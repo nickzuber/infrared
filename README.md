@@ -1,1 +1,1 @@
-## :sparkles: :rocket: Infrared
+# :sparkles: :rocket: Infrared
