@@ -1,2 +1,6 @@
+# Builds & Scripts
+_build
+
+# Others
 .DS_Store
 node_modules
