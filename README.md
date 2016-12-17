@@ -1,1 +1,1 @@
-# ✨ 🚀  Infrared
+## :sparkles: :rocket: Infrared
