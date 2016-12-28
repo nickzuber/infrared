@@ -1,3 +1,3 @@
 # :sparkles: :rocket: Infrared
 
-Fast light weight inference based static type checker in real time for JavaScript.
+Fast light weight inferred static type checker in real time for JavaScript.
