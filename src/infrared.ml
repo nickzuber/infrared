@@ -1,7 +1,7 @@
 (* Core Infrared shell for filtering and dispatching commands *)
 
 module InfraredShell : sig
-  val commands : command list
+  val commands : Command.t list
   val main : unit -> unit
 end = struct
   
