@@ -16,3 +16,5 @@ end = struct
 
 end
 
+let _ = InfraredShell.main ()
+
