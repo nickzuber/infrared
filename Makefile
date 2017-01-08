@@ -1,11 +1,21 @@
-COMPILER = -gcc
-FLAGS    = 
 
-BUILD += core
+OCB_FLAGS = -use-ocamlfind -pkg core -tags thread 
+OCB =				ocamlbuild $(OCB_FLAGS)
 
-# Build everything
-all: $(BUILD)
+MODULES = src/commands\
+					src/watch\
+					src/parser\
+					src/typing
 
-# Build exec structure for threading
-core: core.h core.c
-	$(COMPILER) $(FLAGS) -c exec/core.c
+INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
+
+all: infrared_native
+
+infrared_native:
+	$(OCB) $(INCLUDE_MODULES) src/infrared.native
+
+clean:
+	$(OCB) -clean
+
+.PHONY: clean all 
+

@@ -1,1 +1,1 @@
-type t = { raw : string; cooked : string; }
+type t = { flag : string; doc : string; }
