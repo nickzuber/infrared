@@ -12,7 +12,7 @@ end = struct
   ]
 
   let main () = 
-    print_endline ("collect cli args and defer to respective command to handle")
+    print_endline (" ✨ 🚀  Infrared v1.0.0")
 
 end
 
