@@ -10,7 +10,6 @@ end = struct
   let commands = [
     ParseCommand.command;
     TypeCheckCommand.command;
-    WatchCommand.command;
     HelpCommand.command;
     VersionCommand.command;
   ]
