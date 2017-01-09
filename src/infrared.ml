@@ -6,9 +6,11 @@ module InfraredShell : sig
 end = struct
   let commands = [
     ParseCommand.command;
+(*    
     TypeCheckCommand.command;
     HelpCommand.command;
     VersionCommand.command;
+*)  
   ]
 
   let main () = 

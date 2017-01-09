@@ -5,7 +5,8 @@ OCB =				ocamlbuild $(OCB_FLAGS)
 MODULES = src/commands\
 					src/watch\
 					src/parser\
-					src/typing
+					src/typing\
+					src/errors
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 
