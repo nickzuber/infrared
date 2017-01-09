@@ -21,3 +21,4 @@ let command = {
   flags = [];
   exec = print_usage;
 }
+
