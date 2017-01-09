@@ -21,6 +21,7 @@ let generate_ast_list ~args ~flags =
 let command = {
   Command.
   name = "Parse";
+  doc = "Parses the targeted files and returns a list of the ASTs produced.";
   flags = [];
   exec = generate_ast_list;
 }
