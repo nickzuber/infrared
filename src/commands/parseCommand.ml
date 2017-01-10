@@ -1,4 +1,6 @@
 
+open Core.Std
+
 let extract_files args = 
   []
 
@@ -18,11 +20,11 @@ let generate_ast_list ~args ~flags =
     | file :: tl -> (parse_files tl ([(parse_single file)] @ asts))
   in parse_files files []
 
-let command = {
-  Command.
-  name = "Parse";
-  doc = "Parses the targeted files and returns a list of the ASTs produced.";
-  flags = [];
-  exec = generate_ast_list;
-}
+let command = CommandSpec.create_command
+  ~name:"parse"
+  ~doc:"Parses the targeted files and returns a list of the ASTs produced."
+  ~flags:[]
+
+let exec = generate_ast_list;
+
 

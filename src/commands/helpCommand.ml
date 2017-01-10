@@ -1,24 +1,17 @@
 
 open Core.Std
-open Command
+open CommandSpec
 
-let get_commands = [
-  ParseCommand.command;
-]
-
-let print_usage ~args ~flags =
+let print_usage commands =
   let open Printf in
-  let commands = get_commands in
-  printf "
-    Usage: infrared [COMMAND]\n\n
-    Valid options for COMMAND:\n";
+  printf "  Usage: infrared [COMMAND]\n\n  Valid options for COMMAND:\n";
   List.iter ~f:(fun cmd -> 
-    printf "  %s\t\t%s" cmd.name cmd.doc) commands
+    printf "    %s\t%s\n" cmd.name cmd.doc) commands
 
-let command = {
-  name = "help";
-  doc = "Prints the usage and other information regarding Infrared.";
-  flags = [];
-  exec = print_usage;
-}
+let command = CommandSpec.create_command
+  ~name:"help"
+  ~doc:"Prints the usage and other information regarding Infrared."
+  ~flags:[]
+
+let exec = print_usage;
 

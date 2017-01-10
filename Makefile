@@ -5,12 +5,15 @@ OCB =				ocamlbuild $(OCB_FLAGS)
 MODULES = src/commands\
 					src/watch\
 					src/parser\
-					src/typing\
+					src/typechecker\
 					src/errors
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 
 all: infrared_native
+
+run:
+	make && ./infrared.native
 
 infrared_native:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native

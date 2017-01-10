@@ -1,10 +1,10 @@
 (* Core Infrared shell for filtering and dispatching commands *)
 
 open Core.Std
-open Command 
+open CommandSpec
 
 module InfraredShell : sig
-  val commands : Command.t list
+  val commands : CommandSpec.t list
   val main : unit -> unit
 end = struct
   let commands = [
@@ -17,8 +17,8 @@ end = struct
   ]
 
   let main () = 
-    List.iter ~f:(fun cmd -> print_endlinef " %s" cmd.doc) commands;
-    print_endline (" ✨ 🚀  Infrared v1.0.0")
+    print_endline ("\n  ✨ 🚀  Infrared v1.0.0\n");
+    HelpCommand.exec commands
 
 end
 
