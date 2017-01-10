@@ -1,5 +1,6 @@
 
 open Core.Std
+open Command
 
 let get_commands = [
   ParseCommand.command;
@@ -15,7 +16,6 @@ let print_usage ~args ~flags =
     printf "  %s\t\t%s" cmd.name cmd.doc) commands
 
 let command = {
-  Command.
   name = "help";
   doc = "Prints the usage and other information regarding Infrared.";
   flags = [];
