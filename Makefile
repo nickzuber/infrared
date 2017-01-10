@@ -6,7 +6,8 @@ MODULES = src/commands\
 					src/watch\
 					src/parser\
 					src/typechecker\
-					src/errors
+					src/errors\
+					core
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 

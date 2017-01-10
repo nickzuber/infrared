@@ -6,22 +6,27 @@ open CommandSpec
 module InfraredShell : sig
   val commands : CommandSpec.t list
   val main : unit -> unit
+  val greeting : unit -> unit
 end = struct
   let commands = [
     ParseCommand.command;
     HelpCommand.command;
+    VersionCommand.command;
 (*    
     TypeCheckCommand.command;
-    VersionCommand.command;
 *)  
   ]
 
-  let main () = 
-    print_endline ("✨  🚀  Infrared v0.0.1 — " ^
-    "Fast light weight inferred static type checker in real time for JavaScript.\n");
-    HelpCommand.exec commands
+  let greeting () = 
+    Printf.printf "%s%s"
+      "✨  🚀  Infrared v1.0.1 — "
+      "Fast light weight inferred static type checker in real time for JavaScript.\n"
 
+  let main () = 
+    HelpCommand.exec commands
 end
 
-let _ = InfraredShell.main ()
+let _ = 
+  InfraredShell.greeting ();
+  InfraredShell.main ();
 

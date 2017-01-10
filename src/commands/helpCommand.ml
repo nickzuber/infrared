@@ -13,5 +13,5 @@ let command = CommandSpec.create_command
   ~doc:"Prints the usage and other information regarding Infrared."
   ~flags:[]
 
-let exec = print_usage;
+let exec = print_usage
 
