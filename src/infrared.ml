@@ -20,7 +20,7 @@ end = struct
   let greeting () = 
     Printf.printf "%s%s"
       "✨  🚀  Infrared v1.0.1 — "
-      "Fast light weight inferred static type checker in real time for JavaScript.\n"
+      "Fast light weight inferred static type checker in real time for JavaScript.\n\n"
 
   let main () = 
     HelpCommand.exec commands
