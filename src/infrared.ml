@@ -21,7 +21,9 @@ end = struct
     Printf.printf "😬  Well this is awkward, %s\n" msg
 
   let greeting () = 
-    Printf.printf "%s%s\n\n" "✨  🚀  Infrared — " InfraredConfig.version
+    Printf.printf "%s%s%s\n\n" "✨  🚀  Infrared v"
+      InfraredConfig.version
+      " — Fast light weight inferred static type checker in real time for JavaScript."
 
   let main () = 
     let argv = Array.to_list Sys.argv in
