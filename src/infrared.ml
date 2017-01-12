@@ -1,6 +1,5 @@
 (* Core Infrared shell for filtering and dispatching commands *)
 
-open Core.Std
 open CommandSpec
 
 module InfraredShell : sig
@@ -10,32 +9,38 @@ module InfraredShell : sig
   val failure : string -> unit
 end = struct
   let commands = [
-    ParseCommand.command;
-    HelpCommand.command;
-    VersionCommand.command;
+    HelpCommand.spec;
+    ParseCommand.spec;
+    VersionCommand.spec;
 (*    
-    TypeCheckCommand.command;
+    TypeCheckCommand.spec;
 *)  
   ]
 
   let failure msg = 
-    Printf.printf "🔥  Whoops, %s" msg
+    Printf.printf "😬  Well this is awkward, %s\n" msg
 
   let greeting () = 
-    Printf.printf "%s%s"
-      "✨  🚀  Infrared v1.0.1 — "
-      "Fast light weight inferred static type checker in real time for JavaScript.\n\n"
+    Printf.printf "%s%s\n\n" "✨  🚀  Infrared — " InfraredConfig.version
 
   let main () = 
     let argv = Array.to_list Sys.argv in
-    let command = match argv with
+    match argv with
     | [] -> failure "no args found whatsoever, shouldn't ever see this"
     | prgm :: [] -> HelpCommand.exec commands
-    | prgm :: cmd :: rest -> VersionCommand.exec ()
-    in command
+    | prgm :: cmd :: flags -> 
+        try 
+          let command = List.find (fun command -> 
+            command.name = cmd) commands in
+          match command with
+          | cmd when cmd.name = HelpCommand.spec.name -> HelpCommand.exec commands
+          | _ -> raise Not_found
+        with Not_found ->
+          failure "you've entered an invalid command.\n";
+          HelpCommand.exec commands
 end
 
 let _ = 
-  InfraredShell.greeting ();
-  InfraredShell.main ();
+  (* InfraredShell.greeting (); *)
+  InfraredShell.main ()
 

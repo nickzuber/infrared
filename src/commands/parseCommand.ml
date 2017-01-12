@@ -20,7 +20,7 @@ let generate_ast_list ~args ~flags =
     | file :: tl -> (parse_files tl ([(parse_single file)] @ asts))
   in parse_files files []
 
-let command = CommandSpec.create_command
+let spec = CommandSpec.create_command
   ~name:"parse"
   ~doc:"Parses the targeted files and returns a list of the ASTs produced."
   ~flags:[]
