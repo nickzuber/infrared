@@ -27,7 +27,9 @@ end = struct
     let argv = Array.to_list Sys.argv in
     match argv with
     | [] -> failure "no args found whatsoever, shouldn't ever see this"
-    | prgm :: [] -> HelpCommand.exec commands
+    | prgm :: [] -> 
+        greeting ();
+        HelpCommand.exec commands
     | prgm :: cmd :: args -> 
         try 
           let command = List.find (fun command -> 
@@ -53,6 +55,5 @@ end = struct
 end
 
 let _ = 
-  (* InfraredShell.greeting (); *)
   InfraredShell.main ()
 
