@@ -1,5 +1,6 @@
 
 open Core.Std
+open CommandSpec
 
 let extract_files args = 
   []
