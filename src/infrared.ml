@@ -43,8 +43,8 @@ end = struct
           match command.name with
           | cmd when HelpCommand.spec.name = cmd -> HelpCommand.exec commands
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
-          | cmd when ParseCommand.spec.name = cmd -> (
-            match args with
+          | cmd when ParseCommand.spec.name = cmd -> 
+            (match args with
             | [] -> failure "no arguments given for parsing."
             | arg :: [] -> Printf.printf "requested to parse single file:\n%s\n" arg
             | _ -> 
