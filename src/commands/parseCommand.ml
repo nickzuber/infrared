@@ -2,10 +2,12 @@
 open Core.Std
 open CommandSpec
 
+(* Given a file path/name it returns the contents of that file.
+ * We might not need this depending on how the lexer works. *)
 let extract_files args = 
   []
 
-let parse_single ~file = 
+let parse_single file = 
   let ast = Parser.parse file in
   match ast with
   | Ok _ -> ast
@@ -18,7 +20,7 @@ let generate_ast_list ~args ~flags =
   let rec parse_files files asts =
     match files with
     | [] -> asts
-    | file :: tl -> (parse_files tl ([(parse_single file)] @ asts))
+    | file :: rest -> (parse_files rest ([(parse_single file)] @ asts))
   in parse_files files []
 
 let spec = CommandSpec.create_command
