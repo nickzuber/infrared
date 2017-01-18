@@ -6,7 +6,7 @@ module InfraredShell : sig
   val commands : CommandSpec.t list
   val main : unit -> unit
   val greeting : unit -> unit
-  val failure : string -> unit
+  val reportCommandError : string -> unit
 end = struct
   let commands = [
     HelpCommand.spec;
@@ -17,7 +17,7 @@ end = struct
 *)  
   ]
 
-  let failure msg = 
+  let reportCommandError msg = 
     Printf.printf "😬  Well this is awkward, %s\n" msg
 
   let greeting () = 
@@ -28,7 +28,7 @@ end = struct
   let main () = 
     let argv = Array.to_list Sys.argv in
     match argv with
-    | [] -> failure "no args found whatsoever, shouldn't ever see this"
+    | [] -> reportCommandError "no args found whatsoever, shouldn't ever see this"
     | prgm :: [] -> 
         greeting ();
         HelpCommand.exec commands
@@ -45,14 +45,14 @@ end = struct
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
           | cmd when ParseCommand.spec.name = cmd -> 
             (match args with
-            | [] -> failure "no arguments given for parsing."
+            | [] -> reportCommandError "no arguments given for parsing."
             | arg :: [] -> Printf.printf "requested to parse single file:\n%s\n" arg
             | _ -> 
                 Printf.printf "requested to parse the following files:\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) args)
           | _ -> raise Not_found
         with Not_found ->
-          failure "you've entered an invalid command.\n";
+          reportCommandError "you've entered an invalid command.\n";
           HelpCommand.exec commands
 end
 
