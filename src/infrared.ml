@@ -46,7 +46,7 @@ end = struct
           | cmd when ParseCommand.spec.name = cmd -> 
             (match args with
             | [] -> reportCommandError "no arguments given for parsing."
-            | arg :: [] -> Printf.printf "requested to parse single file:\n%s\n" arg
+            | arg :: [] -> ParseCommand.exec ~args:[arg]
             | _ -> 
                 Printf.printf "requested to parse the following files:\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) args)
