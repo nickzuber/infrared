@@ -1,6 +1,7 @@
 (* Core Infrared shell for filtering and dispatching commands *)
 
 open CommandSpec
+open Ast
 
 module InfraredShell : sig
   val commands : CommandSpec.t list
@@ -46,7 +47,7 @@ end = struct
           | cmd when ParseCommand.spec.name = cmd -> 
             (match args with
             | [] -> reportCommandError "no arguments given for parsing."
-            | arg :: [] -> ParseCommand.exec ~args:[arg]
+            | arg :: [] -> Ast.printAST (ParseCommand.exec ~args:[arg])
             | _ -> 
                 Printf.printf "requested to parse the following files:\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) args)
