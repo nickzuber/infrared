@@ -19,6 +19,9 @@ run:
 infrared_native:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
+test:
+	echo "no tests yet"
+
 clean:
 	$(OCB) -clean
 
