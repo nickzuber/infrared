@@ -1,4 +1,4 @@
-<img src="./.github/header.png" />
+<img width="510" src="./.github/header.png" />
 
 <!-- These badges aren't configured -->
 [![Build Status](https://travis-ci.org/nickzuber/needle.svg?branch=master)]()
