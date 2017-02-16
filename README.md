@@ -1,9 +1,4 @@
-<a href="https://github.com/nickzuber/infrared"><img src="./assets/infrared.png" height="200" align="right"></a>
-
-Infrared
-========
-
-Fast light weight inferred static type checker in real time for JavaScript.
+<img src="./.github/header.png" />
 
 <!-- These badges aren't configured -->
 [![Build Status](https://travis-ci.org/nickzuber/needle.svg?branch=master)]()
