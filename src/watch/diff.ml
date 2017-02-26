@@ -1,7 +1,16 @@
 
+(* If the file does not exist, None is returned *)
 let get_mtime file =
-  Unix.((stat file).st_mtime)
+  try
+    Some Unix.((stat file).st_mtime)
+  with
+    Unix.Unix_error (Unix.ENOENT, "stat", _) ->
+      None
 
+(* 
+   A default size of 50 seems reasonable at the moment. 
+   Might change later. 
+*)
 let create_cache ?size:(size=50) =
   Hashtbl.create size
 
@@ -13,7 +22,7 @@ let create_cache ?size:(size=50) =
       - No changes         => return false
     - File does not exist  => add to cache; return true
  *)
-let check_diff file ~cache = 
+let has_diff file ~cache = 
   let file_mtime = get_mtime file in
   try
     let cached_mtime = Hashtbl.find cache file in
