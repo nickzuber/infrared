@@ -12,12 +12,12 @@ MODULES = src/commands\
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 
-all: infrared_native
+all: infrared
 
 run:
 	make && ./infrared.native
 
-infrared_native:
+infrared:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
 test:
@@ -26,5 +26,5 @@ test:
 clean:
 	$(OCB) -clean
 
-.PHONY: clean all 
+.PHONY: clean all run
 
