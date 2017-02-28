@@ -1,27 +1,20 @@
 
-(* If the file does not exist, None is returned *)
+(* We assume that we have a valid file path. Bad file paths should
+ * be handled somewhere else. *)
 let get_mtime file =
-  try
-    Some Unix.((stat file).st_mtime)
-  with
-    Unix.Unix_error (Unix.ENOENT, "stat", _) ->
-      None
+  Some Unix.((stat file).st_mtime)
 
-(* 
-   A default size of 50 seems reasonable at the moment. 
-   Might change later. 
-*)
+(* A default size of 50 seems reasonable at the moment. 
+ * Might change later. *)
 let create_cache ?size:(size=50) =
   Hashtbl.create size
 
-(*
-   Checks the cache for the last modified time of a given file.
-   Few scenarios:
-    - File exists
-      - Has been updated   => update cache; return true
-      - No changes         => return false
-    - File does not exist  => add to cache; return true
- *)
+(* Checks the cache for the last modified time of a given file.
+ * Few scenarios:
+ *  - File exists
+ *    - Has been updated   => update cache; return true
+ *    - No changes         => return false
+ *  - File does not exist  => add to cache; return true *)
 let has_diff file ~cache = 
   let file_mtime = get_mtime file in
   try
