@@ -1,4 +1,12 @@
 
+let is_valid_file file =
+  try
+    let stat = Unix.stat file in 
+    true (* We don't care about the stats, just the fact it found some *)
+  with
+    Unix.Unix_error (Unix.ENOENT, "stat", _) ->
+      false
+
 (* We assume that we have a valid file path. Bad file paths should
  * be handled somewhere else. *)
 let get_mtime file =
