@@ -11,7 +11,7 @@ let parse_single file =
       ast
  
 let generate_ast_list ~args ~flags =
-  let files = extract_files args in
+  let files = Fs.extract_files args in
   let rec parse_files files asts =
     match files with
     | [] -> asts

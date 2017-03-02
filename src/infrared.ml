@@ -13,9 +13,7 @@ end = struct
     HelpCommand.spec;
     ParseCommand.spec;
     VersionCommand.spec;
-(*    
     TypeCheckCommand.spec;
-*)  
   ]
 
   let reportCommandError msg = 

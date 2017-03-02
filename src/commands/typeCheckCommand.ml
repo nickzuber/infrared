@@ -1,10 +1,15 @@
 
-let spec = CommandSpec.create
+let check_files = 
+  ignore ("check_files")
+
+let spec = 
+  let flags = Flag.create_list [
+    ("-watch", "Type checks the target file(s) in real time as you edit.")
+  ] in
+  CommandSpec.create
   ~name:"check"
   ~doc:""
-  ~flags:[
-    Flags
-  ]
+  ~flags: flags
 
-let exec = generate_ast_list;
+let exec = check_files;
 
