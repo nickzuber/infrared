@@ -4,9 +4,8 @@ type t = {
   doc: string;
 }
 
-let create ~name ~doc ~flags = {
-  name = name;
+let create ~flag ~doc = {
+  flag = flag;
   doc = doc;
-  flags = flags;
 }
 
