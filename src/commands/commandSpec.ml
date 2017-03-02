@@ -5,7 +5,7 @@ type t = {
   flags: Flag.t list;
 }
 
-let create_command ~name ~doc ~flags = {
+let create ~name ~doc ~flags = {
   name = name;
   doc = doc;
   flags = flags;

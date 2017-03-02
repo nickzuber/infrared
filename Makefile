@@ -8,7 +8,7 @@ MODULES = src/commands\
 					src/typechecker\
 					src/errors\
 					core\
-					unix
+					utils
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 

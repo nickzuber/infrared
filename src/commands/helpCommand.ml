@@ -8,7 +8,7 @@ let print_usage commands =
   List.iter ~f:(fun cmd -> 
     printf "     %s\t%s\n" cmd.name cmd.doc) commands
 
-let spec = CommandSpec.create_command
+let spec = CommandSpec.create
   ~name:"help"
   ~doc:"Prints the usage and other information regarding Infrared."
   ~flags:[]

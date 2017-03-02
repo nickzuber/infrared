@@ -2,11 +2,6 @@
 open Core.Std
 open CommandSpec
 
-(* Given a file path/name it returns the contents of that file.
- * We might not need this depending on how the lexer works. *)
-let extract_files args = 
-  []
-
 let parse_single file = 
   let ast = Parser.parse file in
   match ast with
@@ -23,7 +18,7 @@ let generate_ast_list ~args ~flags =
     | file :: rest -> (parse_files rest ([(parse_single file)] @ asts))
   in parse_files files []
 
-let spec = CommandSpec.create_command
+let spec = CommandSpec.create
   ~name:"parse"
   ~doc:"Parses the targeted files and returns a list of the ASTs produced."
   ~flags:[]
