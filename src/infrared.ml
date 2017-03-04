@@ -58,7 +58,7 @@ end = struct
               (ignore ("this"))
           | _ -> raise Not_found
         with Not_found ->
-          reportCommandError "you've entered an invalid command.\n";
+          reportCommandError ("you've entered an invalid command: \n\t" ^ cmd ^ "\n");
           HelpCommand.exec commands
 end
 
