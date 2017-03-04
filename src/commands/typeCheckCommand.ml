@@ -4,7 +4,7 @@ let check_files =
 
 let spec = 
   let flags = Flag.create_list [
-    ("-watch", "Type checks the target file(s) in real time as you edit.")
+    ("-watch", "Type checks the target files in real time as you edit.")
   ] in
   CommandSpec.create
   ~name:"check"
