@@ -8,7 +8,7 @@ let spec =
   ] in
   CommandSpec.create
   ~name:"check"
-  ~doc:""
+  ~doc:"Type checks the targetd files and reports back with any errors found."
   ~flags: flags
 
 let exec = check_files;
