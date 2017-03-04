@@ -45,7 +45,7 @@ end = struct
           | cmd when HelpCommand.spec.name = cmd -> HelpCommand.exec commands
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
           | cmd when ParseCommand.spec.name = cmd -> 
-            (match args with
+            (match args' with
             | [] -> reportCommandError "no arguments given for parsing."
             | arg :: [] -> 
                 Ast.printAST (ParseCommand.exec ~flags:flags' ~args:[arg])
