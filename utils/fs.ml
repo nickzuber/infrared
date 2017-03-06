@@ -9,7 +9,10 @@ let extract_files name =
   else 
     let rec crawl filename = 
       if Sys.file_exists filename = false then
-        []
+        (ErrorHandling.report 
+          ~msg:(Printf.sprintf "Unable to resolve the file: %s" filename)
+          ~level:(Level.Low);
+        [])
       else
         if Sys.is_directory filename = true then
           let paths = Sys.readdir filename in

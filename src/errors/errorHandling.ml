@@ -4,7 +4,7 @@ let report ~msg ~level =
   | Level.High ->
     print_endline("🚨  Serious error: " ^ msg)
   | Level.Med ->
-      print_endline("❗ Hang on there, " ^ msg)
+      print_endline("❗ Woah hold up: " ^ msg)
   | Level.Low ->
-      print_endline("⚠️  Watch out, " ^ msg)
+      print_endline("⚠️  Be careful: " ^ msg)
 
