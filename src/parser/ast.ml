@@ -3,6 +3,6 @@ type t =
   | Expr
   | Null
 
-let printAST ast = 
-  Printf.printf "print ast"
+let print_ast ast = 
+  ignore ("print the ast")
 

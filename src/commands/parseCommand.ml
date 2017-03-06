@@ -1,22 +1,16 @@
 
-open Core.Std
 open CommandSpec
+open Ast
 
-let parse_single file = 
-  let ast = Parser.parse file in
-  match ast with
-  | Ok _ -> ast
-  | Error msg -> 
-      (ErrorHandling.report ~msg:msg ~level:Level.Med);
-      ast
- 
 let generate_ast_list ~args ~flags =
-  let files = Fs.extract_files args in
-  let rec parse_files files asts =
-    match files with
-    | [] -> asts
-    | file :: rest -> (parse_files rest ([(parse_single file)] @ asts))
-  in parse_files files []
+  let files = List.fold_left (fun acc arg -> 
+    let response = Fs.extract_files arg in
+    match response with
+    | Some paths -> acc @ paths
+    | None -> acc
+  ) [] args in
+  List.iter (fun path -> print_endline path) files;
+  Null
 
 let spec = CommandSpec.create
   ~name:"parse"
