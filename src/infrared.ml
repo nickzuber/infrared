@@ -51,9 +51,10 @@ end = struct
                 Ast.print_ast (ParseCommand.exec ~flags:flags' ~args:[arg])
             | _ -> 
                 Printf.printf "\nflags found\n";
-                Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags');
+                Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
                 Ast.print_ast (ParseCommand.exec ~flags:flags' ~args:args')
+            )
           | cmd when TypeCheckCommand.spec.name = cmd ->
               (ignore ("this"))
           | _ -> raise Not_found
