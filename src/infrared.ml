@@ -1,4 +1,3 @@
-(* Core Infrared shell for filtering and dispatching commands *)
 
 open CommandSpec
 open Ast
