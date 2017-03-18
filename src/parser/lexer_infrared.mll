@@ -9,7 +9,7 @@ module Token = struct
   type t = 
     (* Standard *)
     | Expression of t list
-    | Variable of t_variable
+    | Variable of var_t
     | Number
     | Bool
     | String
@@ -63,12 +63,16 @@ module Token = struct
     | Static
     | Eof
 
-  type t_variable = 
+  type var_t = 
     (* Standard *)
     | Var
     (* ES6 *)
     | Let
     | Const
+
+  type state_t = 
+    | REGULAR
+    | 
 
 end
 open Token
