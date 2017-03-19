@@ -72,7 +72,17 @@ module Token = struct
 
   type state_t = 
     | REGULAR
-    | 
+    | PAREN_OPEN
+    | PAREN_CLOSE
+    | BRACKET_OPEN
+    | BRACKET_CLOSE
+
+  type env_t = {
+    mutable state: state_t list;
+    mutable expr: t list;
+    mutable body_builder: t list list;
+    mutable ast: t list;
+  }
 
 end
 open Token
