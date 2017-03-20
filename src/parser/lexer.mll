@@ -8,6 +8,7 @@ module Token = struct
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
   type t = 
     (* Standard *)
+    | Block of t list (* Like Expression but with curly brackets *)
     | Bool
     | Break
     | Case
@@ -19,7 +20,7 @@ module Token = struct
     | Delete
     | Do
     | Else
-    | Expression of t list
+    | Expression of t list (* Like Block but with parethesis *)
     | Export
     | Extends
     | Finally
@@ -89,6 +90,18 @@ module Token = struct
 
   let rec token_to_string tok =
     match tok with
+    | Block content -> (
+      Printf.sprintf "Block (%s)"
+        List.fold_left (fun acc e -> 
+          match acc with
+          | "" -> acc ^ (token_to_string e)
+          | _ -> Prinft.sprintf "%s, %s" acc (token_to_string e))
+        "" content)
+    | Variable var -> (
+      let (var_t, value) = var in
+      Printf.sprintf "Variable (%s: %s)"
+        (token_to_string var_t)
+        (token_to_string value))
     | Expression expr -> (
       Printf.sprintf "Expression (%s)"
         List.fold_left (fun acc e -> 
@@ -96,11 +109,6 @@ module Token = struct
           | "" -> acc ^ (token_to_string e)
           | _ -> Prinft.sprintf "%s, %s" acc (token_to_string e))
         "" expr)
-    | Variable var -> (
-      let (var_t, value) = var in
-      Printf.sprintf "Variable (%s: %s)"
-        (token_to_string var_t)
-        (token_to_string value))
     | Number -> "Number"
     | Bool -> "Bool"
     | String -> "String"
