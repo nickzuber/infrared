@@ -8,38 +8,41 @@ module Token = struct
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
   type t = 
     (* Standard *)
-    | Expression of t list
-    | Variable of (var_t * t)
-    | Number
     | Bool
-    | String
-    | Comment
     | Break
     | Case
     | Catch
+    | Comment
     | Continue
     | Debugger
     | Default
     | Delete
     | Do
     | Else
+    | Expression of t list
     | Export
     | Extends
     | Finally
     | For
-    | Function
+    (* Bind function names in env while parsing *)
+    | Function of t 
     | If
     | Import
     | In
     | Instanceof
     | New
+    | Null
+    | Number
     | Return
+    | String
     | Super
     | Switch
     | This
     | Throw
     | Try
     | Typeof
+    (* All variables have identifers so we mark that in token *)
+    | Variable of string * (var_t * t)
     | Void
     | While
     | With
@@ -147,7 +150,9 @@ module Token = struct
     | Public -> "Public"
     | Static -> "Static"
     | Eof -> "Eof"
-  
+
+  let state_to_string = function
+    | 
 
 end
 open Token
