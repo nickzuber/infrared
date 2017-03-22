@@ -76,10 +76,8 @@ module Token = struct
 
   type state_t = 
     | REGULAR
-    | PAREN_OPEN
-    | PAREN_CLOSE
-    | BRACKET_OPEN
-    | BRACKET_CLOSE
+    | CLOSURE_START
+    | CLOSURE_END
 
   type env_t = {
     mutable state: state_t list;
