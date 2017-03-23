@@ -67,17 +67,12 @@ module Token = struct
     | Static
     | Eof
 
-  type var_t = 
+  and var_t = 
     (* Standard *)
     | Var
     (* ES6 *)
     | Let
     | Const
-
-  type state_t = 
-    | REGULAR
-    | CLOSURE_START
-    | CLOSURE_END
 
   type env_t = {
     mutable state: state_t list;
@@ -86,6 +81,12 @@ module Token = struct
     mutable ast: t list;
   }
 
+  and state_t = 
+    | REGULAR
+    | CLOSURE_START
+    | CLOSURE_INSIDE
+    | CLOSURE_END
+  
   let rec token_to_string tok =
     match tok with
     | Block content -> (
@@ -158,12 +159,45 @@ module Token = struct
     | Eof -> "Eof"
 
   let state_to_string = function
-    | 
+    | REGULAR -> "REGULAR"
+    | CLOSURE_START -> "CLOSURE_START"
+    | CLOSURE_INSIDE -> "CLOSURE_INSIDE"
+    | CLOSURE_END -> "CLOSURE_END"
 
 end
 open Token
 }
 
+(* Different ways you can write a number 
+   https://github.com/facebook/flow/blob/master/src/parser/lexer_flow.mll#L755 *)
+let hex = ['0'-'9''a'-'f''A'-'F']
+let binnumber = '0' ['B''b'] ['0''1']+
+let hexnumber = '0' ['X''x'] hex+
+let octnumber = '0' ['O''o'] ['0'-'7']+
+let legacyoctnumber = '0' ['0'-'7']+
+let scinumber = ['0'-'9']*'.'?['0'-'9']+['e''E']['-''+']?['0'-'9']+
+let wholenumber = ['0'-'9']+'.'?
+let floatnumber = ['0'-'9']*'.'['0'-'9']+
+
+let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
+             scinumber | wholenumber | floatnumber
+let whitespace = [' ' '\t' '\r']
+let letter = ['a'-'z''A'-'Z''_''$']
+
 rule token env = parse
-  | '\n'
+  | [' ' '\t' '\n']   {
+                        token env lexbuf
+                      }
+  | ['\n']            {
+                        (**)
+                      }
+  | ['\n']            {
+                        (**)
+                      }
+
+
+
+
+
+
 
