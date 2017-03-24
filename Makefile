@@ -1,5 +1,5 @@
 
-OCB_FLAGS = -use-ocamlfind -pkg core -tags thread 
+OCB_FLAGS = -use-ocamlfind -pkg core,batteries -tags thread 
 OCB =				ocamlbuild $(OCB_FLAGS)
 
 MODULES = src/commands\

@@ -1,6 +1,7 @@
 
+open Batteries
 open Ast
 
 let parse file = 
-  Ok Expr
+  Expr
 

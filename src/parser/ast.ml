@@ -3,6 +3,8 @@ type t =
   | Expr
   | Null
 
-let print_ast ast = 
+(* Is given a list of AST's to print.
+ * Probably needs a better name. *)
+let print_ast l = 
   ignore ("print the ast")
 

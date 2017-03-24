@@ -9,8 +9,14 @@ let generate_ast_list ~args ~flags =
     | Some paths -> acc @ paths
     | None -> acc
   ) [] args in
+  List.fold_left (fun acc path ->
+    let ast = Parser.parse path in
+    acc @ [ast]
+  ) [] files
+  (* 
   List.iter (fun path -> print_endline path) files;
-  Null
+  Null 
+  *)
 
 let spec = CommandSpec.create
   ~name:"parse"
