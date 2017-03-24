@@ -7,7 +7,7 @@ module Token = struct
    * looking for particular keywords to add or change.
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
   type t = 
-    (* Standard *)
+    (* Standard & Custom *)
     | Block of t list (* Like Expression but with curly brackets *)
     | Bool
     | Break
@@ -25,8 +25,15 @@ module Token = struct
     | Extends
     | Finally
     | For
-    (* Bind function names in env while parsing *)
+    (* Bind function names in env while parsing 
+     * Ex:
+       * Function (String "Foo", Block ( ... )) ....
+       * or 
+       * Function (Block ( ... )) ....
+     * *)
     | Function of t 
+    (* Words like the names of functions or variables, not to be confused with Strings *)
+    | Identifier of string
     | If
     | Import
     | In
@@ -35,7 +42,8 @@ module Token = struct
     | Null
     | Number
     | Return
-    | String
+    (* Surrounded by quotes, not to be confused with Identifiers *)
+    | String of string
     | Super
     | Switch
     | This
@@ -73,20 +81,7 @@ module Token = struct
     (* ES6 *)
     | Let
     | Const
-
-  type env_t = {
-    mutable state: state_t list;
-    mutable exprs: t list;
-    mutable body_builders: t list list;
-    mutable ast: t list;
-  }
-
-  and state_t = 
-    | REGULAR
-    | CLOSURE_START
-    | CLOSURE_INSIDE
-    | CLOSURE_END
-  
+ 
   let rec token_to_string tok =
     match tok with
     | Block content -> (
@@ -157,15 +152,34 @@ module Token = struct
     | Public -> "Public"
     | Static -> "Static"
     | Eof -> "Eof"
+end
+open Token
+
+module Lex_env = struct
+  type t = {
+    (* Current state of the Lexer *)
+    state: state_t;
+    (*  *)
+    expr: Token.t list;
+    (*  *)
+    body_builders: Token.t list list;
+    (*  *)
+    ast: Token.t list;
+  }
+
+  and state_t = 
+    | REGULAR
+    | CLOSURE_START
+    | CLOSURE_INSIDE
+    | CLOSURE_END
 
   let state_to_string = function
     | REGULAR -> "REGULAR"
     | CLOSURE_START -> "CLOSURE_START"
     | CLOSURE_INSIDE -> "CLOSURE_INSIDE"
     | CLOSURE_END -> "CLOSURE_END"
-
-end
-open Token
+end 
+open Lex_env
 }
 
 (* Different ways you can write a number 
