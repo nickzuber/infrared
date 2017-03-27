@@ -1,10 +1,23 @@
 
-type t = 
-  | Expr
-  | Null
+module Token = Lexer.Token
+module Lex_env = Lexer.Lex_env
 
-(* Is given a list of AST's to print.
- * Probably needs a better name. *)
-let print_ast l = 
-  ignore ("print the ast")
+module Ast = struct
+  (* Tentative *)
+  type t = 
+    | Binop of (t * t)
+    | Variable
+    | Null
+
+  let defaultEnv = {
+    Lex_env.
+    file = "undefined";
+    line_number = 1;
+    is_in_comment = false;
+    state = REGULAR;
+    expr = [];
+    body_builders = [];
+    ast = [];
+  }
+end
 

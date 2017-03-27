@@ -47,12 +47,12 @@ end = struct
             (match args' with
             | [] -> reportCommandError "no arguments given for parsing."
             | arg :: [] -> 
-                Ast.print_ast (ParseCommand.exec ~flags:flags' ~args:[arg])
+                Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:[arg])
             | _ -> 
                 Printf.printf "\nflags found\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
-                Ast.print_ast (ParseCommand.exec ~flags:flags' ~args:args')
+                Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args')
             )
           | cmd when TypeCheckCommand.spec.name = cmd ->
               (ignore ("this"))

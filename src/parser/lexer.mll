@@ -7,8 +7,19 @@ module Token = struct
    * looking for particular keywords to add or change.
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
   type t = 
-    (* Standard & Custom *)
-    | Block of t list (* Like Expression but with curly brackets *)
+    (* Custom *)
+    (* Like Expression but with curly brackets *)
+    | Block of t list 
+    (* Like Block but with parethesis *)
+    | Expression of t list 
+    (* Words like the names of functions or variables, not to be confused with Strings *)
+    | Identifier of string
+    | Variable of var_t
+    | Assignment
+    | Equality 
+    (* Possibly same as `Equality` if we disallow implicit coersion *)
+    | StrictEquality 
+    (* Standard *)
     | Bool
     | Break
     | Case
@@ -20,22 +31,18 @@ module Token = struct
     | Delete
     | Do
     | Else
-    | Expression of t list (* Like Block but with parethesis *)
     | Export
     | Extends
     | Finally
     | For
     (* Bind function names in env while parsing 
      * Ex:
-       * Function (String "Foo", Block ( ... )) ....
+       * Function (Identifier "Foo", Expression ( ... ), Block ( ... )) ....
        * or 
-       * Function (Block ( ... )) ....
+       * Function (Expression ( ... ) Block ( ... )) ....
      * *)
     | Function of t 
-    (* Words like the names of functions or variables, not to be confused with Strings *)
-    | Identifier of string
     | If
-    | Import
     | In
     | Instanceof
     | New
@@ -50,8 +57,6 @@ module Token = struct
     | Throw
     | Try
     | Typeof
-    (* All variables have identifers so we mark that in token *)
-    | Variable of string * (var_t * t)
     | Void
     | While
     | With
@@ -59,6 +64,7 @@ module Token = struct
     (* ES6 *)
     | Class
     | Implements
+    | Import
     | Spread
     | TemplateString
     | Rest
@@ -81,31 +87,34 @@ module Token = struct
     (* ES6 *)
     | Let
     | Const
+
+  let var_to_string = function
+    | Var -> "Var"
+    | Let -> "Let"
+    | Const -> "Const"
  
   let rec token_to_string tok =
     match tok with
     | Block content -> (
       Printf.sprintf "Block (%s)"
-        List.fold_left (fun acc e -> 
+        (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (token_to_string e)
-          | _ -> Prinft.sprintf "%s, %s" acc (token_to_string e))
-        "" content)
-    | Variable var -> (
-      let (var_t, value) = var in
-      Printf.sprintf "Variable (%s: %s)"
-        (token_to_string var_t)
-        (token_to_string value))
+          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+        "" content))
+    | Variable t -> 
+      Printf.sprintf "Variable (%s)"
+        (var_to_string t)
     | Expression expr -> (
       Printf.sprintf "Expression (%s)"
-        List.fold_left (fun acc e -> 
+        (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (token_to_string e)
-          | _ -> Prinft.sprintf "%s, %s" acc (token_to_string e))
-        "" expr)
+          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+        "" expr))
     | Number -> "Number"
     | Bool -> "Bool"
-    | String -> "String"
+    | String str -> Printf.sprintf "String (%s)" str
     | Comment -> "Comment"
     | Break -> "Break"
     | Case -> "Case"
@@ -120,7 +129,9 @@ module Token = struct
     | Extends -> "Extends"
     | Finally -> "Finally"
     | For -> "For"
-    | Function -> "Function"
+    | Function body -> 
+        Printf.sprintf "Function (%s)"
+        (token_to_string body)
     | If -> "If"
     | Import -> "Import"
     | In -> "In"
@@ -157,13 +168,14 @@ open Token
 
 module Lex_env = struct
   type t = {
-    (* Current state of the Lexer *)
+    (* Meta *)
+    file: string;
+    line_number: int;
+    is_in_comment: bool;
+    (* States *)
     state: state_t;
-    (*  *)
     expr: Token.t list;
-    (*  *)
     body_builders: Token.t list list;
-    (*  *)
     ast: Token.t list;
   }
 
