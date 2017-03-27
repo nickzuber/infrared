@@ -15,14 +15,13 @@ let parse file =
 
 let print_tokens env =
   Printf.printf "
-FILE:
-\t%s
-AST:\n" env.file;
+FILE:\t%s
+AST:" env.file;
   List.iter (fun tok -> 
     Printf.printf "\t%s\n"
     (Token.token_to_string tok))
   env.ast;
-  print_endline ""
+  print_endline "(end)"
 
 
 let print_ast envs =
