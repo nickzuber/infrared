@@ -2,7 +2,7 @@
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
 
-module Ast = struct
+module Infrared_ast = struct
   (* Tentative *)
   type t = 
     | Binop of (t * t)

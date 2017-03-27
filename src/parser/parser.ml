@@ -1,13 +1,15 @@
 
 module Lex_env = Lexer.Lex_env
 module Token = Lexer.Token
-module Ast = Ast.Ast
+module Infrared_ast = Ast.Infrared_ast
 open Batteries
-open Ast
+open Infrared_ast
 open Lex_env
 
 let parse file = 
-  { Ast.defaultEnv with 
+  (* temp for testing right now *)
+  let open Token in
+  { Infrared_ast.defaultEnv with 
     file = file;
     ast = [Bool; Bool; Bool; Bool; Bool] }
 
