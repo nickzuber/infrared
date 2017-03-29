@@ -163,13 +163,18 @@ module Token = struct
     | Public -> "Public"
     | Static -> "Static"
     | Eof -> "Eof"
+    | Null -> "Null"
+    | Assignment -> "Assignment"
+    | Equality -> "Equality"
+    | StrictEquality -> "StrictEquality"
+    | Identifier str -> Printf.sprintf "Identifier (%s)" str
 end
 open Token
 
 module Lex_env = struct
   type t = {
     (* Meta *)
-    file: string;
+    source: string;
     line_number: int;
     is_in_comment: bool;
     (* States *)
@@ -190,6 +195,17 @@ module Lex_env = struct
     | CLOSURE_START -> "CLOSURE_START"
     | CLOSURE_INSIDE -> "CLOSURE_INSIDE"
     | CLOSURE_END -> "CLOSURE_END"
+
+  let defaultEnv = { 
+    source = "Null";
+    line_number = 1;
+    is_in_comment = false;
+    state = REGULAR;
+    expr = [];
+    body_builders = [];
+    ast = [];
+  }
+
 end 
 open Lex_env
 }
