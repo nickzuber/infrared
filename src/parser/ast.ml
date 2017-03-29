@@ -41,7 +41,27 @@ and Statement : sig
   end
 
   module Expression : sig
-    type t
+    module BlockExpression : sig
+      type t
+    end
+
+    module StandardExpression : sig
+      type t
+    end
+
+    type t = 
+      | BlockExpression of BlockExpression.t
+      | StandardExpression of StandardExpression.t
+  end
+
+  module Function : sig
+    type t = (t' * Loc.t)
+    
+    type t' = {
+      id: option Identifier.t;
+      params: option Identifier.t list;
+      body: BlockExpression.t;
+    }
   end
 
   module Object : sig
