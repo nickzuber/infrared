@@ -6,7 +6,9 @@ module Lex_env = Lexer.Lex_env
  * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/ *)
 
 module rec Loc : sig
-  type t = { line: int }
+  type t = {
+    line: int
+  }
 end = Loc
 
 and Program : sig
