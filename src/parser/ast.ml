@@ -58,6 +58,7 @@ and Statement : sig
     }
 
     and t' =
+      | Empty
       | Identifier of Identifier.t
       | Function of Function.t
       | Expression of Expression.t
