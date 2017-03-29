@@ -42,7 +42,7 @@ and Statement : sig
 
   module Expression : sig
     module BlockExpression : sig
-      type t
+      type t = (Statement.t list * Loc.t)
     end
 
     module StandardExpression : sig
@@ -55,13 +55,13 @@ and Statement : sig
   end
 
   module Function : sig
-    type t = (t' * Loc.t)
-    
     type t' = {
-      id: option Identifier.t;
-      params: option Identifier.t list;
-      body: BlockExpression.t;
+      id: Identifier.t option;
+      params: Identifier.t list option;
+      body: Expression.BlockExpression.t;
     }
+
+    type t = (t' * Loc.t)
   end
 
   module Object : sig
@@ -91,13 +91,13 @@ and Statement : sig
       | Const
   end
 
-  type t = (t' * Loc.t)
-
   type t' = 
     | Identifier of Identifier.t
     | Expression of Expression.t
     | Object of Object.t
     | VariableDeclaration of VariableDeclaration.t
+  
+  type t = (t' * Loc.t)
 end = Statement
 
 
