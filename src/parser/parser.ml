@@ -13,9 +13,7 @@ let parse file =
     ast = [Bool; Bool; Bool; Bool; Bool] }
 
 let print_tokens env =
-  Printf.printf "
-FILE:\t%s
-TOKENS:" env.source;
+  Printf.printf "\nFILE:\t%s\nTOKENS:" env.source;
   List.iter (fun tok -> 
     Printf.printf "\t%s\n"
     (Token.token_to_string tok))

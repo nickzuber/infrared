@@ -5,6 +5,17 @@ module Lex_env = Lexer.Lex_env
 (* Dope trick for defining recursive modules
  * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/ *)
 
+(*
+ * NOTE: This AST implementation is based off of the Shift AST specification
+ * described here: 
+ * http://shift-ast.org/
+ * *)
+
+module rec Loc : sig
+  type t = { line: int; }
+end = Loc
+
+(*
 module rec Loc : sig
   type t = {
     line: int
@@ -49,19 +60,30 @@ and Statement : sig
       type t
     end
 
+    module CallExpression : sig
+      type t' = 
+        | Identifier of Identifier.t
+        | C
+
+      type t = {
+        arguments: Statement.t list;
+        callee: Identifier.t;
+      }
+    end
+
     type t = 
       | BlockExpression of BlockExpression.t
       | StandardExpression of StandardExpression.t
   end
 
   module Function : sig
-    type t' = {
+    type t = (t' * Loc.t)
+
+    and t' = {
       id: Identifier.t option;
       params: Identifier.t list option;
       body: Expression.BlockExpression.t;
     }
-
-    type t = (t' * Loc.t)
   end
 
   module Object : sig
@@ -69,15 +91,15 @@ and Statement : sig
   end
 
   module VariableDeclaration : sig
-    (* Multiple declarations could be handled by parsing into
-     * multiple `VariableDeclaration`? *)
-    type t = {
+    type t = (t' * Loc.t)
+
+    and t' = {
       id: Identifier.t;
-      value: t';
+      value: t'';
       kind: var_t;
     }
 
-    and t' =
+    and t'' =
       | Empty
       | Identifier of Identifier.t
       | Function of Function.t
@@ -99,7 +121,7 @@ and Statement : sig
   
   type t = (t' * Loc.t)
 end = Statement
-
+*)
 
 
 
