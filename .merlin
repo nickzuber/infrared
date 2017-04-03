@@ -1,3 +1,6 @@
 S src/**
+S utils/**
+S tests/**
+S core/**
 
 B _build/**
