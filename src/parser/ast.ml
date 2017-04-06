@@ -15,6 +15,63 @@ module rec Loc : sig
   type t = { line: int; }
 end = Loc
 
+and VariableDeclarationKind : sig
+  type t = 
+    | Var
+    | Let
+    | Const 
+end = VariableDeclarationKind
+
+and CompoundAssignmentOperator : sig 
+  type t = 
+    | Plus                (*    +=    *)
+    | Minus               (*    -=    *)
+    | Mult                (*    *=    *)
+    | Div                 (*    /=    *)
+    | Mod                 (*    %=    *)
+    | Pow                 (*    **=   *)
+    | LeftShift           (*    <<=   *)
+    | RightShift          (*    >>=   *)
+    | RightShiftUnsigned  (*    >>>=  *)
+    | Or                  (*    |=    *)
+    | XOr                 (*    ^=    *)
+    | And                 (*    &=    *)
+end = CompoundAssignmentOperator
+
+and BinaryOperator : sig 
+  type t = 
+    | Equal
+    | NotEqual
+    | StrictEqual 
+    | StrictNotEqual
+    | LessThan
+    | LessThanEqual
+    | GreaterThan
+    | GreaterThanEqual
+    | In
+    | InstanceOf
+    | LeftShift
+    | RightShift
+    | RightShiftUnsigned
+    | Plus
+    | Minus
+    | Mult
+    | Div
+    | Mod
+    | Pow
+    | Comma
+    | LogicalOr
+    | LogicalAnd
+    | Or
+    | Xor
+    | And
+end = BinaryOperator
+
+
+and ArrayAssignmentTarget : sig
+  type t
+end = ArrayAssignmentTarget
+
 (*
 module rec Loc : sig
   type t = {
