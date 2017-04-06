@@ -40,37 +40,44 @@ end = CompoundAssignmentOperator
 
 and BinaryOperator : sig 
   type t = 
-    | Equal
-    | NotEqual
-    | StrictEqual 
-    | StrictNotEqual
-    | LessThan
-    | LessThanEqual
-    | GreaterThan
-    | GreaterThanEqual
-    | In
-    | InstanceOf
-    | LeftShift
-    | RightShift
-    | RightShiftUnsigned
-    | Plus
-    | Minus
-    | Mult
-    | Div
-    | Mod
-    | Pow
-    | Comma
-    | LogicalOr
-    | LogicalAnd
-    | Or
-    | Xor
-    | And
+    | Equal               (*    ==    *)
+    | NotEqual            (*    !=    *)
+    | StrictEqual         (*    ===   *)
+    | StrictNotEqual      (*    !==   *)
+    | LessThan            (*    <     *)
+    | LessThanEqual       (*    <=    *)
+    | GreaterThan         (*    >     *)
+    | GreaterThanEqual    (*    >=    *)
+    | In                 
+    | InstanceOf          
+    | LeftShift           (*    <<    *)
+    | RightShift          (*    >>    *)
+    | RightShiftUnsigned  (*    >>>   *)
+    | Plus                (*    +     *)
+    | Minus               (*    -     *)
+    | Mult                (*    *     *)
+    | Div                 (*    /     *)
+    | Mod                 (*    %     *)
+    | Pow                 (*    **    *)
+    | Comma               (*    ,     *)
+    | LogicalOr           (*    ||    *)
+    | LogicalAnd          (*    &&    *)
+    | Or                  (*    |     *)
+    | Xor                 (*    ^     *)
+    | And                 (*    &     *)
 end = BinaryOperator
 
+and UnaryOperator : sig
+  type t = 
+    | Plus                (*    +     *)
+    | Minus               (*    -     *)
+    | Bang                (*    !     *)
+    | Not                 (*    ~     *)
+    | Typeof              
+    | Void                
+    | Delete              
+end = UnaryOperator
 
-and ArrayAssignmentTarget : sig
-  type t
-end = ArrayAssignmentTarget
 
 (*
 module rec Loc : sig
