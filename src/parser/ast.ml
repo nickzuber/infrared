@@ -1,19 +1,30 @@
 
+(* Dope trick for defining recursive modules
+ * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
+ *
+ * This AST implementation is based off of the Shift AST specification
+ * described here: http://shift-ast.org/ *)
+
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
-
-(* Dope trick for defining recursive modules
- * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/ *)
-
-(*
- * NOTE: This AST implementation is based off of the Shift AST specification
- * described here: 
- * http://shift-ast.org/
- * *)
 
 module rec Loc : sig
   type t = { line: int; }
 end = Loc
+
+(* Supporting types *)
+
+and Identifier : sig
+  type t = Identifier of string
+end = Identifier
+
+and IdentifierName : sig
+  type t = IdentifierName of string
+end = IdentifierName
+
+and Label : sig
+  type t = Label of string
+end = Label
 
 and VariableDeclarationKind : sig
   type t = 
@@ -78,6 +89,41 @@ and UnaryOperator : sig
     | Delete              
 end = UnaryOperator
 
+and UpdateOperator : sig
+  type t = 
+    | Increment           (*    ++    *)
+    | Decrement           (*    --    *)
+end = UpdateOperator
+
+and Function : sig
+  type t = 
+    | IsGenerator of bool
+    | Params of FormalParameters.t
+    | Body of FunctionBody.t
+end = Function
+
+and Node : sig
+  type t = 
+    | Type of Identifier.t
+end = Node
+
+and Program : sig
+  type t =
+    | Program of Node.t
+end = Program
+
+and Statement : sig
+  type t = Node.t * t'
+
+  and t' = 
+    | IterationStatement of IterationStatement.t
+    | Empty
+end = Statement
+
+and IterationStatement : sig
+  type t = 
+    | Body of Statement.t
+end = IterationStatement
 
 (*
 module rec Loc : sig
