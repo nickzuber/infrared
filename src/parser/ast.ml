@@ -96,26 +96,29 @@ and UpdateOperator : sig
 end = UpdateOperator
 
 and Function : sig
-  type t = 
-    | IsGenerator of bool
-    | Params of FormalParameters.t
-    | Body of FunctionBody.t
+  type t = {
+    isGenerator: bool;
+    params: FormalParameters.t;
+    body: FunctionBody.t;
+  }
 end = Function
 
 and Node : sig
-  type t = 
-    | Type of Identifier.t
+  type t = Identifier.t * t'
+
+  and t' = 
+    | Program of Program.t
+    | Statement of Statement.t
+    | Expression of Expression.t
 end = Node
 
 and Program : sig
   type t =
-    | Program of Node.t
+    | Script of Script.t
 end = Program
 
 and Statement : sig
-  type t = Node.t * t'
-
-  and t' = 
+  type t = 
     | IterationStatement of IterationStatement.t
     | Empty
 end = Statement
@@ -124,6 +127,11 @@ and IterationStatement : sig
   type t = 
     | Body of Statement.t
 end = IterationStatement
+
+and Expression : sig
+  type t = 
+    | ...
+end = Expression
 
 (*
 module rec Loc : sig
