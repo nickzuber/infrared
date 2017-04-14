@@ -110,6 +110,7 @@ and Node : sig
     | Program of Program.t
     | Statement of Statement.t
     | Expression of Expression.t
+    | PropertyName of PropertyName.t 
 end = Node
 
 and Program : sig
@@ -124,14 +125,31 @@ and Statement : sig
 end = Statement
 
 and IterationStatement : sig
-  type t = 
-    | Body of Statement.t
+  type t = {
+    body:  Statement.t;
+  }
 end = IterationStatement
 
 and Expression : sig
   type t = 
-    | ...
+    | MemberExpression of MemberExpression.t
 end = Expression
+
+and MemberExpression : sig
+  type t = 
+    | Object_E of Expression.t
+    | Object_S of Super.t
+end = MemberExpression
+
+and PropertyName : sig
+  type t
+end = PropertyName
+
+and NamedObjectProperty : sig
+  type t = {
+    name: PropertyName.t;
+  }
+end = NamedObjectProperty
 
 (*
 module rec Loc : sig
