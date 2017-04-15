@@ -111,6 +111,8 @@ and Node : sig
     | Statement of Statement.t
     | Expression of Expression.t
     | PropertyName of PropertyName.t 
+    | ImportDeclaration of ImportDeclaration.t
+    | ExportDeclaration of ExportDeclaration.t
 end = Node
 
 and Program : sig
@@ -157,9 +159,16 @@ and MethodDefinition : sig
   }
 end = MethodDefinition
 
+and ImportDeclaration : sig
+  type t = {
+    moduleSpecifier: string;
+  }
+end = ImportDeclaration
 
-
-
+and ExportDeclaration : sig
+  type t = 
+    | ... 
+end = ExportDeclaration
 
 
 
