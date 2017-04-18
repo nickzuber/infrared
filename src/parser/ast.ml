@@ -14,6 +14,12 @@ end = Loc
 
 (* Supporting types *)
 
+and Arguments : sig
+  type t = 
+    | SpreadElement of SpreadElement.t
+    | Expression of Expression.t
+end = Arguments
+
 and Identifier : sig
   type t = Identifier of string
 end = Identifier
@@ -103,6 +109,8 @@ and Function : sig
   }
 end = Function
 
+(* Node classes *)
+
 and Node : sig
   type t = Identifier.t * t'
 
@@ -113,6 +121,7 @@ and Node : sig
     | PropertyName of PropertyName.t 
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
+    | VariableReference  of VariableReference.t
 end = Node
 
 and Program : sig
@@ -166,9 +175,27 @@ and ImportDeclaration : sig
 end = ImportDeclaration
 
 and ExportDeclaration : sig
-  type t = 
-    | ... 
+  type t
 end = ExportDeclaration
+
+and VariableReference : sig
+  type t = {
+    name: Identifier.t;
+  }
+end = VariableReference
+
+(* Bindings *)
+
+and BindingPattern : sig
+  type t = 
+    | ObjectBinding of ObjectBinding.t
+    | ArrayBinding of ArrayBinding.t
+end = BindingPattern
+
+
+
+
+
 
 
 
