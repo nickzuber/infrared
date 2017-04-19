@@ -192,11 +192,35 @@ and BindingPattern : sig
     | ArrayBinding of ArrayBinding.t
 end = BindingPattern
 
+and Binding : sig
+  type t =
+    | BindingPattern of BindingPattern.t
+    | BindingIdentifier of BindingIdentifier.t
+end = Binding
 
+and SimpleAssignmentTarget : sig
+  type t = 
+    | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
+    | MemberAssignmentTarget of MemberAssignmentTarget.t
+end = SimpleAssignmentTarget
 
+and AssignmentTarget : sig
+  type t = 
+    | ObjectAssignmentTarget of ObjectAssignmentTarget.t
+    | ArrayAssignmentTarget of ArrayAssignmentTarget.t
+end = SimpleAssignmentTarget
 
+and AssignmentTarget : sig
+  type t = 
+    | AssignmentTargetPattern of AssignmentTargetPattern.t
+    | SimpleAssignmentTarget of SimpleAssignmentTarget.t
+end = AssignmentTarget 
 
-
+and Parameter : sig
+  type t = 
+    | Binding of Binding.t
+    | BindingWithDefault of BindingWithDefault.t
+end = Parameter
 
 
 
