@@ -114,6 +114,8 @@ end = Function
 and Node : sig
   type t = Identifier.t * t'
 
+  and 
+
   and t' = 
     | Program of Program.t
     | Statement of Statement.t
@@ -122,6 +124,7 @@ and Node : sig
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | VariableReference  of VariableReference.t
+    | BindingWithDefault of BindingWithDefault.t
 end = Node
 
 and Program : sig
@@ -179,6 +182,7 @@ and ExportDeclaration : sig
 end = ExportDeclaration
 
 and VariableReference : sig
+  type t = 
   type t = {
     name: Identifier.t;
   }
@@ -222,7 +226,14 @@ and Parameter : sig
     | BindingWithDefault of BindingWithDefault.t
 end = Parameter
 
+and BindingWithDefault : sig
+  type t = {
+    binding: Binding.t;
+    init: Expression.t;
+  }
+end = BindingWithDefault
 
-
-
+and BindingIdentifier : sig
+  type t
+end = BindingIdentifier 
 
