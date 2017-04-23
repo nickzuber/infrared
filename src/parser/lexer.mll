@@ -175,12 +175,11 @@ module Lex_env = struct
   type t = {
     (* Meta *)
     source: string;
-    line_number: int;
     is_in_comment: bool;
     (* States *)
     state: state_t;
     expr: Token.t list;
-    body_builders: Token.t list list;
+    expr_buffers: Token.t list list;
     ast: Token.t list;
   }
 
@@ -198,11 +197,10 @@ module Lex_env = struct
 
   let defaultEnv = { 
     source = "Null";
-    line_number = 1;
     is_in_comment = false;
     state = REGULAR;
     expr = [];
-    body_builders = [];
+    expr_buffers = [];
     ast = [];
   }
 
