@@ -5,18 +5,17 @@ open Batteries
 open Ast
 open Lex_env
 
-let parse file = 
-  (* temp for testing right now *)
-  let open Token in
-  { Lex_env.defaultEnv with 
-    source = file;
-    ast = [Bool; Bool; Bool; Bool; Bool] }
+let parse file =
+  let input = open_in file in
+  let filebuf = Lexing.from_input input in
+  let env = { Lex_env.defaultEnv with source = file; } in
+  Lexer.token env filebuf
 
 let print_tokens env =
   Printf.printf "\nFILE:\t%s\nTOKENS:" env.source;
   List.iter (fun tok -> 
     Printf.printf "\t%s\n"
-    (Token.token_to_string tok))
+    (Token.full_token_to_string tok))
   env.ast;
   print_endline "(end)"
 

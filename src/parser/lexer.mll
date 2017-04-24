@@ -1,17 +1,28 @@
 
 {
+module rec Loc : sig
+  type t = {
+    pos_start: int;
+    pos_end: int;
+  }
+end = Loc
+
 module Token = struct
+  type t = {
+    loc: Loc.t;
+    body: t';
+  }
 
   (* These keywords are organized alphabetically rather than by relevant
    * association, and separated by their specifications. Keep that in mind when
    * looking for particular keywords to add or change.
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
-  type t = 
+  and t' = 
     (* Custom *)
     (* Like Expression but with curly brackets *)
-    | Block of t list 
+    | Block of t' list 
     (* Like Block but with parethesis *)
-    | Expression of t list 
+    | Expression of t' list 
     (* Words like the names of functions or variables, not to be confused with Strings *)
     | Identifier of string
     | Variable of var_t
@@ -41,7 +52,7 @@ module Token = struct
        * or 
        * Function (Expression ( ... ) Block ( ... )) ....
      * *)
-    | Function of t 
+    | Function of t' 
     | If
     | In
     | Instanceof
@@ -92,7 +103,7 @@ module Token = struct
     | Var -> "Var"
     | Let -> "Let"
     | Const -> "Const"
- 
+  
   let rec token_to_string tok =
     match tok with
     | Block content -> (
@@ -168,6 +179,18 @@ module Token = struct
     | Equality -> "Equality"
     | StrictEquality -> "StrictEquality"
     | Identifier str -> Printf.sprintf "Identifier (%s)" str
+
+  let full_token_to_string tok =
+    let open Loc in
+    Printf.sprintf "%d:%d %s"
+      tok.loc.pos_start
+      tok.loc.pos_end
+      (token_to_string tok.body)
+
+  let lazy_token_to_string tok =
+    let open Loc in
+    token_to_string tok.body
+
 end
 open Token
 
@@ -180,6 +203,8 @@ module Lex_env = struct
     state: state_t;
     expr: Token.t list;
     expr_buffers: Token.t list list;
+    (* NOTE: The ast is "backwards" -- newest token is 
+     * inserted into the front of the list. *)
     ast: Token.t list;
   }
 
@@ -204,6 +229,18 @@ module Lex_env = struct
     ast = [];
   }
 
+  let dress body env = 
+    let open Loc in
+    let loc = { pos_start = 0; pos_end = 0; } in      
+    { loc; body; }
+
+  let push tok env =
+    let tok = dress tok env in
+    match env.state with
+    | _ -> { 
+        env with 
+        ast = tok::env.ast;
+      }
 end 
 open Lex_env
 }
@@ -221,18 +258,19 @@ let floatnumber = ['0'-'9']*'.'['0'-'9']+
 
 let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
              scinumber | wholenumber | floatnumber
-let whitespace = [' ' '\t' '\r']
+let whitespace = [' ' '\t' '\r' '\n']
 let letter = ['a'-'z''A'-'Z''_''$']
 
 rule token env = parse
-  | [' ' '\t' '\n']   {
+  | whitespace+       {
                         token env lexbuf
                       }
-  | ['\n']            {
-                        (**)
+  | "var"             {
+                        let env = push (Variable Var) env in
+                        token env lexbuf
                       }
-  | ['\n']            {
-                        (**)
+  | eof               {
+                        env
                       }
 
 

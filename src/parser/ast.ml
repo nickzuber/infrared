@@ -8,13 +8,9 @@
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
 
-module rec Loc : sig
-  type t = { line: int; }
-end = Loc
-
 (* Supporting types *)
-
-and Arguments : sig
+(*
+module rec Arguments : sig
   type t = 
     | SpreadElement of SpreadElement.t
     | Expression of Expression.t
@@ -180,7 +176,6 @@ and ExportDeclaration : sig
 end = ExportDeclaration
 
 and VariableReference : sig
-  type t = 
   type t = {
     name: Identifier.t;
   }
@@ -206,7 +201,7 @@ and SimpleAssignmentTarget : sig
     | MemberAssignmentTarget of MemberAssignmentTarget.t
 end = SimpleAssignmentTarget
 
-and AssignmentTarget : sig
+and AssignmentTargetPattern : sig
   type t = 
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
@@ -235,3 +230,4 @@ and BindingIdentifier : sig
   type t
 end = BindingIdentifier 
 
+*)
