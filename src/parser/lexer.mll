@@ -25,13 +25,16 @@ module Token = struct
     | Expression of t' list 
     (* Words like the names of functions or variables, not to be confused with Strings *)
     | Identifier of string
+    | Bool
+    (* Surrounded by quotes, not to be confused with Identifiers *)
+    | String of string
+    | Number
     | Variable of var_t
     | Assignment
     | Equality 
     (* Possibly same as `Equality` if we disallow implicit coersion *)
     | StrictEquality 
     (* Standard *)
-    | Bool
     | Break
     | Case
     | Catch
@@ -48,20 +51,17 @@ module Token = struct
     | For
     (* Bind function names in env while parsing 
      * Ex:
-       * Function (Identifier "Foo", Expression ( ... ), Block ( ... )) ....
+       * Function Identifier "Foo", Expression ( ... ), Block ( ... ) ....
        * or 
-       * Function (Expression ( ... ) Block ( ... )) ....
+       * Function Expression ( ... ) Block ( ... ) ....
      * *)
-    | Function of t' 
+    | Function
     | If
     | In
     | Instanceof
     | New
     | Null
-    | Number
     | Return
-    (* Surrounded by quotes, not to be confused with Identifiers *)
-    | String of string
     | Super
     | Switch
     | This
@@ -140,9 +140,7 @@ module Token = struct
     | Extends -> "Extends"
     | Finally -> "Finally"
     | For -> "For"
-    | Function body -> 
-        Printf.sprintf "Function (%s)"
-        (token_to_string body)
+    | Function -> "Function"
     | If -> "If"
     | Import -> "Import"
     | In -> "In"
@@ -179,6 +177,58 @@ module Token = struct
     | Equality -> "Equality"
     | StrictEquality -> "StrictEquality"
     | Identifier str -> Printf.sprintf "Identifier (%s)" str
+
+  (* List of faux keywords that need to be checked separately:
+   *  - Spread
+   *  - TemplateString
+   *  - Rest
+   *)
+  let keywords = Hashtbl.create 53
+  let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keywords kwd tok) 
+    [ "break", Break;
+      "case", Case;
+      "catch", Catch;
+      "continue", Continue;
+      "debugger", Debugger;
+      "default", Default;
+      "delete", Delete;
+      "do", Do;
+      "else", Else;
+      "export", Export;
+      "extends", Extends;
+      "finally", Finally;
+      "for", For;
+      "function", Function;
+      "if", If;
+      "in", In;
+      "instanceof", Instanceof;
+      "new", New;
+      "null", Null;
+      "return", Return;
+      "super", Super;
+      "this", This;
+      "throw", Throw;
+      "try", Try;
+      "typeof", Typeof;
+      "void", Void;
+      "while", While;
+      "with", With;
+   (* "yield", Yield; *)
+      "class", Class;
+   (* "implements", Implements; *)
+      "import", Import;
+   (* "async", Async; *)
+   (* "await", Await; *)
+      "enum", Enum;
+   (* "interface", Interface; *)
+   (* "package", Package; *)
+   (* "private", Private; *)
+   (* "protected", Protected; *)
+   (* "public", Public; *)
+   (* "static", Static; *)
+      "var", (Variable Var);
+      "let", (Variable Let);
+      "const", (Variable Const);  ]
 
   let full_token_to_string tok =
     let open Loc in
@@ -253,25 +303,46 @@ let hexnumber = '0' ['X''x'] hex+
 let octnumber = '0' ['O''o'] ['0'-'7']+
 let legacyoctnumber = '0' ['0'-'7']+
 let scinumber = ['0'-'9']*'.'?['0'-'9']+['e''E']['-''+']?['0'-'9']+
-let wholenumber = ['0'-'9']+'.'?
+let digit = ['0'-'9']
+let wholenumber = digit+'.'?
 let floatnumber = ['0'-'9']*'.'['0'-'9']+
 
 let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
              scinumber | wholenumber | floatnumber
 let whitespace = [' ' '\t' '\r' '\n']
 let letter = ['a'-'z''A'-'Z''_''$']
+let alphanumeric = digit | letter
+
+let word = letter alphanumeric*
 
 rule token env = parse
-  | whitespace+       {
+  | whitespace+ | ';' { token env lexbuf }
+  | word as word      {
+                        try
+                          let env = push (Hashtbl.find keywords word) env in
+                          token env lexbuf
+                        with Not_found -> 
+                          let env = push (Identifier word) env in
+                          token env lexbuf
+                      }
+  | number            {
+                        let env = push Number env in
+                        token env lexbuf
+                      } 
+  | '='               {
+                        let env = push Assignment env in
                         token env lexbuf
                       }
-  | "var"             {
-                        let env = push (Variable Var) env in
+  | "=="              {
+                        let env = push Equality env in
                         token env lexbuf
                       }
-  | eof               {
-                        env
+
+  | "==="              {
+                        let env = push StrictEquality env in
+                        token env lexbuf
                       }
+  | eof               { env }
 
 
 
