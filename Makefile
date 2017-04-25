@@ -20,8 +20,10 @@ run:
 infrared:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
+# Run test on testing file and compare to actual expected output file
+# We generate those expected output files in a controlled env
 test:
-	echo "no tests yet"
+	echo "not implemented yet"
 
 clean:
 	$(OCB) -clean

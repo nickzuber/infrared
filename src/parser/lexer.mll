@@ -91,7 +91,7 @@ module Token = struct
     | Protected
     | Public
     | Static
-    | Eof
+    | Unknown_Token of char
 
   and var_t = 
     (* Standard *)
@@ -172,12 +172,12 @@ module Token = struct
     | Protected -> "Protected"
     | Public -> "Public"
     | Static -> "Static"
-    | Eof -> "Eof"
     | Null -> "Null"
     | Assignment -> "Assignment"
     | Equality -> "Equality"
     | StrictEquality -> "StrictEquality"
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
+    | Unknown_Token str -> Printf.sprintf "Unknown_Token (%c)" str
 
   (* List of faux keywords that need to be checked separately:
    *  - Spread
@@ -345,6 +345,10 @@ rule token env = parse
                         token env lexbuf
                       }
   | eof               { env }
+  | _ as tok          { 
+                        let env = push (Unknown_Token tok) env in
+                        token env lexbuf
+                      }
 
 
 

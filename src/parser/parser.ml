@@ -16,9 +16,7 @@ let print_tokens env =
   List.iter (fun tok -> 
     Printf.printf "\t%s\n"
     (Token.full_token_to_string tok))
-  env.ast;
-  print_endline "(end)"
-
+  env.ast
 
 let print_ast envs =
   List.iter (fun env -> print_tokens env) envs

@@ -5,8 +5,7 @@ all:
 	make parser
 
 parser:
-	$(EXEC) parse parser/simple.js
-	$(EXEC) parse parser/basic.js
+	$(EXEC) parse parser/keywords.js
 
 .PHONY: all parser
 
