@@ -273,7 +273,7 @@ module Lex_env = struct
     | S_CLOSURE_END -> "S_CLOSURE_END"
 
   let defaultEnv = { 
-    source = "Null";
+    source = "undefined";
     is_in_comment = false;
     state = S_REGULAR;
     expr = [];
