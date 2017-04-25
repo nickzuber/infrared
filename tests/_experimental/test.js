@@ -1,3 +1,4 @@
 var v = 73;
-const name = "nick";
+const name = "testvartest";
 v === name;
+let bool = false;

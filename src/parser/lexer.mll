@@ -1,6 +1,7 @@
 
 {
-(* Pretty dumb Loc definition, make this better by using Lexing.lexbuf positions *)
+exception SyntaxError of string
+
 module rec Loc : sig
   type t = {
     line: int;
@@ -126,7 +127,7 @@ module Token = struct
         "" expr))
     | Number -> "Number"
     | Bool -> "Bool"
-    | String str -> Printf.sprintf "String (%s)" str
+    | String str -> Printf.sprintf "String \"%s\"" str
     | Comment -> "Comment"
     | Break -> "Break"
     | Case -> "Case"
@@ -233,7 +234,7 @@ module Token = struct
 
   let full_token_to_string tok =
     let open Loc in
-    Printf.sprintf "%d:%d %s"
+    Printf.sprintf "%d:%d\t%s"
       tok.loc.line
       tok.loc.column
       (token_to_string tok.body)
@@ -353,9 +354,36 @@ rule token env = parse
                         let env = push StrictEquality env lexbuf in
                         token env lexbuf
                       }
+  | "true"|"false"    {
+                        let env = push Bool env lexbuf in
+                        token env lexbuf
+                      }
+  | '"'|"'"           {
+                        let tok = read_string (Buffer.create 16) lexbuf in
+                        let env = push tok env lexbuf in
+                        token env lexbuf
+                      }
   | eof               { env }
   | _ as tok          { 
                         let env = push (Unknown_Token tok) env lexbuf in
                         token env lexbuf
                       }
+  
+(* Creating string buffers
+ * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll *)
+and read_string buf = parse
+  | '"'       { String (Buffer.contents buf) }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
+  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string buf lexbuf }
+  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
+  | [^ '"' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string buf lexbuf
+    }
+  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError ("String is not terminated")) }
   
