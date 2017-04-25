@@ -1,4 +1,2 @@
-var v = 73;
-const name = "testvartest";
-v === name;
-let bool = false;
+const first = 'nick \' ';
+const last = "zuber \" ";

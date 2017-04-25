@@ -358,8 +358,13 @@ rule token env = parse
                         let env = push Bool env lexbuf in
                         token env lexbuf
                       }
-  | '"'|"'"           {
-                        let tok = read_string (Buffer.create 16) lexbuf in
+  | '"'               {
+                        let tok = read_string_dquote (Buffer.create 16) lexbuf in
+                        let env = push tok env lexbuf in
+                        token env lexbuf
+                      }
+  | '\''              {
+                        let tok = read_string_squote (Buffer.create 16) lexbuf in
                         let env = push tok env lexbuf in
                         token env lexbuf
                       }
@@ -371,19 +376,36 @@ rule token env = parse
   
 (* Creating string buffers
  * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll *)
-and read_string buf = parse
+and read_string_dquote buf = parse
   | '"'       { String (Buffer.contents buf) }
-  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
-  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
-  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string buf lexbuf }
-  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string buf lexbuf }
-  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
-  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
-  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string_dquote buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string_dquote buf lexbuf }
+  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string_dquote buf lexbuf }
+  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string_dquote buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string_dquote buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string_dquote buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string_dquote buf lexbuf }
+  | '\\' '"'  { Buffer.add_char buf '\"'; read_string_dquote buf lexbuf }
   | [^ '"' '\\']+
     { Buffer.add_string buf (Lexing.lexeme lexbuf);
-      read_string buf lexbuf
+      read_string_dquote buf lexbuf
     }
   | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
   | eof { raise (SyntaxError ("String is not terminated")) }
-  
+
+and read_string_squote buf = parse
+  | '\''       { String (Buffer.contents buf) }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string_squote buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string_squote buf lexbuf }
+  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string_squote buf lexbuf }
+  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string_squote buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string_squote buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string_squote buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string_squote buf lexbuf }
+  | '\\' '\''  { Buffer.add_char buf '\''; read_string_squote buf lexbuf }
+  | [^ '\'' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string_squote buf lexbuf
+    }
+  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError ("String is not terminated")) }
