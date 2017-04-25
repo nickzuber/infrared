@@ -3,8 +3,8 @@
 (* Pretty dumb Loc definition, make this better by using Lexing.lexbuf positions *)
 module rec Loc : sig
   type t = {
-    pos_start: int;
-    pos_end: int;
+    line: int;
+    column: int;
   }
 end = Loc
 
@@ -234,8 +234,8 @@ module Token = struct
   let full_token_to_string tok =
     let open Loc in
     Printf.sprintf "%d:%d %s"
-      tok.loc.pos_start
-      tok.loc.pos_end
+      tok.loc.line
+      tok.loc.column
       (token_to_string tok.body)
 
   let lazy_token_to_string tok =
@@ -281,17 +281,22 @@ module Lex_env = struct
     ast = [];
   }
 
-  let dress body env = 
-    let open Loc in
-    let loc = { pos_start = 0; pos_end = 0; } in      
+  let dress body lxb = 
+    let open Lexing in
+    let pos = lxb.lex_start_p in
+    let loc = { 
+      Loc.
+      line = pos.pos_lnum;
+      column = pos.pos_cnum - pos.pos_bol + 1;
+    } in
     { loc; body; }
 
-  let push tok env =
-    let tok = dress tok env in
+  let push tok env lxb =
+    let tok = dress tok lxb in
     match env.state with
     | _ -> { 
         env with 
-        ast = tok::env.ast;
+        ast = tok :: env.ast;
       }
 end 
 open Lex_env
@@ -311,7 +316,7 @@ let floatnumber = ['0'-'9']*'.'['0'-'9']+
 
 let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
              scinumber | wholenumber | floatnumber
-let whitespace = [' ' '\t' '\r' '\n']
+let whitespace = [' ' '\t' '\r']
 let letter = ['a'-'z''A'-'Z''_''$']
 let alphanumeric = digit | letter
 
@@ -319,34 +324,38 @@ let word = letter alphanumeric*
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
+  | '\n'              { 
+                        let _ = Lexing.new_line lexbuf in
+                        token env lexbuf 
+                      }
   | word as word      {
                         try
-                          let env = push (Hashtbl.find keywords word) env in
+                          let env = push (Hashtbl.find keywords word) env lexbuf in
                           token env lexbuf
                         with Not_found -> 
-                          let env = push (Identifier word) env in
+                          let env = push (Identifier word) env lexbuf in
                           token env lexbuf
                       }
   | number            {
-                        let env = push Number env in
+                        let env = push Number env lexbuf in
                         token env lexbuf
                       } 
   | '='               {
-                        let env = push Assignment env in
+                        let env = push Assignment env lexbuf in
                         token env lexbuf
                       }
   | "=="              {
-                        let env = push Equality env in
+                        let env = push Equality env lexbuf in
                         token env lexbuf
                       }
 
   | "==="              {
-                        let env = push StrictEquality env in
+                        let env = push StrictEquality env lexbuf in
                         token env lexbuf
                       }
   | eof               { env }
   | _ as tok          { 
-                        let env = push (Unknown_Token tok) env in
+                        let env = push (Unknown_Token tok) env lexbuf in
                         token env lexbuf
                       }
   

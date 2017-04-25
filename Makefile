@@ -15,7 +15,7 @@ INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 all: infrared
 
 run:
-	make && ./infrared.native
+	make && make test
 
 infrared:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
@@ -24,6 +24,7 @@ infrared:
 # We generate those expected output files in a controlled env
 test:
 	echo "not implemented yet"
+	./infrared.native parse tests/_experimental/test.js
 
 clean:
 	$(OCB) -clean
