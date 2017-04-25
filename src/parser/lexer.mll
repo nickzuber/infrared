@@ -261,21 +261,21 @@ module Lex_env = struct
   }
 
   and state_t = 
-    | REGULAR
-    | CLOSURE_START
-    | CLOSURE_INSIDE
-    | CLOSURE_END
+    | S_REGULAR
+    | S_CLOSURE_START
+    | S_CLOSURE_INSIDE
+    | S_CLOSURE_END
 
   let state_to_string = function
-    | REGULAR -> "REGULAR"
-    | CLOSURE_START -> "CLOSURE_START"
-    | CLOSURE_INSIDE -> "CLOSURE_INSIDE"
-    | CLOSURE_END -> "CLOSURE_END"
+    | S_REGULAR -> "S_REGULAR"
+    | S_CLOSURE_START -> "S_CLOSURE_START"
+    | S_CLOSURE_INSIDE -> "S_CLOSURE_INSIDE"
+    | S_CLOSURE_END -> "S_CLOSURE_END"
 
   let defaultEnv = { 
     source = "Null";
     is_in_comment = false;
-    state = REGULAR;
+    state = S_REGULAR;
     expr = [];
     expr_buffers = Utils.Stack.create [];
     ast = [];
