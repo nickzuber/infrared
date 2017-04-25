@@ -1,36 +1,36 @@
 
 FILE:	tests/parser/keywords/keywords.js
-TOKENS:	0:0 Variable (Const)
-	0:0 Variable (Let)
-	0:0 Variable (Var)
-	0:0 Enum
-	0:0 Import
-	0:0 Class
-	0:0 With
-	0:0 While
-	0:0 Void
-	0:0 Typeof
-	0:0 Try
-	0:0 Throw
-	0:0 This
-	0:0 Super
-	0:0 Return
-	0:0 Null
-	0:0 New
-	0:0 Instanceof
-	0:0 In
-	0:0 If
-	0:0 Function
-	0:0 For
-	0:0 Finally
-	0:0 Extends
-	0:0 Exports
-	0:0 Else
-	0:0 Do
-	0:0 Default
-	0:0 Delete
-	0:0 Debugger
-	0:0 Continue
-	0:0 Catch
-	0:0 Case
-	0:0 Break
+TOKENS:	34:1	Variable (Const)
+	33:1	Variable (Let)
+	32:1	Variable (Var)
+	31:1	Enum
+	30:1	Import
+	29:1	Class
+	28:1	With
+	27:1	While
+	26:1	Void
+	25:1	Typeof
+	24:1	Try
+	23:1	Throw
+	22:1	This
+	21:1	Super
+	20:1	Return
+	19:1	Null
+	18:1	New
+	17:1	Instanceof
+	16:1	In
+	15:1	If
+	14:1	Function
+	13:1	For
+	12:1	Finally
+	11:1	Extends
+	10:1	Exports
+	9:1	Else
+	8:1	Do
+	7:1	Default
+	6:1	Delete
+	5:1	Debugger
+	4:1	Continue
+	3:1	Catch
+	2:1	Case
+	1:1	Break
