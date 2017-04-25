@@ -1,5 +1,6 @@
 
 {
+(* Pretty dumb Loc definition, make this better by using Lexing.lexbuf positions *)
 module rec Loc : sig
   type t = {
     pos_start: int;
@@ -176,7 +177,7 @@ module Token = struct
     | Assignment -> "Assignment"
     | Equality -> "Equality"
     | StrictEquality -> "StrictEquality"
-    | Identifier str -> Printf.sprintf "Identifier (%s)" str
+    | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
 
   (* List of faux keywords that need to be checked separately:
    *  - Spread
@@ -252,9 +253,10 @@ module Lex_env = struct
     (* States *)
     state: state_t;
     expr: Token.t list;
-    expr_buffers: Token.t list list;
-    (* NOTE: The ast is "backwards" -- newest token is 
-     * inserted into the front of the list. *)
+    expr_buffers: Token.t list Utils.Stack.t;
+    (* The ast is "backwards" -- newest token is 
+     * inserted into the front of the list. 
+     * TODO: Consider using a queue? *)
     ast: Token.t list;
   }
 
@@ -275,7 +277,7 @@ module Lex_env = struct
     is_in_comment = false;
     state = REGULAR;
     expr = [];
-    expr_buffers = [];
+    expr_buffers = Utils.Stack.create [];
     ast = [];
   }
 
