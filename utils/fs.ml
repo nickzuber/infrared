@@ -9,7 +9,7 @@ let extract_files name =
   else 
     let rec crawl filename = 
       if Sys.file_exists filename = false then
-        (ErrorHandling.report 
+        (Error_handler.report 
           ~msg:(Printf.sprintf "Unable to resolve the file: %s" filename)
           ~level:(Level.Low);
         [])

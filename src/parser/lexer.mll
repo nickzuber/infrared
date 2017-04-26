@@ -1,7 +1,5 @@
 
 {
-exception SyntaxError of string
-
 module rec Loc : sig
   type t = {
     line: int;
@@ -92,7 +90,9 @@ module Token = struct
     | Protected
     | Public
     | Static
+    (* Error handling *)
     | Unknown_Token of char
+    | Syntax_Error of string
 
   and var_t = 
     (* Standard *)
@@ -116,7 +116,7 @@ module Token = struct
           | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
         "" content))
     | Variable t -> 
-      Printf.sprintf "Variable (%s)"
+      Printf.sprintf "Variable <%s>"
         (var_to_string t)
     | Expression expr -> (
       Printf.sprintf "Expression (%s)"
@@ -178,7 +178,8 @@ module Token = struct
     | Equality -> "Equality"
     | StrictEquality -> "StrictEquality"
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
-    | Unknown_Token str -> Printf.sprintf "Unknown_Token (%c)" str
+    | Unknown_Token str -> Printf.sprintf "Unknown_Token: %c" str
+    | Syntax_Error str -> Printf.sprintf "Syntax_Error: %s" str
 
   (* List of faux keywords that need to be checked separately:
    *  - Spread
@@ -259,6 +260,7 @@ module Lex_env = struct
      * inserted into the front of the list. 
      * TODO: Consider using a queue? *)
     ast: Token.t list;
+    error: (string * Level.t) option;
   }
 
   and state_t = 
@@ -280,7 +282,12 @@ module Lex_env = struct
     expr = [];
     expr_buffers = Utils.Stack.create [];
     ast = [];
+    error = None;
   }
+
+  let set_error msg env = 
+    let err = (msg, Level.SyntaxError) in
+    { env with error = Some err; }
 
   let dress body lxb = 
     let open Lexing in
@@ -360,12 +367,18 @@ rule token env = parse
                       }
   | '"'               {
                         let tok = read_string_dquote (Buffer.create 16) lexbuf in
-                        let env = push tok env lexbuf in
+                        let env = match tok with
+                          | Syntax_Error msg -> set_error msg env
+                          | _ -> env
+                        in let env = push tok env lexbuf in
                         token env lexbuf
                       }
   | '\''              {
                         let tok = read_string_squote (Buffer.create 16) lexbuf in
-                        let env = push tok env lexbuf in
+                        let env = match tok with
+                          | Syntax_Error msg -> set_error msg env
+                          | _ -> env
+                        in let env = push tok env lexbuf in
                         token env lexbuf
                       }
   | eof               { env }
@@ -377,35 +390,21 @@ rule token env = parse
 (* Creating string buffers
  * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll *)
 and read_string_dquote buf = parse
-  | '"'       { String (Buffer.contents buf) }
-  | '\\' '/'  { Buffer.add_char buf '/'; read_string_dquote buf lexbuf }
-  | '\\' '\\' { Buffer.add_char buf '\\'; read_string_dquote buf lexbuf }
-  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string_dquote buf lexbuf }
-  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string_dquote buf lexbuf }
-  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string_dquote buf lexbuf }
-  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string_dquote buf lexbuf }
-  | '\\' 't'  { Buffer.add_char buf '\t'; read_string_dquote buf lexbuf }
-  | '\\' '"'  { Buffer.add_char buf '\"'; read_string_dquote buf lexbuf }
-  | [^ '"' '\\']+
-    { Buffer.add_string buf (Lexing.lexeme lexbuf);
-      read_string_dquote buf lexbuf
-    }
-  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
-  | eof { raise (SyntaxError ("String is not terminated")) }
+  | '"'             { String (Buffer.contents buf) }
+  | '\\' '/'        { Buffer.add_char buf '/'; read_string_dquote buf lexbuf }
+  | '\\' '"'        { Buffer.add_char buf '\"'; read_string_dquote buf lexbuf }
+  | '\\'            { Buffer.add_char buf '\\'; read_string_dquote buf lexbuf }
+  | [^ '"' '\\']+   { Buffer.add_string buf (Lexing.lexeme lexbuf);
+                      read_string_dquote buf lexbuf }
+  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
+  | eof             { Syntax_Error "String is not terminated" }
 
 and read_string_squote buf = parse
-  | '\''       { String (Buffer.contents buf) }
-  | '\\' '/'  { Buffer.add_char buf '/'; read_string_squote buf lexbuf }
-  | '\\' '\\' { Buffer.add_char buf '\\'; read_string_squote buf lexbuf }
-  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string_squote buf lexbuf }
-  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string_squote buf lexbuf }
-  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string_squote buf lexbuf }
-  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string_squote buf lexbuf }
-  | '\\' 't'  { Buffer.add_char buf '\t'; read_string_squote buf lexbuf }
-  | '\\' '\''  { Buffer.add_char buf '\''; read_string_squote buf lexbuf }
-  | [^ '\'' '\\']+
-    { Buffer.add_string buf (Lexing.lexeme lexbuf);
-      read_string_squote buf lexbuf
-    }
-  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
-  | eof { raise (SyntaxError ("String is not terminated")) }
+  | '\''            { String (Buffer.contents buf) }
+  | '\\' '/'        { Buffer.add_char buf '/'; read_string_squote buf lexbuf }
+  | '\\' '\''       { Buffer.add_char buf '\''; read_string_squote buf lexbuf }
+  | '\\'            { Buffer.add_char buf '\\'; read_string_squote buf lexbuf }
+  | [^ '\'' '\\']+  { Buffer.add_string buf (Lexing.lexeme lexbuf);
+                      read_string_squote buf lexbuf }
+  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
+  | eof             { Syntax_Error "String is not terminated" }

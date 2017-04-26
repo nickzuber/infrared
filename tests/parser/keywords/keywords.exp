@@ -1,4 +1,3 @@
-
 FILE:	tests/parser/keywords/keywords.js
 TOKENS:	34:1	Variable (Const)
 	33:1	Variable (Let)

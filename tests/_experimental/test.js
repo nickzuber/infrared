@@ -1,2 +1,2 @@
-const first = 'nick \' ';
-const last = "zuber \" ";
+var foo = " \" \@ \"  "
+var foo = ' \' \@ \' \ \\  '
