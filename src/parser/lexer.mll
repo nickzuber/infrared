@@ -357,7 +357,7 @@ rule token env = parse
                         token env lexbuf
                       }
 
-  | "==="              {
+  | "==="             {
                         let env = push StrictEquality env lexbuf in
                         token env lexbuf
                       }
