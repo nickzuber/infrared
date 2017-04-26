@@ -31,9 +31,6 @@ module Token = struct
     | Number
     | Variable of var_t
     | Assignment
-    | Equality 
-    (* Possibly same as `Equality` if we disallow implicit coersion *)
-    | StrictEquality 
     (* Standard *)
     | Break
     | Case
@@ -90,9 +87,54 @@ module Token = struct
     | Protected
     | Public
     | Static
+    | Operator of ops
     (* Error handling *)
-    | Unknown_Token of char
+    | Unknown_Token of string
     | Syntax_Error of string
+
+  and ops =
+    (* Compound Assignment Operators *)
+    | CA_Plus                (*    +=    *)
+    | CA_Minus               (*    -=    *)
+    | CA_Mult                (*    *=    *)
+    | CA_Div                 (*    /=    *)
+    | CA_Mod                 (*    %=    *)
+    | CA_Pow                 (*    **=   *)
+    | CA_LeftShift           (*    <<=   *)
+    | CA_RightShift          (*    >>=   *)
+    | CA_RightShiftUnsigned  (*    >>>=  *)
+    | CA_Or                  (*    |=    *)
+    | CA_Xor                 (*    ^=    *)
+    | CA_And                 (*    &=    *)
+    (* Binary Operators *)
+    | Equal                  (*    ==    *)
+    | NotEqual               (*    !=    *)
+    | StrictEqual            (*    ===   *)
+    | StrictNotEqual         (*    !==   *)
+    | LessThan               (*    <     *)
+    | LessThanEqual          (*    <=    *)
+    | GreaterThan            (*    >     *)
+    | GreaterThanEqual       (*    >=    *)
+    | LeftShift              (*    <<    *)
+    | RightShift             (*    >>    *)
+    | RightShiftUnsigned     (*    >>>   *)
+    | Plus                   (*    +     *)
+    | Minus                  (*    -     *)
+    | Mult                   (*    *     *)
+    | Div                    (*    /     *)
+    | Mod                    (*    %     *)
+    | Pow                    (*    **    *)
+    | Comma                  (*    ,     *)
+    | LogicalOr              (*    ||    *)
+    | LogicalAnd             (*    &&    *)
+    | Or                     (*    |     *)
+    | Xor                    (*    ^     *)
+    | And                    (*    &     *)
+    | Bang                   (*    !     *)
+    | Not                    (*    ~     *)
+    | Increment              (*    ++    *)
+    | Decrement              (*    --    *)
+    | Dot                    (*    .     *)
 
   and var_t = 
     (* Standard *)
@@ -101,11 +143,6 @@ module Token = struct
     | Let
     | Const
 
-  let var_to_string = function
-    | Var -> "Var"
-    | Let -> "Let"
-    | Const -> "Const"
-  
   let rec token_to_string tok =
     match tok with
     | Block content -> (
@@ -175,16 +212,103 @@ module Token = struct
     | Static -> "Static"
     | Null -> "Null"
     | Assignment -> "Assignment"
-    | Equality -> "Equality"
-    | StrictEquality -> "StrictEquality"
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
-    | Unknown_Token str -> Printf.sprintf "Unknown_Token: %c" str
+    | Operator op -> Printf.sprintf "Operator <%s>" (op_to_string op)
+    (* Error Handling *)
+    | Unknown_Token str -> Printf.sprintf "Unknown_Token: %s" str
     | Syntax_Error str -> Printf.sprintf "Syntax_Error: %s" str
+
+  and op_to_string = function
+    (* Operators *)
+    | CA_Plus -> "CA_Plus"
+    | CA_Minus -> "CA_Minus"
+    | CA_Mult -> "CA_Mult"
+    | CA_Div -> "CA_Div"
+    | CA_Mod -> "CA_Mod"
+    | CA_Pow -> "CA_Pow"
+    | CA_LeftShift -> "CA_LeftShift"
+    | CA_RightShift -> "CA_RightShift"
+    | CA_RightShiftUnsigned -> "CA_RightShiftUnsigned"
+    | CA_Or -> "CA_Or"
+    | CA_Xor -> "CA_Xor"
+    | CA_And -> "CA_And"
+    | Equal -> "Equal"
+    | NotEqual -> "NotEqual"
+    | StrictEqual -> "StrictEqual"
+    | StrictNotEqual -> "StrictNotEqual"
+    | LessThan -> "LessThan"
+    | LessThanEqual -> "LessThanEqual"
+    | GreaterThan -> "GreaterThan"
+    | GreaterThanEqual -> "GreaterThanEqual"
+    | LeftShift -> "LeftShift"
+    | RightShift -> "RightShift"
+    | RightShiftUnsigned -> "RightShiftUnsigned"
+    | Plus -> "Plus"
+    | Minus -> "Minus"
+    | Mult -> "Mult"
+    | Div -> "Div"
+    | Mod -> "Mod"
+    | Pow -> "Pow"
+    | Comma -> "Comma"
+    | LogicalOr -> "LogicalOr"
+    | LogicalAnd -> "LogicalAnd"
+    | Or -> "Or"
+    | Xor -> "Xor"
+    | And -> "And"
+    | Bang -> "Bang"
+    | Not -> "Not"
+    | Increment -> "Increment"
+    | Decrement -> "Decrement"
+    | Dot -> "Dot"
+
+    and var_to_string = function
+    | Var -> "Var"
+    | Let -> "Let"
+    | Const -> "Const"
 
   let operators = Hashtbl.create 53
   let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
     [
-      "+=", "test"
+      "+=", CA_Plus;
+      "-=", CA_Minus;
+      "*=", CA_Mult;
+      "/=", CA_Div;
+      "%=", CA_Mod;
+      "**=", CA_Pow;
+      "<<=", CA_LeftShift;
+      ">>=", CA_RightShift;
+      ">>>=", CA_RightShiftUnsigned;
+      "|=", CA_Or;
+      "^=", CA_Xor;
+      "&=", CA_And;
+      "==", Equal;
+      "!=", NotEqual;
+      "===", StrictEqual;
+      "!==", StrictNotEqual;
+      "<", LessThan;
+      "<=", LessThanEqual;
+      ">", GreaterThan;
+      ">=", GreaterThanEqual;
+      "<<", LeftShift;
+      ">>", RightShift;
+      ">>>", RightShiftUnsigned;
+      "+", Plus;
+      "-", Minus;
+      "*", Mult;
+      "/", Div;
+      "%", Mod;
+      "**", Pow;
+      ",", Comma;
+      "||", LogicalOr;
+      "&&", LogicalAnd;
+      "|", Or;
+      "^", Xor;
+      "&", And;
+      "!", Bang;
+      "~", Not;
+      "++", Increment;
+      "--", Decrement;
+      ".", Dot;
     ]
 
   (* List of faux keywords that need to be checked separately:
@@ -335,42 +459,21 @@ let floatnumber = ['0'-'9']*'.'['0'-'9']+
 
 let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
              scinumber | wholenumber | floatnumber
+
 let whitespace = [' ' '\t' '\r']
 let letter = ['a'-'z''A'-'Z''_''$']
 let alphanumeric = digit | letter
 
 let word = letter alphanumeric*
 
+(* If I forget a symbol, add that here boi *)
+let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',']
+
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
   | '\n'              { 
                         let _ = Lexing.new_line lexbuf in
                         token env lexbuf 
-                      }
-  | word as word      {
-                        try
-                          let env = push (Hashtbl.find keywords word) env lexbuf in
-                          token env lexbuf
-                        with Not_found -> 
-                          let env = push (Identifier word) env lexbuf in
-                          token env lexbuf
-                      }
-  | number            {
-                        let env = push Number env lexbuf in
-                        token env lexbuf
-                      } 
-  | '='               {
-                        let env = push Assignment env lexbuf in
-                        token env lexbuf
-                      }
-  | "=="              {
-                        let env = push Equality env lexbuf in
-                        token env lexbuf
-                      }
-
-  | "==="             {
-                        let env = push StrictEquality env lexbuf in
-                        token env lexbuf
                       }
   | "true"|"false"    {
                         let env = push Bool env lexbuf in
@@ -390,10 +493,32 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
+  | symbols+ as op    {
+                        try
+                          let op = (Hashtbl.find operators op) in
+                          let env = push (Operator op) env lexbuf in
+                          token env lexbuf
+                        with Not_found -> 
+                          let env = push (Unknown_Token op) env lexbuf in
+                          token env lexbuf
+                      }
+  | number            {
+                        let env = push Number env lexbuf in
+                        token env lexbuf
+                      }
+  | word as word      {
+                        try
+                          let env = push (Hashtbl.find keywords word) env lexbuf in
+                          token env lexbuf
+                        with Not_found -> 
+                          let env = push (Identifier word) env lexbuf in
+                          token env lexbuf
+                      }
   | '('
   | eof               { env }
   | _ as tok          { 
-                        let env = push (Unknown_Token tok) env lexbuf in
+                        let tok_str = String.make 1 tok in
+                        let env = push (Unknown_Token tok_str) env lexbuf in
                         token env lexbuf
                       }
   
