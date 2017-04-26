@@ -181,6 +181,12 @@ module Token = struct
     | Unknown_Token str -> Printf.sprintf "Unknown_Token: %c" str
     | Syntax_Error str -> Printf.sprintf "Syntax_Error: %s" str
 
+  let operators = Hashtbl.create 53
+  let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
+    [
+      "+=", "test"
+    ]
+
   (* List of faux keywords that need to be checked separately:
    *  - Spread
    *  - TemplateString
@@ -216,19 +222,19 @@ module Token = struct
       "void", Void;
       "while", While;
       "with", With;
-   (* "yield", Yield; *)
+      (* "yield", Yield; *)
       "class", Class;
-   (* "implements", Implements; *)
+      (* "implements", Implements; *)
       "import", Import;
-   (* "async", Async; *)
-   (* "await", Await; *)
+      (* "async", Async; *)
+      (* "await", Await; *)
       "enum", Enum;
-   (* "interface", Interface; *)
-   (* "package", Package; *)
-   (* "private", Private; *)
-   (* "protected", Protected; *)
-   (* "public", Public; *)
-   (* "static", Static; *)
+      (* "interface", Interface; *)
+      (* "package", Package; *)
+      (* "private", Private; *)
+      (* "protected", Protected; *)
+      (* "public", Public; *)
+      (* "static", Static; *)
       "var", (Variable Var);
       "let", (Variable Let);
       "const", (Variable Const);  ]
@@ -299,13 +305,18 @@ module Lex_env = struct
     } in
     { loc; body; }
 
-  let push tok env lxb =
+  let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match env.state with
     | _ -> { 
         env with 
         ast = tok :: env.ast;
       }
+
+    let resolve_errors ~tok env =
+      match tok with
+        | Syntax_Error msg -> set_error msg env
+        | _ -> env
 end 
 open Lex_env
 }
@@ -367,20 +378,19 @@ rule token env = parse
                       }
   | '"'               {
                         let tok = read_string_dquote (Buffer.create 16) lexbuf in
-                        let env = match tok with
-                          | Syntax_Error msg -> set_error msg env
-                          | _ -> env
-                        in let env = push tok env lexbuf in
+                        let env = env
+                          |> resolve_errors ~tok:(tok)
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
   | '\''              {
                         let tok = read_string_squote (Buffer.create 16) lexbuf in
-                        let env = match tok with
-                          | Syntax_Error msg -> set_error msg env
-                          | _ -> env
-                        in let env = push tok env lexbuf in
+                        let env = env
+                          |> resolve_errors ~tok:(tok)
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
+  | '('
   | eof               { env }
   | _ as tok          { 
                         let env = push (Unknown_Token tok) env lexbuf in

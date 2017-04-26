@@ -1,2 +1,2 @@
-var foo = " \" \@ \"  "
-var foo = ' \' \@ \' \ \\  '
+function foo;
+var foo = "bad"
