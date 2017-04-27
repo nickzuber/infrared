@@ -23,6 +23,8 @@ module Token = struct
     | Block of t' list 
     (* Like Block but with parethesis *)
     | Expression of t' list 
+    (* Like Block/Expression but with square brackets *)
+    | Array of t' list
     (* Words like the names of functions or variables, not to be confused with Strings *)
     | Identifier of string
     | Bool
@@ -162,6 +164,13 @@ module Token = struct
           | "" -> acc ^ (token_to_string e)
           | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
         "" expr))
+    | Array content -> (
+      Printf.sprintf "Array [%s]"
+        (List.fold_left (fun acc e -> 
+          match acc with
+          | "" -> acc ^ (token_to_string e)
+          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+        "" content))
     | Number -> "Number"
     | Bool -> "Bool"
     | String str -> Printf.sprintf "String \"%s\"" str
@@ -411,15 +420,17 @@ module Lex_env = struct
     error = None;
   }
 
+  let update_state state env = 
+    { env with state }
+
   let set_error msg env = 
     let err = (msg, Level.SyntaxError) in
-    { env with error = Some err; }
+    { env with error = Some err }
 
   let dress body lxb = 
     let open Lexing in
     let pos = lxb.lex_start_p in
-    let loc = { 
-      Loc.
+    let loc = { Loc.
       line = pos.pos_lnum;
       column = pos.pos_cnum - pos.pos_bol + 1;
     } in
@@ -475,6 +486,10 @@ rule token env = parse
                         let env = push Bool env lexbuf in
                         token env lexbuf
                       }
+  | '='               {
+                        let env = push Assignment env lexbuf in
+                        token env lexbuf
+                      }
   | '"'               {
                         let tok = read_string_dquote (Buffer.create 16) lexbuf in
                         let env = env
@@ -510,7 +525,9 @@ rule token env = parse
                           let env = push (Identifier word) env lexbuf in
                           token env lexbuf
                       }
-  | '('
+  | '('               {
+                        token env lexbuf
+                      }
   | eof               { env }
   | _ as tok          { 
                         let tok_str = String.make 1 tok in
