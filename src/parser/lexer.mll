@@ -270,7 +270,7 @@ module Token = struct
     | Decrement -> "Decrement"
     | Dot -> "Dot"
 
-    and var_to_string = function
+  and var_to_string = function
     | Var -> "Var"
     | Let -> "Let"
     | Const -> "Const"
@@ -403,17 +403,17 @@ module Lex_env = struct
   }
 
   and state_t = 
-    | S_Regular
+    | S_Default
     | S_Closure
 
   let state_to_string = function
-    | S_Regular -> "S_Regular"
+    | S_Default -> "S_Default"
     | S_Closure -> "S_Closure"
 
   let defaultEnv = { 
     source = "undefined";
     is_in_comment = false;
-    state = S_Regular;
+    state = S_Default;
     expr = [];
     expr_buffers = Utils.Stack.create [];
     ast = [];
@@ -433,21 +433,18 @@ module Lex_env = struct
     let loc = { Loc.
       line = pos.pos_lnum;
       column = pos.pos_cnum - pos.pos_bol + 1;
-    } in
-    { loc; body; }
+    } in { loc; body }
 
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match env.state with
-    | _ -> { 
-        env with 
-        ast = tok :: env.ast;
-      }
+    | _ -> { env with 
+      ast = tok :: env.ast }
 
     let resolve_errors ~tok env =
       match tok with
-        | Syntax_Error msg -> set_error msg env
-        | _ -> env
+      | Syntax_Error msg -> set_error msg env
+      | _ -> env
 end 
 open Lex_env
 }
