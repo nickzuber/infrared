@@ -9,12 +9,13 @@ let parse file =
   let input = open_in file in
   let filebuf = Lexing.from_input input in
   let env = { Lex_env.defaultEnv with source = file; } in
-  let ast = Lexer.token env filebuf in
-  match ast.error with
+  let final_env = Lexer.token env filebuf in
+  debug final_env;
+  match final_env.error with
   | Some (msg, lvl) -> 
     (Error_handler.report ~msg:(msg) ~level:(lvl));
-    ast
-  | None -> ast
+    final_env
+  | None -> final_env
 
 let print_tokens env =
   Printf.printf "FILE:\t%s\nTOKENS:" env.source;

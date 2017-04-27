@@ -20,11 +20,11 @@ module Token = struct
   and t' = 
     (* Custom *)
     (* Like Expression but with curly brackets *)
-    | Block of t' list 
+    | Block of t list 
     (* Like Block but with parethesis *)
-    | Expression of t' list 
+    | Expression of t list 
     (* Like Block/Expression but with square brackets *)
-    | Array of t' list
+    | Array of t list
     (* Words like the names of functions or variables, not to be confused with Strings *)
     | Identifier of string
     | Bool
@@ -151,8 +151,8 @@ module Token = struct
       Printf.sprintf "Block (%s)"
         (List.fold_left (fun acc e -> 
           match acc with
-          | "" -> acc ^ (token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+          | "" -> acc ^ (full_token_to_string e)
+          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
         "" content))
     | Variable t -> 
       Printf.sprintf "Variable <%s>"
@@ -161,15 +161,15 @@ module Token = struct
       Printf.sprintf "Expression (%s)"
         (List.fold_left (fun acc e -> 
           match acc with
-          | "" -> acc ^ (token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+          | "" -> acc ^ (full_token_to_string e)
+          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
         "" expr))
     | Array content -> (
       Printf.sprintf "Array [%s]"
         (List.fold_left (fun acc e -> 
           match acc with
-          | "" -> acc ^ (token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (token_to_string e))
+          | "" -> acc ^ (full_token_to_string e)
+          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
         "" content))
     | Number -> "Number"
     | Bool -> "Bool"
@@ -275,6 +275,17 @@ module Token = struct
     | Let -> "Let"
     | Const -> "Const"
 
+  and full_token_to_string tok =
+    let open Loc in
+    Printf.sprintf "%d:%d\t%s"
+      tok.loc.line
+      tok.loc.column
+      (token_to_string tok.body)
+
+  and lazy_token_to_string tok =
+    let open Loc in
+    token_to_string tok.body
+
   let operators = Hashtbl.create 53
   let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
     [
@@ -372,17 +383,6 @@ module Token = struct
       "let", (Variable Let);
       "const", (Variable Const);  ]
 
-  let full_token_to_string tok =
-    let open Loc in
-    Printf.sprintf "%d:%d\t%s"
-      tok.loc.line
-      tok.loc.column
-      (token_to_string tok.body)
-
-  let lazy_token_to_string tok =
-    let open Loc in
-    token_to_string tok.body
-
 end
 open Token
 
@@ -427,6 +427,11 @@ module Lex_env = struct
     let err = (msg, Level.SyntaxError) in
     { env with error = Some err }
 
+  (* A known issue is that the position of certain tokens is currently
+   * incorrect sometimes, due to _when_ we dress these tokens.
+   * Tokens that are definitely have wrong positions:
+   *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
+   *  - Expression <- we don't track when they start, but we know when the inside tokens do *)
   let dress body lxb = 
     let open Lexing in
     let pos = lxb.lex_start_p in
@@ -438,13 +443,55 @@ module Lex_env = struct
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match env.state with
+    | S_Closure -> { env with 
+      expr = tok :: env.expr }
     | _ -> { env with 
       ast = tok :: env.ast }
+  
+  (* Add current expression to the expression buffer
+   * and clear current expression. *)
+  let buf_push lxb env =
+    let expr = env.expr in
+    let stack = env.expr_buffers in
+    { env with
+      expr_buffers = Utils.Stack.push stack expr;
+      expr = [] }
 
-    let resolve_errors ~tok env =
-      match tok with
-      | Syntax_Error msg -> set_error msg env
-      | _ -> env
+  (* Pop from expression buffer and combine it with current expression.
+   * If the current expression is empty, we combine *)
+  let buf_pop lxb env =
+    let top_expr = Utils.Stack.peek env.expr_buffers in
+    let stack = Utils.Stack.pop env.expr_buffers in
+    match Utils.Stack.peek env.expr_buffers with 
+    | [] -> update_state S_Default env
+    | _ ->
+      let create_expr_token = dress (Expression env.expr) lxb in
+      let combined_expr = top_expr @ [ create_expr_token ] in
+      { env with 
+        expr_buffers = stack;
+        expr = combined_expr }
+  
+  let resolve_errors tok env =
+    match tok with
+    | Syntax_Error msg -> set_error msg env
+    | _ -> env
+
+  let debug env = 
+    Printf.sprintf "\n{\n\
+      \tsource = \"%s\";\n\
+      \tis_in_comment = %s;\n\
+      \tstate = %s;\n\
+      \texpr = [];\n\
+      \texpr_buffers = Utils.Stack.create [];\n\
+      \tast = [];\n\
+      \terror = None;\n\
+    }\n" 
+    env.source 
+    (string_of_bool env.is_in_comment)
+    (state_to_string env.state)
+    |> print_endline
+
+
 end 
 open Lex_env
 }
@@ -470,7 +517,8 @@ let alphanumeric = digit | letter
 
 let word = letter alphanumeric*
 
-(* If I forget a symbol, add that here boi *)
+(* If I forget a symbol, add that here boi 
+ * These are a list of the symbols which operators are composed of. *)
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',']
 
 rule token env = parse
@@ -490,14 +538,14 @@ rule token env = parse
   | '"'               {
                         let tok = read_string_dquote (Buffer.create 16) lexbuf in
                         let env = env
-                          |> resolve_errors ~tok:(tok)
+                          |> resolve_errors tok
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
   | '\''              {
                         let tok = read_string_squote (Buffer.create 16) lexbuf in
                         let env = env
-                          |> resolve_errors ~tok:(tok)
+                          |> resolve_errors tok
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
@@ -523,6 +571,13 @@ rule token env = parse
                           token env lexbuf
                       }
   | '('               {
+                        let env = env
+                          |> update_state S_Closure
+                          |> buf_push lexbuf in
+                        token env lexbuf
+                      }
+  | ')'               {
+                        let env = buf_pop lexbuf env in
                         token env lexbuf
                       }
   | eof               { env }
@@ -533,7 +588,11 @@ rule token env = parse
                       }
   
 (* Creating string buffers
- * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll *)
+ * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll 
+ * NOTE: Splitting the double quote and single quote isn't perfect since we dupe code, but
+ * unless there's a way to use variables as regex that I don't know about, this is
+ * the most efficient solution. Taking them both with the same regex then checking/separating
+ * is "cleaner" but less efficient, so that's another option. *)
 and read_string_dquote buf = parse
   | '"'             { String (Buffer.contents buf) }
   | '\\' '/'        { Buffer.add_char buf '/'; read_string_dquote buf lexbuf }
@@ -553,3 +612,4 @@ and read_string_squote buf = parse
                       read_string_squote buf lexbuf }
   | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
   | eof             { Syntax_Error "String is not terminated" }
+
