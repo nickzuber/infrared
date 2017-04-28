@@ -404,11 +404,15 @@ module Lex_env = struct
 
   and state_t = 
     | S_Default
-    | S_Closure
+    | S_Array
+    | S_Block
+    | S_Expression
 
   let state_to_string = function
     | S_Default -> "S_Default"
-    | S_Closure -> "S_Closure"
+    | S_Array -> "S_Array"
+    | S_Block -> "S_Block"
+    | S_Expression -> "S_Expression"
 
   let defaultEnv = { 
     source = "undefined";
@@ -431,7 +435,7 @@ module Lex_env = struct
    * incorrect sometimes, due to _when_ we dress these tokens.
    * Tokens that are definitely have wrong positions:
    *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
-   *  - Expression <- we don't track when they start, but we know when the inside tokens do *)
+   *  - Closures <- we don't track when they start, but we dress when they end *)
   let dress body lxb = 
     let open Lexing in
     let pos = lxb.lex_start_p in
@@ -443,10 +447,10 @@ module Lex_env = struct
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match env.state with
-    | S_Closure -> { env with 
-      expr = tok :: env.expr }
-    | _ -> { env with 
+    | S_Default -> { env with 
       ast = tok :: env.ast }
+    | _ -> { env with 
+      expr = tok :: env.expr }
   
   (* Add current expression to the expression buffer
    * and clear current expression. *)
@@ -462,8 +466,14 @@ module Lex_env = struct
   let buf_pop lxb env =
     let top_expr = Utils.Stack.peek env.expr_buffers in
     let stack = Utils.Stack.pop env.expr_buffers in
-    let create_expr_token = dress (Expression env.expr) lxb in
-    match Utils.Stack.peek env.expr_buffers with 
+    let raw_create_expr_token = 
+      match env.state with
+      | S_Array -> Array env.expr 
+      | S_Block -> Block env.expr 
+      | S_Expression -> Expression env.expr 
+      | S_Default -> Syntax_Error "A closure was terminated before it was started"
+    in let create_expr_token = dress raw_create_expr_token lxb in
+     match Utils.Stack.peek env.expr_buffers with 
     | [] -> { env with
       state = S_Default;
       ast = create_expr_token :: env.ast;
@@ -515,8 +525,7 @@ let digit = ['0'-'9']
 let wholenumber = digit+'.'?
 let floatnumber = ['0'-'9']*'.'['0'-'9']+
 
-let number = hex | binnumber | hexnumber | octnumber | legacyoctnumber |
-             scinumber | wholenumber | floatnumber
+let number = binnumber | hexnumber | octnumber | legacyoctnumber | scinumber | wholenumber | floatnumber
 
 let whitespace = [' ' '\t' '\r']
 let letter = ['a'-'z''A'-'Z''_''$']
@@ -579,11 +588,23 @@ rule token env = parse
                       }
   | '('               {
                         let env = env
-                          |> update_state S_Closure
+                          |> update_state S_Expression
                           |> buf_push lexbuf in
                         token env lexbuf
                       }
-  | ')'               {
+  | '{'               {
+                        let env = env
+                          |> update_state S_Block
+                          |> buf_push lexbuf in
+                        token env lexbuf
+                      }
+  | '['               {
+                        let env = env
+                          |> update_state S_Array
+                          |> buf_push lexbuf in
+                        token env lexbuf
+                      }
+  | ')'|'}'|']'       {
                         let env = buf_pop lexbuf env in
                         token env lexbuf
                       }
