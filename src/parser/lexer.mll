@@ -392,7 +392,7 @@ module Lex_env = struct
     source: string;
     is_in_comment: bool;
     (* States *)
-    state: state_t;
+    state: state_t list;
     expr: Token.t list;
     expr_buffers: Token.t list Utils.Stack.t;
     (* The ast is "backwards" -- newest token is 
@@ -417,15 +417,15 @@ module Lex_env = struct
   let defaultEnv = { 
     source = "undefined";
     is_in_comment = false;
-    state = S_Default;
+    state = [ S_Default ];
     expr = [];
-    expr_buffers = Utils.Stack.create [];
+    expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
     ast = [];
     error = None;
   }
 
   let update_state state env = 
-    { env with state }
+    { env with state = state :: env.state }
 
   let set_error msg env = 
     let err = (msg, Level.SyntaxError) in
@@ -446,7 +446,7 @@ module Lex_env = struct
 
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
-    match env.state with
+    match List.hd env.state with
     | S_Default -> { env with 
       ast = tok :: env.ast }
     | _ -> { env with 
@@ -457,30 +457,34 @@ module Lex_env = struct
   let buf_push lxb env =
     let expr = env.expr in
     let stack = env.expr_buffers in
-    { env with
-      expr_buffers = Utils.Stack.push stack expr;
-      expr = [] }
+    match expr with
+    | [] -> env
+    | _ -> { env with
+             expr_buffers = Utils.Stack.push stack expr;
+             expr = [] }
 
   (* Pop from expression buffer and combine it with current expression.
    * If the current expression is empty, we combine *)
   let buf_pop lxb env =
-    let top_expr = Utils.Stack.peek env.expr_buffers in
-    let stack = Utils.Stack.pop env.expr_buffers in
-    let raw_create_expr_token = 
-      match env.state with
+    let state = List.tl env.state in
+    let naked_closure_token = 
+      match List.hd env.state with
       | S_Array -> Array env.expr 
       | S_Block -> Block env.expr 
       | S_Expression -> Expression env.expr 
       | S_Default -> Syntax_Error "A closure was terminated before it was started"
-    in let create_expr_token = dress raw_create_expr_token lxb in
-     match Utils.Stack.peek env.expr_buffers with 
-    | [] -> { env with
-      state = S_Default;
-      ast = create_expr_token :: env.ast;
+    in let dressed_closure_token = dress naked_closure_token lxb in
+    match List.hd state with 
+    | S_Default -> { env with
+      state = List.tl env.state;
+      ast = dressed_closure_token :: env.ast;
       expr = [] }
     | _ ->
-      let combined_expr = create_expr_token :: top_expr in
+      let top_expr = Utils.Stack.peek env.expr_buffers in
+      let stack = Utils.Stack.pop env.expr_buffers in
+      let combined_expr = dressed_closure_token :: top_expr in
       { env with 
+        state;
         expr_buffers = stack;
         expr = combined_expr }
   
@@ -495,15 +499,17 @@ module Lex_env = struct
       \tis_in_comment = \x1b[35m%s\x1b[39m;\n\
       \tstate = \x1b[35m%s\x1b[39m;\n\
       \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
-      \texpr_buffers = Utils.Stack.create [];\n\
+      \texpr_buffers = Utils.Stack.create [ %d ];\n\
       \tast = [\x1b[35m%s\x1b[39m\n\t];\n\
       \terror = None;\n\
     }\n" 
     env.source 
     (string_of_bool env.is_in_comment)
-    (state_to_string env.state)
+    (List.fold_left 
+      (fun acc state -> acc ^ "\n" ^ (state_to_string state)) "" env.state)
     (List.fold_left 
       (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.expr)
+    (Utils.Stack.size env.expr_buffers)
     (List.fold_left 
       (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.ast)
     |> print_endline
@@ -538,7 +544,7 @@ let word = letter alphanumeric*
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',']
 
 rule token env = parse
-  | whitespace+ | ';' { token env lexbuf }
+  | whitespace+ | ';' { debug env; token env lexbuf }
   | '\n'              { 
                         let _ = Lexing.new_line lexbuf in
                         token env lexbuf 
