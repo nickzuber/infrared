@@ -148,28 +148,28 @@ module Token = struct
   let rec token_to_string tok =
     match tok with
     | Block content -> (
-      Printf.sprintf "Block (%s)"
+      Printf.sprintf "Block {\n\t%s\n\t}"
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
         "" content))
     | Variable t -> 
       Printf.sprintf "Variable <%s>"
         (var_to_string t)
     | Expression expr -> (
-      Printf.sprintf "Expression (%s)"
+      Printf.sprintf "Expression (\n\t%s\n\t)"
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
         "" expr))
     | Array content -> (
-      Printf.sprintf "Array [%s]"
+      Printf.sprintf "Array [\n\t%s\n\t]"
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s, %s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
         "" content))
     | Number -> "Number"
     | Bool -> "Bool"
@@ -462,11 +462,14 @@ module Lex_env = struct
   let buf_pop lxb env =
     let top_expr = Utils.Stack.peek env.expr_buffers in
     let stack = Utils.Stack.pop env.expr_buffers in
+    let create_expr_token = dress (Expression env.expr) lxb in
     match Utils.Stack.peek env.expr_buffers with 
-    | [] -> update_state S_Default env
+    | [] -> { env with
+      state = S_Default;
+      ast = create_expr_token :: env.ast;
+      expr = [] }
     | _ ->
-      let create_expr_token = dress (Expression env.expr) lxb in
-      let combined_expr = top_expr @ [ create_expr_token ] in
+      let combined_expr = create_expr_token :: top_expr in
       { env with 
         expr_buffers = stack;
         expr = combined_expr }
@@ -478,17 +481,21 @@ module Lex_env = struct
 
   let debug env = 
     Printf.sprintf "\n{\n\
-      \tsource = \"%s\";\n\
-      \tis_in_comment = %s;\n\
-      \tstate = %s;\n\
-      \texpr = [];\n\
+      \tsource = \"\x1b[35m%s\x1b[39m\";\n\
+      \tis_in_comment = \x1b[35m%s\x1b[39m;\n\
+      \tstate = \x1b[35m%s\x1b[39m;\n\
+      \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
       \texpr_buffers = Utils.Stack.create [];\n\
-      \tast = [];\n\
+      \tast = [\x1b[35m%s\x1b[39m\n\t];\n\
       \terror = None;\n\
     }\n" 
     env.source 
     (string_of_bool env.is_in_comment)
     (state_to_string env.state)
+    (List.fold_left 
+      (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.expr)
+    (List.fold_left 
+      (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.ast)
     |> print_endline
 
 
@@ -558,10 +565,6 @@ rule token env = parse
                           let env = push (Unknown_Token op) env lexbuf in
                           token env lexbuf
                       }
-  | number            {
-                        let env = push Number env lexbuf in
-                        token env lexbuf
-                      }
   | word as word      {
                         try
                           let env = push (Hashtbl.find keywords word) env lexbuf in
@@ -569,6 +572,10 @@ rule token env = parse
                         with Not_found -> 
                           let env = push (Identifier word) env lexbuf in
                           token env lexbuf
+                      }
+  | number            {
+                        let env = push Number env lexbuf in
+                        token env lexbuf
                       }
   | '('               {
                         let env = env
