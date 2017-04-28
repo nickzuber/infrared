@@ -407,12 +407,14 @@ module Lex_env = struct
     | S_Array
     | S_Block
     | S_Expression
+    | S_Panic
 
   let state_to_string = function
     | S_Default -> "S_Default"
     | S_Array -> "S_Array"
     | S_Block -> "S_Block"
     | S_Expression -> "S_Expression"
+    | S_Panic -> "S_Panic"
 
   let defaultEnv = { 
     source = "undefined";
@@ -472,7 +474,7 @@ module Lex_env = struct
       | S_Array -> Array env.expr 
       | S_Block -> Block env.expr 
       | S_Expression -> Expression env.expr 
-      | S_Default -> Syntax_Error "A closure was terminated before it was started"
+      | _ -> Syntax_Error "A closure was terminated before it was started"
     in let dressed_closure_token = dress naked_closure_token lxb in
     match List.hd state with 
     | S_Default -> { env with
@@ -544,7 +546,7 @@ let word = letter alphanumeric*
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',']
 
 rule token env = parse
-  | whitespace+ | ';' { debug env; token env lexbuf }
+  | whitespace+ | ';' { token env lexbuf }
   | '\n'              { 
                         let _ = Lexing.new_line lexbuf in
                         token env lexbuf 
@@ -592,21 +594,14 @@ rule token env = parse
                         let env = push Number env lexbuf in
                         token env lexbuf
                       }
-  | '('               {
-                        let env = env
-                          |> update_state S_Expression
-                          |> buf_push lexbuf in
-                        token env lexbuf
-                      }
-  | '{'               {
-                        let env = env
-                          |> update_state S_Block
-                          |> buf_push lexbuf in
-                        token env lexbuf
-                      }
-  | '['               {
-                        let env = env
-                          |> update_state S_Array
+  | '('|'{'|'[' as c  {
+                        let state = match c with
+                        | '[' -> S_Array
+                        | '{' -> S_Block
+                        | '(' -> S_Expression
+                        | _ -> S_Panic
+                        in let env = env
+                          |> update_state state
                           |> buf_push lexbuf in
                         token env lexbuf
                       }
