@@ -1,7 +1,55 @@
+
+{
+	source = "[35mtests/parser/keywords/keywords.js[39m";
+	is_in_comment = [35mfalse[39m;
+	state = [35m
+S_Default[39m;
+	expr = [[35m[39m
+	];
+	expr_buffers = Utils.Stack.create [ 0 ];
+	ast = [[35m
+34:1	Variable <Const>
+33:1	Variable <Let>
+32:1	Variable <Var>
+31:1	Enum
+30:1	Import
+29:1	Class
+28:1	With
+27:1	While
+26:1	Void
+25:1	Typeof
+24:1	Try
+23:1	Throw
+22:1	This
+21:1	Super
+20:1	Return
+19:1	Null
+18:1	New
+17:1	Instanceof
+16:1	In
+15:1	If
+14:1	Function
+13:1	For
+12:1	Finally
+11:1	Extends
+10:1	Exports
+9:1	Else
+8:1	Do
+7:1	Default
+6:1	Delete
+5:1	Debugger
+4:1	Continue
+3:1	Catch
+2:1	Case
+1:1	Break[39m
+	];
+	error = None;
+}
+
 FILE:	tests/parser/keywords/keywords.js
-TOKENS:	34:1	Variable (Const)
-	33:1	Variable (Let)
-	32:1	Variable (Var)
+TOKENS:	34:1	Variable <Const>
+	33:1	Variable <Let>
+	32:1	Variable <Var>
 	31:1	Enum
 	30:1	Import
 	29:1	Class
