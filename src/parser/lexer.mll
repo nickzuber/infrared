@@ -152,7 +152,7 @@ module Token = struct
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" content))
     | Variable t -> 
       Printf.sprintf "Variable <%s>"
@@ -162,14 +162,14 @@ module Token = struct
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" expr))
     | Array content -> (
       Printf.sprintf "Array [\n\t%s\n\t]"
         (List.fold_left (fun acc e -> 
           match acc with
           | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s,\n\t%s" acc (full_token_to_string e))
+          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" content))
     | Number -> "Number"
     | Bool -> "Bool"
