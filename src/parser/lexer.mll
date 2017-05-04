@@ -33,6 +33,7 @@ module Token = struct
     | Number
     | Variable of var_t
     | Assignment
+    | Colon
     (* Standard *)
     | Break
     | Case
@@ -174,6 +175,7 @@ module Token = struct
     | Bool -> "Bool"
     | String str -> Printf.sprintf "String \"%s\"" str
     | Comment -> "Comment"
+    | Colon -> "Colon"
     | Break -> "Break"
     | Case -> "Case"
     | Catch -> "Catch"
@@ -222,8 +224,8 @@ module Token = struct
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
     | Operator op -> Printf.sprintf "Operator <%s>" (op_to_string op)
     (* Error Handling *)
-    | Unknown_Token str -> Printf.sprintf "Unknown_Token: %s" str
-    | Syntax_Error str -> Printf.sprintf "Syntax_Error: %s" str
+    | Unknown_Token str -> Printf.sprintf "\x1b[31mUnknown_Token: %s\x1b[39m" str
+    | Syntax_Error str -> Printf.sprintf "\x1b[31mSyntax_Error: %s\x1b[39m" str
 
   and op_to_string = function
     (* Operators *)
@@ -540,7 +542,7 @@ let word = letter alphanumeric*
 
 (* If I forget a symbol, add that here boi 
  * These are a list of the symbols which operators are composed of. *)
-let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',']
+let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!']
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
@@ -558,6 +560,10 @@ rule token env = parse
                       }
   | "..."             {
                         let env = push Spread env lexbuf in
+                        token env lexbuf
+                      }
+  | ':'               {
+                        let env = push Colon env lexbuf in
                         token env lexbuf
                       }
   | '`'               {
