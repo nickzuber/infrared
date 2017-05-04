@@ -33,7 +33,6 @@ module Token = struct
     | Number
     | Variable of var_t
     | Assignment
-    | Colon
     (* Standard *)
     | Break
     | Case
@@ -137,6 +136,7 @@ module Token = struct
     | Increment              (*    ++    *)
     | Decrement              (*    --    *)
     | Dot                    (*    .     *)
+    | Colon                  (*    :     *)
 
   and var_t = 
     (* Standard *)
@@ -175,7 +175,6 @@ module Token = struct
     | Bool -> "Bool"
     | String str -> Printf.sprintf "String \"%s\"" str
     | Comment -> "Comment"
-    | Colon -> "Colon"
     | Break -> "Break"
     | Case -> "Case"
     | Catch -> "Catch"
@@ -269,6 +268,7 @@ module Token = struct
     | Increment -> "Increment"
     | Decrement -> "Decrement"
     | Dot -> "Dot"
+    | Colon -> "Colon"
 
   and var_to_string = function
     | Var -> "Var"
@@ -329,6 +329,7 @@ module Token = struct
       "++", Increment;
       "--", Decrement;
       ".", Dot;
+      ":", Colon;
     ]
 
   (* List of faux keywords that need to be checked separately:
@@ -542,7 +543,7 @@ let word = letter alphanumeric*
 
 (* If I forget a symbol, add that here boi 
  * These are a list of the symbols which operators are composed of. *)
-let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!']
+let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':']
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
@@ -560,10 +561,6 @@ rule token env = parse
                       }
   | "..."             {
                         let env = push Spread env lexbuf in
-                        token env lexbuf
-                      }
-  | ':'               {
-                        let env = push Colon env lexbuf in
                         token env lexbuf
                       }
   | '`'               {
