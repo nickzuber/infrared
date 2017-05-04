@@ -77,7 +77,6 @@ module Token = struct
     | Import
     | Spread
     | TemplateString
-    | Rest
     (* ES7 *)
     | Async
     | Await
@@ -209,7 +208,6 @@ module Token = struct
     | Implements -> "Implements"
     | Spread -> "Spread"
     | TemplateString -> "TemplateString"
-    | Rest -> "Rest"
     | Async -> "Async"
     | Await -> "Await"
     | Enum -> "Enum"
@@ -332,9 +330,8 @@ module Token = struct
     ]
 
   (* List of faux keywords that need to be checked separately:
-   *  - Spread
+   *  - Spread (Rest)
    *  - TemplateString
-   *  - Rest
    *)
   let keywords = Hashtbl.create 53
   let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keywords kwd tok) 
@@ -557,6 +554,10 @@ rule token env = parse
                       }
   | '='               {
                         let env = push Assignment env lexbuf in
+                        token env lexbuf
+                      }
+  | "..."             {
+                        let env = push Spread env lexbuf in
                         token env lexbuf
                       }
   | '"'               {
