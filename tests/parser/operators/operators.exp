@@ -1,0 +1,135 @@
+MACTHED: +=
+MACTHED: -=
+MACTHED: *=
+MACTHED: /=
+MACTHED: %=
+MACTHED: **=
+MACTHED: <<=
+MACTHED: >>=
+MACTHED: >>>=
+MACTHED: |=
+MACTHED: ^=
+MACTHED: &=
+MACTHED: ==
+MACTHED: !=
+MACTHED: ===
+MACTHED: !==
+MACTHED: <
+MACTHED: <=
+MACTHED: >
+MACTHED: >=
+MACTHED: <<
+MACTHED: >>
+MACTHED: >>>
+MACTHED: +
+MACTHED: -
+MACTHED: *
+MACTHED: /
+MACTHED: %
+MACTHED: **
+MACTHED: ,
+MACTHED: ||
+MACTHED: &&
+MACTHED: |
+MACTHED: ^
+MACTHED: &
+MACTHED: !
+MACTHED: ~
+MACTHED: ++
+MACTHED: --
+MACTHED: .
+
+{
+	source = "[35mtests/parser/operators/operators.js[39m";
+	is_in_comment = [35mfalse[39m;
+	state = [35m
+S_Default[39m;
+	expr = [[35m[39m
+	];
+	expr_buffers = Utils.Stack.create [ 0 ];
+	ast = [[35m
+40:1	Operator <Dot>
+39:1	Operator <Decrement>
+38:1	Operator <Increment>
+37:1	Operator <Not>
+36:1	Operator <Bang>
+35:1	Operator <And>
+34:1	Operator <Xor>
+33:1	Operator <Or>
+32:1	Operator <LogicalAnd>
+31:1	Operator <LogicalOr>
+30:1	Operator <Comma>
+29:1	Operator <Pow>
+28:1	Operator <Mod>
+27:1	Operator <Div>
+26:1	Operator <Mult>
+25:1	Operator <Minus>
+24:1	Operator <Plus>
+23:1	Operator <RightShiftUnsigned>
+22:1	Operator <RightShift>
+21:1	Operator <LeftShift>
+20:1	Operator <GreaterThanEqual>
+19:1	Operator <GreaterThan>
+18:1	Operator <LessThanEqual>
+17:1	Operator <LessThan>
+16:1	Operator <StrictNotEqual>
+15:1	Operator <StrictEqual>
+14:1	Operator <NotEqual>
+13:1	Operator <Equal>
+12:1	Operator <CA_And>
+11:1	Operator <CA_Xor>
+10:1	Operator <CA_Or>
+9:1	Operator <CA_RightShiftUnsigned>
+8:1	Operator <CA_RightShift>
+7:1	Operator <CA_LeftShift>
+6:1	Operator <CA_Pow>
+5:1	Operator <CA_Mod>
+4:1	Operator <CA_Div>
+3:1	Operator <CA_Mult>
+2:1	Operator <CA_Minus>
+1:1	Operator <CA_Plus>[39m
+	];
+	error = None;
+}
+
+FILE:	tests/parser/operators/operators.js
+TOKENS:	40:1	Operator <Dot>
+	39:1	Operator <Decrement>
+	38:1	Operator <Increment>
+	37:1	Operator <Not>
+	36:1	Operator <Bang>
+	35:1	Operator <And>
+	34:1	Operator <Xor>
+	33:1	Operator <Or>
+	32:1	Operator <LogicalAnd>
+	31:1	Operator <LogicalOr>
+	30:1	Operator <Comma>
+	29:1	Operator <Pow>
+	28:1	Operator <Mod>
+	27:1	Operator <Div>
+	26:1	Operator <Mult>
+	25:1	Operator <Minus>
+	24:1	Operator <Plus>
+	23:1	Operator <RightShiftUnsigned>
+	22:1	Operator <RightShift>
+	21:1	Operator <LeftShift>
+	20:1	Operator <GreaterThanEqual>
+	19:1	Operator <GreaterThan>
+	18:1	Operator <LessThanEqual>
+	17:1	Operator <LessThan>
+	16:1	Operator <StrictNotEqual>
+	15:1	Operator <StrictEqual>
+	14:1	Operator <NotEqual>
+	13:1	Operator <Equal>
+	12:1	Operator <CA_And>
+	11:1	Operator <CA_Xor>
+	10:1	Operator <CA_Or>
+	9:1	Operator <CA_RightShiftUnsigned>
+	8:1	Operator <CA_RightShift>
+	7:1	Operator <CA_LeftShift>
+	6:1	Operator <CA_Pow>
+	5:1	Operator <CA_Mod>
+	4:1	Operator <CA_Div>
+	3:1	Operator <CA_Mult>
+	2:1	Operator <CA_Minus>
+	1:1	Operator <CA_Plus>
