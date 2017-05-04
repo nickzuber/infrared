@@ -76,7 +76,7 @@ module Token = struct
     | Implements
     | Import
     | Spread
-    | TemplateString
+    | TemplateString of string
     (* ES7 *)
     | Async
     | Await
@@ -207,7 +207,7 @@ module Token = struct
     | Class -> "Class"
     | Implements -> "Implements"
     | Spread -> "Spread"
-    | TemplateString -> "TemplateString"
+    | TemplateString str -> Printf.sprintf "TemplateString `%s`" str
     | Async -> "Async"
     | Await -> "Await"
     | Enum -> "Enum"
@@ -560,6 +560,15 @@ rule token env = parse
                         let env = push Spread env lexbuf in
                         token env lexbuf
                       }
+  | '`'               {
+                        (* As of now, ${..} is being parsed as part of the string, we
+                         * can (and should probably) parse this in the parsing phase. *)
+                        let tok = read_string_template (Buffer.create 16) lexbuf in
+                        let env = env
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                        token env lexbuf
+                      }
   | '"'               {
                         let tok = read_string_dquote (Buffer.create 16) lexbuf in
                         let env = env
@@ -642,4 +651,14 @@ and read_string_squote buf = parse
                       read_string_squote buf lexbuf }
   | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
   | eof             { Syntax_Error "String is not terminated" }
+
+and read_string_template buf = parse
+  | '`'             { TemplateString (Buffer.contents buf) }
+  | '\\' '/'        { Buffer.add_char buf '/'; read_string_template buf lexbuf }
+  | '\\' '"'        { Buffer.add_char buf '\"'; read_string_template buf lexbuf }
+  | '\\'            { Buffer.add_char buf '\\'; read_string_template buf lexbuf }
+  | [^ '`' '\\']+   { Buffer.add_string buf (Lexing.lexeme lexbuf);
+                      read_string_template buf lexbuf }
+  | _               { Syntax_Error ("Illegal template string character: " ^ (Lexing.lexeme lexbuf)) }
+  | eof             { Syntax_Error "Template string is not terminated" }
 
