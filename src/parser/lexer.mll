@@ -564,7 +564,7 @@ rule token env = parse
                         token env lexbuf
                       }
   | '`'               {
-                        (* As of now, ${..} is being parsed as part of the string, we
+                        (* As of now, ${...} is being parsed as part of the string, we
                          * can (and should probably) parse this in the parsing phase. *)
                         let tok = read_string_template (Buffer.create 16) lexbuf in
                         let env = env
