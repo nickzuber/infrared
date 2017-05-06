@@ -137,6 +137,7 @@ module Token = struct
     | Decrement              (*    --    *)
     | Dot                    (*    .     *)
     | Colon                  (*    :     *)
+    | Ternary                (*    ?     *)
 
   and var_t = 
     (* Standard *)
@@ -269,6 +270,7 @@ module Token = struct
     | Decrement -> "Decrement"
     | Dot -> "Dot"
     | Colon -> "Colon"
+    | Ternary -> "Ternary"
 
   and var_to_string = function
     | Var -> "Var"
@@ -330,6 +332,7 @@ module Token = struct
       "--", Decrement;
       ".", Dot;
       ":", Colon;
+      "?", Ternary;
     ]
 
   (* List of faux keywords that need to be checked separately:
@@ -419,7 +422,7 @@ module Lex_env = struct
   let defaultEnv = { 
     source = "undefined";
     is_in_comment = false;
-    state = [ S_Default ];
+    state = [ S_Default ]; (* I should use a stack for this too *)
     expr = [];
     expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
     ast = [];
@@ -449,10 +452,8 @@ module Lex_env = struct
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match List.hd env.state with
-    | S_Default -> { env with 
-      ast = tok :: env.ast }
-    | _ -> { env with 
-      expr = tok :: env.expr }
+    | S_Default -> { env with ast = tok :: env.ast }
+    | _ -> { env with expr = tok :: env.expr }
   
   (* Add current expression to the expression buffer
    * and clear current expression. *)
@@ -477,15 +478,24 @@ module Lex_env = struct
       | _ -> Syntax_Error "A closure was terminated before it was started"
     in let dressed_closure_token = dress naked_closure_token lxb in
     match List.hd state with 
+    (* There are no more closures left to resolve *)
     | S_Default -> { env with
       state = List.tl env.state;
       ast = dressed_closure_token :: env.ast;
       expr = [] }
     | _ ->
+      (* We still have closures left to resolve
+       * Take the most recent expression buffer *)
       let top_expr = Utils.Stack.peek env.expr_buffers in
       let stack = Utils.Stack.pop env.expr_buffers in
-      let combined_expr = dressed_closure_token :: top_expr in
-      { env with 
+      (* If there was an expression buffer [if empty closure there won't be]
+       * then add our closure token to the front an put that back in the working buffer
+       * If not, then we just return the closure token as a list *)
+      let combined_expr = 
+        match top_expr with
+        | Some expr -> dressed_closure_token :: expr
+        | None -> [dressed_closure_token]
+      in { env with 
         state;
         expr_buffers = stack;
         expr = combined_expr }
@@ -543,7 +553,7 @@ let word = letter alphanumeric*
 
 (* If I forget a symbol, add that here boi 
  * These are a list of the symbols which operators are composed of. *)
-let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':']
+let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':' '?']
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }

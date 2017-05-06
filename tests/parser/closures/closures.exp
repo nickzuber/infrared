@@ -1,0 +1,291 @@
+
+{
+	source = "[35mtests/parser/closures/closures.js[39m";
+	is_in_comment = [35mfalse[39m;
+	state = [35m
+S_Default[39m;
+	expr = [[35m[39m
+	];
+	expr_buffers = Utils.Stack.create [ 0 ];
+	ast = [[35m
+23:12	Expression (
+	23:11	Identifier "a" 
+	23:10	Expression (
+	23:9	Array [
+	
+	] 
+	23:7	Identifier "a"
+	) 
+	23:5	Identifier "s" 
+	23:4	Expression (
+	
+	) 
+	23:2	Identifier "a"
+	)
+22:8	Expression (
+	22:7	Block {
+	22:6	Identifier "f"
+	} 
+	22:4	Array [
+	22:3	Identifier "f"
+	]
+	)
+21:9	Expression (
+	21:8	Array [
+	21:7	Identifier "q" 
+	21:6	Block {
+	21:5	Identifier "d"
+	} 
+	21:3	Identifier "d"
+	]
+	)
+20:9	Expression (
+	20:8	Expression (
+	20:7	Identifier "c" 
+	20:6	Expression (
+	
+	) 
+	20:3	Identifier "s"
+	)
+	)
+20:1	Identifier "a"
+19:6	Block {
+	19:5	Identifier "s" 
+	19:4	Array [
+	19:3	Identifier "c"
+	]
+	}
+18:6	Array [
+	18:5	Identifier "s" 
+	18:4	Expression (
+	
+	) 
+	18:2	Identifier "c"
+	]
+17:7	Expression (
+	17:6	Identifier "a" 
+	17:5	Array [
+	17:4	Identifier "s"
+	] 
+	17:2	Identifier "c"
+	)
+16:7	Expression (
+	16:6	Identifier "a" 
+	16:5	Expression (
+	16:4	Identifier "x"
+	) 
+	16:2	Identifier "a"
+	)
+15:3	Array [
+	15:2	Identifier "a"
+	]
+14:3	Block {
+	14:2	Identifier "a"
+	}
+13:3	Expression (
+	13:2	Identifier "a"
+	)
+11:8	Expression (
+	11:7	Expression (
+	11:6	Array [
+	
+	] 
+	11:3	Expression (
+	
+	)
+	)
+	)
+10:6	Expression (
+	10:5	Block {
+	
+	} 
+	10:3	Array [
+	
+	]
+	)
+9:6	Expression (
+	9:5	Array [
+	9:4	Block {
+	
+	}
+	]
+	)
+8:6	Expression (
+	8:5	Expression (
+	8:4	Expression (
+	
+	)
+	)
+	)
+7:4	Block {
+	7:3	Array [
+	
+	]
+	}
+6:4	Array [
+	6:3	Expression (
+	
+	)
+	]
+5:4	Expression (
+	5:3	Array [
+	
+	]
+	)
+4:4	Expression (
+	4:3	Expression (
+	
+	)
+	)
+3:2	Array [
+	
+	]
+2:2	Block {
+	
+	}
+1:2	Expression (
+	
+	)[39m
+	];
+	error = None;
+}
+
+FILE:	tests/parser/closures/closures.js
+TOKENS:	23:12	Expression (
+	23:11	Identifier "a" 
+	23:10	Expression (
+	23:9	Array [
+	
+	] 
+	23:7	Identifier "a"
+	) 
+	23:5	Identifier "s" 
+	23:4	Expression (
+	
+	) 
+	23:2	Identifier "a"
+	)
+	22:8	Expression (
+	22:7	Block {
+	22:6	Identifier "f"
+	} 
+	22:4	Array [
+	22:3	Identifier "f"
+	]
+	)
+	21:9	Expression (
+	21:8	Array [
+	21:7	Identifier "q" 
+	21:6	Block {
+	21:5	Identifier "d"
+	} 
+	21:3	Identifier "d"
+	]
+	)
+	20:9	Expression (
+	20:8	Expression (
+	20:7	Identifier "c" 
+	20:6	Expression (
+	
+	) 
+	20:3	Identifier "s"
+	)
+	)
+	20:1	Identifier "a"
+	19:6	Block {
+	19:5	Identifier "s" 
+	19:4	Array [
+	19:3	Identifier "c"
+	]
+	}
+	18:6	Array [
+	18:5	Identifier "s" 
+	18:4	Expression (
+	
+	) 
+	18:2	Identifier "c"
+	]
+	17:7	Expression (
+	17:6	Identifier "a" 
+	17:5	Array [
+	17:4	Identifier "s"
+	] 
+	17:2	Identifier "c"
+	)
+	16:7	Expression (
+	16:6	Identifier "a" 
+	16:5	Expression (
+	16:4	Identifier "x"
+	) 
+	16:2	Identifier "a"
+	)
+	15:3	Array [
+	15:2	Identifier "a"
+	]
+	14:3	Block {
+	14:2	Identifier "a"
+	}
+	13:3	Expression (
+	13:2	Identifier "a"
+	)
+	11:8	Expression (
+	11:7	Expression (
+	11:6	Array [
+	
+	] 
+	11:3	Expression (
+	
+	)
+	)
+	)
+	10:6	Expression (
+	10:5	Block {
+	
+	} 
+	10:3	Array [
+	
+	]
+	)
+	9:6	Expression (
+	9:5	Array [
+	9:4	Block {
+	
+	}
+	]
+	)
+	8:6	Expression (
+	8:5	Expression (
+	8:4	Expression (
+	
+	)
+	)
+	)
+	7:4	Block {
+	7:3	Array [
+	
+	]
+	}
+	6:4	Array [
+	6:3	Expression (
+	
+	)
+	]
+	5:4	Expression (
+	5:3	Array [
+	
+	]
+	)
+	4:4	Expression (
+	4:3	Expression (
+	
+	)
+	)
+	3:2	Array [
+	
+	]
+	2:2	Block {
+	
+	}
+	1:2	Expression (
+	
+	)
