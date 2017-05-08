@@ -8,6 +8,14 @@ S_Default[39m;
 	];
 	expr_buffers = Utils.Stack.create [ 0 ];
 	ast = [[35m
+24:7	Block {
+	24:6	Block {
+	24:5	Block {
+	
+	}
+	}
+	}
+24:1	Identifier "a"
 23:12	Expression (
 	23:11	Identifier "a" 
 	23:10	Expression (
@@ -151,7 +159,15 @@ S_Default[39m;
 }
 
 FILE:	tests/parser/closures/closures.js
-TOKENS:	23:12	Expression (
+TOKENS:	24:7	Block {
+	24:6	Block {
+	24:5	Block {
+	
+	}
+	}
+	}
+	24:1	Identifier "a"
+	23:12	Expression (
 	23:11	Identifier "a" 
 	23:10	Expression (
 	23:9	Array [
