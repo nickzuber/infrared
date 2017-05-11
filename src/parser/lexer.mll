@@ -224,8 +224,8 @@ module Token = struct
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
     | Operator op -> Printf.sprintf "Operator <%s>" (op_to_string op)
     (* Error Handling *)
-    | Unknown_Token str -> Printf.sprintf "\x1b[31mUnknown_Token: %s\x1b[39m" str
-    | Syntax_Error str -> Printf.sprintf "\x1b[31mSyntax_Error: %s\x1b[39m" str
+    | Unknown_Token str -> Printf.sprintf "\x1b[31mUnknown_Token: %s \x1b[39m" str
+    | Syntax_Error str -> Printf.sprintf "\x1b[31mSyntax_Error: %s \x1b[39m" str
 
   and op_to_string = function
     (* Operators *)
@@ -393,7 +393,7 @@ module Lex_env = struct
   type t = {
     (* Meta *)
     source: string;
-    is_in_comment: bool;
+    is_in_comment: comment_t;
     (* States *)
     state: state_t list;
     expr: Token.t list;
@@ -412,6 +412,11 @@ module Lex_env = struct
     | S_Expression
     | S_Panic
 
+  and comment_t = 
+    | SingleLine
+    | MultiLine
+    | Null
+
   let state_to_string = function
     | S_Default -> "S_Default"
     | S_Array -> "S_Array"
@@ -419,9 +424,14 @@ module Lex_env = struct
     | S_Expression -> "S_Expression"
     | S_Panic -> "S_Panic"
 
+  let comment_to_string = function
+    | SingleLine -> "SingleLine"
+    | MultiLine -> "MultiLine"
+    | Null -> "Null"
+
   let defaultEnv = { 
     source = "undefined";
-    is_in_comment = false;
+    is_in_comment = Null;
     state = [ S_Default ]; (* I should use a stack for this too *)
     expr = [];
     expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
@@ -499,6 +509,10 @@ module Lex_env = struct
         state;
         expr_buffers = stack;
         expr = combined_expr }
+
+  (* Sets the is_in_comment attribute to Null *)
+  let exit_comment env =
+    { env with is_in_comment = Null }
   
   let resolve_errors tok env =
     match tok with
@@ -516,7 +530,7 @@ module Lex_env = struct
       \terror = None;\n\
     }\n" 
     env.source 
-    (string_of_bool env.is_in_comment)
+    (comment_to_string env.is_in_comment)
     (List.fold_left 
       (fun acc state -> acc ^ "\n" ^ (state_to_string state)) "" env.state)
     (List.fold_left 
@@ -559,7 +573,10 @@ rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
   | '\n'              { 
                         let _ = Lexing.new_line lexbuf in
-                        token env lexbuf 
+                        let env = match env.is_in_comment with
+                          | SingleLine -> exit_comment env
+                          | _ -> env
+                        in token env lexbuf 
                       }
   | "true"|"false"    {
                         let env = push Bool env lexbuf in
@@ -619,10 +636,10 @@ rule token env = parse
                       }
   | '('|'{'|'[' as c  {
                         let state = match c with
-                        | '[' -> S_Array
-                        | '{' -> S_Block
-                        | '(' -> S_Expression
-                        | _ -> S_Panic
+                          | '[' -> S_Array
+                          | '{' -> S_Block
+                          | '(' -> S_Expression
+                          | _ -> S_Panic
                         in let env = env
                           |> update_state state
                           |> buf_push lexbuf in

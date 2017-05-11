@@ -24,7 +24,7 @@ infrared:
 # We generate those expected output files in a controlled env
 test:
 	echo "not implemented yet"
-	./infrared.native parse tests/_experimental/test.js
+	./infrared.native parse tests/_experimental/test.js > tests/_experimental/test.exp
 
 clean:
 	$(OCB) -clean
