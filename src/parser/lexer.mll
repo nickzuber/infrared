@@ -613,13 +613,14 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | symbols+ as op    {
+  | symbols  as op    {
+                        let op_as_string = String.make 1 op in
                         try
-                          let op = (Hashtbl.find operators op) in
+                          let op = (Hashtbl.find operators op_as_string) in
                           let env = push (Operator op) env lexbuf in
                           token env lexbuf
                         with Not_found -> 
-                          let env = push (Unknown_Token op) env lexbuf in
+                          let env = push (Unknown_Token op_as_string) env lexbuf in
                           token env lexbuf
                       }
   | word as word      {

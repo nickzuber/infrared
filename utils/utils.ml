@@ -29,3 +29,8 @@ end = struct
     in _size s 0
 end
 
+(* http://stackoverflow.com/questions/10068713/string-to-list-of-char *)
+let explode s =
+  let rec exp i l =
+    if i < 0 then l else exp (i - 1) (s.[i] :: l) in
+  exp (String.length s - 1) []
