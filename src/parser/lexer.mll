@@ -613,7 +613,7 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | symbols  as op    {
+  | symbols as op     {
                         let op_as_string = String.make 1 op in
                         try
                           let op = (Hashtbl.find operators op_as_string) in
