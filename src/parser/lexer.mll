@@ -32,7 +32,6 @@ module Token = struct
     | String of string
     | Number
     | Variable of var_t
-    | Assignment
     (* Standard *)
     | Break
     | Case
@@ -138,6 +137,7 @@ module Token = struct
     | Dot                    (*    .     *)
     | Colon                  (*    :     *)
     | Ternary                (*    ?     *)
+    | Assignment             (*    =     *)
 
   and var_t = 
     (* Standard *)
@@ -220,7 +220,6 @@ module Token = struct
     | Public -> "Public"
     | Static -> "Static"
     | Null -> "Null"
-    | Assignment -> "Assignment"
     | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
     | Operator op -> Printf.sprintf "Operator <%s>" (op_to_string op)
     (* Error Handling *)
@@ -271,6 +270,7 @@ module Token = struct
     | Dot -> "Dot"
     | Colon -> "Colon"
     | Ternary -> "Ternary"
+    | Assignment -> "Assignment"
 
   and var_to_string = function
     | Var -> "Var"
@@ -333,6 +333,7 @@ module Token = struct
       ".", Dot;
       ":", Colon;
       "?", Ternary;
+      "=", Assignment;
     ]
 
   (* List of faux keywords that need to be checked separately:
@@ -450,7 +451,8 @@ module Lex_env = struct
    * incorrect sometimes, due to _when_ we dress these tokens.
    * Tokens that are definitely have wrong positions:
    *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
-   *  - Closures <- we don't track when they start, but we dress when they end *)
+   *  - Closures <- we don't track when they start, but we dress when they end 
+   *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc *)
   let dress body lxb = 
     let open Lexing in
     let pos = lxb.lex_start_p in
@@ -573,17 +575,24 @@ rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
   | '\n'              { 
                         let _ = Lexing.new_line lexbuf in
-                        let env = match env.is_in_comment with
-                          | SingleLine -> exit_comment env
-                          | _ -> env
-                        in token env lexbuf 
-                      }
-  | "true"|"false"    {
-                        let env = push Bool env lexbuf in
                         token env lexbuf
                       }
-  | '='               {
-                        let env = push Assignment env lexbuf in
+  | "//"              {
+                        let tok = swallow_single_comment lexbuf in
+                        let env = env
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                        token env lexbuf
+                      }
+  | "/*"              {
+                        let tok = swallow_multi_comment lexbuf in
+                        let env = env
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                        token env lexbuf
+                      }
+  | "true" | "false"  {
+                        let env = push Bool env lexbuf in
                         token env lexbuf
                       }
   | "..."             {
@@ -680,8 +689,8 @@ and read_string_squote buf = parse
   | '\\'            { Buffer.add_char buf '\\'; read_string_squote buf lexbuf }
   | [^ '\'' '\\']+  { Buffer.add_string buf (Lexing.lexeme lexbuf);
                       read_string_squote buf lexbuf }
-  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
   | eof             { Syntax_Error "String is not terminated" }
+  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
 
 and read_string_template buf = parse
   | '`'             { TemplateString (Buffer.contents buf) }
@@ -690,6 +699,25 @@ and read_string_template buf = parse
   | '\\'            { Buffer.add_char buf '\\'; read_string_template buf lexbuf }
   | [^ '`' '\\']+   { Buffer.add_string buf (Lexing.lexeme lexbuf);
                       read_string_template buf lexbuf }
-  | _               { Syntax_Error ("Illegal template string character: " ^ (Lexing.lexeme lexbuf)) }
   | eof             { Syntax_Error "Template string is not terminated" }
+  | _               { Syntax_Error ("Illegal template string character: " ^ (Lexing.lexeme lexbuf)) }
 
+(* Swallows everything until a newline is encountered. By doing this, we isolate this
+ * process and give us the option to save or do whatever we want to comments if we want
+ * to in the future. *)
+and swallow_single_comment = parse
+  | '\n'              { 
+                        let _ = Lexing.new_line lexbuf in
+                        Comment
+                      }
+  | eof               { Comment }
+  | _                 { swallow_single_comment lexbuf }
+
+and swallow_multi_comment = parse
+  | "*/"              { Comment }
+  | '\n'              {
+                        let _ = Lexing.new_line lexbuf in
+                        swallow_multi_comment lexbuf
+                      }
+  | eof             { Syntax_Error "Multiline comment is not terminated" }
+  | _               { swallow_multi_comment lexbuf }
