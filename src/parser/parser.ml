@@ -23,7 +23,7 @@ let print_tokens env =
   List.iter (fun tok -> 
     Printf.printf "%s\n"
     (Token.full_token_to_string ~indent:2 tok))
-  env.token_list
+  (List.rev env.token_list)
 
 let print_ast envs =
   List.iter (fun env -> print_tokens env) envs

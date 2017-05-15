@@ -766,3 +766,4 @@ and swallow_multi_comment = parse
                     }
   | eof             { Syntax_Error "Multiline comment is not terminated" }
   | _               { swallow_multi_comment lexbuf }
+
