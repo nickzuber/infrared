@@ -288,6 +288,10 @@ module Token = struct
     let open Loc in
     token_to_string tok.body
 
+  (* @NOTE @TODO
+   * If we want to identify these complex operators, we can't use this
+   * hashtable trick. We need to explicitly check each complex operator
+   * manually in `token` *)
   let operators = Hashtbl.create 53
   let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
     [
@@ -394,7 +398,6 @@ module Lex_env = struct
   type t = {
     (* Meta *)
     source: string;
-    is_in_comment: comment_t;
     (* States *)
     state: state_t list;
     expr: Token.t list;
@@ -413,11 +416,6 @@ module Lex_env = struct
     | S_Expression
     | S_Panic
 
-  and comment_t = 
-    | SingleLine
-    | MultiLine
-    | Null
-
   let state_to_string = function
     | S_Default -> "S_Default"
     | S_Array -> "S_Array"
@@ -425,14 +423,8 @@ module Lex_env = struct
     | S_Expression -> "S_Expression"
     | S_Panic -> "S_Panic"
 
-  let comment_to_string = function
-    | SingleLine -> "SingleLine"
-    | MultiLine -> "MultiLine"
-    | Null -> "Null"
-
   let defaultEnv = { 
     source = "undefined";
-    is_in_comment = Null;
     state = [ S_Default ]; (* I should use a stack for this too *)
     expr = [];
     expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
@@ -511,10 +503,6 @@ module Lex_env = struct
         state;
         expr_buffers = stack;
         expr = combined_expr }
-
-  (* Sets the is_in_comment attribute to Null *)
-  let exit_comment env =
-    { env with is_in_comment = Null }
   
   let resolve_errors tok env =
     match tok with
@@ -524,7 +512,6 @@ module Lex_env = struct
   let debug env = 
     Printf.sprintf "\n{\n\
       \tsource = \"\x1b[35m%s\x1b[39m\";\n\
-      \tis_in_comment = \x1b[35m%s\x1b[39m;\n\
       \tstate = \x1b[35m%s\x1b[39m;\n\
       \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
       \texpr_buffers = Utils.Stack.create [ %d ];\n\
@@ -532,7 +519,6 @@ module Lex_env = struct
       \terror = None;\n\
     }\n" 
     env.source 
-    (comment_to_string env.is_in_comment)
     (List.fold_left 
       (fun acc state -> acc ^ "\n" ^ (state_to_string state)) "" env.state)
     (List.fold_left 
@@ -591,12 +577,22 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | "true" | "false"  {
-                        let env = push Bool env lexbuf in
-                        token env lexbuf
+  | "#!"              {
+                        (* This need to be at the start of the file to be valid *)
+                        let tok = if lexbuf.Lexing.lex_start_pos = 0
+                          then swallow_single_comment lexbuf (* Handling as comment for now *)
+                          else Syntax_Error "Illegal hashbang found in file"
+                        in let env = env
+                            |> resolve_errors tok
+                            |> push ~tok:(tok) ~lxb:(lexbuf) in
+                          token env lexbuf
                       }
   | "..."             {
                         let env = push Spread env lexbuf in
+                        token env lexbuf
+                      }
+  | "true" | "false"  {
+                        let env = push Bool env lexbuf in
                         token env lexbuf
                       }
   | '`'               {
