@@ -219,7 +219,7 @@ module Token = struct
     | Implements -> "Implements"
     | Spread -> "Spread"
     | TemplateString (str,tok_lists) -> (
-        Printf.sprintf "TemplateString `%s`\n - {\n%s - }"
+        Printf.sprintf "TemplateString `%s`\n -{\n%s -}"
         str
         (List.fold_left 
           (fun acc toks -> Printf.sprintf "%s - [ %s ]\n" 
@@ -575,7 +575,7 @@ let word = letter alphanumeric*
  * These are a list of the symbols which operators are composed of. *)
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':' '?']
 
-let templatechars = alphanumeric | whitespace | symbols
+let templatechars = alphanumeric | whitespace | symbols | ['('')' '['']' '{''}']
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
@@ -708,14 +708,18 @@ and read_template_strings env buf exprs = parse
   | '$' '{' (templatechars* as raw_expr) '}'
                     {
                       if (String.length raw_expr) = 0 
-                        then Syntax_Error "Empty template string argument"
-                        else begin
-                          (* Spawn a new instance of our lexer and work on expression *)
+                        then begin
+                          let expr = Syntax_Error "Empty template string argument" in
+                          let expr' = dress expr lexbuf in
+                          let exprs' = [expr'] :: exprs in
+                          read_template_strings env buf exprs' lexbuf
+                        end else begin
+                          (* Spawn a new instance of our lexer and work on expression *) 
                           let open Batteries in
                           let input = IO.input_string raw_expr in
                           let lexbuf' = Lexing.from_input input in
                           let cooked_expr_env = token new_env lexbuf' in
-                          (* Consider checking for errors in arg_env.error *)
+                          (* Consider checking for errors in cooked_expr_env.error *)
                           let expr = cooked_expr_env.token_list in
                           let exprs' = expr :: exprs in
                           read_template_strings env buf exprs' lexbuf
@@ -730,16 +734,6 @@ and read_template_strings env buf exprs = parse
                       Buffer.add_char buf c;
                       read_template_strings env buf exprs lexbuf
                     }
-
-and read_string_template buf = parse
-  | '`'             { TemplateString ((Buffer.contents buf), []) }
-  | '\\' '/'        { Buffer.add_char buf '/'; read_string_template buf lexbuf }
-  | '\\' '"'        { Buffer.add_char buf '\"'; read_string_template buf lexbuf }
-  | '\\'            { Buffer.add_char buf '\\'; read_string_template buf lexbuf }
-  | [^ '`' '\\']+   { Buffer.add_string buf (Lexing.lexeme lexbuf);
-                      read_string_template buf lexbuf }
-  | eof             { Syntax_Error "Template string is not terminated" }
-  | _               { Syntax_Error ("Illegal template string character: " ^ (Lexing.lexeme lexbuf)) }
 
 (* Swallows everything until a newline is encountered. By doing this, we isolate this
  * process and give us the option to save or do whatever we want to comments if we want
