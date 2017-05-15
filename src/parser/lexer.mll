@@ -219,10 +219,11 @@ module Token = struct
     | Implements -> "Implements"
     | Spread -> "Spread"
     | TemplateString (str,tok_lists) -> (
-        Printf.sprintf "TemplateString `%s`\n - {\n - %s\n - }"
+        Printf.sprintf "TemplateString `%s`\n - {\n%s - }"
         str
         (List.fold_left 
-          (fun acc toks -> Printf.sprintf "[ %s ]" 
+          (fun acc toks -> Printf.sprintf "%s - [ %s ]\n" 
+            acc
             (List.fold_left 
               (fun acc e -> acc ^ (lazy_token_to_string e)  ^ ", ")
               "" toks))
@@ -621,15 +622,6 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | '`'               {
-                        (* As of now, ${...} is being parsed as part of the string, we
-                         * can (and should probably) parse this in the parsing phase. *)
-                        let tok = read_string_template (Buffer.create 16) lexbuf in
-                        let env = env
-                          |> resolve_errors tok
-                          |> push ~tok:(tok) ~lxb:(lexbuf) in
-                        token env lexbuf
-                      }
   | "'"|'"' as q      {
                         let tok = read_string q (Buffer.create 16) lexbuf in
                         let env = env
@@ -709,6 +701,8 @@ and read_template_strings env buf exprs = parse
                     }
   | '`'             {
                       let str = Buffer.contents buf in
+                      let _d = Printf.sprintf "%s" (string_of_int (List.length exprs)) in
+                      print_endline _d;
                       TemplateString (str, exprs)
                     }
   | '$' '{' (templatechars* as raw_expr) '}'
