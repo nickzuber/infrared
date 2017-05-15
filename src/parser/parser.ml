@@ -19,10 +19,10 @@ let parse file =
   | None -> final_env
 
 let print_tokens env =
-  Printf.printf "FILE:\t%s\nTOKENS:" env.source;
+  Printf.printf "FILE:\t%s\nTOKENS:\n" env.source;
   List.iter (fun tok -> 
-    Printf.printf "\t%s\n"
-    (Token.full_token_to_string tok))
+    Printf.printf "%s\n"
+    (Token.full_token_to_string ~indent:2 tok))
   env.token_list
 
 let print_ast envs =

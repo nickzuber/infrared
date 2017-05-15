@@ -152,72 +152,84 @@ module Token = struct
     | Let
     | Const
 
-  let rec token_to_string tok =
+  let rec token_to_string tok i =
+    let indentation = String.make i ' ' in
+    let step = 4 in
     match tok with
     | Block content -> (
-      Printf.sprintf "Block {\n\t%s\n\t}"
-        (List.fold_left 
-          (fun acc e -> 
-            match acc with
-            | "" -> acc ^ (full_token_to_string e)
-            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
-        "" content))
-    | Variable t -> 
-      Printf.sprintf "Variable <%s>"
-        (var_to_string t)
-    | Expression expr -> (
-      Printf.sprintf "Expression (\n\t%s\n\t)"
-        (List.fold_left
-          (fun acc e -> 
-            match acc with
-            | "" -> acc ^ (full_token_to_string e)
-            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
-        "" expr))
+      if List.length content = 0 
+        then indentation ^ "Block {}"
+        else Printf.sprintf "%sBlock {\n%s%s}"
+          indentation
+          (List.fold_left 
+            (fun acc e -> 
+              Printf.sprintf "%s%s\n"
+              acc
+              (full_token_to_string ~indent:(i + step) e))
+          "" content)
+          indentation)
+    | Expression content -> (
+      if List.length content = 0 
+        then indentation ^ "Expression ()"
+        else Printf.sprintf "%sExpression (\n%s%s)"
+          indentation
+          (List.fold_left 
+            (fun acc e -> 
+              Printf.sprintf "%s%s\n"
+              acc
+              (full_token_to_string ~indent:(i + step) e))
+          "" content)
+          indentation)
     | Array content -> (
-      Printf.sprintf "Array [\n\t%s\n\t]"
-        (List.fold_left
-          (fun acc e -> 
-            match acc with
-            | "" -> acc ^ (full_token_to_string e)
-            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
-        "" content))
-    | Number -> "Number"
-    | Bool -> "Bool"
-    | String str -> Printf.sprintf "String \"%s\"" str
-    | Comment -> "Comment"
-    | Break -> "Break"
-    | Case -> "Case"
-    | Catch -> "Catch"
-    | Continue -> "Continue"
-    | Debugger -> "Debugger"
-    | Default -> "Default"
-    | Delete -> "Delete"
-    | Do -> "Do"
-    | Else -> "Else"
-    | Export -> "Exports"
-    | Extends -> "Extends"
-    | Finally -> "Finally"
-    | For -> "For"
-    | Function -> "Function"
-    | If -> "If"
-    | Import -> "Import"
-    | In -> "In"
-    | Instanceof -> "Instanceof"
-    | New -> "New"
-    | Return -> "Return"
-    | Super -> "Super"
-    | Switch -> "Switch"
-    | This -> "This"
-    | Throw -> "Throw"
-    | Try -> "Try"
-    | Typeof -> "Typeof"
-    | Void -> "Void"
-    | While -> "While"
-    | With -> "With"
-    | Yield -> "Yields"
-    | Class -> "Class"
-    | Implements -> "Implements"
-    | Spread -> "Spread"
+      if List.length content = 0 
+        then indentation ^ "Array []"
+        else Printf.sprintf "%sArray [\n%s%s]"
+          indentation
+          (List.fold_left 
+            (fun acc e -> 
+              Printf.sprintf "%s%s\n"
+              acc
+              (full_token_to_string ~indent:(i + step) e))
+          "" content)
+          indentation)
+    | Variable t -> indentation ^ "Variable: " ^ (var_to_string t)
+    | Number -> indentation ^ "Number"
+    | Bool -> indentation ^ "Bool"
+    | String str -> indentation ^ "String: " ^ str
+    | Comment -> indentation ^ "Comment"
+    | Break -> indentation ^ "Break"
+    | Case -> indentation ^ "Case"
+    | Catch -> indentation ^ "Catch"
+    | Continue -> indentation ^ "Continue"
+    | Debugger -> indentation ^ "Debugger"
+    | Default -> indentation ^ "Default"
+    | Delete -> indentation ^ "Delete"
+    | Do -> indentation ^ "Do"
+    | Else -> indentation ^ "Else"
+    | Export -> indentation ^ "Exports"
+    | Extends -> indentation ^ "Extends"
+    | Finally -> indentation ^ "Finally"
+    | For -> indentation ^ "For"
+    | Function -> indentation ^ "Function"
+    | If -> indentation ^ "If"
+    | Import -> indentation ^ "Import"
+    | In -> indentation ^ "In"
+    | Instanceof -> indentation ^ "Instanceof"
+    | New -> indentation ^ "New"
+    | Return -> indentation ^ "Return"
+    | Super -> indentation ^ "Super"
+    | Switch -> indentation ^ "Switch"
+    | This -> indentation ^ "This"
+    | Throw -> indentation ^ "Throw"
+    | Try -> indentation ^ "Try"
+    | Typeof -> indentation ^ "Typeof"
+    | Void -> indentation ^ "Void"
+    | While -> indentation ^ "While"
+    | With -> indentation ^ "With"
+    | Yield -> indentation ^ "Yields"
+    | Class -> indentation ^ "Class"
+    | Implements -> indentation ^ "Implements"
+    | Spread -> indentation ^ "Spread"
     | TemplateString (str,tok_lists) -> (
         Printf.sprintf "TemplateString `%s`\n -{\n%s -}"
         str
@@ -228,21 +240,21 @@ module Token = struct
               (fun acc e -> acc ^ (lazy_token_to_string e)  ^ ", ")
               "" toks))
         "" tok_lists))
-    | Async -> "Async"
-    | Await -> "Await"
-    | Enum -> "Enum"
-    | Interface -> "Interface"
-    | Package -> "Package"
-    | Private -> "Private"
-    | Protected -> "Protected"
-    | Public -> "Public"
-    | Static -> "Static"
-    | Null -> "Null"
-    | Identifier str -> Printf.sprintf "Identifier \"%s\"" str
-    | Operator op -> Printf.sprintf "Operator <%s>" (op_to_string op)
+    | Async -> indentation ^ "Async"
+    | Await -> indentation ^ "Await"
+    | Enum -> indentation ^ "Enum"
+    | Interface -> indentation ^ "Interface"
+    | Package -> indentation ^ "Package"
+    | Private -> indentation ^ "Private"
+    | Protected -> indentation ^ "Protected"
+    | Public -> indentation ^ "Public"
+    | Static -> indentation ^ "Static"
+    | Null -> indentation ^ "Null"
+    | Identifier str -> indentation ^ "Identifier: " ^ str
+    | Operator op -> indentation ^ "Operator: " ^ (op_to_string op)
     (* Error Handling *)
-    | Unknown_Token str -> Printf.sprintf "\x1b[31mUnknown_Token: %s \x1b[39m" str
-    | Syntax_Error str -> Printf.sprintf "\x1b[31mSyntax_Error: %s \x1b[39m" str
+    | Unknown_Token str -> Printf.sprintf "%s\x1b[31mUnknown_Token: %s \x1b[39m" indentation str
+    | Syntax_Error str -> Printf.sprintf "%s\x1b[31mSyntax_Error: %s \x1b[39m" indentation str
 
   and op_to_string = function
     (* Operators *)
@@ -295,16 +307,16 @@ module Token = struct
     | Let -> "Let"
     | Const -> "Const"
 
-  and full_token_to_string tok =
+  and full_token_to_string ?(indent=0) tok =
     let open Loc in
-    Printf.sprintf "%d:%d\t%s"
+    Printf.sprintf "%s \x1b[90m(%d:%d)\x1b[39m"
+      (token_to_string tok.body indent)
       tok.loc.line
       tok.loc.column
-      (token_to_string tok.body)
 
   and lazy_token_to_string tok =
     let open Loc in
-    token_to_string tok.body
+    token_to_string tok.body 0
 
   (* @NOTE @TODO
    * If we want to identify these complex operators, we can't use this

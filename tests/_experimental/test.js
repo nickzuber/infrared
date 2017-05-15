@@ -1,8 +1,8 @@
 
-`start ${1+1} 
+const a = 4;
 
-end ${}
+function foo () {
+    return;
+}
 
-${function ()}
-
-`
+let arr = [];
