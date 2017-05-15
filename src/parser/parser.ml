@@ -8,8 +8,9 @@ open Lex_env
 let parse file =
   let input = open_in file in
   let filebuf = Lexing.from_input input in
-  let env = { Lex_env.defaultEnv with source = file; } in
+  let env = { Lex_env.new_env with source = file; } in
   let final_env = Lexer.token env filebuf in
+  IO.close_in input; (* might not be best spot for this *)
   (* debug final_env; *)
   match final_env.error with
   | Some (msg, lvl) -> 
@@ -22,7 +23,7 @@ let print_tokens env =
   List.iter (fun tok -> 
     Printf.printf "\t%s\n"
     (Token.full_token_to_string tok))
-  env.ast
+  env.token_list
 
 let print_ast envs =
   List.iter (fun env -> print_tokens env) envs

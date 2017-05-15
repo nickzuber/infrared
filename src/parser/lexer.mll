@@ -1,4 +1,9 @@
-
+(* @TODO
+ * List of jobs or tasks that need to be done or are worth noting.
+ *  - Need support for `Tagged template literals`
+ *    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+ *  - Need support for recognizing regex
+ *)
 {
 module rec Loc : sig
   type t = {
@@ -75,7 +80,8 @@ module Token = struct
     | Implements
     | Import
     | Spread
-    | TemplateString of string
+    (* Template string w/ list of TokenTrees *)
+    | TemplateString of string * t list list
     (* ES7 *)
     | Async
     | Await
@@ -150,27 +156,30 @@ module Token = struct
     match tok with
     | Block content -> (
       Printf.sprintf "Block {\n\t%s\n\t}"
-        (List.fold_left (fun acc e -> 
-          match acc with
-          | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
+        (List.fold_left 
+          (fun acc e -> 
+            match acc with
+            | "" -> acc ^ (full_token_to_string e)
+            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" content))
     | Variable t -> 
       Printf.sprintf "Variable <%s>"
         (var_to_string t)
     | Expression expr -> (
       Printf.sprintf "Expression (\n\t%s\n\t)"
-        (List.fold_left (fun acc e -> 
-          match acc with
-          | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
+        (List.fold_left
+          (fun acc e -> 
+            match acc with
+            | "" -> acc ^ (full_token_to_string e)
+            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" expr))
     | Array content -> (
       Printf.sprintf "Array [\n\t%s\n\t]"
-        (List.fold_left (fun acc e -> 
-          match acc with
-          | "" -> acc ^ (full_token_to_string e)
-          | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
+        (List.fold_left
+          (fun acc e -> 
+            match acc with
+            | "" -> acc ^ (full_token_to_string e)
+            | _ -> Printf.sprintf "%s \n\t%s" acc (full_token_to_string e))
         "" content))
     | Number -> "Number"
     | Bool -> "Bool"
@@ -209,7 +218,15 @@ module Token = struct
     | Class -> "Class"
     | Implements -> "Implements"
     | Spread -> "Spread"
-    | TemplateString str -> Printf.sprintf "TemplateString `%s`" str
+    | TemplateString (str,tok_lists) -> (
+        Printf.sprintf "TemplateString `%s`\n - {\n - %s\n - }"
+        str
+        (List.fold_left 
+          (fun acc toks -> Printf.sprintf "[ %s ]" 
+            (List.fold_left 
+              (fun acc e -> acc ^ (lazy_token_to_string e)  ^ ", ")
+              "" toks))
+        "" tok_lists))
     | Async -> "Async"
     | Await -> "Await"
     | Enum -> "Enum"
@@ -402,10 +419,10 @@ module Lex_env = struct
     state: state_t list;
     expr: Token.t list;
     expr_buffers: Token.t list Utils.Stack.t;
-    (* The ast is "backwards" -- newest token is 
+    (* The token_list is "backwards" -- newest token is 
      * inserted into the front of the list. 
      * TODO: Consider using a queue? *)
-    ast: Token.t list;
+    token_list: Token.t list;
     error: (string * Level.t) option;
   }
 
@@ -423,12 +440,12 @@ module Lex_env = struct
     | S_Expression -> "S_Expression"
     | S_Panic -> "S_Panic"
 
-  let defaultEnv = { 
+  let new_env = { 
     source = "undefined";
     state = [ S_Default ]; (* I should use a stack for this too *)
     expr = [];
     expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
-    ast = [];
+    token_list = [];
     error = None;
   }
 
@@ -456,7 +473,7 @@ module Lex_env = struct
   let push ~tok env ~lxb =
     let tok = dress tok lxb in
     match List.hd env.state with
-    | S_Default -> { env with ast = tok :: env.ast }
+    | S_Default -> { env with token_list = tok :: env.token_list }
     | _ -> { env with expr = tok :: env.expr }
   
   (* Add current expression to the expression buffer
@@ -485,7 +502,7 @@ module Lex_env = struct
     (* There are no more closures left to resolve *)
     | S_Default -> { env with
       state = List.tl env.state;
-      ast = dressed_closure_token :: env.ast;
+      token_list = dressed_closure_token :: env.token_list;
       expr = [] }
     | _ ->
       (* We still have closures left to resolve
@@ -515,7 +532,7 @@ module Lex_env = struct
       \tstate = \x1b[35m%s\x1b[39m;\n\
       \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
       \texpr_buffers = Utils.Stack.create [ %d ];\n\
-      \tast = [\x1b[35m%s\x1b[39m\n\t];\n\
+      \ttoken_list = [\x1b[35m%s\x1b[39m\n\t];\n\
       \terror = None;\n\
     }\n" 
     env.source 
@@ -525,7 +542,7 @@ module Lex_env = struct
       (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.expr)
     (Utils.Stack.size env.expr_buffers)
     (List.fold_left 
-      (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.ast)
+      (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.token_list)
     |> print_endline
 
 
@@ -535,10 +552,10 @@ open Lex_env
 
 (* Different ways you can write a number 
    https://github.com/facebook/flow/blob/master/src/parser/lexer_flow.mll#L755 *)
-let hex = ['0'-'9''a'-'f''A'-'F']
-let binnumber = '0' ['B''b'] ['0''1']+
-let hexnumber = '0' ['X''x'] hex+
-let octnumber = '0' ['O''o'] ['0'-'7']+
+let hex = ['0'-'9' 'a'-'f' 'A'-'F']
+let binnumber = '0' ['B' 'b'] ['0' '1']+
+let hexnumber = '0' ['X' 'x'] hex+
+let octnumber = '0' ['O' 'o'] ['0'-'7']+
 let legacyoctnumber = '0' ['0'-'7']+
 let scinumber = ['0'-'9']*'.'?['0'-'9']+['e''E']['-''+']?['0'-'9']+
 let digit = ['0'-'9']
@@ -548,7 +565,7 @@ let floatnumber = ['0'-'9']*'.'['0'-'9']+
 let number = binnumber | hexnumber | octnumber | legacyoctnumber | scinumber | wholenumber | floatnumber
 
 let whitespace = [' ' '\t' '\r']
-let letter = ['a'-'z''A'-'Z''_''$']
+let letter = ['a'-'z' 'A'-'Z' '_''$']
 let alphanumeric = digit | letter
 
 let word = letter alphanumeric*
@@ -556,6 +573,8 @@ let word = letter alphanumeric*
 (* If I forget a symbol, add that here boi 
  * These are a list of the symbols which operators are composed of. *)
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':' '?']
+
+let templatechars = alphanumeric | whitespace | symbols
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
@@ -593,6 +612,13 @@ rule token env = parse
                       }
   | "true" | "false"  {
                         let env = push Bool env lexbuf in
+                        token env lexbuf
+                      }
+  | '`'               {
+                        let tok = read_template_strings env (Buffer.create 16) [] lexbuf in
+                        let env = env
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
   | '`'               {
@@ -675,8 +701,44 @@ and read_string q buf = parse
                       read_string q buf lexbuf 
                     }
 
+and read_template_strings env buf exprs = parse
+  | '\\' _
+                    {
+                      Buffer.add_string buf (Lexing.lexeme lexbuf);
+                      read_template_strings env buf exprs lexbuf
+                    }
+  | '`'             {
+                      let str = Buffer.contents buf in
+                      TemplateString (str, exprs)
+                    }
+  | '$' '{' (templatechars* as raw_expr) '}'
+                    {
+                      if (String.length raw_expr) = 0 
+                        then Syntax_Error "Empty template string argument"
+                        else begin
+                          (* Spawn a new instance of our lexer and work on expression *)
+                          let open Batteries in
+                          let input = IO.input_string raw_expr in
+                          let lexbuf' = Lexing.from_input input in
+                          let cooked_expr_env = token new_env lexbuf' in
+                          (* Consider checking for errors in arg_env.error *)
+                          let expr = cooked_expr_env.token_list in
+                          let exprs' = expr :: exprs in
+                          read_template_strings env buf exprs' lexbuf
+                        end
+                    }
+  | '\n'            {
+                      let _ = Lexing.new_line lexbuf in
+                      read_template_strings env buf exprs lexbuf
+                    }
+  | eof             { Syntax_Error "TemplateString is terminated illegally or not at all" }
+  | _ as c          { 
+                      Buffer.add_char buf c;
+                      read_template_strings env buf exprs lexbuf
+                    }
+
 and read_string_template buf = parse
-  | '`'             { TemplateString (Buffer.contents buf) }
+  | '`'             { TemplateString ((Buffer.contents buf), []) }
   | '\\' '/'        { Buffer.add_char buf '/'; read_string_template buf lexbuf }
   | '\\' '"'        { Buffer.add_char buf '\"'; read_string_template buf lexbuf }
   | '\\'            { Buffer.add_char buf '\\'; read_string_template buf lexbuf }
@@ -689,18 +751,18 @@ and read_string_template buf = parse
  * process and give us the option to save or do whatever we want to comments if we want
  * to in the future. *)
 and swallow_single_comment = parse
-  | '\n'              { 
-                        let _ = Lexing.new_line lexbuf in
-                        Comment
-                      }
-  | eof               { Comment }
-  | _                 { swallow_single_comment lexbuf }
+  | '\n'            { 
+                      let _ = Lexing.new_line lexbuf in
+                      Comment
+                    }
+  | eof             { Comment }
+  | _               { swallow_single_comment lexbuf }
 
 and swallow_multi_comment = parse
-  | "*/"              { Comment }
-  | '\n'              {
-                        let _ = Lexing.new_line lexbuf in
-                        swallow_multi_comment lexbuf
-                      }
+  | "*/"            { Comment }
+  | '\n'            {
+                      let _ = Lexing.new_line lexbuf in
+                      swallow_multi_comment lexbuf
+                    }
   | eof             { Syntax_Error "Multiline comment is not terminated" }
   | _               { swallow_multi_comment lexbuf }
