@@ -604,15 +604,8 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | '"'               {
-                        let tok = read_string_dquote (Buffer.create 16) lexbuf in
-                        let env = env
-                          |> resolve_errors tok
-                          |> push ~tok:(tok) ~lxb:(lexbuf) in
-                        token env lexbuf
-                      }
-  | '\''              {
-                        let tok = read_string_squote (Buffer.create 16) lexbuf in
+  | "'"|'"' as q      {
+                        let tok = read_string q (Buffer.create 16) lexbuf in
                         let env = env
                           |> resolve_errors tok
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
@@ -662,31 +655,25 @@ rule token env = parse
                         token env lexbuf
                       }
   
-(* Creating string buffers
- * https://github.com/realworldocaml/examples/blob/master/code/parsing/lexer.mll 
- * NOTE: Splitting the double quote and single quote isn't perfect since we dupe code, but
- * unless there's a way to use variables as regex that I don't know about, this is
- * the most efficient solution. Taking them both with the same regex then checking/separating
- * is "cleaner" but less efficient, so that's another option. *)
-and read_string_dquote buf = parse
-  | '"'             { String (Buffer.contents buf) }
-  | '\\' '/'        { Buffer.add_char buf '/'; read_string_dquote buf lexbuf }
-  | '\\' '"'        { Buffer.add_char buf '\"'; read_string_dquote buf lexbuf }
-  | '\\'            { Buffer.add_char buf '\\'; read_string_dquote buf lexbuf }
-  | [^ '"' '\\']+   { Buffer.add_string buf (Lexing.lexeme lexbuf);
-                      read_string_dquote buf lexbuf }
-  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
-  | eof             { Syntax_Error "String is not terminated" }
-
-and read_string_squote buf = parse
-  | '\''            { String (Buffer.contents buf) }
-  | '\\' '/'        { Buffer.add_char buf '/'; read_string_squote buf lexbuf }
-  | '\\' '\''       { Buffer.add_char buf '\''; read_string_squote buf lexbuf }
-  | '\\'            { Buffer.add_char buf '\\'; read_string_squote buf lexbuf }
-  | [^ '\'' '\\']+  { Buffer.add_string buf (Lexing.lexeme lexbuf);
-                      read_string_squote buf lexbuf }
-  | eof             { Syntax_Error "String is not terminated" }
-  | _               { Syntax_Error ("Illegal string character: " ^ (Lexing.lexeme lexbuf)) }
+and read_string q buf = parse
+  | '\\' _
+                    {
+                      Buffer.add_string buf (Lexing.lexeme lexbuf);
+                      read_string q buf lexbuf
+                    }
+  | "'"|'"' as q'   {
+                      if q = q'
+                        then String (Buffer.contents buf)
+                        else begin
+                          Buffer.add_string buf (Lexing.lexeme lexbuf);
+                          read_string q buf lexbuf
+                        end
+                    }
+  | '\n' | eof      { Syntax_Error "String is terminated illegally or not at all" }
+  | _ as c          { 
+                      Buffer.add_char buf c;
+                      read_string q buf lexbuf 
+                    }
 
 and read_string_template buf = parse
   | '`'             { TemplateString (Buffer.contents buf) }
