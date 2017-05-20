@@ -28,10 +28,7 @@ EXEC = "./infrared.native"
 LEXER_TESTS = (join(dir_path, "lexer"), "tokenize")
 PARSER_TESTS = (join(dir_path, "parser"), "parse")
 
-""" 
-    Make sure to include the `.` prefix
-    These are output files that we accept for lexing/parsing
-"""
+""" Make sure to include the `.` prefix """
 WHITE_LISTED_EXTENSIONS = [".js"]
 
 def safe_index(lst, str):
