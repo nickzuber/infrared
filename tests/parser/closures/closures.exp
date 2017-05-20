@@ -1,307 +1,112 @@
-
-{
-	source = "[35mtests/parser/closures/closures.js[39m";
-	is_in_comment = [35mfalse[39m;
-	state = [35m
-S_Default[39m;
-	expr = [[35m[39m
-	];
-	expr_buffers = Utils.Stack.create [ 0 ];
-	ast = [[35m
-24:7	Block {
-	24:6	Block {
-	24:5	Block {
-	
-	}
-	}
-	}
-24:1	Identifier "a"
-23:12	Expression (
-	23:11	Identifier "a" 
-	23:10	Expression (
-	23:9	Array [
-	
-	] 
-	23:7	Identifier "a"
-	) 
-	23:5	Identifier "s" 
-	23:4	Expression (
-	
-	) 
-	23:2	Identifier "a"
-	)
-22:8	Expression (
-	22:7	Block {
-	22:6	Identifier "f"
-	} 
-	22:4	Array [
-	22:3	Identifier "f"
-	]
-	)
-21:9	Expression (
-	21:8	Array [
-	21:7	Identifier "q" 
-	21:6	Block {
-	21:5	Identifier "d"
-	} 
-	21:3	Identifier "d"
-	]
-	)
-20:9	Expression (
-	20:8	Expression (
-	20:7	Identifier "c" 
-	20:6	Expression (
-	
-	) 
-	20:3	Identifier "s"
-	)
-	)
-20:1	Identifier "a"
-19:6	Block {
-	19:5	Identifier "s" 
-	19:4	Array [
-	19:3	Identifier "c"
-	]
-	}
-18:6	Array [
-	18:5	Identifier "s" 
-	18:4	Expression (
-	
-	) 
-	18:2	Identifier "c"
-	]
-17:7	Expression (
-	17:6	Identifier "a" 
-	17:5	Array [
-	17:4	Identifier "s"
-	] 
-	17:2	Identifier "c"
-	)
-16:7	Expression (
-	16:6	Identifier "a" 
-	16:5	Expression (
-	16:4	Identifier "x"
-	) 
-	16:2	Identifier "a"
-	)
-15:3	Array [
-	15:2	Identifier "a"
-	]
-14:3	Block {
-	14:2	Identifier "a"
-	}
-13:3	Expression (
-	13:2	Identifier "a"
-	)
-11:8	Expression (
-	11:7	Expression (
-	11:6	Array [
-	
-	] 
-	11:3	Expression (
-	
-	)
-	)
-	)
-10:6	Expression (
-	10:5	Block {
-	
-	} 
-	10:3	Array [
-	
-	]
-	)
-9:6	Expression (
-	9:5	Array [
-	9:4	Block {
-	
-	}
-	]
-	)
-8:6	Expression (
-	8:5	Expression (
-	8:4	Expression (
-	
-	)
-	)
-	)
-7:4	Block {
-	7:3	Array [
-	
-	]
-	}
-6:4	Array [
-	6:3	Expression (
-	
-	)
-	]
-5:4	Expression (
-	5:3	Array [
-	
-	]
-	)
-4:4	Expression (
-	4:3	Expression (
-	
-	)
-	)
-3:2	Array [
-	
-	]
-2:2	Block {
-	
-	}
-1:2	Expression (
-	
-	)[39m
-	];
-	error = None;
-}
-
-FILE:	tests/parser/closures/closures.js
-TOKENS:	24:7	Block {
-	24:6	Block {
-	24:5	Block {
-	
-	}
-	}
-	}
-	24:1	Identifier "a"
-	23:12	Expression (
-	23:11	Identifier "a" 
-	23:10	Expression (
-	23:9	Array [
-	
-	] 
-	23:7	Identifier "a"
-	) 
-	23:5	Identifier "s" 
-	23:4	Expression (
-	
-	) 
-	23:2	Identifier "a"
-	)
-	22:8	Expression (
-	22:7	Block {
-	22:6	Identifier "f"
-	} 
-	22:4	Array [
-	22:3	Identifier "f"
-	]
-	)
-	21:9	Expression (
-	21:8	Array [
-	21:7	Identifier "q" 
-	21:6	Block {
-	21:5	Identifier "d"
-	} 
-	21:3	Identifier "d"
-	]
-	)
-	20:9	Expression (
-	20:8	Expression (
-	20:7	Identifier "c" 
-	20:6	Expression (
-	
-	) 
-	20:3	Identifier "s"
-	)
-	)
-	20:1	Identifier "a"
-	19:6	Block {
-	19:5	Identifier "s" 
-	19:4	Array [
-	19:3	Identifier "c"
-	]
-	}
-	18:6	Array [
-	18:5	Identifier "s" 
-	18:4	Expression (
-	
-	) 
-	18:2	Identifier "c"
-	]
-	17:7	Expression (
-	17:6	Identifier "a" 
-	17:5	Array [
-	17:4	Identifier "s"
-	] 
-	17:2	Identifier "c"
-	)
-	16:7	Expression (
-	16:6	Identifier "a" 
-	16:5	Expression (
-	16:4	Identifier "x"
-	) 
-	16:2	Identifier "a"
-	)
-	15:3	Array [
-	15:2	Identifier "a"
-	]
-	14:3	Block {
-	14:2	Identifier "a"
-	}
-	13:3	Expression (
-	13:2	Identifier "a"
-	)
-	11:8	Expression (
-	11:7	Expression (
-	11:6	Array [
-	
-	] 
-	11:3	Expression (
-	
-	)
-	)
-	)
-	10:6	Expression (
-	10:5	Block {
-	
-	} 
-	10:3	Array [
-	
-	]
-	)
-	9:6	Expression (
-	9:5	Array [
-	9:4	Block {
-	
-	}
-	]
-	)
-	8:6	Expression (
-	8:5	Expression (
-	8:4	Expression (
-	
-	)
-	)
-	)
-	7:4	Block {
-	7:3	Array [
-	
-	]
-	}
-	6:4	Array [
-	6:3	Expression (
-	
-	)
-	]
-	5:4	Expression (
-	5:3	Array [
-	
-	]
-	)
-	4:4	Expression (
-	4:3	Expression (
-	
-	)
-	)
-	3:2	Array [
-	
-	]
-	2:2	Block {
-	
-	}
-	1:2	Expression (
-	
-	)
+FILE:	/Users/nick/projects/infrared/tests/parser/closures/closures.js
+TOKENS:
+  Expression () [90m(1:2)[39m
+  Block {} [90m(2:2)[39m
+  Array [] [90m(3:2)[39m
+  Expression (
+      Expression () [90m(4:3)[39m
+  ) [90m(4:4)[39m
+  Expression (
+      Array [] [90m(5:3)[39m
+  ) [90m(5:4)[39m
+  Array [
+      Expression () [90m(6:3)[39m
+  ] [90m(6:4)[39m
+  Block {
+      Array [] [90m(7:3)[39m
+  } [90m(7:4)[39m
+  Expression (
+      Expression (
+          Expression () [90m(8:4)[39m
+      ) [90m(8:5)[39m
+  ) [90m(8:6)[39m
+  Expression (
+      Array [
+          Block {} [90m(9:4)[39m
+      ] [90m(9:5)[39m
+  ) [90m(9:6)[39m
+  Expression (
+      Block {} [90m(10:5)[39m
+      Array [] [90m(10:3)[39m
+  ) [90m(10:6)[39m
+  Expression (
+      Expression (
+          Array [] [90m(11:6)[39m
+          Expression () [90m(11:3)[39m
+      ) [90m(11:7)[39m
+  ) [90m(11:8)[39m
+  Expression (
+      Identifier: a [90m(13:2)[39m
+  ) [90m(13:3)[39m
+  Block {
+      Identifier: a [90m(14:2)[39m
+  } [90m(14:3)[39m
+  Array [
+      Identifier: a [90m(15:2)[39m
+  ] [90m(15:3)[39m
+  Expression (
+      Identifier: a [90m(16:6)[39m
+      Expression (
+          Identifier: x [90m(16:4)[39m
+      ) [90m(16:5)[39m
+      Identifier: a [90m(16:2)[39m
+  ) [90m(16:7)[39m
+  Expression (
+      Identifier: a [90m(17:6)[39m
+      Array [
+          Identifier: s [90m(17:4)[39m
+      ] [90m(17:5)[39m
+      Identifier: c [90m(17:2)[39m
+  ) [90m(17:7)[39m
+  Array [
+      Identifier: s [90m(18:5)[39m
+      Expression () [90m(18:4)[39m
+      Identifier: c [90m(18:2)[39m
+  ] [90m(18:6)[39m
+  Block {
+      Identifier: s [90m(19:5)[39m
+      Array [
+          Identifier: c [90m(19:3)[39m
+      ] [90m(19:4)[39m
+  } [90m(19:6)[39m
+  Identifier: a [90m(20:1)[39m
+  Expression (
+      Expression (
+          Identifier: c [90m(20:7)[39m
+          Expression () [90m(20:6)[39m
+          Identifier: s [90m(20:3)[39m
+      ) [90m(20:8)[39m
+  ) [90m(20:9)[39m
+  Expression (
+      Array [
+          Identifier: q [90m(21:7)[39m
+          Block {
+              Identifier: d [90m(21:5)[39m
+          } [90m(21:6)[39m
+          Identifier: d [90m(21:3)[39m
+      ] [90m(21:8)[39m
+  ) [90m(21:9)[39m
+  Expression (
+      Block {
+          Identifier: f [90m(22:6)[39m
+      } [90m(22:7)[39m
+      Array [
+          Identifier: f [90m(22:3)[39m
+      ] [90m(22:4)[39m
+  ) [90m(22:8)[39m
+  Expression (
+      Identifier: a [90m(23:11)[39m
+      Expression (
+          Array [] [90m(23:9)[39m
+          Identifier: a [90m(23:7)[39m
+      ) [90m(23:10)[39m
+      Identifier: s [90m(23:5)[39m
+      Expression () [90m(23:4)[39m
+      Identifier: a [90m(23:2)[39m
+  ) [90m(23:12)[39m
+  Identifier: a [90m(24:1)[39m
+  Block {
+      Block {
+          Block {} [90m(24:5)[39m
+      } [90m(24:6)[39m
+  } [90m(24:7)[39m

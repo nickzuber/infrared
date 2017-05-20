@@ -20,15 +20,18 @@ run:
 infrared:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
-# Run test on testing file and compare to actual expected output file
-# We generate those expected output files in a controlled env
 test:
-	echo "not implemented yet"
-	./infrared.native parse tests/_experimental/test.js
+	python tests/run_tests.py
 
-test-save:
-	echo "not implemented yet"
+generate-tests:
+	python tests/generate_tests.py
+
+# @TEMP v
+e-test:
+	./infrared.native parse tests/_experimental/test.js
+e-test-s:
 	./infrared.native parse tests/_experimental/test.js > tests/_experimental/test.exp
+# @TEMP ^
 
 clean:
 	$(OCB) -clean

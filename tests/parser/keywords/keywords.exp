@@ -1,83 +1,36 @@
-
-{
-	source = "[35mtests/parser/keywords/keywords.js[39m";
-	is_in_comment = [35mfalse[39m;
-	state = [35m
-S_Default[39m;
-	expr = [[35m[39m
-	];
-	expr_buffers = Utils.Stack.create [ 0 ];
-	ast = [[35m
-34:1	Variable <Const>
-33:1	Variable <Let>
-32:1	Variable <Var>
-31:1	Enum
-30:1	Import
-29:1	Class
-28:1	With
-27:1	While
-26:1	Void
-25:1	Typeof
-24:1	Try
-23:1	Throw
-22:1	This
-21:1	Super
-20:1	Return
-19:1	Null
-18:1	New
-17:1	Instanceof
-16:1	In
-15:1	If
-14:1	Function
-13:1	For
-12:1	Finally
-11:1	Extends
-10:1	Exports
-9:1	Else
-8:1	Do
-7:1	Default
-6:1	Delete
-5:1	Debugger
-4:1	Continue
-3:1	Catch
-2:1	Case
-1:1	Break[39m
-	];
-	error = None;
-}
-
-FILE:	tests/parser/keywords/keywords.js
-TOKENS:	34:1	Variable <Const>
-	33:1	Variable <Let>
-	32:1	Variable <Var>
-	31:1	Enum
-	30:1	Import
-	29:1	Class
-	28:1	With
-	27:1	While
-	26:1	Void
-	25:1	Typeof
-	24:1	Try
-	23:1	Throw
-	22:1	This
-	21:1	Super
-	20:1	Return
-	19:1	Null
-	18:1	New
-	17:1	Instanceof
-	16:1	In
-	15:1	If
-	14:1	Function
-	13:1	For
-	12:1	Finally
-	11:1	Extends
-	10:1	Exports
-	9:1	Else
-	8:1	Do
-	7:1	Default
-	6:1	Delete
-	5:1	Debugger
-	4:1	Continue
-	3:1	Catch
-	2:1	Case
-	1:1	Break
+FILE:	/Users/nick/projects/infrared/tests/parser/keywords/keywords.js
+TOKENS:
+  Break [90m(1:1)[39m
+  Case [90m(2:1)[39m
+  Catch [90m(3:1)[39m
+  Continue [90m(4:1)[39m
+  Debugger [90m(5:1)[39m
+  Delete [90m(6:1)[39m
+  Default [90m(7:1)[39m
+  Do [90m(8:1)[39m
+  Else [90m(9:1)[39m
+  Exports [90m(10:1)[39m
+  Extends [90m(11:1)[39m
+  Finally [90m(12:1)[39m
+  For [90m(13:1)[39m
+  Function [90m(14:1)[39m
+  If [90m(15:1)[39m
+  In [90m(16:1)[39m
+  Instanceof [90m(17:1)[39m
+  New [90m(18:1)[39m
+  Null [90m(19:1)[39m
+  Return [90m(20:1)[39m
+  Super [90m(21:1)[39m
+  This [90m(22:1)[39m
+  Throw [90m(23:1)[39m
+  Try [90m(24:1)[39m
+  Typeof [90m(25:1)[39m
+  Void [90m(26:1)[39m
+  While [90m(27:1)[39m
+  With [90m(28:1)[39m
+  Class [90m(29:1)[39m
+  Import [90m(30:1)[39m
+  Enum [90m(31:1)[39m
+  Variable: Var [90m(32:1)[39m
+  Variable: Let [90m(33:1)[39m
+  Variable: Const [90m(34:1)[39m
