@@ -7,8 +7,7 @@ let generate_ast_list ~args ~flags =
     let response = Fs.extract_files arg in
     match response with
     | Some paths -> acc @ paths
-    | None -> acc
-  ) [] args in
+    | None -> acc) [] args in
   if List.length files > 0 then
     List.fold_left (fun acc path ->
         let ast = Parser.parse path in
