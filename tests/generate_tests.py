@@ -7,6 +7,9 @@ from time import sleep
 
 dir_path = dirname(realpath(__file__))
 
+class FoundError(Exception):
+    pass
+
 """ Colours """
 END = '\033[0m'
 BOLD = '\033[1m'
@@ -61,12 +64,15 @@ for job in jobs:
             # Check output for simple errors
             if (output.find("Syntax_Error") != -1 or
                output.find("Unknown_Token") != -1):
-               raise
+               raise FoundError
             # Create expected output file
             file_exp_name = file[:-3] + ".exp"
             file_exp = open(file_exp_name, "w")
             file_exp.write(output)
             file_exp.close()
             print(GREEN + u'\u2714' + " DONE " + END + path + "    ")
+        except FoundError:
+            print(RED + u'\u2715' + " FAIL " + END + path + ": " + 
+                  LIGHT_GRAY + "Syntax_Error or Unknown_Token encountered" + END)
         except:
-            print(RED + u'\u2715' + " FAIL " + END + path + "    ")
+            print(RED + u'\u2715' + " ERROR " + END + path + "    ")

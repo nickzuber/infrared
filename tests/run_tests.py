@@ -72,6 +72,7 @@ for job in jobs:
             print(GREEN + u'\u2714' + " PASS " + END + path + "    ")
         except FailedTest as e:
             obj = e.args[0]
-            print(RED + u'\u2715' + " FAIL " + END + path + ": " + str(obj["actual"]) + ", " + str(obj["expected"]))
+            print(RED + u'\u2715' + " FAIL " + END + path + ": " +
+                  LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + END)
         except:
             print(RED + u'\u2715' + " ERROR " + END + path + "    ")
