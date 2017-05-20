@@ -10,6 +10,7 @@ module InfraredShell : sig
 end = struct
   let commands = [
     HelpCommand.spec;
+    TokenizeCommand.spec;
     ParseCommand.spec;
     TypeCheckCommand.spec;
     VersionCommand.spec;
@@ -42,6 +43,16 @@ end = struct
           let (flags', args') = parsedArgs in
           match command.name with
           | cmd when HelpCommand.spec.name = cmd -> HelpCommand.exec commands
+          | cmd when TokenizeCommand.spec.name = cmd -> 
+            (match args' with
+            | [] -> reportCommandError "no arguments given for tokenizing."
+            | arg :: [] -> 
+                Parser.print_tokens (TokenizeCommand.exec ~flags:flags' ~args:[arg])
+            | _ -> 
+                Printf.printf "\nflags found\n";
+                Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
+                Printf.printf "\nPRINTING FILES FOUND: \n";
+                Parser.print_tokens (TokenizeCommand.exec ~flags:flags' ~args:args'))
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
           | cmd when ParseCommand.spec.name = cmd -> 
             (match args' with
@@ -52,8 +63,7 @@ end = struct
                 Printf.printf "\nflags found\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
-                Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args')
-            )
+                Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args'))
           | cmd when TypeCheckCommand.spec.name = cmd ->
               (ignore ("this"))
           | _ -> raise Not_found

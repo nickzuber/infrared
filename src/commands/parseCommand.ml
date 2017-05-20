@@ -20,5 +20,3 @@ let spec = CommandSpec.create
   ~flags:[]
 
 let exec = generate_ast_list;
-
-
