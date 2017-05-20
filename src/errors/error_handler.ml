@@ -6,7 +6,7 @@ let report ~msg ~level =
   | Level.Med ->
       print_endline("❗ Error: " ^ msg)
   | Level.Low ->
-      print_endline("⚠️  Warning: " ^ msg)
+      print_endline("🚩 Warning: " ^ msg)
   | Level.SyntaxError ->
     print_endline("❗ SyntaxError: " ^ msg)
   | Level.ParseError ->

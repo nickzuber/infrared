@@ -9,10 +9,14 @@ let generate_ast_list ~args ~flags =
     | Some paths -> acc @ paths
     | None -> acc
   ) [] args in
-  List.fold_left (fun acc path ->
-    let ast = Parser.parse path in
-    acc @ [ast]
-  ) [] files
+  if List.length files > 0 then
+    List.fold_left (fun acc path ->
+        let ast = Parser.parse path in
+        acc @ [ast]) 
+    [] files
+  else 
+    (Error_handler.report 
+      ~msg:("No files found with given path") ~level:(Level.Low); [])
 
 let spec = CommandSpec.create
   ~name:"parse"
