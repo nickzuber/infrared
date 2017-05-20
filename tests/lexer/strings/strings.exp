@@ -1,0 +1,4 @@
+FILE:	/Users/nick/projects/infrared/tests/lexer/strings/strings.js
+TOKENS:
+  String: test [90m(1:6)[39m
+  String: another 'test' [90m(3:16)[39m
