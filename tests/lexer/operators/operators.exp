@@ -75,3 +75,5 @@ TOKENS:
   Operator: Minus [90m(39:2)[39m
   Operator: Dot [90m(40:1)[39m
   Operator: Colon [90m(41:1)[39m
+  Operator: Ternary [90m(42:1)[39m
+  Operator: Assignment [90m(43:1)[39m

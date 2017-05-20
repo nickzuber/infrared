@@ -1,3 +1,11 @@
-"test"
+""
+"single"
+"multi word string"
+"string with 'inner' quotes"
+"this one has !@#$%^&*()-=_+0987654321`~[]]{}\\|"
 
-"another 'test'"
+''
+'single'
+'multi word string'
+'string with "inner" quotes'
+'this one has !@#$%^&*()-=_+0987654321`~[]]{}\\|'
