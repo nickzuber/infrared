@@ -4,5 +4,4 @@ node_modules
 *.md
 *.ml
 *.mli
-.vscode
 LICENSE
