@@ -31,7 +31,7 @@ PARSER_TESTS = (join(dir_path, "parser"), "parse")
 """ Make sure to include the `.` prefix """
 WHITE_LISTED_EXTENSIONS = [".js"]
 
-def safe_index(lst, str):
+def existsIn(lst, str):
     try:
         lst.index(str)
         return True
@@ -54,7 +54,7 @@ for job in jobs:
         try:
             # Find test file (we only expect 1 file at the moment)
             files = listdir(real_path)
-            files_valid = [f for f in files if safe_index(WHITE_LISTED_EXTENSIONS, f[-3:])]
+            files_valid = [f for f in files if existsIn(WHITE_LISTED_EXTENSIONS, f[-3:])]
             if len(files_valid) != 1: raise
             file = join(real_path, files_valid[0])
             actual = check_output([EXEC, job[1], file])
