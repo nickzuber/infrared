@@ -641,16 +641,6 @@ rule token env = parse
                           |> push ~tok:(tok) ~lxb:(lexbuf) in
                         token env lexbuf
                       }
-  | symbols as op     {
-                        let op_as_string = String.make 1 op in
-                        try
-                          let op = (Hashtbl.find operators op_as_string) in
-                          let env = push (Operator op) env lexbuf in
-                          token env lexbuf
-                        with Not_found -> 
-                          let env = push (Unknown_Token op_as_string) env lexbuf in
-                          token env lexbuf
-                      }
   | word as word      {
                         try
                           let env = push (Hashtbl.find keywords word) env lexbuf in
@@ -677,6 +667,20 @@ rule token env = parse
   | ')'|'}'|']'       {
                         let env = buf_pop lexbuf env in
                         token env lexbuf
+                      }
+  | "+="              { 
+                        let env = push (Operator CA_Plus) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | symbols as op     {
+                        let op_as_string = String.make 1 op in
+                        try
+                          let op = (Hashtbl.find operators op_as_string) in
+                          let env = push (Operator op) env lexbuf in
+                          token env lexbuf
+                        with Not_found -> 
+                          let env = push (Unknown_Token op_as_string) env lexbuf in
+                          token env lexbuf
                       }
   | eof               { env }
   | _ as tok          { 
