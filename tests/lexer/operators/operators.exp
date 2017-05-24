@@ -58,3 +58,8 @@ TOKENS:
   Number [90m(48:1)[39m
   Operator: LessThanEqual [90m(48:2)[39m
   Number [90m(48:4)[39m
+  Operator: StrictNotEqual [90m(50:1)[39m
+  Operator: Assignment [90m(50:4)[39m
+  Operator: StrictNotEqual [90m(51:1)[39m
+  Operator: StrictEqual [90m(51:4)[39m
+  Operator: Equal [90m(51:7)[39m
