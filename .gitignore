@@ -1,6 +1,7 @@
 # Builds & Scripts
 _build
 *.native
+*.pyc
 
 # Others
 .DS_Store
