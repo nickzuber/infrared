@@ -12,9 +12,6 @@ dir_path = getCurrentAbsolutePath(__file__)
 LEXER_TESTS = (join(dir_path, "lexer"), "tokenize")
 PARSER_TESTS = (join(dir_path, "parser"), "parse")
 
-# Make sure to include the `.` prefix
-WHITE_LISTED_EXTENSIONS = [".js"]
-
 jobs = [LEXER_TESTS, PARSER_TESTS]
 
 for job in jobs:
