@@ -43,3 +43,18 @@ TOKENS:
   Operator: Colon [90m(41:1)[39m
   Operator: Ternary [90m(42:1)[39m
   Operator: Assignment [90m(43:1)[39m
+  Number [90m(45:1)[39m
+  Operator: LessThan [90m(45:3)[39m
+  Operator: Minus [90m(45:5)[39m
+  Number [90m(45:6)[39m
+  Number [90m(46:1)[39m
+  Operator: LessThan [90m(46:2)[39m
+  Operator: Minus [90m(46:3)[39m
+  Number [90m(46:4)[39m
+  Number [90m(47:1)[39m
+  Operator: Assignment [90m(47:2)[39m
+  Operator: GreaterThan [90m(47:3)[39m
+  Number [90m(47:4)[39m
+  Number [90m(48:1)[39m
+  Operator: LessThanEqual [90m(48:2)[39m
+  Number [90m(48:4)[39m
