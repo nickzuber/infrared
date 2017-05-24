@@ -95,8 +95,8 @@ module Token = struct
     | Static
     | Operator of ops
     (* Error handling *)
-    | Unknown_Token of string
     | Syntax_Error of string
+    | Unknown_Token of string
 
   and ops =
     (* Compound Assignment Operators *)
@@ -569,6 +569,13 @@ rule token env = parse
                         let _ = Lexing.new_line lexbuf in
                         token env lexbuf
                       }
+  | '\\'              {
+                        let tok = Syntax_Error "Illegal backslash found" in
+                        let env = env
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                        token env lexbuf
+                      }
   | "//"              {
                         let tok = swallow_single_comment lexbuf in
                         let env = env
@@ -587,7 +594,7 @@ rule token env = parse
                         (* This need to be at the start of the file to be valid *)
                         let tok = if lexbuf.Lexing.lex_start_pos = 0
                           then swallow_single_comment lexbuf (* Handling as comment for now *)
-                          else Syntax_Error "Illegal hashbang found in file"
+                          else Syntax_Error "Illegal hashbang found"
                         in let env = env
                             |> resolve_errors tok
                             |> push ~tok:(tok) ~lxb:(lexbuf) in
