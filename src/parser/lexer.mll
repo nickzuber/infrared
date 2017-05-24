@@ -325,49 +325,23 @@ module Token = struct
   let operators = Hashtbl.create 53
   let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
     [
-      "+=", CA_Plus;
-      "-=", CA_Minus;
-      "*=", CA_Mult;
-      "/=", CA_Div;
-      "%=", CA_Mod;
-      "**=", CA_Pow;
-      "<<=", CA_LeftShift;
-      ">>=", CA_RightShift;
-      ">>>=", CA_RightShiftUnsigned;
-      "|=", CA_Or;
-      "^=", CA_Xor;
-      "&=", CA_And;
-      "==", Equal;
-      "!=", NotEqual;
-      "===", StrictEqual;
-      "!==", StrictNotEqual;
-      "<", LessThan;
-      "<=", LessThanEqual;
-      ">", GreaterThan;
-      ">=", GreaterThanEqual;
-      "<<", LeftShift;
-      ">>", RightShift;
-      ">>>", RightShiftUnsigned;
-      "+", Plus;
-      "-", Minus;
-      "*", Mult;
-      "/", Div;
-      "%", Mod;
-      "**", Pow;
-      ",", Comma;
-      "||", LogicalOr;
-      "&&", LogicalAnd;
-      "|", Or;
-      "^", Xor;
-      "&", And;
-      "!", Bang;
-      "~", Not;
-      "++", Increment;
-      "--", Decrement;
-      ".", Dot;
-      ":", Colon;
-      "?", Ternary;
-      "=", Assignment;
+      '+', Plus;
+      '-', Minus;
+      '*', Mult;
+      '/', Div;
+      '%', Mod;
+      '<', LessThan;
+      '>', GreaterThan;
+      ',', Comma;
+      '|', Or;
+      '^', Xor;
+      '&', And;
+      '!', Bang;
+      '~', Not;
+      '.', Dot;
+      ':', Colon;
+      '?', Ternary;
+      '=', Assignment;
     ]
 
   (* List of faux keywords that need to be checked separately:
@@ -619,10 +593,6 @@ rule token env = parse
                             |> push ~tok:(tok) ~lxb:(lexbuf) in
                           token env lexbuf
                       }
-  | "..."             {
-                        let env = push Spread env lexbuf in
-                        token env lexbuf
-                      }
   | "true" | "false"  {
                         let env = push Bool env lexbuf in
                         token env lexbuf
@@ -668,17 +638,121 @@ rule token env = parse
                         let env = buf_pop lexbuf env in
                         token env lexbuf
                       }
+  | "..."             {
+                        let env = push Spread env lexbuf in
+                        token env lexbuf
+                      }
   | "+="              { 
                         let env = push (Operator CA_Plus) env lexbuf in
                         token env lexbuf; 
                       }
+  | "-="              { 
+                        let env = push (Operator CA_Minus) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "*="              { 
+                        let env = push (Operator CA_Mult) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "/="              { 
+                        let env = push (Operator CA_Div) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "%="              { 
+                        let env = push (Operator CA_Mod) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "**="             { 
+                        let env = push (Operator CA_Pow) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "<<="             { 
+                        let env = push (Operator CA_LeftShift) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | ">>="             { 
+                        let env = push (Operator CA_RightShift) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | ">>>="            { 
+                        let env = push (Operator CA_RightShiftUnsigned) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "|="              { 
+                        let env = push (Operator CA_Or) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "^="              { 
+                        let env = push (Operator CA_Xor) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "&="              { 
+                        let env = push (Operator CA_And) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "=="              { 
+                        let env = push (Operator Equal) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "!="              { 
+                        let env = push (Operator NotEqual) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "==="             { 
+                        let env = push (Operator StrictEqual) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "!=="             { 
+                        let env = push (Operator StrictNotEqual) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "<="              { 
+                        let env = push (Operator LessThanEqual) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | ">="              { 
+                        let env = push (Operator GreaterThanEqual) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "<<"              { 
+                        let env = push (Operator LeftShift) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | ">>"              { 
+                        let env = push (Operator RightShift) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | ">>>"             { 
+                        let env = push (Operator RightShiftUnsigned) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "**"              { 
+                        let env = push (Operator Pow) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "||"              { 
+                        let env = push (Operator LogicalOr) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "&&"              { 
+                        let env = push (Operator LogicalAnd) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "++"              { 
+                        let env = push (Operator Increment) env lexbuf in
+                        token env lexbuf; 
+                      }
+  | "--"              { 
+                        let env = push (Operator Decrement) env lexbuf in
+                        token env lexbuf; 
+                      }
   | symbols as op     {
-                        let op_as_string = String.make 1 op in
                         try
-                          let op = (Hashtbl.find operators op_as_string) in
-                          let env = push (Operator op) env lexbuf in
+                          let op' = (Hashtbl.find operators op) in
+                          let env = push (Operator op') env lexbuf in
                           token env lexbuf
                         with Not_found -> 
+                          let op_as_string = String.make 1 op in
                           let env = push (Unknown_Token op_as_string) env lexbuf in
                           token env lexbuf
                       }
