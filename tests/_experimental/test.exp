@@ -1,2038 +1,252 @@
 FILE:	tests/_experimental/test.js
-TOKENS:	342:1	Block {
-	341:17	Expression (
-	341:16	Number
-	) 
-	341:11	Identifier "exit" 
-	341:10	Operator <Dot> 
-	341:3	Identifier "process" 
-	340:34	Expression (
-	340:33	Expression (
-	340:30	Identifier "err"
-	) 
-	340:26	Identifier "red" 
-	340:25	Operator <Dot> 
-	340:21	Identifier "bold" 
-	340:20	Operator <Dot> 
-	340:15	Identifier "chalk"
-	) 
-	340:11	Identifier "log" 
-	340:10	Operator <Dot> 
-	340:3	Identifier "console"
-	}
-	339:25	Expression (
-	339:22	Identifier "err"
-	)
-	339:10	Identifier "reportError"
-	339:1	Function
-	337:1	Block {
-	336:3	Block {
-	335:30	String "js" 
-	335:25	Operator <Assignment> 
-	335:24	Operator <Assignment> 
-	335:23	Operator <Assignment> 
-	335:12	Identifier "_extension" 
-	335:5	Return 
-	334:43	Expression (
-	
-	) 
-	334:39	Identifier "pop" 
-	334:38	Operator <Dot> 
-	334:37	Expression (
-	334:36	String "."
-	) 
-	334:28	Identifier "split" 
-	334:27	Operator <Dot> 
-	334:22	Identifier "_file" 
-	334:20	Operator <Assignment> 
-	334:9	Identifier "_extension" 
-	334:5	Variable <Var> 
-	333:35	Array [
-	333:34	Number 
-	333:33	Operator <Minus> 
-	333:27	Identifier "length" 
-	333:26	Operator <Dot> 
-	333:22	Identifier "file"
-	] 
-	333:17	Identifier "file" 
-	333:15	Operator <Assignment> 
-	333:9	Identifier "_file" 
-	333:5	Variable <Var> 
-	332:5	Block {
-	331:21	Expression (
-	331:20	Number
-	) 
-	331:15	Identifier "exit" 
-	331:14	Operator <Dot> 
-	331:7	Identifier "process" 
-	330:69	Expression (
-	330:68	String "Error while validating file path: too few tokens"
-	) 
-	330:7	Identifier "reportError"
-	} 
-	329:20	Expression (
-	329:14	Identifier "length" 
-	329:13	Operator <Dot> 
-	329:9	Identifier "file" 
-	329:8	Operator <Bang>
-	) 
-	329:5	If
-	} 
-	328:33	Expression (
-	328:28	Identifier "Array" 
-	328:17	Instanceof 
-	328:12	Identifier "file"
-	) 
-	328:9	If 
-	328:4	Else 
-	328:3	Block {
-	327:36	Expression (
-	327:23	Identifier "minimalSyntax"
-	) 
-	327:17	Identifier "match" 
-	327:16	Operator <Dot> 
-	327:12	Identifier "file" 
-	327:5	Return 
-	326:57	Identifier "ig" 
-	326:56	Operator <Div> 
-	326:55	Identifier "$" 
-	326:54	Expression (
-	326:52	Identifier "js" 
-	326:51	Operator <Dot>
-	) 
-	326:49	Operator <Plus> 
-	326:48	Expression (
-	326:47	Operator <Ternary> 
-	326:46	Expression (
-	326:45	Operator <Dot> 
-	326:44	[31mUnknown_Token: \ [39m 
-	326:43	Operator <Ternary> 
-	326:42	Operator <Colon>
-	) 
-	326:40	Operator <Plus> 
-	326:39	Expression (
-	326:38	Array [
-	326:37	Identifier "Z" 
-	326:36	Operator <Minus> 
-	326:34	Identifier "zA" 
-	326:33	Operator <Minus> 
-	326:32	Identifier "a" 
-	326:31	Number 
-	326:30	Operator <Minus> 
-	326:29	Number
-	] 
-	326:25	Operator <Div> 
-	326:23	Operator <Assignment> 
-	326:9	Identifier "minimalSyntax" 
-	326:5	Variable <Var>
-	) 
-	325:30	Expression (
-	325:29	String "string" 
-	325:20	Operator <Assignment> 
-	325:19	Operator <Assignment> 
-	325:18	Operator <Assignment> 
-	325:13	Identifier "file" 
-	325:6	Typeof
-	) 
-	325:3	If
-	)
-	}
-	}
-	324:28	Expression (
-	324:24	Identifier "file"
-	)
-	324:10	Identifier "validFilePath"
-	324:1	Function
-	323:42	Comment
-	321:1	Block {
-	320:51	Expression (
-	320:50	Number 
-	320:49	Operator <Minus> 
-	320:47	Operator <GreaterThan> 
-	320:45	Expression (
-	320:44	String "doxyfile.json"
-	) 
-	320:22	Identifier "indexOf" 
-	320:21	Operator <Dot> 
-	320:11	Identifier "localFiles"
-	) 
-	320:3	Return 
-	319:39	Expression (
-	319:38	String "./"
-	) 
-	319:23	Identifier "readdirSync" 
-	319:22	Operator <Dot> 
-	319:20	Identifier "fs" 
-	319:18	Operator <Assignment> 
-	319:7	Identifier "localFiles" 
-	319:3	Variable <Var>
-	}
-	318:27	Expression (
-	
-	)
-	318:10	Identifier "checkForDoxyFile"
-	318:1	Function
-	317:43	Comment
-	315:1	Block {
-	314:3	Block {
-	313:21	Expression (
-	313:20	Number
-	) 
-	313:15	Identifier "exit" 
-	313:14	Operator <Dot> 
-	313:7	Identifier "process" 
-	312:59	Expression (
-	312:58	Expression (
-	312:57	String "  --h\n  --help\n  -o\n  "
-	) 
-	312:25	Identifier "white" 
-	312:24	Operator <Dot> 
-	312:19	Identifier "chalk"
-	) 
-	312:15	Identifier "log" 
-	312:14	Operator <Dot> 
-	312:7	Identifier "console" 
-	311:72	Expression (
-	311:71	Expression (
-	311:70	String "Here is a list of possible <commands>:"
-	) 
-	311:25	Identifier "white" 
-	311:24	Operator <Dot> 
-	311:19	Identifier "chalk"
-	) 
-	311:15	Identifier "log" 
-	311:14	Operator <Dot> 
-	311:7	Identifier "console" 
-	310:79	Expression (
-	310:78	Expression (
-	310:74	Identifier "flag"
-	) 
-	310:70	Identifier "red" 
-	310:69	Operator <Dot> 
-	310:65	Identifier "bold" 
-	310:64	Operator <Dot> 
-	310:59	Identifier "chalk" 
-	310:57	Operator <Plus> 
-	310:55	Expression (
-	310:54	String "Unrecognized command: "
-	) 
-	310:25	Identifier "white" 
-	310:24	Operator <Dot> 
-	310:19	Identifier "chalk"
-	) 
-	310:15	Identifier "log" 
-	310:14	Operator <Dot> 
-	310:7	Identifier "console" 
-	309:12	Operator <Colon> 
-	309:5	Default 
-	308:7	Break 
-	307:7	Block {
-	306:25	Identifier "value" 
-	306:23	Operator <Assignment> 
-	306:9	Identifier "CLIOutputDest"
-	} 
-	305:37	Expression (
-	305:36	String "boolean" 
-	305:26	Operator <Assignment> 
-	305:25	Operator <Assignment> 
-	305:24	Operator <Bang> 
-	305:18	Identifier "value" 
-	305:11	Typeof
-	) 
-	305:7	If 
-	304:13	Operator <Colon> 
-	304:12	String "o" 
-	304:5	Case 
-	303:7	Break 
-	302:21	Expression (
-	302:20	Number
-	) 
-	302:15	Identifier "exit" 
-	302:14	Operator <Dot> 
-	302:7	Identifier "process" 
-	301:138	Expression (
-	301:137	Expression (
-	301:136	String "  doxide <directory> -o <file>       Compiles all valid files in <directory> and stores output in <file>"
-	) 
-	301:25	Identifier "white" 
-	301:24	Operator <Dot> 
-	301:19	Identifier "chalk"
-	) 
-	301:15	Identifier "log" 
-	301:14	Operator <Dot> 
-	301:7	Identifier "console" 
-	300:116	Expression (
-	300:115	Expression (
-	300:114	String "  doxide <file1> -o <file2>          Compiles <file1> and stores output in <file2>"
-	) 
-	300:25	Identifier "white" 
-	300:24	Operator <Dot> 
-	300:19	Identifier "chalk"
-	) 
-	300:15	Identifier "log" 
-	300:14	Operator <Dot> 
-	300:7	Identifier "console" 
-	299:110	Expression (
-	299:109	Expression (
-	299:108	String "  doxide <directory>                 Compiles all valid files in <directory>"
-	) 
-	299:25	Identifier "white" 
-	299:24	Operator <Dot> 
-	299:19	Identifier "chalk"
-	) 
-	299:15	Identifier "log" 
-	299:14	Operator <Dot> 
-	299:7	Identifier "console" 
-	298:86	Expression (
-	298:85	Expression (
-	298:84	String "  doxide <file>                      Compiles <file>"
-	) 
-	298:25	Identifier "white" 
-	298:24	Operator <Dot> 
-	298:19	Identifier "chalk"
-	) 
-	298:15	Identifier "log" 
-	298:14	Operator <Dot> 
-	298:7	Identifier "console" 
-	297:94	Expression (
-	297:93	Expression (
-	297:92	String "  doxide --help                      Prompts the help screen"
-	) 
-	297:25	Identifier "white" 
-	297:24	Operator <Dot> 
-	297:19	Identifier "chalk"
-	) 
-	297:15	Identifier "log" 
-	297:14	Operator <Dot> 
-	297:7	Identifier "console" 
-	296:94	Expression (
-	296:93	Expression (
-	296:92	String "  doxide --h                         Prompts the help screen"
-	) 
-	296:25	Identifier "white" 
-	296:24	Operator <Dot> 
-	296:19	Identifier "chalk"
-	) 
-	296:15	Identifier "log" 
-	296:14	Operator <Dot> 
-	296:7	Identifier "console" 
-	295:107	Expression (
-	295:106	Expression (
-	295:105	String "  doxide                             Compiles based on your doxyfile.json"
-	) 
-	295:25	Identifier "white" 
-	295:24	Operator <Dot> 
-	295:19	Identifier "chalk"
-	) 
-	295:15	Identifier "log" 
-	295:14	Operator <Dot> 
-	295:7	Identifier "console" 
-	294:67	Expression (
-	294:66	Expression (
-	294:65	String "  Possible <commands> could be:\n"
-	) 
-	294:25	Identifier "white" 
-	294:24	Operator <Dot> 
-	294:19	Identifier "chalk"
-	) 
-	294:15	Identifier "log" 
-	294:14	Operator <Dot> 
-	294:7	Identifier "console" 
-	293:61	Expression (
-	293:60	Expression (
-	293:59	String "\nUsage: doxide <command>\n"
-	) 
-	293:25	Identifier "white" 
-	293:24	Operator <Dot> 
-	293:19	Identifier "chalk"
-	) 
-	293:15	Identifier "log" 
-	293:14	Operator <Dot> 
-	293:7	Identifier "console" 
-	292:16	Operator <Colon> 
-	292:15	String "help" 
-	292:5	Case 
-	291:13	Operator <Colon> 
-	291:12	String "h" 
-	291:5	Case
-	} 
-	290:14	Expression (
-	290:10	Identifier "flag"
-	) 
-	290:3	Identifier "switch"
-	}
-	289:33	Expression (
-	289:28	Identifier "value" 
-	289:26	Operator <Comma> 
-	289:22	Identifier "flag"
-	)
-	289:10	Identifier "resolveFlag"
-	289:1	Function
-	287:1	Block {
-	286:4	Expression (
-	286:3	Block {
-	285:5	Block {
-	284:83	Expression (
-	284:82	String " directory" 
-	284:70	Operator <Plus> 
-	284:69	Expression (
-	284:58	Identifier "derivedFile"
-	) 
-	284:51	Identifier "yellow" 
-	284:50	Operator <Dot> 
-	284:47	Identifier "dim" 
-	284:46	Operator <Dot> 
-	284:41	Identifier "chalk" 
-	284:40	Operator <Plus> 
-	284:39	String "Ignoring " 
-	284:28	Operator <Plus> 
-	284:19	Identifier "timeStamp"
-	) 
-	284:15	Identifier "log" 
-	284:14	Operator <Dot> 
-	284:7	Identifier "console"
-	} 
-	283:6	Else 
-	283:5	Block {
-	282:7	Block {
-	281:9	Block {
-	280:58	Expression (
-	280:50	Identifier "allFiles" 
-	280:48	Operator <Comma> 
-	280:38	Identifier "actualPath"
-	) 
-	280:11	Identifier "recurseAllFilesInDirectory"
-	} 
-	279:50	Expression (
-	279:49	Expression (
-	
-	) 
-	279:37	Identifier "isDirectory" 
-	279:36	Operator <Dot> 
-	279:35	Expression (
-	279:25	Identifier "actualPath"
-	) 
-	279:15	Identifier "lstatSync" 
-	279:14	Operator <Dot> 
-	279:12	Identifier "fs"
-	) 
-	279:9	If 
-	278:45	Identifier "derivedFile" 
-	278:43	Operator <Plus> 
-	278:29	Identifier "slashIfNeeded" 
-	278:27	Operator <Plus> 
-	278:22	Identifier "path" 
-	278:20	Operator <Assignment> 
-	278:9	Identifier "actualPath" 
-	277:62	String "/" 
-	277:58	Operator <Colon> 
-	277:56	String "" 
-	277:53	Operator <Ternary> 
-	277:51	String "/" 
-	277:47	Operator <Assignment> 
-	277:46	Operator <Assignment> 
-	277:45	Operator <Assignment> 
-	277:43	Array [
-	277:42	Number 
-	277:41	Operator <Minus> 
-	277:35	Identifier "length" 
-	277:34	Operator <Dot> 
-	277:30	Identifier "path"
-	] 
-	277:25	Identifier "path" 
-	277:23	Operator <Assignment> 
-	277:9	Identifier "slashIfNeeded"
-	} 
-	276:8	Else 
-	276:7	Block {
-	275:33	Expression (
-	275:23	Identifier "actualPath"
-	) 
-	275:18	Identifier "push" 
-	275:17	Operator <Dot> 
-	275:9	Identifier "allFiles" 
-	274:45	Identifier "derivedFile" 
-	274:43	Operator <Plus> 
-	274:29	Identifier "slashIfNeeded" 
-	274:27	Operator <Plus> 
-	274:22	Identifier "path" 
-	274:20	Operator <Assignment> 
-	274:9	Identifier "actualPath" 
-	273:62	String "/" 
-	273:58	Operator <Colon> 
-	273:56	String "" 
-	273:53	Operator <Ternary> 
-	273:51	String "/" 
-	273:47	Operator <Assignment> 
-	273:46	Operator <Assignment> 
-	273:45	Operator <Assignment> 
-	273:43	Array [
-	273:42	Number 
-	273:41	Operator <Minus> 
-	273:35	Identifier "length" 
-	273:34	Operator <Dot> 
-	273:30	Identifier "path"
-	] 
-	273:25	Identifier "path" 
-	273:23	Operator <Assignment> 
-	273:9	Identifier "slashIfNeeded"
-	} 
-	272:36	Expression (
-	272:35	Expression (
-	272:24	Identifier "derivedFile"
-	) 
-	272:10	Identifier "validFilePath"
-	) 
-	272:7	If
-	} 
-	271:58	Expression (
-	271:57	Number 
-	271:56	Operator <Minus> 
-	271:54	Operator <Assignment> 
-	271:53	Operator <Assignment> 
-	271:52	Operator <Assignment> 
-	271:50	Expression (
-	271:39	Identifier "derivedFile"
-	) 
-	271:31	Identifier "indexOf" 
-	271:30	Operator <Dot> 
-	271:8	Identifier "blackListedDirectories"
-	) 
-	271:5	If 
-	270:63	Comment 
-	269:39	Comment
-	} 
-	268:48	Expression (
-	268:37	Identifier "derivedFile"
-	) 
-	268:28	Function
-	) 
-	268:24	Identifier "map" 
-	268:23	Operator <Dot> 
-	268:22	Expression (
-	268:18	Identifier "path"
-	) 
-	268:6	Identifier "readdirSync" 
-	268:5	Operator <Dot> 
-	268:3	Identifier "fs" 
-	267:22	Identifier "actualPath" 
-	267:20	Operator <Comma> 
-	267:7	Identifier "slashIfNeeded" 
-	267:3	Variable <Var>
-	}
-	266:51	Expression (
-	266:43	Identifier "allFiles" 
-	266:41	Operator <Comma> 
-	266:37	Identifier "path"
-	)
-	266:10	Identifier "recurseAllFilesInDirectory"
-	266:1	Function
-	264:1	Block {
-	263:3	Block {
-	262:86	Expression (
-	262:85	TemplateString `${timeStamp}Finished after ${chalk.magenta(endTime - startTime)} ms`
-	) 
-	262:13	Identifier "log" 
-	262:12	Operator <Dot> 
-	262:5	Identifier "console"
-	} 
-	261:19	Expression (
-	261:11	Identifier "complete" 
-	261:10	Operator <Dot> 
-	261:7	Identifier "bar"
-	) 
-	261:3	If 
-	260:26	Expression (
-	
-	) 
-	260:21	Identifier "Date" 
-	260:17	New 
-	260:15	Operator <Assignment> 
-	260:7	Identifier "endTime" 
-	260:3	Variable <Var> 
-	259:12	Expression (
-	
-	) 
-	259:7	Identifier "tick" 
-	259:6	Operator <Dot> 
-	259:3	Identifier "bar"
-	}
-	258:25	Expression (
-	
-	)
-	258:10	Identifier "finishProcess"
-	258:1	Function
-	256:1	Block {
-	255:4	Expression (
-	255:3	Block {
-	254:6	Expression (
-	254:5	Block {
-	253:7	Block {
-	252:45	Expression (
-	252:39	Identifier "output" 
-	252:38	Operator <Dot> 
-	252:21	Identifier "markdownGenerator"
-	) 
-	252:17	Identifier "log" 
-	252:16	Operator <Dot> 
-	252:9	Identifier "console" 
-	251:9	Block {
-	250:147	Expression (
-	250:146	TemplateString `)}` 
-	250:142	Operator <Dot> 
-	250:136	Identifier "fields" 
-	250:128	Identifier "missing" 
-	250:125	Identifier "to" 
-	250:121	Identifier "due" 
-	250:119	Block {
-	250:111	Identifier "taskFile"
-	} 
-	250:109	Identifier "$" 
-	250:106	In 
-	250:99	Identifier "blocks" 
-	250:91	Identifier "comment" 
-	250:86	Identifier "more" 
-	250:83	Identifier "or" 
-	250:79	Identifier "one" 
-	250:74	Identifier "over" 
-	250:66	Identifier "Skipped" 
-	250:64	[31mUnknown_Token: € [39m 
-	250:63	[31mUnknown_Token: ” [39m 
-	250:62	[31mUnknown_Token: â [39m 
-	250:61	[31mUnknown_Token: € [39m 
-	250:60	[31mUnknown_Token: ” [39m 
-	250:59	[31mUnknown_Token: â [39m 
-	250:58	[31mUnknown_Token: ” [39m 
-	250:57	[31mUnknown_Token: ” [39m 
-	250:56	[31mUnknown_Token: â [39m 
-	250:54	TemplateString `${timeStamp}${chalk.dim.white(`
-	) 
-	250:19	Identifier "log" 
-	250:18	Operator <Dot> 
-	250:11	Identifier "console"
-	} 
-	249:38	Expression (
-	249:31	Identifier "flagged" 
-	249:30	Operator <Dot> 
-	249:13	Identifier "markdownGenerator"
-	) 
-	249:9	If 
-	248:120	Expression (
-	248:119	TemplateString `${timeStamp}Successfully wrote ${segue} of ${chalk.cyan(taskFile)} documention from to console:\n`
-	) 
-	248:17	Identifier "log" 
-	248:16	Operator <Dot> 
-	248:9	Identifier "console" 
-	247:62	String "all" 
-	247:56	Operator <Colon> 
-	247:54	String "some" 
-	247:47	Operator <Ternary> 
-	247:39	Identifier "flagged" 
-	247:38	Operator <Dot> 
-	247:21	Identifier "markdownGenerator" 
-	247:19	Operator <Assignment> 
-	247:13	Identifier "segue" 
-	247:9	Variable <Var>
-	} 
-	246:7	Else 
-	245:52	Comment 
-	244:7	Block {
-	243:10	Expression (
-	243:9	Block {
-	242:11	Block {
-	241:27	Expression (
-	
-	) 
-	241:13	Identifier "finishProcess"
-	} 
-	240:50	Expression (
-	240:44	Identifier "length" 
-	240:43	Operator <Dot> 
-	240:35	Identifier "allFiles" 
-	240:33	Operator <Assignment> 
-	240:32	Operator <Assignment> 
-	240:31	Operator <Assignment> 
-	240:17	Identifier "finishedFiles" 
-	240:16	Operator <Plus> 
-	240:15	Operator <Plus>
-	) 
-	240:11	If 
-	239:11	Block {
-	238:149	Expression (
-	238:148	TemplateString `)}` 
-	238:144	Operator <Dot> 
-	238:138	Identifier "fields" 
-	238:130	Identifier "missing" 
-	238:127	Identifier "to" 
-	238:123	Identifier "due" 
-	238:121	Block {
-	238:113	Identifier "taskFile"
-	} 
-	238:111	Identifier "$" 
-	238:108	In 
-	238:101	Identifier "blocks" 
-	238:93	Identifier "comment" 
-	238:88	Identifier "more" 
-	238:85	Identifier "or" 
-	238:81	Identifier "one" 
-	238:76	Identifier "over" 
-	238:68	Identifier "Skipped" 
-	238:66	[31mUnknown_Token: € [39m 
-	238:65	[31mUnknown_Token: ” [39m 
-	238:64	[31mUnknown_Token: â [39m 
-	238:63	[31mUnknown_Token: € [39m 
-	238:62	[31mUnknown_Token: ” [39m 
-	238:61	[31mUnknown_Token: â [39m 
-	238:60	[31mUnknown_Token: ” [39m 
-	238:59	[31mUnknown_Token: ” [39m 
-	238:58	[31mUnknown_Token: â [39m 
-	238:56	TemplateString `${timeStamp}${chalk.dim.white(`
-	) 
-	238:21	Identifier "log" 
-	238:20	Operator <Dot> 
-	238:13	Identifier "console"
-	} 
-	237:40	Expression (
-	237:33	Identifier "flagged" 
-	237:32	Operator <Dot> 
-	237:15	Identifier "markdownGenerator"
-	) 
-	237:11	If 
-	236:140	Expression (
-	236:139	TemplateString `${timeStamp}Successfully wrote ${segue} of ${chalk.cyan(taskFile)} documention from to ${chalk.magenta(outputDest)}`
-	) 
-	236:19	Identifier "log" 
-	236:18	Operator <Dot> 
-	236:11	Identifier "console" 
-	235:64	String "all" 
-	235:58	Operator <Colon> 
-	235:56	String "some" 
-	235:49	Operator <Ternary> 
-	235:41	Identifier "flagged" 
-	235:40	Operator <Dot> 
-	235:23	Identifier "markdownGenerator" 
-	235:21	Operator <Assignment> 
-	235:15	Identifier "segue" 
-	235:11	Variable <Var> 
-	234:11	Block {
-	233:84	Expression (
-	233:83	TemplateString `Unable to write output from ${taskFile} to ${outputDest}.`
-	) 
-	233:13	Identifier "reportError"
-	} 
-	232:18	Expression (
-	232:15	Identifier "err"
-	) 
-	232:11	If
-	} 
-	231:85	Expression (
-	231:82	Identifier "err" 
-	231:80	Operator <Comma> 
-	231:73	Identifier "content"
-	) 
-	231:63	Function
-	) 
-	231:58	Identifier "then" 
-	231:57	Operator <Dot> 
-	231:56	Expression (
-	231:50	Identifier "output" 
-	231:49	Operator <Dot> 
-	231:32	Identifier "markdownGenerator" 
-	231:30	Operator <Comma> 
-	231:20	Identifier "outputDest"
-	) 
-	231:9	Identifier "appendFile" 
-	230:32	Comment
-	} 
-	229:21	Expression (
-	229:11	Identifier "outputDest"
-	) 
-	229:7	If 
-	227:16	Expression (
-	
-	) 
-	227:11	Identifier "tick" 
-	227:10	Operator <Dot> 
-	227:7	Identifier "bar" 
-	226:33	Expression (
-	
-	) 
-	226:25	Identifier "compile" 
-	226:24	Operator <Dot> 
-	226:7	Identifier "markdownGenerator" 
-	225:60	Expression (
-	225:51	Identifier "tokenTree" 
-	225:50	Operator <Dot> 
-	225:44	Identifier "parser"
-	) 
-	225:35	Identifier "Compiler" 
-	225:31	New 
-	225:29	Operator <Assignment> 
-	225:11	Identifier "markdownGenerator" 
-	225:7	Variable <Var> 
-	224:7	Block {
-	223:22	Expression (
-	223:21	Identifier "e"
-	) 
-	223:9	Identifier "reportError"
-	} 
-	222:15	Expression (
-	222:14	Identifier "e"
-	) 
-	222:8	Catch 
-	222:7	Block {
-	221:34	Expression (
-	
-	) 
-	221:16	Identifier "generateTokenTree" 
-	221:15	Operator <Dot> 
-	221:9	Identifier "parser"
-	} 
-	220:7	Try 
-	219:60	Expression (
-	219:51	Identifier "tokenList" 
-	219:50	Operator <Dot> 
-	219:41	Identifier "tokenizer" 
-	219:39	Operator <Comma> 
-	219:31	Identifier "taskFile"
-	) 
-	219:24	Identifier "Parser" 
-	219:20	New 
-	219:18	Operator <Assignment> 
-	219:11	Identifier "parser" 
-	219:7	Variable <Var> 
-	218:7	Block {
-	217:22	Expression (
-	217:21	Identifier "e"
-	) 
-	217:9	Identifier "reportError"
-	} 
-	216:15	Expression (
-	216:14	Identifier "e"
-	) 
-	216:8	Catch 
-	216:7	Block {
-	215:34	Expression (
-	
-	) 
-	215:19	Identifier "generateTokens" 
-	215:18	Operator <Dot> 
-	215:9	Identifier "tokenizer"
-	} 
-	214:7	Try 
-	213:47	Expression (
-	213:43	Identifier "data" 
-	213:41	Operator <Comma> 
-	213:33	Identifier "taskFile"
-	) 
-	213:27	Identifier "Lexer" 
-	213:23	New 
-	213:21	Operator <Assignment> 
-	213:11	Identifier "tokenizer" 
-	213:7	Variable <Var> 
-	212:16	Expression (
-	
-	) 
-	212:11	Identifier "tick" 
-	212:10	Operator <Dot> 
-	212:7	Identifier "bar" 
-	211:7	Block {
-	210:95	Expression (
-	210:88	Identifier "message" 
-	210:87	Operator <Dot> 
-	210:84	Identifier "err" 
-	210:83	Operator <Plus> 
-	210:82	String "\n\n" 
-	210:76	Operator <Plus> 
-	210:68	Identifier "taskFile" 
-	210:67	Operator <Plus> 
-	210:66	String "Error occured when attempting to read file: "
-	) 
-	210:9	Identifier "reportError"
-	} 
-	209:13	Expression (
-	209:10	Identifier "err"
-	) 
-	209:7	If
-	} 
-	208:53	Expression (
-	208:49	Identifier "data" 
-	208:47	Operator <Comma> 
-	208:44	Identifier "err"
-	) 
-	208:35	Function 
-	208:33	Operator <Comma> 
-	208:32	String "utf8" 
-	208:25	Operator <Comma> 
-	208:17	Identifier "taskFile"
-	) 
-	208:8	Identifier "readFile" 
-	208:7	Operator <Dot> 
-	208:5	Identifier "fs"
-	} 
-	207:33	Expression (
-	207:25	Identifier "taskFile"
-	) 
-	207:16	Function
-	) 
-	207:12	Identifier "map" 
-	207:11	Operator <Dot> 
-	207:3	Identifier "allFiles" 
-	206:23	Number 
-	206:21	Operator <Assignment> 
-	206:7	Identifier "finishedFiles" 
-	206:3	Variable <Var> 
-	204:3	Block {
-	203:87	Expression (
-	203:86	TemplateString `${timeStamp}Cleared ${chalk.magenta(outputDest)} prepping for output`
-	) 
-	203:13	Identifier "log" 
-	203:12	Operator <Dot> 
-	203:5	Identifier "console" 
-	202:5	Block {
-	201:70	Expression (
-	201:69	TemplateString `Unable to access the file ${outputDest}: \n${err}`
-	) 
-	201:7	Identifier "reportError"
-	} 
-	200:17	Expression (
-	200:14	Identifier "err"
-	) 
-	200:7	Catch 
-	200:5	Block {
-	199:46	Expression (
-	199:45	String "utf8" 
-	199:38	Operator <Comma> 
-	199:37	String "" 
-	199:34	Operator <Comma> 
-	199:24	Identifier "outputDest"
-	) 
-	199:10	Identifier "writeFileSync" 
-	199:9	Operator <Dot> 
-	199:7	Identifier "fs"
-	} 
-	198:5	Try 
-	197:59	Comment
-	} 
-	196:17	Expression (
-	196:7	Identifier "outputDest"
-	) 
-	196:3	If 
-	194:107	Expression (
-	194:106	Expression (
-	194:105	String "" 
-	194:102	Operator <Colon> 
-	194:100	String "s" 
-	194:96	Operator <Ternary> 
-	194:94	Number 
-	194:92	Operator <GreaterThan> 
-	194:85	Identifier "length" 
-	194:84	Operator <Dot> 
-	194:76	Identifier "allFiles"
-	) 
-	194:74	Operator <Plus> 
-	194:73	String " file" 
-	194:66	Operator <Plus> 
-	194:65	Expression (
-	194:59	Identifier "length" 
-	194:58	Operator <Dot> 
-	194:50	Identifier "allFiles"
-	) 
-	194:45	Identifier "cyan" 
-	194:44	Operator <Dot> 
-	194:39	Identifier "chalk" 
-	194:38	Operator <Plus> 
-	194:37	String "Working on " 
-	194:24	Operator <Plus> 
-	194:15	Identifier "timeStamp"
-	) 
-	194:11	Identifier "log" 
-	194:10	Operator <Dot> 
-	194:3	Identifier "console" 
-	193:52	Comment 
-	192:12	Expression (
-	
-	) 
-	192:7	Identifier "tick" 
-	192:6	Operator <Dot> 
-	192:3	Identifier "bar"
-	}
-	191:35	Expression (
-	191:25	Identifier "outputDest"
-	)
-	191:10	Identifier "workOnFileTree"
-	191:1	Function
-	189:1	Block {
-	188:3	Block {
-	187:6	Expression (
-	187:5	Block {
-	186:32	Expression (
-	186:22	Identifier "outputDest"
-	) 
-	186:7	Identifier "workOnFileTree" 
-	185:25	Null 
-	184:40	Operator <Or> 
-	184:39	Operator <Or> 
-	184:25	Identifier "CLIOutputDest" 
-	183:44	Operator <Or> 
-	183:43	Operator <Or> 
-	183:36	Identifier "output" 
-	183:35	Operator <Dot> 
-	183:24	Identifier "revivedData" 
-	183:22	Operator <Assignment> 
-	183:11	Identifier "outputDest" 
-	183:7	Variable <Var> 
-	182:7	Block {
-	181:10	Expression (
-	181:9	Block {
-	180:11	Block {
-	179:13	Block {
-	178:29	Expression (
-	178:28	Number
-	) 
-	178:23	Identifier "exit" 
-	178:22	Operator <Dot> 
-	178:15	Identifier "process" 
-	177:68	Expression (
-	177:67	String "For help use the --h or --help command."
-	) 
-	177:23	Identifier "log" 
-	177:22	Operator <Dot> 
-	177:15	Identifier "console" 
-	176:63	Expression (
-	176:62	Array [
-	176:61	Number 
-	176:60	Operator <Minus> 
-	176:54	Identifier "length" 
-	176:53	Operator <Dot> 
-	176:43	Identifier "pathTokens"
-	] 
-	176:32	Identifier "pathTokens" 
-	176:31	Operator <Plus> 
-	176:30	String "  "
-	) 
-	176:15	Identifier "reportError" 
-	175:47	Expression (
-	175:46	String "Invalid file type:"
-	) 
-	175:23	Identifier "log" 
-	175:22	Operator <Dot> 
-	175:15	Identifier "console"
-	} 
-	174:14	Else 
-	174:13	Block {
-	173:35	Expression (
-	173:29	Identifier "target"
-	) 
-	173:24	Identifier "push" 
-	173:23	Operator <Dot> 
-	173:15	Identifier "allFiles"
-	} 
-	172:41	Expression (
-	172:40	Expression (
-	172:30	Identifier "pathTokens"
-	) 
-	172:16	Identifier "validFilePath"
-	) 
-	172:13	If
-	} 
-	171:20	Expression (
-	171:14	Identifier "isFile"
-	) 
-	171:11	If 
-	170:11	Block {
-	169:27	Expression (
-	169:26	Number
-	) 
-	169:21	Identifier "exit" 
-	169:20	Operator <Dot> 
-	169:13	Identifier "process" 
-	168:100	Expression (
-	168:97	Identifier "err" 
-	168:96	Operator <Plus> 
-	168:95	String "Given path does not resolve to a file or was unable to be located: \n"
-	) 
-	168:13	Identifier "reportError"
-	} 
-	167:21	Expression (
-	167:18	Identifier "err"
-	) 
-	167:12	Catch 
-	167:11	Block {
-	166:52	Expression (
-	
-	) 
-	166:45	Identifier "isFile" 
-	166:44	Operator <Dot> 
-	166:43	Expression (
-	166:37	Identifier "target"
-	) 
-	166:27	Identifier "lstatSync" 
-	166:26	Operator <Dot> 
-	166:24	Identifier "fs" 
-	166:23	Operator <Bang> 
-	166:22	Operator <Bang> 
-	166:20	Operator <Assignment> 
-	166:13	Identifier "isFile"
-	} 
-	165:11	Try 
-	164:24	Bool 
-	164:22	Operator <Assignment> 
-	164:15	Identifier "isFile" 
-	164:11	Variable <Var> 
-	163:11	Block {
-	162:56	Expression (
-	162:48	Identifier "allFiles" 
-	162:46	Operator <Comma> 
-	162:40	Identifier "target"
-	) 
-	162:13	Identifier "recurseAllFilesInDirectory"
-	} 
-	161:25	Expression (
-	161:14	Identifier "isDirectory"
-	) 
-	161:11	If 
-	160:11	Block {
-	159:27	Expression (
-	159:26	Number
-	) 
-	159:21	Identifier "exit" 
-	159:20	Operator <Dot> 
-	159:13	Identifier "process" 
-	158:13	Block {
-	157:127	Expression (
-	157:126	String "  Simply pass in the path to the directory and all the valid files will be compiled automatically."
-	) 
-	157:15	Identifier "reportError" 
-	156:133	Expression (
-	156:132	String "  If you're trying to use a wildcard (*) to relay every type of file within a directory, do not use it."
-	) 
-	156:15	Identifier "reportError"
-	} 
-	155:38	Expression (
-	155:37	Number 
-	155:36	Operator <Minus> 
-	155:35	Operator <GreaterThan> 
-	155:34	Expression (
-	155:33	String "*"
-	) 
-	155:23	Identifier "indexOf" 
-	155:22	Operator <Dot> 
-	155:16	Identifier "target"
-	) 
-	155:13	If 
-	154:88	Expression (
-	154:85	Identifier "err" 
-	154:84	Operator <Plus> 
-	154:83	String "Given path does not exist or was unable to be located: \n"
-	) 
-	154:13	Identifier "reportError"
-	} 
-	153:21	Expression (
-	153:18	Identifier "err"
-	) 
-	153:12	Catch 
-	153:11	Block {
-	152:62	Expression (
-	
-	) 
-	152:50	Identifier "isDirectory" 
-	152:49	Operator <Dot> 
-	152:48	Expression (
-	152:42	Identifier "target"
-	) 
-	152:32	Identifier "lstatSync" 
-	152:31	Operator <Dot> 
-	152:29	Identifier "fs" 
-	152:28	Operator <Bang> 
-	152:27	Operator <Bang> 
-	152:25	Operator <Assignment> 
-	152:13	Identifier "isDirectory"
-	} 
-	151:11	Try 
-	150:29	Bool 
-	150:27	Operator <Assignment> 
-	150:15	Identifier "isDirectory" 
-	150:11	Variable <Var> 
-	149:17	Comment 
-	148:76	Comment 
-	147:43	Comment 
-	146:45	Comment 
-	145:19	Comment 
-	144:11	Block {
-	143:43	Expression (
-	143:42	Array [
-	143:41	Number
-	] 
-	143:37	Identifier "lex" 
-	143:36	Operator <Or> 
-	143:35	Operator <Or> 
-	143:34	Array [
-	143:33	Number
-	] 
-	143:29	Identifier "lex"
-	) 
-	143:24	Identifier "push" 
-	143:23	Operator <Dot> 
-	143:13	Identifier "pathTokens"
-	} 
-	142:44	Expression (
-	142:43	Expression (
-	142:37	Identifier "target"
-	) 
-	142:32	Identifier "exec" 
-	142:31	Operator <Dot> 
-	142:23	Identifier "tokenize" 
-	142:21	Operator <Assignment> 
-	142:17	Identifier "lex"
-	) 
-	142:11	While 
-	141:21	Null 
-	141:19	Operator <Assignment> 
-	141:15	Identifier "lex" 
-	141:11	Variable <Var> 
-	140:29	Array [
-	
-	] 
-	140:26	Operator <Assignment> 
-	140:15	Identifier "pathTokens" 
-	140:11	Variable <Var> 
-	139:80	Identifier "ig" 
-	139:79	Operator <Div> 
-	139:78	Expression (
-	139:77	Identifier "$" 
-	139:76	Operator <Plus> 
-	139:75	Identifier "w" 
-	139:74	[31mUnknown_Token: \ [39m 
-	139:73	Operator <Dot> 
-	139:72	[31mUnknown_Token: \ [39m 
-	139:71	Operator <Plus> 
-	139:70	Array [
-	139:69	Operator <Dot> 
-	139:68	Identifier "Z" 
-	139:67	Operator <Minus> 
-	139:65	Identifier "zA" 
-	139:64	Operator <Minus> 
-	139:63	Identifier "a" 
-	139:62	Number 
-	139:61	Operator <Minus> 
-	139:60	Number
-	] 
-	139:57	Operator <Or> 
-	139:56	Expression (
-	139:55	Expression (
-	139:54	Operator <Div> 
-	139:53	[31mUnknown_Token: \ [39m
-	) 
-	139:51	Operator <Colon> 
-	139:50	Operator <Ternary>
-	) 
-	139:48	Expression (
-	139:47	Operator <Plus> 
-	139:46	Array [
-	139:45	Identifier "Z" 
-	139:44	Operator <Minus> 
-	139:42	Identifier "zA" 
-	139:41	Operator <Minus> 
-	139:40	Identifier "a" 
-	139:39	Number 
-	139:38	Operator <Minus> 
-	139:37	Number
-	] 
-	139:35	Operator <Or> 
-	139:34	Block {
-	139:33	Number 
-	139:32	Operator <Comma> 
-	139:31	Number
-	} 
-	139:29	Operator <Dot> 
-	139:28	[31mUnknown_Token: \ [39m
-	) 
-	139:26	Operator <Div> 
-	139:24	Operator <Assignment> 
-	139:15	Identifier "tokenize" 
-	139:11	Variable <Var> 
-	138:51	Comment
-	) 
-	137:48	Expression (
-	137:42	Identifier "target"
-	) 
-	137:33	Function
-	} 
-	137:29	Identifier "map" 
-	137:28	Operator <Dot> 
-	137:21	Identifier "targets" 
-	137:20	Operator <Dot> 
-	137:9	Identifier "revivedData"
-	) 
-	136:8	Else 
-	136:7	Block {
-	135:42	Expression (
-	135:35	Identifier "targets" 
-	135:34	Operator <Dot> 
-	135:23	Identifier "revivedData"
-	) 
-	135:18	Identifier "push" 
-	135:17	Operator <Dot> 
-	135:9	Identifier "allFiles"
-	} 
-	134:49	Expression (
-	134:48	String "string" 
-	134:39	Operator <Assignment> 
-	134:38	Operator <Assignment> 
-	134:37	Operator <Assignment> 
-	134:29	Identifier "targets" 
-	134:28	Operator <Dot> 
-	134:17	Identifier "revivedData" 
-	134:10	Typeof
-	) 
-	134:7	If 
-	133:36	Expression (
-	133:32	Identifier "data"
-	) 
-	133:26	Identifier "parse" 
-	133:25	Operator <Dot> 
-	133:21	Identifier "JSON" 
-	133:19	Operator <Assignment> 
-	133:7	Identifier "revivedData" 
-	132:7	Block {
-	131:96	Expression (
-	131:89	Identifier "message" 
-	131:88	Operator <Dot> 
-	131:85	Identifier "err" 
-	131:84	Operator <Plus> 
-	131:83	String "Error occured when attempting to read file: doxyfile.json\n\n"
-	) 
-	131:9	Identifier "reportError"
-	} 
-	130:13	Expression (
-	130:10	Identifier "err"
-	) 
-	130:7	If
-	} 
-	129:65	Expression (
-	129:62	Identifier "err" 
-	129:60	Operator <Comma> 
-	129:56	Identifier "data"
-	) 
-	129:46	Function
-	} 
-	129:41	Identifier "then" 
-	129:40	Operator <Dot> 
-	129:39	Expression (
-	129:38	String "utf8" 
-	129:31	Operator <Comma> 
-	129:30	String "./doxyfile.json"
-	) 
-	129:5	Identifier "readFile" 
-	128:83	Expression (
-	128:82	Expression (
-	128:81	String "doxyfile.json"
-	) 
-	128:59	Identifier "magenta" 
-	128:58	Operator <Dot> 
-	128:53	Identifier "chalk" 
-	128:52	Operator <Plus> 
-	128:51	String "Using information from " 
-	128:26	Operator <Plus> 
-	128:17	Identifier "timeStamp"
-	) 
-	128:13	Identifier "log" 
-	128:12	Operator <Dot> 
-	128:5	Identifier "console"
-	) 
-	127:4	Else 
-	127:3	Block {
-	126:30	Expression (
-	126:20	Identifier "outputDest"
-	) 
-	126:5	Identifier "workOnFileTree" 
-	125:23	Null 
-	124:38	Operator <Or> 
-	124:37	Operator <Or> 
-	124:23	Identifier "CLIOutputDest" 
-	124:20	Operator <Assignment> 
-	124:9	Identifier "outputDest" 
-	124:5	Variable <Var> 
-	123:6	Expression (
-	123:5	Block {
-	122:7	Block {
-	121:9	Block {
-	120:25	Expression (
-	120:24	Number
-	) 
-	120:19	Identifier "exit" 
-	120:18	Operator <Dot> 
-	120:11	Identifier "process" 
-	119:64	Expression (
-	119:63	String "For help use the --h or --help command."
-	) 
-	119:19	Identifier "log" 
-	119:18	Operator <Dot> 
-	119:11	Identifier "console" 
-	118:59	Expression (
-	118:58	Array [
-	118:57	Number 
-	118:56	Operator <Minus> 
-	118:50	Identifier "length" 
-	118:49	Operator <Dot> 
-	118:39	Identifier "pathTokens"
-	] 
-	118:28	Identifier "pathTokens" 
-	118:27	Operator <Plus> 
-	118:26	String "  "
-	) 
-	118:11	Identifier "reportError" 
-	117:43	Expression (
-	117:42	String "Invalid file type:"
-	) 
-	117:19	Identifier "log" 
-	117:18	Operator <Dot> 
-	117:11	Identifier "console"
-	} 
-	116:10	Else 
-	116:9	Block {
-	115:29	Expression (
-	115:25	Identifier "path"
-	) 
-	115:20	Identifier "push" 
-	115:19	Operator <Dot> 
-	115:11	Identifier "allFiles"
-	} 
-	114:37	Expression (
-	114:36	Expression (
-	114:26	Identifier "pathTokens"
-	) 
-	114:12	Identifier "validFilePath"
-	) 
-	114:9	If
-	} 
-	113:16	Expression (
-	113:10	Identifier "isFile"
-	) 
-	113:7	If 
-	112:7	Block {
-	111:23	Expression (
-	111:22	Number
-	) 
-	111:17	Identifier "exit" 
-	111:16	Operator <Dot> 
-	111:9	Identifier "process" 
-	110:96	Expression (
-	110:93	Identifier "err" 
-	110:92	Operator <Plus> 
-	110:91	String "Given path does not resolve to a file or was unable to be located: \n"
-	) 
-	110:9	Identifier "reportError"
-	} 
-	109:17	Expression (
-	109:14	Identifier "err"
-	) 
-	109:8	Catch 
-	109:7	Block {
-	108:46	Expression (
-	
-	) 
-	108:39	Identifier "isFile" 
-	108:38	Operator <Dot> 
-	108:37	Expression (
-	108:33	Identifier "path"
-	) 
-	108:23	Identifier "lstatSync" 
-	108:22	Operator <Dot> 
-	108:20	Identifier "fs" 
-	108:19	Operator <Bang> 
-	108:18	Operator <Bang> 
-	108:16	Operator <Assignment> 
-	108:9	Identifier "isFile"
-	} 
-	107:7	Try 
-	106:20	Bool 
-	106:18	Operator <Assignment> 
-	106:11	Identifier "isFile" 
-	106:7	Variable <Var> 
-	105:7	Block {
-	104:50	Expression (
-	104:42	Identifier "allFiles" 
-	104:40	Operator <Comma> 
-	104:36	Identifier "path"
-	) 
-	104:9	Identifier "recurseAllFilesInDirectory"
-	} 
-	103:21	Expression (
-	103:10	Identifier "isDirectory"
-	) 
-	103:7	If 
-	102:7	Block {
-	101:23	Expression (
-	101:22	Number
-	) 
-	101:17	Identifier "exit" 
-	101:16	Operator <Dot> 
-	101:9	Identifier "process" 
-	100:9	Block {
-	99:123	Expression (
-	99:122	String "  Simply pass in the path to the directory and all the valid files will be compiled automatically."
-	) 
-	99:11	Identifier "reportError" 
-	98:129	Expression (
-	98:128	String "  If you're trying to use a wildcard (*) to relay every type of file within a directory, do not use it."
-	) 
-	98:11	Identifier "reportError"
-	} 
-	97:32	Expression (
-	97:31	Number 
-	97:30	Operator <Minus> 
-	97:29	Operator <GreaterThan> 
-	97:28	Expression (
-	97:27	String "*"
-	) 
-	97:17	Identifier "indexOf" 
-	97:16	Operator <Dot> 
-	97:12	Identifier "path"
-	) 
-	97:9	If 
-	96:84	Expression (
-	96:81	Identifier "err" 
-	96:80	Operator <Plus> 
-	96:79	String "Given path does not exist or was unable to be located: \n"
-	) 
-	96:9	Identifier "reportError"
-	} 
-	95:17	Expression (
-	95:14	Identifier "err"
-	) 
-	95:8	Catch 
-	95:7	Block {
-	94:56	Expression (
-	
-	) 
-	94:44	Identifier "isDirectory" 
-	94:43	Operator <Dot> 
-	94:42	Expression (
-	94:38	Identifier "path"
-	) 
-	94:28	Identifier "lstatSync" 
-	94:27	Operator <Dot> 
-	94:25	Identifier "fs" 
-	94:24	Operator <Bang> 
-	94:23	Operator <Bang> 
-	94:21	Operator <Assignment> 
-	94:9	Identifier "isDirectory"
-	} 
-	93:7	Try 
-	92:25	Bool 
-	92:23	Operator <Assignment> 
-	92:11	Identifier "isDirectory" 
-	92:7	Variable <Var> 
-	91:13	Comment 
-	90:72	Comment 
-	89:39	Comment 
-	88:41	Comment 
-	87:15	Comment 
-	86:7	Block {
-	85:39	Expression (
-	85:38	Array [
-	85:37	Number
-	] 
-	85:33	Identifier "lex" 
-	85:32	Operator <Or> 
-	85:31	Operator <Or> 
-	85:30	Array [
-	85:29	Number
-	] 
-	85:25	Identifier "lex"
-	) 
-	85:20	Identifier "push" 
-	85:19	Operator <Dot> 
-	85:9	Identifier "pathTokens"
-	} 
-	84:38	Expression (
-	84:37	Expression (
-	84:33	Identifier "path"
-	) 
-	84:28	Identifier "exec" 
-	84:27	Operator <Dot> 
-	84:19	Identifier "tokenize" 
-	84:17	Operator <Assignment> 
-	84:13	Identifier "lex"
-	) 
-	84:7	While 
-	83:17	Null 
-	83:15	Operator <Assignment> 
-	83:11	Identifier "lex" 
-	83:7	Variable <Var> 
-	82:25	Array [
-	
-	] 
-	82:22	Operator <Assignment> 
-	82:11	Identifier "pathTokens" 
-	82:7	Variable <Var> 
-	81:76	Identifier "ig" 
-	81:75	Operator <Div> 
-	81:74	Expression (
-	81:73	Identifier "$" 
-	81:72	Operator <Plus> 
-	81:71	Identifier "w" 
-	81:70	[31mUnknown_Token: \ [39m 
-	81:69	Operator <Dot> 
-	81:68	[31mUnknown_Token: \ [39m 
-	81:67	Operator <Plus> 
-	81:66	Array [
-	81:65	Operator <Dot> 
-	81:64	Identifier "Z" 
-	81:63	Operator <Minus> 
-	81:61	Identifier "zA" 
-	81:60	Operator <Minus> 
-	81:59	Identifier "a" 
-	81:58	Number 
-	81:57	Operator <Minus> 
-	81:56	Number
-	] 
-	81:53	Operator <Or> 
-	81:52	Expression (
-	81:51	Expression (
-	81:50	Operator <Div> 
-	81:49	[31mUnknown_Token: \ [39m
-	) 
-	81:47	Operator <Colon> 
-	81:46	Operator <Ternary>
-	) 
-	81:44	Expression (
-	81:43	Operator <Plus> 
-	81:42	Array [
-	81:41	Identifier "Z" 
-	81:40	Operator <Minus> 
-	81:38	Identifier "zA" 
-	81:37	Operator <Minus> 
-	81:36	Identifier "a" 
-	81:35	Number 
-	81:34	Operator <Minus> 
-	81:33	Number
-	] 
-	81:31	Operator <Or> 
-	81:30	Block {
-	81:29	Number 
-	81:28	Operator <Comma> 
-	81:27	Number
-	} 
-	81:25	Operator <Dot> 
-	81:24	[31mUnknown_Token: \ [39m
-	) 
-	81:22	Operator <Div> 
-	81:20	Operator <Assignment> 
-	81:11	Identifier "tokenize" 
-	81:7	Variable <Var> 
-	80:44	Comment 
-	79:76	Comment 
-	78:50	Comment 
-	77:70	Comment 
-	76:70	Comment
-	) 
-	75:29	Expression (
-	75:25	Identifier "path"
-	) 
-	75:16	Function
-	} 
-	75:12	Identifier "map" 
-	75:11	Operator <Dot> 
-	75:10	Identifier "_" 
-	75:9	Operator <Dot> 
-	75:5	Identifier "argv"
-	) 
-	74:16	Expression (
-	74:7	Identifier "localDoxy" 
-	74:6	Operator <Bang>
-	) 
-	74:3	If 
-	73:57	Expression (
-	73:56	String "Attempting to fetch files" 
-	73:29	Operator <Plus> 
-	73:20	Identifier "timeStamp" 
-	73:19	Operator <Plus> 
-	73:18	String "\n"
-	) 
-	73:11	Identifier "log" 
-	73:10	Operator <Dot> 
-	73:3	Identifier "console" 
-	72:3	Block {
-	71:5	Block {
-	70:19	Bool 
-	70:17	Operator <Assignment> 
-	70:7	Identifier "localDoxy"
-	} 
-	69:6	Else 
-	69:5	Block {
-	68:21	Expression (
-	68:20	Number
-	) 
-	68:15	Identifier "exit" 
-	68:14	Operator <Dot> 
-	68:7	Identifier "process" 
-	67:22	Expression (
-	67:21	String "h"
-	) 
-	67:7	Identifier "resolveFlag"
-	} 
-	66:27	Expression (
-	66:26	Expression (
-	
-	) 
-	66:9	Identifier "checkForDoxyFile" 
-	66:8	Operator <Bang>
-	) 
-	66:5	If
-	} 
-	65:20	Expression (
-	65:14	Identifier "length" 
-	65:13	Operator <Dot> 
-	65:12	Identifier "_" 
-	65:11	Operator <Dot> 
-	65:7	Identifier "argv" 
-	65:6	Operator <Bang>
-	) 
-	65:3	If 
-	64:12	Expression (
-	
-	) 
-	64:7	Identifier "tick" 
-	64:6	Operator <Dot> 
-	64:3	Identifier "bar"
-	}
-	}
-	}
-	63:26	Expression (
-	
-	)
-	63:10	Identifier "continueProcess"
-	63:1	Function
-	62:54	Comment
-	60:17	Expression (
-	
-	)
-	60:1	Identifier "continueProcess"
-	59:1	Block {
-	58:4	Expression (
-	58:3	Block {
-	57:33	Expression (
-	57:32	Array [
-	57:28	Identifier "flag"
-	] 
-	57:23	Identifier "argv" 
-	57:21	Operator <Comma> 
-	57:17	Identifier "flag"
-	) 
-	57:5	Identifier "resolveFlag" 
-	56:29	Bool 
-	56:22	Return 
-	56:20	Expression (
-	56:19	String "_" 
-	56:15	Operator <Assignment> 
-	56:14	Operator <Assignment> 
-	56:13	Operator <Assignment> 
-	56:8	Identifier "flag"
-	) 
-	56:5	If
-	} 
-	55:56	Expression (
-	55:52	Identifier "flag"
-	) 
-	55:43	Function
-	) 
-	55:36	Identifier "filter" 
-	55:35	Operator <Dot> 
-	55:34	Expression (
-	55:30	Identifier "argv"
-	) 
-	55:10	Identifier "getOwnPropertyNames" 
-	55:9	Operator <Dot> 
-	55:3	Identifier "Object"
-	}
-	54:47	Expression (
-	54:46	Number 
-	54:44	Operator <GreaterThan> 
-	54:37	Identifier "length" 
-	54:36	Operator <Dot> 
-	54:35	Expression (
-	54:31	Identifier "argv"
-	) 
-	54:11	Identifier "getOwnPropertyNames" 
-	54:10	Operator <Dot> 
-	54:4	Identifier "Object"
-	)
-	54:1	If
-	53:24	Comment
-	51:1	Array [
-	50:16	String "node_modules" 
-	49:9	Operator <Comma> 
-	49:8	String ".git"
-	]
-	48:28	Operator <Assignment>
-	48:5	Identifier "blackListedDirectories"
-	48:1	Variable <Var>
-	47:67	Comment
-	46:70	Comment
-	44:26	Expression (
-	
-	)
-	44:21	Identifier "Date"
-	44:17	New
-	44:15	Operator <Assignment>
-	44:5	Identifier "startTime"
-	44:1	Variable <Var>
-	43:192	String "] "
-	43:188	Operator <Plus>
-	43:187	Expression (
-	43:186	Expression (
-	43:185	Number 
-	43:184	Operator <Minus>
-	) 
-	43:178	Identifier "slice" 
-	43:177	Operator <Dot> 
-	43:176	Expression (
-	43:175	Expression (
-	
-	) 
-	43:164	Identifier "getSeconds" 
-	43:163	Operator <Dot> 
-	43:143	Identifier "currentTimeReference" 
-	43:142	Operator <Plus> 
-	43:141	String "0"
-	) 
-	43:137	Operator <Plus> 
-	43:136	String ":" 
-	43:133	Operator <Plus> 
-	43:132	Expression (
-	43:131	Number 
-	43:130	Operator <Minus>
-	) 
-	43:124	Identifier "slice" 
-	43:123	Operator <Dot> 
-	43:122	Expression (
-	43:121	Expression (
-	
-	) 
-	43:110	Identifier "getMinutes" 
-	43:109	Operator <Dot> 
-	43:89	Identifier "currentTimeReference" 
-	43:88	Operator <Plus> 
-	43:87	String "0"
-	) 
-	43:83	Operator <Plus> 
-	43:82	String ":" 
-	43:79	Operator <Plus> 
-	43:78	Expression (
-	43:77	Number 
-	43:76	Operator <Minus>
-	) 
-	43:70	Identifier "slice" 
-	43:69	Operator <Dot> 
-	43:68	Expression (
-	43:67	Expression (
-	
-	) 
-	43:58	Identifier "getHours" 
-	43:57	Operator <Dot> 
-	43:37	Identifier "currentTimeReference" 
-	43:36	Operator <Plus> 
-	43:35	String "0"
-	)
-	)
-	43:27	Identifier "gray"
-	43:26	Operator <Dot>
-	43:21	Identifier "chalk"
-	43:20	Operator <Plus>
-	43:19	String "["
-	43:15	Operator <Assignment>
-	43:5	Identifier "timeStamp"
-	43:1	Variable <Var>
-	42:37	Expression (
-	
-	)
-	42:32	Identifier "Date"
-	42:28	New
-	42:26	Operator <Assignment>
-	42:5	Identifier "currentTimeReference"
-	42:1	Variable <Var>
-	41:19	Null
-	41:17	Operator <Assignment>
-	41:5	Identifier "revivedData"
-	41:1	Variable <Var>
-	40:21	Null
-	40:19	Operator <Assignment>
-	40:5	Identifier "CLIOutputDest"
-	40:1	Variable <Var>
-	39:17	Bool
-	39:15	Operator <Assignment>
-	39:5	Identifier "localDoxy"
-	39:1	Variable <Var>
-	38:17	Array [
-	
-	]
-	38:14	Operator <Assignment>
-	38:5	Identifier "allFiles"
-	38:1	Variable <Var>
-	37:24	Comment
-	35:1	Block {
-	34:22	Block {
-	
-	} 
-	34:19	Expression (
-	
-	) 
-	34:9	Function 
-	34:7	Operator <Colon> 
-	34:3	Identifier "tick"
-	}
-	33:11	Operator <Assignment>
-	33:7	Identifier "bar"
-	33:1	Variable <Const>
-	32:34	Comment
-	31:16	Comment
-	30:84	Comment
-	28:1	Block {
-	27:10	Identifier "bar" 
-	27:3	Return 
-	26:4	Expression (
-	26:3	Block {
-	25:12	Number 
-	25:10	Operator <Colon> 
-	25:5	Identifier "total" 
-	24:17	Operator <Comma> 
-	24:12	Identifier "width" 
-	24:10	Operator <Colon> 
-	24:5	Identifier "width" 
-	23:22	Operator <Comma> 
-	23:21	String "â–‘" 
-	23:15	Operator <Colon> 
-	23:5	Identifier "incomplete" 
-	22:20	Operator <Comma> 
-	22:19	String "â–“" 
-	22:13	Operator <Colon> 
-	22:5	Identifier "complete"
-	} 
-	21:38	Operator <Comma> 
-	21:37	String "â•¢:bar"
-	) 
-	21:17	Identifier "ProgressBar" 
-	21:13	New 
-	21:11	Operator <Assignment> 
-	21:7	Identifier "bar" 
-	21:3	Variable <Var> 
-	20:30	Identifier "columns" 
-	20:29	Operator <Dot> 
-	20:23	Identifier "stdout" 
-	20:22	Operator <Dot> 
-	20:15	Identifier "process" 
-	20:13	Operator <Assignment> 
-	20:7	Identifier "width" 
-	20:3	Variable <Var>
-	}
-	19:27	Expression (
-	
-	)
-	19:10	Identifier "initProgressBar"
-	19:1	Function
-	17:36	Expression (
-	
-	)
-	17:32	Identifier "cwd"
-	17:31	Operator <Dot>
-	17:24	Identifier "process"
-	17:22	Operator <Assignment>
-	17:13	Identifier "INIT_CWD"
-	17:12	Operator <Dot>
-	17:9	Identifier "env"
-	17:8	Operator <Dot>
-	17:1	Identifier "process"
-	16:27	Comment
-	14:47	Expression (
-	14:39	Identifier "readFile" 
-	14:38	Operator <Dot> 
-	14:36	Identifier "fs"
-	)
-	14:26	Identifier "promisify"
-	14:25	Operator <Dot>
-	14:18	Identifier "Promise"
-	14:16	Operator <Assignment>
-	14:7	Identifier "readFile"
-	14:1	Variable <Const>
-	13:51	Expression (
-	13:41	Identifier "appendFile" 
-	13:40	Operator <Dot> 
-	13:38	Identifier "fs"
-	)
-	13:28	Identifier "promisify"
-	13:27	Operator <Dot>
-	13:20	Identifier "Promise"
-	13:18	Operator <Assignment>
-	13:7	Identifier "appendFile"
-	13:1	Variable <Const>
-	12:24	Expression (
-	12:23	String "fs"
-	)
-	12:12	Identifier "require"
-	12:10	Operator <Assignment>
-	12:7	Identifier "fs"
-	12:1	Variable <Const>
-	11:30	Expression (
-	11:29	String "chalk"
-	)
-	11:15	Identifier "require"
-	11:13	Operator <Assignment>
-	11:7	Identifier "chalk"
-	11:1	Variable <Const>
-	10:55	Expression (
-	10:54	Expression (
-	10:53	Number
-	) 
-	10:47	Identifier "slice" 
-	10:46	Operator <Dot> 
-	10:42	Identifier "argv" 
-	10:41	Operator <Dot> 
-	10:34	Identifier "process"
-	)
-	10:32	Expression (
-	10:31	String "minimist"
-	)
-	10:14	Identifier "require"
-	10:12	Operator <Assignment>
-	10:7	Identifier "argv"
-	10:1	Variable <Const>
-	9:39	Expression (
-	9:38	String "progress"
-	)
-	9:21	Identifier "require"
-	9:19	Operator <Assignment>
-	9:7	Identifier "ProgressBar"
-	9:1	Variable <Const>
-	8:35	Expression (
-	8:34	String "bluebird"
-	)
-	8:17	Identifier "require"
-	8:15	Operator <Assignment>
-	8:7	Identifier "Promise"
-	8:1	Variable <Const>
-	7:38	Expression (
-	7:37	String "./compiler"
-	)
-	7:18	Identifier "require"
-	7:16	Operator <Assignment>
-	7:7	Identifier "Compiler"
-	7:1	Variable <Const>
-	6:34	Expression (
-	6:33	String "./parser"
-	)
-	6:16	Identifier "require"
-	6:14	Operator <Assignment>
-	6:7	Identifier "Parser"
-	6:1	Variable <Const>
-	5:32	Expression (
-	5:31	String "./lexer"
-	)
-	5:15	Identifier "require"
-	5:13	Operator <Assignment>
-	5:7	Identifier "Lexer"
-	5:1	Variable <Const>
-	3:12	String "use strict"
-	1:20	Comment
+TOKENS:
+  Comment [90m(15:2)[39m
+  String: use strict [90m(17:12)[39m
+  Variable: Const [90m(19:1)[39m
+  Identifier: Node [90m(19:7)[39m
+  Operator: Assignment [90m(19:12)[39m
+  Identifier: require [90m(19:14)[39m
+  Expression (
+      String: ../Nodes/multidirectional_tree_node.js [90m(19:61)[39m
+  ) [90m(19:62)[39m
+  Comment [90m(25:2)[39m
+  Variable: Const [90m(26:1)[39m
+  Identifier: KaryTree [90m(26:7)[39m
+  Operator: Assignment [90m(26:16)[39m
+  Function [90m(26:18)[39m
+  Expression (
+      Identifier: data [90m(26:27)[39m
+  ) [90m(26:31)[39m
+  Block {
+      Expression (
+          Identifier: data [90m(27:24)[39m
+      ) [90m(27:28)[39m
+      Identifier: Node [90m(27:19)[39m
+      New [90m(27:15)[39m
+      Operator: Assignment [90m(27:13)[39m
+      Identifier: root [90m(27:8)[39m
+      Operator: Dot [90m(27:7)[39m
+      This [90m(27:3)[39m
+  } [90m(28:1)[39m
+  Comment [90m(34:2)[39m
+  Identifier: KaryTree [90m(35:1)[39m
+  Operator: Dot [90m(35:9)[39m
+  Identifier: prototype [90m(35:10)[39m
+  Operator: Dot [90m(35:19)[39m
+  Identifier: isLeaf [90m(35:20)[39m
+  Operator: Assignment [90m(35:27)[39m
+  Function [90m(35:29)[39m
+  Expression (
+      Identifier: node [90m(35:38)[39m
+  ) [90m(35:42)[39m
+  Block {
+      Expression (
+          Number [90m(39:36)[39m
+          Operator: StrictEqual [90m(39:32)[39m
+          Identifier: length [90m(39:25)[39m
+          Operator: Dot [90m(39:24)[39m
+          Identifier: children [90m(39:16)[39m
+          Operator: Dot [90m(39:15)[39m
+          Identifier: node [90m(39:11)[39m
+      ) [90m(39:37)[39m
+      Return [90m(39:3)[39m
+      Block {
+          Expression (
+              String: Attempting to check the leaves of undefined node in KaryTree.isLeaf [90m(37:93)[39m
+          ) [90m(37:94)[39m
+          Identifier: TypeError [90m(37:15)[39m
+          New [90m(37:11)[39m
+          Throw [90m(37:5)[39m
+      } [90m(38:3)[39m
+      Expression (
+          Null [90m(36:46)[39m
+          Operator: StrictEqual [90m(36:42)[39m
+          Identifier: node [90m(36:37)[39m
+          Operator: LogicalOr [90m(36:34)[39m
+          String: undefined [90m(36:32)[39m
+          Operator: StrictEqual [90m(36:18)[39m
+          Identifier: node [90m(36:13)[39m
+          Typeof [90m(36:6)[39m
+      ) [90m(36:50)[39m
+      If [90m(36:3)[39m
+  } [90m(40:1)[39m
+  Comment [90m(46:2)[39m
+  Identifier: KaryTree [90m(47:1)[39m
+  Operator: Dot [90m(47:9)[39m
+  Identifier: prototype [90m(47:10)[39m
+  Operator: Dot [90m(47:19)[39m
+  Identifier: emptySubtree [90m(47:20)[39m
+  Operator: Assignment [90m(47:33)[39m
+  Function [90m(47:35)[39m
+  Expression (
+      Identifier: node [90m(47:44)[39m
+  ) [90m(47:48)[39m
+  Block {
+      Null [90m(55:10)[39m
+      Operator: Assignment [90m(55:8)[39m
+      Identifier: node [90m(55:3)[39m
+      Expression (
+          Expression (
+              This [90m(54:10)[39m
+          ) [90m(54:14)[39m
+          Identifier: bind [90m(54:5)[39m
+          Operator: Dot [90m(54:4)[39m
+          Block {
+              Null [90m(53:13)[39m
+              Operator: Assignment [90m(53:11)[39m
+              Identifier: child [90m(53:5)[39m
+              Expression (
+                  Identifier: child [90m(52:23)[39m
+              ) [90m(52:28)[39m
+              Identifier: emptySubtree [90m(52:10)[39m
+              Operator: Dot [90m(52:9)[39m
+              This [90m(52:5)[39m
+          } [90m(54:3)[39m
+          Expression (
+              Identifier: child [90m(51:30)[39m
+          ) [90m(51:35)[39m
+          Function [90m(51:21)[39m
+      ) [90m(54:15)[39m
+      Identifier: map [90m(51:17)[39m
+      Operator: Dot [90m(51:16)[39m
+      Identifier: children [90m(51:8)[39m
+      Operator: Dot [90m(51:7)[39m
+      Identifier: node [90m(51:3)[39m
+      Block {
+          Return [90m(49:5)[39m
+      } [90m(50:3)[39m
+      Expression (
+          Null [90m(48:15)[39m
+          Operator: StrictEqual [90m(48:11)[39m
+          Identifier: node [90m(48:6)[39m
+      ) [90m(48:19)[39m
+      If [90m(48:3)[39m
+  } [90m(56:1)[39m
+  Comment [90m(62:2)[39m
+  Identifier: KaryTree [90m(63:1)[39m
+  Operator: Dot [90m(63:9)[39m
+  Identifier: prototype [90m(63:10)[39m
+  Operator: Dot [90m(63:19)[39m
+  Identifier: emptyTree [90m(63:20)[39m
+  Operator: Assignment [90m(63:30)[39m
+  Function [90m(63:32)[39m
+  Expression () [90m(63:41)[39m
+  Block {
+      Null [90m(68:15)[39m
+      Operator: Assignment [90m(68:13)[39m
+      Identifier: root [90m(68:8)[39m
+      Operator: Dot [90m(68:7)[39m
+      This [90m(68:3)[39m
+      Expression (
+          Identifier: root [90m(67:26)[39m
+          Operator: Dot [90m(67:25)[39m
+          This [90m(67:21)[39m
+      ) [90m(67:30)[39m
+      Identifier: emptySubtree [90m(67:8)[39m
+      Operator: Dot [90m(67:7)[39m
+      This [90m(67:3)[39m
+      Block {
+          Expression (
+              String: Attempted to empty a nulled tree in KaryTree.emptyTree [90m(65:76)[39m
+          ) [90m(65:77)[39m
+          Identifier: Error [90m(65:15)[39m
+          New [90m(65:11)[39m
+          Throw [90m(65:5)[39m
+      } [90m(66:3)[39m
+      Expression (
+          Null [90m(64:20)[39m
+          Operator: StrictEqual [90m(64:16)[39m
+          Identifier: root [90m(64:11)[39m
+          Operator: Dot [90m(64:10)[39m
+          This [90m(64:6)[39m
+      ) [90m(64:24)[39m
+      If [90m(64:3)[39m
+  } [90m(69:1)[39m
+  Comment [90m(77:2)[39m
+  Identifier: KaryTree [90m(78:1)[39m
+  Operator: Dot [90m(78:9)[39m
+  Identifier: prototype [90m(78:10)[39m
+  Operator: Dot [90m(78:19)[39m
+  Identifier: search [90m(78:20)[39m
+  Operator: Assignment [90m(78:27)[39m
+  Function [90m(78:29)[39m
+  Expression (
+      Identifier: node [90m(78:44)[39m
+      Operator: Comma [90m(78:42)[39m
+      Identifier: data [90m(78:38)[39m
+  ) [90m(78:48)[39m
+  Block {
+      Expression (
+          Block {
+              Expression (
+                  Identifier: child [90m(95:18)[39m
+                  Operator: Comma [90m(95:16)[39m
+                  Identifier: data [90m(95:12)[39m
+              ) [90m(95:23)[39m
+              Identifier: search [90m(95:5)[39m
+          } [90m(96:3)[39m
+          Expression (
+              Identifier: child [90m(94:30)[39m
+          ) [90m(94:35)[39m
+          Function [90m(94:21)[39m
+      ) [90m(96:4)[39m
+      Identifier: map [90m(94:17)[39m
+      Operator: Dot [90m(94:16)[39m
+      Identifier: children [90m(94:8)[39m
+      Operator: Dot [90m(94:7)[39m
+      Identifier: node [90m(94:3)[39m
+      Comment [90m(93:33)[39m
+      Block {
+          Identifier: node [90m(90:12)[39m
+          Return [90m(90:5)[39m
+      } [90m(91:3)[39m
+      Expression (
+          Expression (
+              Identifier: data [90m(89:52)[39m
+              Operator: Dot [90m(89:51)[39m
+              Identifier: node [90m(89:47)[39m
+          ) [90m(89:56)[39m
+          Identifier: stringify [90m(89:37)[39m
+          Operator: Dot [90m(89:36)[39m
+          Identifier: JSON [90m(89:32)[39m
+          Operator: StrictEqual [90m(89:27)[39m
+          Expression (
+              Identifier: data [90m(89:21)[39m
+          ) [90m(89:25)[39m
+          Identifier: stringify [90m(89:11)[39m
+          Operator: Dot [90m(89:10)[39m
+          Identifier: JSON [90m(89:6)[39m
+      ) [90m(89:57)[39m
+      If [90m(89:3)[39m
+      Comment [90m(88:56)[39m
+      Block {
+          Identifier: root [90m(85:17)[39m
+          Operator: Dot [90m(85:16)[39m
+          This [90m(85:12)[39m
+          Operator: Assignment [90m(85:10)[39m
+          Identifier: node [90m(85:5)[39m
+      } [90m(86:3)[39m
+      Expression (
+          String: undefined [90m(84:32)[39m
+          Operator: StrictEqual [90m(84:18)[39m
+          Identifier: node [90m(84:13)[39m
+          Typeof [90m(84:6)[39m
+      ) [90m(84:33)[39m
+      If [90m(84:3)[39m
+      Comment [90m(83:48)[39m
+      Block {
+          Bool [90m(80:12)[39m
+          Return [90m(80:5)[39m
+      } [90m(81:3)[39m
+      Expression (
+          Null [90m(79:15)[39m
+          Operator: StrictEqual [90m(79:11)[39m
+          Identifier: node [90m(79:6)[39m
+      ) [90m(79:19)[39m
+      If [90m(79:3)[39m
+  } [90m(97:1)[39m
+  Identifier: module [90m(99:1)[39m
+  Operator: Dot [90m(99:7)[39m
+  Identifier: exports [90m(99:8)[39m
+  Operator: Assignment [90m(99:16)[39m
+  Identifier: KaryTree [90m(99:18)[39m
