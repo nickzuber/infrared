@@ -2,7 +2,7 @@
 from __future__ import print_function
 from subprocess import check_output
 from os import listdir
-from os.path import join, dirname, realpath
+from os.path import join
 from time import sleep
 from utils import Colour, FoundError, getCurrentAbsolutePath, existsIn, EXEC, WHITE_LISTED_EXTENSIONS
 

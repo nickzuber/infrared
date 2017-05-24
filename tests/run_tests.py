@@ -2,11 +2,11 @@
 from __future__ import print_function
 from subprocess import check_output
 from os import listdir
-from os.path import join, dirname, realpath
+from os.path import join
 from time import sleep
 from utils import Colour, FoundError, getCurrentAbsolutePath, existsIn, EXEC, WHITE_LISTED_EXTENSIONS
 
-dir_path = dirname(realpath(__file__))
+dir_path = getCurrentAbsolutePath(__file__)
 
 # (path/to/tests, infrared_command)
 LEXER_TESTS = (join(dir_path, "lexer"), "tokenize")
