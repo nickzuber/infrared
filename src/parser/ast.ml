@@ -106,9 +106,9 @@ and Function : sig
 end = Function
 
 (* Node classes *)
-
 and Node : sig
-  type t = Identifier.t * t'
+  (* Currently not implementing `TypeIndicator` but leaving room if we want to later *)
+  type t = t'
 
   and t' = 
     | Program of Program.t
