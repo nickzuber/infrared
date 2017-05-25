@@ -180,6 +180,32 @@ end = IterationStatement
 and Expression : sig
   type t = 
     | MemberExpression of MemberExpression.t
+    | ClassExpression
+    | LiteralBooleanExpression
+    | LiteralInfinityExpression
+    | LiteralNullExpression
+    | LiteralNumericExpression
+    | LiteralRegExpExpression
+    | LiteralStringExpression
+    | ArrayExpression
+    | ArrowExpression
+    | AssignmentExpression
+    | BinaryExpression
+    | CallExpression
+    | CompoundAssignmentExpression
+    | ConditionalExpression
+    | FunctionExpression
+    | IdentifierExpression
+    | NewExpression
+    | NewTargetExpression
+    | ObjectExpression
+    | UnaryExpression
+    | TemplateExpression
+    | ThisExpression
+    | UpdateExpression
+    | YieldExpression
+    | YieldGeneratorExpression
+    | AwaitExpression
 end = Expression
 
 and MemberExpression : sig
