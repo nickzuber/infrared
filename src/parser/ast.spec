@@ -45,19 +45,8 @@
 
 // node classes
 
-interface Node {
-  [TypeIndicator] readonly attribute Type type;
-};
-
-// `Script`, `Module`
-interface Program : Node { };
-
-interface Statement : Node { };
-interface IterationStatement : Statement {
-  attribute Statement body;
-};
-
 interface Expression : Node { };
+
 // `MemberExpression`, `SuperProperty`
 interface MemberExpression : Expression {
   // The object whose property is being accessed.

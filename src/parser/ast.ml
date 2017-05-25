@@ -151,7 +151,24 @@ end = Program
 and Statement : sig
   type t = 
     | IterationStatement of IterationStatement.t
-    | Empty
+    | ClassDeclaration of ClassDeclaration.t
+    | BlockStatement of BlockStatement.t
+    | BreakStatement of BreakStatement.t
+    | ContinueStatement of ContinueStatement.t
+    | DebuggerStatement of DebuggerStatement.t
+    | ExpressionStatement of ExpressionStatement.t
+    | IfStatement of IfStatement.t
+    | LabeledStatement of LabeledStatement.t
+    | ReturnStatement of ReturnStatement.t
+    | SwitchStatement of SwitchStatement.t
+    | SwitchStatementWithDefault of SwitchStatementWithDefault.t
+    | ThrowStatement of ThrowStatement.t
+    | TryCatchStatement of TryCatchStatement.t
+    | TryFinallyStatement of TryFinallyStatement.t
+    | VariableDeclarationStatement of VariableDeclarationStatement.t
+    | WithStatement of WithStatement.t
+    | FunctionDeclaration of FunctionDeclaration.t
+    | EmptyStatement
 end = Statement
 
 and IterationStatement : sig
