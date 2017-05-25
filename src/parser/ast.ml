@@ -8,15 +8,19 @@
  * Note for translating spec.idl to ocaml:
  * ```
  * interface B : A { }
- * ```
- * implies
- * ```
+ * ---
  * module rec A : sig
- *   type t =
+ *   type t = PropA * t'
+ *   type t' =
  *     | B of B.t
  * end = A
+ * 
+ * and B : sig 
+ *   type t = PropA * t'
+ *   type t' =
+ *     | Blah of Blah.t
+ * end = B
  * ```
- * etc.
  *)
 
 module Token = Lexer.Token
