@@ -3,7 +3,21 @@
  * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
  *
  * This AST implementation is based off of the Shift AST specification
- * described here: http://shift-ast.org/ *)
+ * described here: http://shift-ast.org/ 
+ *
+ * Note for translating spec.idl to ocaml:
+ * ```
+ * interface B : A { }
+ * ```
+ * implies
+ * ```
+ * module rec A : sig
+ *   type t =
+ *     | B of B.t
+ * end = A
+ * ```
+ * etc.
+ *)
 
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
@@ -124,6 +138,7 @@ end = Node
 and Program : sig
   type t =
     | Script of Script.t
+    | Module of Module.t
 end = Program
 
 and Statement : sig
