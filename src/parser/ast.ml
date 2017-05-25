@@ -21,6 +21,11 @@
  *     | Blah of Blah.t
  * end = B
  * ```
+ * Basically when a module B implements another module A, we need
+ * to make B a varient type of A and also make sure that any other
+ * properties in A are then copied over in B to simulate proper
+ * inheritence.
+ * 
  *)
 
 module Token = Lexer.Token
