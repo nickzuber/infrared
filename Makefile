@@ -1,14 +1,14 @@
 
 OCB_FLAGS = -use-ocamlfind -pkg core,batteries -tags thread 
-OCB =				ocamlbuild $(OCB_FLAGS)
+OCB =       ocamlbuild $(OCB_FLAGS)
 
 MODULES = src/commands\
-					src/watch\
-					src/parser\
-					src/typechecker\
-					src/errors\
-					core\
-					utils
+          src/watch\
+          src/parser\
+          src/typechecker\
+          src/errors\
+          core\
+          utils
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 
@@ -26,15 +26,14 @@ test:
 generate-tests:
 	python tests/generate_tests.py
 
-# @TEMP v
+# @TEMP
 e-test:
 	./infrared.native parse tests/_experimental/test.js
 e-test-s:
 	./infrared.native parse tests/_experimental/test.js > tests/_experimental/test.exp
-# @TEMP ^
 
 clean:
 	$(OCB) -clean
 
-.PHONY: clean all run
+.PHONY: all run infrared test generate_tests clean 
 
