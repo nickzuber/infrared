@@ -9,23 +9,22 @@ module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
 
 (* Supporting types *)
-(*
 module rec Arguments : sig
   type t = 
-    | SpreadElement of SpreadElement.t
-    | Expression of Expression.t
+    | SpreadElement of SpreadElement.t list
+    | Expression of Expression.t list
 end = Arguments
 
 and Identifier : sig
-  type t = Identifier of string
+  type t = string
 end = Identifier
 
 and IdentifierName : sig
-  type t = IdentifierName of string
+  type t = string
 end = IdentifierName
 
 and Label : sig
-  type t = Label of string
+  type t = string
 end = Label
 
 and VariableDeclarationKind : sig
@@ -229,5 +228,3 @@ end = BindingWithDefault
 and BindingIdentifier : sig
   type t
 end = BindingIdentifier 
-
-*)
