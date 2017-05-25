@@ -130,10 +130,8 @@ end = Function
 
 (* Node classes *)
 and Node : sig
-  (* Currently not implementing `TypeIndicator` but leaving room if we want to later *)
-  type t = t'
-
-  and t' = 
+  (* Currently not implementing `TypeIndicator` *)
+  type t' = 
     | Program of Program.t
     | Statement of Statement.t
     | Expression of Expression.t
