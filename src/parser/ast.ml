@@ -98,6 +98,7 @@ end = UpdateOperator
 
 and Function : sig
   type t = {
+    isAsync: bool;
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;

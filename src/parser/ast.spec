@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+/* I am deleting stuff as I go so leave me alone */
+
 /*
   INFO: This specification is currently divided into the following sections:
-  * supporting types
+  - supporting types
   * node classes
   * bindings
   * classes
@@ -31,36 +33,15 @@
 */
 
 
-// supporting types
 
 
-typedef (SpreadElement or Expression)[] Arguments;
-typedef DOMString string;
-typedef string Identifier;
-typedef string IdentifierName;
-typedef string Label;
 
-enum VariableDeclarationKind { "var", "let", "const" };
 
-enum CompoundAssignmentOperator {
-  "+=", "-=", "*=", "/=", "%=", "**=", "<<=", ">>=", ">>>=", "|=", "^=", "&="
-};
-enum BinaryOperator {
-  "==", "!=", "===", "!==", "<", "<=", ">", ">=", "in", "instanceof", "<<",
-  ">>", ">>>", "+", "-", "*", "/", "%", "**", ",", "||", "&&", "|", "^", "&"
-};
-enum UnaryOperator { "+", "-", "!", "~", "typeof", "void", "delete" };
-enum UpdateOperator { "++", "--" };
 
-// `FunctionExpression`, `FunctionDeclaration`, `GeneratorExpression`, `GeneratorDeclaration`, `AsyncFunctionExpression`, `AsyncFunctionDeclaration`
-interface Function {
-  // True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise.
-  attribute boolean isAsync;
-  // True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise.
-  attribute boolean isGenerator;
-  attribute FormalParameters params;
-  attribute FunctionBody body;
-};
+
+
+
+
 
 // node classes
 
