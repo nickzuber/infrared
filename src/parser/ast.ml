@@ -136,10 +136,35 @@ and Node : sig
     | Statement of Statement.t
     | Expression of Expression.t
     | PropertyName of PropertyName.t 
+    | ObjectProperty of ObjectProperty.t
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | VariableReference  of VariableReference.t
     | BindingWithDefault of BindingWithDefault.t
+    | MemberAssignmentTarget of MemberAssignmentTarget.t
+    | ArrayBinding of ArrayBinding.t
+    | ObjectBinding of ObjectBinding.t
+    | BindingProperty of BindingProperty.t
+    | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+    | ArrayAssignmentTarget of ArrayAssignmentTarget.t
+    | ObjectAssignmentTarget of ObjectAssignmentTarget.t
+    | AssignmentTargetProperty of AssignmentTargetProperty.t
+    | ClassElement of ClassElement.t
+    | ImportSpecifier of ImportSpecifier.t
+    | ExportFromSpecifier of ExportFromSpecifier.t
+    | ExportLocalSpecifier of ExportLocalSpecifier.t
+    | Block of Block.t
+    | CatchClause of CatchClause.t
+    | Directive of Directive.t
+    | FormalParameters of FormalParameters.t
+    | FunctionBody of FunctionBody.t
+    | SpreadElement of SpreadElement.t
+    | Super of Super.t
+    | SwitchCase of SwitchCase.t
+    | SwitchDefault of SwitchDefault.t
+    | TemplateElement of TemplateElement.t
+    | VariableDeclaration of VariableDeclaration.t
+    | VariableDeclarator of VariableDeclarator.t
 end = Node
 
 and Program : sig

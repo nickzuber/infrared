@@ -45,14 +45,6 @@
 
 // node classes
 
-interface Expression : Node { };
-
-// `MemberExpression`, `SuperProperty`
-interface MemberExpression : Expression {
-  // The object whose property is being accessed.
-  attribute (Expression or Super) _object;
-};
-
 // `[ Expression ]`, `. IdentifierName`
 interface PropertyName : Node { };
 
