@@ -209,9 +209,10 @@ and Expression : sig
 end = Expression
 
 and MemberExpression : sig
-  type t = 
-    | Object_E of Expression.t
-    | Object_S of Super.t
+  type t = { _object: t' }
+  and t' =
+    | Expression of Expression.t
+    | Super of Super.t
 end = MemberExpression
 
 and PropertyName : sig

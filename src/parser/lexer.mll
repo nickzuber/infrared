@@ -371,6 +371,7 @@ module Token = struct
       "null", Null;
       "return", Return;
       "super", Super;
+      "switch", Switch;
       "this", This;
       "throw", Throw;
       "try", Try;
