@@ -10,20 +10,17 @@
  * interface B : A { }
  * ---
  * module rec A : sig
- *   type t = PropA * t'
- *   type t' =
+ *   type t =
  *     | B of B.t
  * end = A
  * 
  * and B : sig 
- *   type t = PropA * t'
- *   type t' =
- *     | Blah of Blah.t
+ *   type t = attributes
  * end = B
  * ```
  * Basically when a module B implements another module A, we need
  * to make B a varient type of A and also make sure that any other
- * properties in A are then copied over in B to simulate proper
+ * properties in A are then moved over to B to simulate this type of
  * inheritence.
  * 
  *)
@@ -119,6 +116,7 @@ and UpdateOperator : sig
     | Decrement           (*    --    *)
 end = UpdateOperator
 
+(* others implement *)
 and Function : sig
   type t = {
     isAsync: bool;
@@ -130,8 +128,7 @@ end = Function
 
 (* Node classes *)
 and Node : sig
-  (* Currently not implementing `TypeIndicator` *)
-  type t' = 
+  type t = 
     | Program of Program.t
     | Statement of Statement.t
     | Expression of Expression.t
@@ -197,9 +194,12 @@ and Statement : sig
 end = Statement
 
 and IterationStatement : sig
-  type t = {
-    body:  Statement.t;
-  }
+  type t = 
+    | DoWhileStatement of DoWhileStatement.t
+    | ForInStatement of ForInStatement.t
+    | ForOfStatement of ForOfStatement.t
+    | ForStatement of ForStatement.t
+    | WhileStatement of WhileStatement.t
 end = IterationStatement
 
 and Expression : sig
@@ -241,19 +241,27 @@ and MemberExpression : sig
 end = MemberExpression
 
 and PropertyName : sig
-  type t
+  type t =
+    | ComputedPropertyName of ComputedPropertyName.t
+    | StaticPropertyName of StaticPropertyName.t
 end = PropertyName
 
+and ObjectProperty : sig
+  type t =
+    | NamedObjectProperty of NamedObjectProperty.t
+    | ShorthandProperty of ShorthandProperty.t
+end = ObjectProperty
+
 and NamedObjectProperty : sig
-  type t = {
-    name: PropertyName.t;
-  }
+  type t = attrs * t'
+  and attrs = { name: PropertyName.t }
+  and t' = 
+    | MethodDefinition of MethodDefinition.t
+    | DataProperty of DataProperty.t
 end = NamedObjectProperty
 
 and MethodDefinition : sig
-  type t = {
-    body: FunctionBody.t;
-  }
+  type t = { body: FunctionBody.t }
 end = MethodDefinition
 
 and ImportDeclaration : sig
