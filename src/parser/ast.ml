@@ -116,7 +116,7 @@ and UpdateOperator : sig
     | Decrement           (*    --    *)
 end = UpdateOperator
 
-(* others implement *)
+(** others implement *)
 and Function : sig
   type t = {
     isAsync: bool;
@@ -234,10 +234,9 @@ and Expression : sig
 end = Expression
 
 and MemberExpression : sig
-  type t = { _object: t' }
-  and t' =
-    | Expression of Expression.t
-    | Super of Super.t
+  type t = 
+    | ComputedMemberExpression of ComputedMemberExpression.t
+    | StaticMemberExpression of StaticMemberExpression.t
 end = MemberExpression
 
 and PropertyName : sig
@@ -253,35 +252,50 @@ and ObjectProperty : sig
 end = ObjectProperty
 
 and NamedObjectProperty : sig
-  type t = attrs * t'
-  and attrs = { name: PropertyName.t }
-  and t' = 
+  and t = 
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
 end = NamedObjectProperty
 
 and MethodDefinition : sig
-  type t = { body: FunctionBody.t }
+  type t = 
+    | Method of Method.t
+    | Getter of Getter.t
+    | Setter of Setter.t
 end = MethodDefinition
 
 and ImportDeclaration : sig
-  type t = {
-    moduleSpecifier: string;
-  }
+  type t = 
+    | Import of Import.t
+    | ImportNamespace of ImportNamespace.t
 end = ImportDeclaration
 
 and ExportDeclaration : sig
-  type t
+  type t =
+    | ExportAllFrom of ExportAllFrom.t
+    | ExportFrom of ExportFrom.t
+    | ExportLocals of ExportLocals.t
+    | Export of Export.t
+    | ExportDefault of ExportDefault.t
 end = ExportDeclaration
 
 and VariableReference : sig
-  type t = {
-    name: Identifier.t;
-  }
+  type t = 
+    | BindingIdentifier of BindingIdentifier.t
+    | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
 end = VariableReference
 
-(* Bindings *)
+and NewExpression : sig
+  type t = {
+    _type: string;
+    callee: Expression.t;
+    arguments: Arguments.t;
+  }
+end = NewExpression
 
+
+
+(* Bindings *)
 and BindingPattern : sig
   type t = 
     | ObjectBinding of ObjectBinding.t
