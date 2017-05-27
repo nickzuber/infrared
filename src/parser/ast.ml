@@ -298,6 +298,27 @@ and NewTargetExpression : sig
   type t = { _type: string; }
 end = NewTargetExpression
 
+and ObjectExpression : sig
+  type t = {
+    _type: string;
+    properties: ObjectProperty.t list;
+  }
+end = ObjectExpression
+
+and UnaryExpression : sig
+  type t = {
+    _type: string;
+    operator: UnaryOperator.t;
+    operand: Expression.t;
+  }
+end = UnaryExpression
+
+and StaticMemberExpression : sig
+  type t = {
+    _type: string;
+    property: IdentifierName.t;
+  }
+end = StaticMemberExpression
 
 
 (* Bindings *)
