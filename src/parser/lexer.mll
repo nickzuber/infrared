@@ -597,9 +597,9 @@ rule token env = parse
                           then swallow_single_comment lexbuf (* Handling as comment for now *)
                           else Syntax_Error "Illegal hashbang found"
                         in let env = env
-                            |> resolve_errors tok
-                            |> push ~tok:(tok) ~lxb:(lexbuf) in
-                          token env lexbuf
+                          |> resolve_errors tok
+                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                        token env lexbuf
                       }
   | "true" | "false"  {
                         let env = push Bool env lexbuf in
