@@ -778,12 +778,12 @@ and read_string q buf = parse
                       read_string q buf lexbuf
                     }
   | "'"|'"' as q'   {
-                      if q = q'
-                        then String (Buffer.contents buf)
-                        else begin
-                          Buffer.add_string buf (Lexing.lexeme lexbuf);
-                          read_string q buf lexbuf
-                        end
+                      if q = q' then
+                        String (Buffer.contents buf)
+                      else begin
+                        Buffer.add_string buf (Lexing.lexeme lexbuf);
+                        read_string q buf lexbuf
+                      end
                     }
   | '\n' | eof      { Syntax_Error "String is terminated illegally or not at all" }
   | _ as c          { 
@@ -805,23 +805,22 @@ and read_template_strings env buf exprs = parse
                     }
   | '$' '{' (templatechars* as raw_expr) '}'
                     {
-                      if (String.length raw_expr) = 0 
-                        then begin
-                          let expr = Syntax_Error "Empty template string argument" in
-                          let expr' = dress expr lexbuf in
-                          let exprs' = [expr'] :: exprs in
-                          read_template_strings env buf exprs' lexbuf
-                        end else begin
-                          (* Spawn a new instance of our lexer and work on expression *) 
-                          let open Batteries in
-                          let input = IO.input_string raw_expr in
-                          let lexbuf' = Lexing.from_input input in
-                          let cooked_expr_env = token new_env lexbuf' in
-                          (* Consider checking for errors in cooked_expr_env.error *)
-                          let expr = cooked_expr_env.token_list in
-                          let exprs' = expr :: exprs in
-                          read_template_strings env buf exprs' lexbuf
-                        end
+                      if (String.length raw_expr) = 0 then begin
+                        let expr = Syntax_Error "Empty template string argument" in
+                        let expr' = dress expr lexbuf in
+                        let exprs' = [expr'] :: exprs in
+                        read_template_strings env buf exprs' lexbuf
+                      end else begin
+                        (* Spawn a new instance of our lexer and work on expression *) 
+                        let open Batteries in
+                        let input = IO.input_string raw_expr in
+                        let lexbuf' = Lexing.from_input input in
+                        let cooked_expr_env = token new_env lexbuf' in
+                        (* Consider checking for errors in cooked_expr_env.error *)
+                        let expr = cooked_expr_env.token_list in
+                        let exprs' = expr :: exprs in
+                        read_template_strings env buf exprs' lexbuf
+                      end
                     }
   | '\n'            {
                       let _ = Lexing.new_line lexbuf in
