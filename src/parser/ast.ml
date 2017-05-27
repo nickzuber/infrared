@@ -320,6 +320,20 @@ and StaticMemberExpression : sig
   }
 end = StaticMemberExpression
 
+and TemplateExpression : sig
+  type t = {
+    _type: string;
+    (* The second `MemberExpression` or `CallExpression`, if present. *)
+    tag: Expression.t option;
+    (* The contents of the template. This list must be alternating 
+       TemplateElements and Expressions, beginning and ending with TemplateElement. *)
+    elements: t' list;
+  }
+  and t' = 
+    | Expression of Expression.t
+    | TemplateElement of TemplateElement.t
+end = TemplateExpression
+
 
 (* Bindings *)
 and BindingPattern : sig
