@@ -293,6 +293,11 @@ and NewExpression : sig
   }
 end = NewExpression
 
+and NewTargetExpression : sig
+  (* https://stackoverflow.com/a/32458960/5055063 *)
+  type t = { _type: string; }
+end = NewTargetExpression
+
 
 
 (* Bindings *)
