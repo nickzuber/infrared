@@ -334,6 +334,21 @@ and TemplateExpression : sig
     | TemplateElement of TemplateElement.t
 end = TemplateExpression
 
+and ThisExpression : sig
+  type t = {
+    _type: string;
+  }
+end = ThisExpression
+
+and UpdateExpression : sig
+  type t = {
+    _type: string;
+    (* True for `UpdateExpression :: ++ LeftHandSideExpression` and
+       `UpdateExpression :: -- LeftHandSideExpression`, false otherwise. *)
+    isPrefix: bool;
+  }
+end = UpdateExpression
+
 
 (* Bindings *)
 and BindingPattern : sig
