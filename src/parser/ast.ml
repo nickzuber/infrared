@@ -346,6 +346,8 @@ and UpdateExpression : sig
     (* True for `UpdateExpression :: ++ LeftHandSideExpression` and
        `UpdateExpression :: -- LeftHandSideExpression`, false otherwise. *)
     isPrefix: bool;
+    operator: UpdateOperator.t;
+    operand: SimpleAssignmentTarget.t;
   }
 end = UpdateExpression
 
