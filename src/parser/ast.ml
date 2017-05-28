@@ -119,7 +119,11 @@ end = UpdateOperator
 (** others implement *)
 and Function : sig
   type t = {
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`,
+       false otherwise. *)
     isAsync: bool;
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`,
+       false otherwise. *)
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;
