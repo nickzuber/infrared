@@ -15,7 +15,7 @@
  * end = A
  * 
  * and B : sig 
- *   type t = attributes
+ *   type t = { ...attributes }
  * end = B
  * ```
  * Basically when a module B implements another module A, we need
