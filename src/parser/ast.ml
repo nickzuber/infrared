@@ -289,6 +289,60 @@ and VariableReference : sig
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
 end = VariableReference
 
+(* Bindings *)
+and BindingPattern : sig
+  type t = 
+    | ObjectBinding of ObjectBinding.t
+    | ArrayBinding of ArrayBinding.t
+end = BindingPattern
+
+and Binding : sig
+  type t =
+    | BindingPattern of BindingPattern.t
+    | BindingIdentifier of BindingIdentifier.t
+end = Binding
+
+and SimpleAssignmentTarget : sig
+  type t = 
+    | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
+    | MemberAssignmentTarget of MemberAssignmentTarget.t
+end = SimpleAssignmentTarget
+
+and AssignmentTargetPattern : sig
+  type t = 
+    | ObjectAssignmentTarget of ObjectAssignmentTarget.t
+    | ArrayAssignmentTarget of ArrayAssignmentTarget.t
+end = SimpleAssignmentTarget
+
+and AssignmentTarget : sig
+  type t = 
+    | AssignmentTargetPattern of AssignmentTargetPattern.t
+    | SimpleAssignmentTarget of SimpleAssignmentTarget.t
+end = AssignmentTarget 
+
+and Parameter : sig
+  type t = 
+    | Binding of Binding.t
+    | BindingWithDefault of BindingWithDefault.t
+end = Parameter
+
+and BindingWithDefault : sig
+  type t = {
+    binding: Binding.t;
+    init: Expression.t;
+  }
+end = BindingWithDefault
+
+and BindingIdentifier : sig
+  type t
+end = BindingIdentifier
+
+
+
+
+
+(* ... *)
+
 and NewExpression : sig
   type t = {
     _type: string;
@@ -339,9 +393,7 @@ and TemplateExpression : sig
 end = TemplateExpression
 
 and ThisExpression : sig
-  type t = {
-    _type: string;
-  }
+  type t = { _type: string; }
 end = ThisExpression
 
 and UpdateExpression : sig
@@ -356,50 +408,6 @@ and UpdateExpression : sig
 end = UpdateExpression
 
 
-(* Bindings *)
-and BindingPattern : sig
-  type t = 
-    | ObjectBinding of ObjectBinding.t
-    | ArrayBinding of ArrayBinding.t
-end = BindingPattern
 
-and Binding : sig
-  type t =
-    | BindingPattern of BindingPattern.t
-    | BindingIdentifier of BindingIdentifier.t
-end = Binding
 
-and SimpleAssignmentTarget : sig
-  type t = 
-    | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
-    | MemberAssignmentTarget of MemberAssignmentTarget.t
-end = SimpleAssignmentTarget
-
-and AssignmentTargetPattern : sig
-  type t = 
-    | ObjectAssignmentTarget of ObjectAssignmentTarget.t
-    | ArrayAssignmentTarget of ArrayAssignmentTarget.t
-end = SimpleAssignmentTarget
-
-and AssignmentTarget : sig
-  type t = 
-    | AssignmentTargetPattern of AssignmentTargetPattern.t
-    | SimpleAssignmentTarget of SimpleAssignmentTarget.t
-end = AssignmentTarget 
-
-and Parameter : sig
-  type t = 
-    | Binding of Binding.t
-    | BindingWithDefault of BindingWithDefault.t
-end = Parameter
-
-and BindingWithDefault : sig
-  type t = {
-    binding: Binding.t;
-    init: Expression.t;
-  }
-end = BindingWithDefault
-
-and BindingIdentifier : sig
-  type t
-end = BindingIdentifier 
+ 

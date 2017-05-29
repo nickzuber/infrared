@@ -128,6 +128,7 @@ interface BindingIdentifier : VariableReference { };
 
 interface AssignmentTargetIdentifier : VariableReference { };
 
+<!-------------------------------------------------------------------------------->
 interface MemberAssignmentTarget : Node {
   // The object whose property is being assigned.
   attribute (Expression or Super) _object;
