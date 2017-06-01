@@ -128,7 +128,6 @@ interface BindingIdentifier : VariableReference { };
 
 interface AssignmentTargetIdentifier : VariableReference { };
 
-<!-------------------------------------------------------------------------------->
 interface MemberAssignmentTarget : Node {
   // The object whose property is being assigned.
   attribute (Expression or Super) _object;
@@ -169,6 +168,7 @@ interface BindingPropertyProperty : BindingProperty {
   attribute (Binding or BindingWithDefault) binding;
 };
 
+<!-------------------------------------------------------------------------------->
 // This interface represents the case where the initializer is present in `AssignmentElement :: DestructuringAssignmentTarget Initializer_opt`.
 interface AssignmentTargetWithDefault : Node {
   attribute AssignmentTarget binding;

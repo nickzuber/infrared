@@ -337,9 +337,76 @@ and BindingIdentifier : sig
   type t
 end = BindingIdentifier
 
+and MemberAssignmentTarget : sig
+  type t = 
+    | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
+    | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
+end = MemberAssignmentTarget
 
+and ComputedMemberAssignmentTarget : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = ComputedMemberAssignmentTarget
 
+and StaticMemberAssignmentTarget : sig
+  type t = {
+    _type: string;
+    property: IdentifierName.t;
+}
+end = StaticMemberAssignmentTarget
 
+and ArrayBinding : sig
+  type t = {
+    _type: string;
+    elements: t' list;
+    rest: Binding.t option;
+  }
+  and t' = 
+    | Binding of Binding.t
+    | BindingWithDefault of BindingWithDefault.t
+end = ArrayBinding
+
+and ObjectBinding : sig
+  type t = {
+    _type: string;
+    properties: BindingProperty.t;
+  }
+end = ObjectBinding
+
+and BindingProperty : sig
+  type t = 
+    | BindingPropertyIdentifier of BindingPropertyIdentifier.t
+    | BindingPropertyProperty of BindingPropertyProperty.t
+end = BindingProperty
+
+and BindingPropertyIdentifier : sig
+  type t = {
+    _type: string;
+    binding: BindingIdentifier.t;
+    init: Expression.t option;
+  }
+end = BindingPropertyIdentifier
+
+and BindingPropertyProperty : sig
+  type t = {
+    _type: string;
+    name: PropertyName.t;
+    binding: t';
+  }
+  and t' = 
+    | Binding of Binding.t
+    | BindingWithDefault of BindingWithDefault.t
+end = BindingPropertyProperty
+
+and AssignmentTargetWithDefault : sig
+  type t = {
+    _type: string;
+    binding: AssignmentTarget.t;
+    init: Expression.t;
+  }
+end = AssignmentTargetWithDefault
 
 (* ... *)
 
