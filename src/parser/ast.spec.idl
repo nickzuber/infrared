@@ -253,7 +253,6 @@ interface ImportSpecifier : Node {
   attribute BindingIdentifier binding;
 };
 
-<!-------------------------------------------------------------------------------->
 // `export * FromClause;`
 interface ExportAllFrom : ExportDeclaration {
   attribute string moduleSpecifier;
@@ -280,6 +279,7 @@ interface ExportDefault : ExportDeclaration {
   attribute (FunctionDeclaration or ClassDeclaration or Expression) body;
 };
 
+<!-------------------------------------------------------------------------------->
 // `ExportSpecifier`, as part of an `ExportFrom`.
 interface ExportFromSpecifier : Node {
   // The only `IdentifierName in `ExportSpecifier :: IdentifierName`, or the first in `ExportSpecifier :: IdentifierName as IdentifierName`.

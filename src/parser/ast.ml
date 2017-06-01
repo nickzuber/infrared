@@ -555,6 +555,30 @@ and ExportLocals : sig
   }
 end = ExportLocals
 
+and Export : sig
+  type t = {
+    _type: string;
+    declaration: t';
+  }
+  and t' = 
+    | FunctionDeclaration of FunctionDeclaration.t
+    | ClassDeclaration of ClassDeclaration.t
+    | VariableDeclaration of VariableDeclaration.t
+end = Export
+
+and ExportDefault : sig
+  type t = {
+    _type: string;
+    body: t';
+  }
+  and t' = 
+    | FunctionDeclaration of FunctionDeclaration.t
+    | ClassDeclaration of ClassDeclaration.t
+    | Expression of Expression.t
+end = ExportDefault
+
+
+
 
 (* ... *)
 
