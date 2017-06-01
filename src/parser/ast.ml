@@ -116,7 +116,7 @@ and UpdateOperator : sig
     | Decrement           (*    --    *)
 end = UpdateOperator
 
-(** others implement this *)
+(*! others implement this *)
 and Function : sig
   type t = {
     (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`,
@@ -453,6 +453,100 @@ end = AssignmentTargetPropertyProperty
 
 (*** Classes ***)
 
+(*! others implement this *)
+and Class : sig
+  type t = {
+    super: Expression.t option;
+    elements: ClassElement.t list;
+  }
+end = Class
+
+and ClassExpression : sig
+  type t = {
+    _type: string;
+    name: BindingIdentifier.t option;
+    super: Expression.t option;
+    elements: ClassElement.t list;
+  }
+end = ClassExpression
+
+and ClassDeclaration : sig
+  type t = {
+    _type: string;
+    name: BindingIdentifier.t;
+    super: Expression.t option;
+    elements: ClassElement.t list;
+  }
+end = ClassDeclaration
+
+and ClassElement : sig
+  type t = {
+    _type: string;
+    (* True iff `IsStatic` of ClassElement is true. *)
+    isStatic: bool;
+    method: MethodDefinition.t;
+    super: Expression.t option;
+    elements: ClassElement.t list;
+  }
+end = ClassElement
+
+(*** Modules ***)
+
+and Module : sig
+  type t = {
+    _type: string;
+    directives: Directive.t list;
+    items: t' list;
+  }
+  and t' = 
+    | ImportDeclaration of ImportDeclaration.t
+    | ExportDeclaration of ExportDeclaration.t
+    | Statement of Statement.t
+end = Module
+
+and Import : sig
+  type t = {
+    _type: string;
+    moduleSpecifier: string;
+    (* `ImportedDefaultBinding`, if present. *)
+    defaultBinding: BindingIdentifier.t option;
+    namedImports: ImportSpecifier.t list;
+  }
+end = Import
+
+and ImportNamespace : sig
+  type t = {
+    _type: string;
+    moduleSpecifier: string;
+    (* `ImportedDefaultBinding`, if present. *)
+    defaultBinding: BindingIdentifier.t option;
+    namespaceBinding: BindingIdentifier.t;
+  }
+end = ImportNamespace
+
+and ImportSpecifier : sig
+  type t = {
+    _type: string;
+    name: IdentifierName.t option;
+    binding: BindingIdentifier.t;
+  }
+end = ImportSpecifier
+
+(*? `export * FromClause;` *)
+and ExportAllFrom : sig
+  type t = {
+    _type: string;
+    namedExports: ExportFromSpecifier.t list;
+    moduleSpecifier: string;
+  }
+end = ExportAllFrom
+
+and ExportFrom : sig
+  type t = {
+    _type: string;
+    namedExports: ExportLocalSpecifier.t list;
+  }
+end = ExportFrom
 
 
 

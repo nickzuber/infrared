@@ -181,7 +181,6 @@ interface ArrayAssignmentTarget : Node {
   attribute AssignmentTarget? rest;
 };
 
-<!-------------------------------------------------------------------------------->
 // `ObjectAssignmentPattern`
 interface ObjectAssignmentTarget : Node {
   attribute AssignmentTargetProperty[] properties;
@@ -254,6 +253,7 @@ interface ImportSpecifier : Node {
   attribute BindingIdentifier binding;
 };
 
+<!-------------------------------------------------------------------------------->
 // `export * FromClause;`
 interface ExportAllFrom : ExportDeclaration {
   attribute string moduleSpecifier;
