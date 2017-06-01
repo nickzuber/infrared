@@ -548,6 +548,12 @@ and ExportFrom : sig
   }
 end = ExportFrom
 
+and ExportLocals : sig
+  type t = {
+    _type: string;
+    namedExports: ExportLocalSpecifier.t list;
+  }
+end = ExportLocals
 
 
 (* ... *)
