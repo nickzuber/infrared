@@ -168,7 +168,6 @@ interface BindingPropertyProperty : BindingProperty {
   attribute (Binding or BindingWithDefault) binding;
 };
 
-<!-------------------------------------------------------------------------------->
 // This interface represents the case where the initializer is present in `AssignmentElement :: DestructuringAssignmentTarget Initializer_opt`.
 interface AssignmentTargetWithDefault : Node {
   attribute AssignmentTarget binding;
@@ -182,6 +181,7 @@ interface ArrayAssignmentTarget : Node {
   attribute AssignmentTarget? rest;
 };
 
+<!-------------------------------------------------------------------------------->
 // `ObjectAssignmentPattern`
 interface ObjectAssignmentTarget : Node {
   attribute AssignmentTargetProperty[] properties;

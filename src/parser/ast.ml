@@ -28,7 +28,7 @@
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
 
-(* Supporting types *)
+(*** Supporting types ***)
 module rec Arguments : sig
   type t = 
     | SpreadElement of SpreadElement.t list
@@ -116,7 +116,7 @@ and UpdateOperator : sig
     | Decrement           (*    --    *)
 end = UpdateOperator
 
-(** others implement *)
+(** others implement this *)
 and Function : sig
   type t = {
     (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`,
@@ -130,7 +130,7 @@ and Function : sig
   }
 end = Function
 
-(* Node classes *)
+(*** Node classes ***)
 and Node : sig
   type t = 
     | Program of Program.t
@@ -289,7 +289,7 @@ and VariableReference : sig
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
 end = VariableReference
 
-(* Bindings *)
+(*** Bindings ***)
 and BindingPattern : sig
   type t = 
     | ObjectBinding of ObjectBinding.t
@@ -407,6 +407,54 @@ and AssignmentTargetWithDefault : sig
     init: Expression.t;
   }
 end = AssignmentTargetWithDefault
+
+and ArrayAssignmentTarget : sig
+  type t = {
+    _type: string;
+    elements: t' list;
+    rest: AssignmentTarget.t option;
+  }
+  and t' = 
+    | AssignmentTarget of AssignmentTarget.t
+    | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+end = ArrayAssignmentTarget
+
+and ObjectAssignmentTarget : sig
+  type t = {
+    _type: string;
+    properties: AssignmentTargetProperty.t list;
+  }
+end = ObjectAssignmentTarget
+
+and AssignmentTargetProperty : sig
+  type t = 
+    | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
+    | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
+end = AssignmentTargetProperty
+
+and AssignmentTargetPropertyIdentifier : sig
+  type t = {
+    _type: string;
+    binding: AssignmentTargetIdentifier.t;
+    init: Expression.t option;
+  }
+end = AssignmentTargetPropertyIdentifier
+
+and AssignmentTargetPropertyProperty : sig
+  type t = {
+    _type: string;
+    name: PropertyName.t;
+    binding: t';
+  }
+  and t' = 
+    | AssignmentTarget of AssignmentTarget.t
+    | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+end = AssignmentTargetPropertyProperty
+
+(*** Classes ***)
+
+
+
 
 (* ... *)
 
