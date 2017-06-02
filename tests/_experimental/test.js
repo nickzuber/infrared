@@ -1,19 +1,40 @@
-class Parent {
-    constructor() {
-        // implicit (from the `super` call)
-        //    new.target = Child;
-        // implicit (because `Parent` doesn't extend anything):
-        //    this = Object.create(new.target.prototype);
-        console.log(new.target) // Child!
-    }
+'use strict';
+
+const Node = require('../Nodes/multidirectional_tree_node.js');
+
+/**
+ * Creates an empty k-ary tree.
+ * @param {Node} the root node
+ * @return {void}
+ */
+const KaryTree = function(data){
+  this.root = new Node(data);
 }
-class Child extends Parent {
-    constructor() {
-        // `this` is uninitialised (and would throw if accessed)
-        // implicit (from the `new` call):
-        //    new.target = Child 
-        super(); // this = Reflect.construct(Parent, [], new.target);
-        console.log(this);
-    }
+
+/** @description
+ * Checks if the given node is a leaf.
+ * @param {Node} the node being checked
+ * @return {boolean} returns true if node is a leaf
+ */
+KaryTree.prototype.isLeaf = function(node){
+  if(typeof node === 'undefined' || node === null){
+    throw new TypeError('Attempting to check the leaves of undefined node in KaryTree.isLeaf');
+  }
+  return (node.children.length === 0);
 }
-new Child;
+
+/** @description
+ * Empties the subtree of the given node.
+ * @param {Node} the root of the subtree being emptied
+ * @return {void}
+ */
+KaryTree.prototype.emptySubtree = function(node){
+  if(node === null){
+    return;
+  }
+  node.children.map(function(child){
+    this.emptySubtree(child);
+    child = null;
+  }.bind(this));
+  node = null;
+}
