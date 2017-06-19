@@ -15,4 +15,3 @@ let create_list l =
     let flag' = create ~flag:(flag) ~doc:(doc) in
     flag' :: acc
   ) [] l
-

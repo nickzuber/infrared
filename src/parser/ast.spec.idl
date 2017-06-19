@@ -279,7 +279,6 @@ interface ExportDefault : ExportDeclaration {
   attribute (FunctionDeclaration or ClassDeclaration or Expression) body;
 };
 
-<!-------------------------------------------------------------------------------->
 // `ExportSpecifier`, as part of an `ExportFrom`.
 interface ExportFromSpecifier : Node {
   // The only `IdentifierName in `ExportSpecifier :: IdentifierName`, or the first in `ExportSpecifier :: IdentifierName as IdentifierName`.
@@ -299,6 +298,7 @@ interface ExportLocalSpecifier : Node {
 
 // property definition
 
+<!-------------------------------------------------------------------------------->
 // `MethodDefinition :: PropertyName ( UniqueFormalParameters ) { FunctionBody }`, `GeneratorMethod :: * PropertyName ( UniqueFormalParameters ) { GeneratorBody }`, `AsyncMethod :: async PropertyName ( UniqueFormalParameters ) { AsyncFunctionBody }`
 interface Method : MethodDefinition {
   // True for `AsyncMethod`, false otherwise.

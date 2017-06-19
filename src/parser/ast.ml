@@ -577,6 +577,26 @@ and ExportDefault : sig
     | Expression of Expression.t
 end = ExportDefault
 
+and ExportFromSpecifier : sig
+  type t = {
+    _type: string;
+    name: IdentifierName.t;
+    exportedName: IdentifierName.t option;
+  }
+end = ExportFromSpecifier
+
+and ExportLocalSpecifier : sig
+  type t = {
+    _type: string;
+    name: IdentifierExpression.t;
+    exportedName: IdentifierName.t option;
+  }
+end = ExportLocalSpecifier
+
+(*** Property Definition ***)
+
+
+
 
 
 
