@@ -298,7 +298,6 @@ interface ExportLocalSpecifier : Node {
 
 // property definition
 
-<!-------------------------------------------------------------------------------->
 // `MethodDefinition :: PropertyName ( UniqueFormalParameters ) { FunctionBody }`, `GeneratorMethod :: * PropertyName ( UniqueFormalParameters ) { GeneratorBody }`, `AsyncMethod :: async PropertyName ( UniqueFormalParameters ) { AsyncFunctionBody }`
 interface Method : MethodDefinition {
   // True for `AsyncMethod`, false otherwise.

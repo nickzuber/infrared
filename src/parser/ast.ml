@@ -28,7 +28,9 @@
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
 
+
 (*** Supporting types ***)
+
 module rec Arguments : sig
   type t = 
     | SpreadElement of SpreadElement.t list
@@ -130,7 +132,9 @@ and Function : sig
   }
 end = Function
 
+
 (*** Node classes ***)
+
 and Node : sig
   type t = 
     | Program of Program.t
@@ -266,6 +270,10 @@ and MethodDefinition : sig
     | Method of Method.t
     | Getter of Getter.t
     | Setter of Setter.t
+  and attributes = {
+    body: FunctionBody.t;
+    name: PropertyName.t;
+  }
 end = MethodDefinition
 
 and ImportDeclaration : sig
@@ -289,7 +297,9 @@ and VariableReference : sig
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
 end = VariableReference
 
+
 (*** Bindings ***)
+
 and BindingPattern : sig
   type t = 
     | ObjectBinding of ObjectBinding.t
@@ -451,6 +461,7 @@ and AssignmentTargetPropertyProperty : sig
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
 end = AssignmentTargetPropertyProperty
 
+
 (*** Classes ***)
 
 (*! others implement this *)
@@ -489,6 +500,7 @@ and ClassElement : sig
     elements: ClassElement.t list;
   }
 end = ClassElement
+
 
 (*** Modules ***)
 
@@ -593,11 +605,27 @@ and ExportLocalSpecifier : sig
   }
 end = ExportLocalSpecifier
 
+
 (*** Property Definition ***)
 
+and Method : sig
+  type t = {
+    _type: string;
+    (* True for `AsyncMethod`, false otherwise. *)
+    isAsync: bool;
+    (* True for `GeneratorMethod`, false otherwise. *)
+    isGenerator: bool;
+    params: FormalParameters.t;
+  }
+end = Method
 
-
-
+and Getter : sig
+  type t = {
+    _type: string;
+    body: FunctionBody.t;
+    name: PropertyName.t;
+  }
+end = Getter
 
 
 (* ... *)
