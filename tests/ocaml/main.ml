@@ -1,4 +1,8 @@
 
-open Test_ast_correctness
+(* open Test_ast_correctness *)
 
-print_endline "main not implemented"
+module rec Identifier : sig
+  type t = string
+end = Identifier
+
+let _ = print_endline "main not implemented"

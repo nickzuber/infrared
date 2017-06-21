@@ -28,7 +28,7 @@ test:
 	python tests/run_tests.py
 
 ocaml-test:
-	$(OCB) $(INCLUDE_MODULES_FOR_TESTING) tests/ocaml/main.ml
+	$(OCB) $(INCLUDE_MODULES_FOR_TESTING) tests/ocaml/main.native
 
 generate-tests:
 	python tests/generate_tests.py
