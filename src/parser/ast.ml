@@ -10,6 +10,7 @@
  * interface B : A { }
  * ---
  * module rec A : sig
+ *   __attributes__ = { ...attributes }
  *   type t =
  *     | B of B.t
  * end = A
@@ -22,6 +23,10 @@
  * to make B a varient type of A and also make sure that any other
  * properties in A are then moved over to B to simulate this type of
  * inheritence.
+ *
+ * A module will only have an __attributes__ field if it is not a terminal
+ * module. If it is a terminal module, then technically its __attribute__
+ * field would just be its type.
  * 
  *)
 
@@ -120,12 +125,10 @@ end = UpdateOperator
 
 (*! others implement this *)
 and Function : sig
-  type t = {
-    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`,
-       false otherwise. *)
+  type __attributes__ = {
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
     isAsync: bool;
-    (* True for `GeneratorExpression` and `GeneratorDeclaration`,
-       false otherwise. *)
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;
@@ -136,6 +139,10 @@ end = Function
 (*** Node classes ***)
 
 and Node : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t = 
     | Program of Program.t
     | Statement of Statement.t
@@ -173,12 +180,20 @@ and Node : sig
 end = Node
 
 and Program : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t =
     | Script of Script.t
     | Module of Module.t
 end = Program
 
 and Statement : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t = 
     | IterationStatement of IterationStatement.t
     | ClassDeclaration of ClassDeclaration.t
@@ -202,6 +217,11 @@ and Statement : sig
 end = Statement
 
 and IterationStatement : sig
+  type __attributes__ = {
+    _type: string;
+    body: Statement.t;
+  }
+
   type t = 
     | DoWhileStatement of DoWhileStatement.t
     | ForInStatement of ForInStatement.t
@@ -211,6 +231,10 @@ and IterationStatement : sig
 end = IterationStatement
 
 and Expression : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t = 
     | MemberExpression of MemberExpression.t
     | ClassExpression of ClassExpression.t
@@ -242,47 +266,79 @@ and Expression : sig
 end = Expression
 
 and MemberExpression : sig
+  type __attributes__ = {
+    _type: string;
+    _object: _object_types;
+  }
+  and _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
+
   type t = 
     | ComputedMemberExpression of ComputedMemberExpression.t
     | StaticMemberExpression of StaticMemberExpression.t
 end = MemberExpression
 
 and PropertyName : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t =
     | ComputedPropertyName of ComputedPropertyName.t
     | StaticPropertyName of StaticPropertyName.t
 end = PropertyName
 
 and ObjectProperty : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t =
     | NamedObjectProperty of NamedObjectProperty.t
     | ShorthandProperty of ShorthandProperty.t
 end = ObjectProperty
 
 and NamedObjectProperty : sig
+  type __attributes__ = {
+    _type: string;
+    name: PropertyName.t;
+  }
+
   and t = 
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
 end = NamedObjectProperty
 
 and MethodDefinition : sig
+  type __attributes__ = {
+    _type: string;
+    name: PropertyName.t;
+    body: FunctionBody.t;
+  }
+
   type t = 
     | Method of Method.t
     | Getter of Getter.t
     | Setter of Setter.t
-  and attributes = {
-    body: FunctionBody.t;
-    name: PropertyName.t;
-  }
 end = MethodDefinition
 
 and ImportDeclaration : sig
+  type __attributes__ = {
+    _type: string;
+    moduleSpecifier: string;
+  }
+
   type t = 
     | Import of Import.t
     | ImportNamespace of ImportNamespace.t
 end = ImportDeclaration
 
 and ExportDeclaration : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t =
     | ExportAllFrom of ExportAllFrom.t
     | ExportFrom of ExportFrom.t
@@ -292,6 +348,11 @@ and ExportDeclaration : sig
 end = ExportDeclaration
 
 and VariableReference : sig
+  type __attributes__ = {
+    _type: string;
+    name: Identifier.t;
+  }
+
   type t = 
     | BindingIdentifier of BindingIdentifier.t
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
@@ -337,17 +398,52 @@ and Parameter : sig
 end = Parameter
 
 and BindingWithDefault : sig
+  type __attributes__ = {
+    _type: string;
+    binding: Binding.t;
+    init: Expression.t;
+  }
+
   type t = {
+    _type: string;
     binding: Binding.t;
     init: Expression.t;
   }
 end = BindingWithDefault
 
 and BindingIdentifier : sig
-  type t
+  type __attributes__ = {
+    _type: string;
+    name: Identifier.t;
+  }
+
+  type t = {
+    _type: string;
+    name: Identifier.t;
+  }
 end = BindingIdentifier
 
+and AssignmentTargetIdentifier : sig
+  type __attributes__ = {
+    _type: string;
+    name: Identifier.t;
+  }
+
+  type t = {
+    _type: string;
+    name: Identifier.t;
+  }
+end = AssignmentTargetIdentifier
+
 and MemberAssignmentTarget : sig
+  type __attributes__ = {
+    _type: string;
+    _object: _object_types;
+  }
+  and _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
+
   type t = 
     | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
     | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
@@ -356,24 +452,32 @@ end = MemberAssignmentTarget
 and ComputedMemberAssignmentTarget : sig
   type t = {
     _type: string;
+    _object: _object_types;
     expression: Expression.t;
   }
+  and _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
 end = ComputedMemberAssignmentTarget
 
 and StaticMemberAssignmentTarget : sig
   type t = {
     _type: string;
+    _object: _object_types;
     property: IdentifierName.t;
-}
+  }
+  and _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
   type t = {
     _type: string;
-    elements: t' list;
+    elements: _element_type list;
     rest: Binding.t option;
   }
-  and t' = 
+  and _element_type = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
 end = ArrayBinding
@@ -403,9 +507,9 @@ and BindingPropertyProperty : sig
   type t = {
     _type: string;
     name: PropertyName.t;
-    binding: t';
+    binding: _binding_type;
   }
-  and t' = 
+  and _binding_type = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
 end = BindingPropertyProperty
@@ -421,10 +525,10 @@ end = AssignmentTargetWithDefault
 and ArrayAssignmentTarget : sig
   type t = {
     _type: string;
-    elements: t' list;
+    elements: _element_type list;
     rest: AssignmentTarget.t option;
   }
-  and t' = 
+  and _element_type = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
 end = ArrayAssignmentTarget
@@ -454,9 +558,9 @@ and AssignmentTargetPropertyProperty : sig
   type t = {
     _type: string;
     name: PropertyName.t;
-    binding: t';
+    binding: _binding_type;
   }
-  and t' = 
+  and _binding_type = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
 end = AssignmentTargetPropertyProperty
@@ -508,9 +612,9 @@ and Module : sig
   type t = {
     _type: string;
     directives: Directive.t list;
-    items: t' list;
+    items: _item_type list;
   }
-  and t' = 
+  and _item_type = 
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | Statement of Statement.t
@@ -570,9 +674,9 @@ end = ExportLocals
 and Export : sig
   type t = {
     _type: string;
-    declaration: t';
+    declaration: _declaration_type;
   }
-  and t' = 
+  and _declaration_type = 
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | VariableDeclaration of VariableDeclaration.t
@@ -581,9 +685,9 @@ end = Export
 and ExportDefault : sig
   type t = {
     _type: string;
-    body: t';
+    body: _body_type;
   }
-  and t' = 
+  and _body_type = 
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | Expression of Expression.t
@@ -672,9 +776,9 @@ and TemplateExpression : sig
     tag: Expression.t option;
     (* The contents of the template. This list must be alternating 
        TemplateElements and Expressions, beginning and ending with TemplateElement. *)
-    elements: t' list;
+    elements: _element_type list;
   }
-  and t' = 
+  and _element_type = 
     | Expression of Expression.t
     | TemplateElement of TemplateElement.t
 end = TemplateExpression
