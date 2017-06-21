@@ -30,9 +30,10 @@
  * 
  *)
 
+(* i imported these but i don't think we need them here?
 module Token = Lexer.Token
 module Lex_env = Lexer.Lex_env
-
+*)
 
 (*** Supporting types ***)
 
@@ -125,7 +126,7 @@ end = UpdateOperator
 
 (*! others implement this *)
 and Function : sig
-  type __attributes__ = {
+  type t = {
     (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
     isAsync: bool;
     (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
@@ -483,6 +484,11 @@ and ArrayBinding : sig
 end = ArrayBinding
 
 and ObjectBinding : sig
+  type __attributes__ = {
+    _type: string;
+    properties: BindingProperty.t list;
+  }
+  
   type t = {
     _type: string;
     properties: BindingProperty.t;
@@ -490,6 +496,10 @@ and ObjectBinding : sig
 end = ObjectBinding
 
 and BindingProperty : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t = 
     | BindingPropertyIdentifier of BindingPropertyIdentifier.t
     | BindingPropertyProperty of BindingPropertyProperty.t
@@ -541,6 +551,10 @@ and ObjectAssignmentTarget : sig
 end = ObjectAssignmentTarget
 
 and AssignmentTargetProperty : sig
+  type __attributes__ = {
+    _type: string;
+  }
+
   type t = 
     | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
     | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
@@ -599,7 +613,7 @@ and ClassElement : sig
     _type: string;
     (* True iff `IsStatic` of ClassElement is true. *)
     isStatic: bool;
-    method: MethodDefinition.t;
+    method_: MethodDefinition.t;
     super: Expression.t option;
     elements: ClassElement.t list;
   }
@@ -647,6 +661,8 @@ and ImportSpecifier : sig
     binding: BindingIdentifier.t;
   }
 end = ImportSpecifier
+
+(* <- workin thru shit right over here -> *)
 
 (*? `export * FromClause;` *)
 and ExportAllFrom : sig
