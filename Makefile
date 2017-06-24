@@ -10,11 +10,7 @@ MODULES = src/commands \
           core \
           utils
 
-MODULES_FOR_TESTING = src/parser \
-					  tests/ocaml
-
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
-INCLUDE_MODULES_FOR_TESTING = $(foreach dir, $(MODULES_FOR_TESTING), -I $(dir))
 
 all: infrared
 
@@ -26,9 +22,6 @@ infrared:
 
 test:
 	python tests/run_tests.py
-
-ocaml-test:
-	$(OCB) $(INCLUDE_MODULES_FOR_TESTING) tests/ocaml/main.native
 
 generate-tests:
 	python tests/generate_tests.py
