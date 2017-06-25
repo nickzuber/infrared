@@ -37,24 +37,29 @@ module Lex_env = Lexer.Lex_env
 
 (*** Supporting types ***)
 
+(* typedef *)
 module rec Arguments : sig
   type t = 
     | SpreadElement of SpreadElement.t list
     | Expression of Expression.t list
 end = Arguments
 
+(* typedef *)
 and Identifier : sig
   type t = string
 end = Identifier
 
+(* typedef *)
 and IdentifierName : sig
   type t = string
 end = IdentifierName
 
+(* typedef *)
 and Label : sig
   type t = string
 end = Label
 
+(* typedef *)
 and VariableDeclarationKind : sig
   type t = 
     | Var
@@ -62,6 +67,7 @@ and VariableDeclarationKind : sig
     | Const 
 end = VariableDeclarationKind
 
+(* typedef *)
 and CompoundAssignmentOperator : sig 
   type t = 
     | Plus                (*    +=    *)
@@ -78,6 +84,7 @@ and CompoundAssignmentOperator : sig
     | And                 (*    &=    *)
 end = CompoundAssignmentOperator
 
+(* typedef *)
 and BinaryOperator : sig 
   type t = 
     | Equal               (*    ==    *)
@@ -107,6 +114,7 @@ and BinaryOperator : sig
     | And                 (*    &     *)
 end = BinaryOperator
 
+(* typedef *)
 and UnaryOperator : sig
   type t = 
     | Plus                (*    +     *)
@@ -118,6 +126,7 @@ and UnaryOperator : sig
     | Delete              
 end = UnaryOperator
 
+(* typedef *)
 and UpdateOperator : sig
   type t = 
     | Increment           (*    ++    *)
@@ -140,10 +149,11 @@ end = Function
 (*** Node classes ***)
 
 and Node : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t = 
     | Program of Program.t
     | Statement of Statement.t
@@ -181,20 +191,22 @@ and Node : sig
 end = Node
 
 and Program : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t =
     | Script of Script.t
     | Module of Module.t
 end = Program
 
 and Statement : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t = 
     | IterationStatement of IterationStatement.t
     | ClassDeclaration of ClassDeclaration.t
@@ -218,11 +230,12 @@ and Statement : sig
 end = Statement
 
 and IterationStatement : sig
-  type __attributes__ = {
-    _type: string;
-    body: Statement.t;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+      body: Statement.t;
+    }
+  end
   type t = 
     | DoWhileStatement of DoWhileStatement.t
     | ForInStatement of ForInStatement.t
@@ -232,10 +245,11 @@ and IterationStatement : sig
 end = IterationStatement
 
 and Expression : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t = 
     | MemberExpression of MemberExpression.t
     | ClassExpression of ClassExpression.t
@@ -267,57 +281,62 @@ and Expression : sig
 end = Expression
 
 and MemberExpression : sig
-  type __attributes__ = {
-    _type: string;
-    _object: _object_types;
-  }
-  and _object_types = 
-    | Expression of Expression.t
-    | Super of Super.t
-
+  module Attributes : sig
+    type _object_types = 
+      | Expression of Expression.t
+      | Super of Super.t
+    type t = {
+      _type: string;
+      _object: _object_types;
+    }
+  end
   type t = 
     | ComputedMemberExpression of ComputedMemberExpression.t
     | StaticMemberExpression of StaticMemberExpression.t
 end = MemberExpression
 
 and PropertyName : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t =
     | ComputedPropertyName of ComputedPropertyName.t
     | StaticPropertyName of StaticPropertyName.t
 end = PropertyName
 
 and ObjectProperty : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t =
     | NamedObjectProperty of NamedObjectProperty.t
     | ShorthandProperty of ShorthandProperty.t
 end = ObjectProperty
 
 and NamedObjectProperty : sig
-  type __attributes__ = {
-    _type: string;
-    name: PropertyName.t;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+      name: PropertyName.t;
+    }
+  end
   and t = 
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
 end = NamedObjectProperty
 
 and MethodDefinition : sig
-  type __attributes__ = {
-    _type: string;
-    name: PropertyName.t;
-    body: FunctionBody.t;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+      name: PropertyName.t;
+      body: FunctionBody.t;
+    }
+  end
   type t = 
     | Method of Method.t
     | Getter of Getter.t
@@ -325,21 +344,23 @@ and MethodDefinition : sig
 end = MethodDefinition
 
 and ImportDeclaration : sig
-  type __attributes__ = {
-    _type: string;
-    moduleSpecifier: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+      moduleSpecifier: string;
+    }
+  end
   type t = 
     | Import of Import.t
     | ImportNamespace of ImportNamespace.t
 end = ImportDeclaration
 
 and ExportDeclaration : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t =
     | ExportAllFrom of ExportAllFrom.t
     | ExportFrom of ExportFrom.t
@@ -349,11 +370,12 @@ and ExportDeclaration : sig
 end = ExportDeclaration
 
 and VariableReference : sig
-  type __attributes__ = {
-    _type: string;
-    name: Identifier.t;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+      name: Identifier.t;
+    }
+  end
   type t = 
     | BindingIdentifier of BindingIdentifier.t
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
@@ -362,36 +384,42 @@ end = VariableReference
 
 (*** Bindings ***)
 
+(* typedef *)
 and BindingPattern : sig
   type t = 
     | ObjectBinding of ObjectBinding.t
     | ArrayBinding of ArrayBinding.t
 end = BindingPattern
 
+(* typedef *)
 and Binding : sig
   type t =
     | BindingPattern of BindingPattern.t
     | BindingIdentifier of BindingIdentifier.t
 end = Binding
 
+(* typedef *)
 and SimpleAssignmentTarget : sig
   type t = 
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
     | MemberAssignmentTarget of MemberAssignmentTarget.t
 end = SimpleAssignmentTarget
 
+(* typedef *)
 and AssignmentTargetPattern : sig
   type t = 
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
 end = SimpleAssignmentTarget
 
+(* typedef *)
 and AssignmentTarget : sig
   type t = 
     | AssignmentTargetPattern of AssignmentTargetPattern.t
     | SimpleAssignmentTarget of SimpleAssignmentTarget.t
 end = AssignmentTarget 
 
+(* typedef *)
 and Parameter : sig
   type t = 
     | Binding of Binding.t
@@ -399,12 +427,9 @@ and Parameter : sig
 end = Parameter
 
 and BindingWithDefault : sig
-  type __attributes__ = {
-    _type: string;
-    binding: Binding.t;
-    init: Expression.t;
-  }
-
+  module Attributes : sig
+    type t
+  end
   type t = {
     _type: string;
     binding: Binding.t;
@@ -413,11 +438,9 @@ and BindingWithDefault : sig
 end = BindingWithDefault
 
 and BindingIdentifier : sig
-  type __attributes__ = {
-    _type: string;
-    name: Identifier.t;
-  }
-
+  module Attributes : sig
+    type t
+  end
   type t = {
     _type: string;
     name: Identifier.t;
@@ -425,11 +448,9 @@ and BindingIdentifier : sig
 end = BindingIdentifier
 
 and AssignmentTargetIdentifier : sig
-  type __attributes__ = {
-    _type: string;
-    name: Identifier.t;
-  }
-
+  module Attributes : sig
+    type t
+  end
   type t = {
     _type: string;
     name: Identifier.t;
@@ -437,20 +458,24 @@ and AssignmentTargetIdentifier : sig
 end = AssignmentTargetIdentifier
 
 and MemberAssignmentTarget : sig
-  type __attributes__ = {
-    _type: string;
-    _object: _object_types;
-  }
-  and _object_types = 
-    | Expression of Expression.t
-    | Super of Super.t
-
+  module Attributes : sig
+    type _object_types = 
+      | Expression of Expression.t
+      | Super of Super.t
+    type t = {
+      _type: string;
+      _object: _object_types;
+    }
+  end
   type t = 
     | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
     | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
 end = MemberAssignmentTarget
 
 and ComputedMemberAssignmentTarget : sig
+  module Attributes : sig
+    type t
+  end
   type t = {
     _type: string;
     _object: _object_types;
@@ -462,33 +487,40 @@ and ComputedMemberAssignmentTarget : sig
 end = ComputedMemberAssignmentTarget
 
 and StaticMemberAssignmentTarget : sig
+  module Attributes : sig
+    type t
+  end
+  type _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
   type t = {
     _type: string;
     _object: _object_types;
     property: IdentifierName.t;
   }
-  and _object_types = 
-    | Expression of Expression.t
-    | Super of Super.t
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
-  type t = {
-    _type: string;
-    elements: _element_type list;
-    rest: Binding.t option;
-  }
-  and _element_type = 
+  module Attributes : sig
+    type t
+  end
+  type _element_type = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
+  type t = {
+    _type: string;
+    elements: _element_type list option;
+    rest: Binding.t option;
+  }
 end = ArrayBinding
 
 and ObjectBinding : sig
-  type __attributes__ = {
-    _type: string;
-    properties: BindingProperty.t list;
-  }
-  
+  module Attributes : sig
+    type t = {
+      _type: string;
+      properties: BindingProperty.t list;
+    }
+  end
   type t = {
     _type: string;
     properties: BindingProperty.t;
@@ -496,10 +528,11 @@ and ObjectBinding : sig
 end = ObjectBinding
 
 and BindingProperty : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t = 
     | BindingPropertyIdentifier of BindingPropertyIdentifier.t
     | BindingPropertyProperty of BindingPropertyProperty.t
@@ -514,14 +547,14 @@ and BindingPropertyIdentifier : sig
 end = BindingPropertyIdentifier
 
 and BindingPropertyProperty : sig
+  type _binding_type = 
+    | Binding of Binding.t
+    | BindingWithDefault of BindingWithDefault.t
   type t = {
     _type: string;
     name: PropertyName.t;
     binding: _binding_type;
   }
-  and _binding_type = 
-    | Binding of Binding.t
-    | BindingWithDefault of BindingWithDefault.t
 end = BindingPropertyProperty
 
 and AssignmentTargetWithDefault : sig
@@ -533,14 +566,15 @@ and AssignmentTargetWithDefault : sig
 end = AssignmentTargetWithDefault
 
 and ArrayAssignmentTarget : sig
-  type t = {
-    _type: string;
-    elements: _element_type list;
-    rest: AssignmentTarget.t option;
-  }
-  and _element_type = 
+  (* ex. [a, b] = [10, 20] *)
+  type _element_type = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+  type t = {
+    _type: string;
+    elements: _element_type list option;
+    rest: AssignmentTarget.t option;
+  }
 end = ArrayAssignmentTarget
 
 and ObjectAssignmentTarget : sig
@@ -551,10 +585,11 @@ and ObjectAssignmentTarget : sig
 end = ObjectAssignmentTarget
 
 and AssignmentTargetProperty : sig
-  type __attributes__ = {
-    _type: string;
-  }
-
+  module Attributes : sig
+    type t = {
+      _type: string;
+    }
+  end
   type t = 
     | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
     | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
@@ -569,14 +604,14 @@ and AssignmentTargetPropertyIdentifier : sig
 end = AssignmentTargetPropertyIdentifier
 
 and AssignmentTargetPropertyProperty : sig
+  type _binding_type = 
+    | AssignmentTarget of AssignmentTarget.t
+    | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
   type t = {
     _type: string;
     name: PropertyName.t;
     binding: _binding_type;
   }
-  and _binding_type = 
-    | AssignmentTarget of AssignmentTarget.t
-    | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
 end = AssignmentTargetPropertyProperty
 
 
@@ -623,15 +658,15 @@ end = ClassElement
 (*** Modules ***)
 
 and Module : sig
+  type _item_type = 
+    | ImportDeclaration of ImportDeclaration.t
+    | ExportDeclaration of ExportDeclaration.t
+    | Statement of Statement.t
   type t = {
     _type: string;
     directives: Directive.t list;
     items: _item_type list;
   }
-  and _item_type = 
-    | ImportDeclaration of ImportDeclaration.t
-    | ExportDeclaration of ExportDeclaration.t
-    | Statement of Statement.t
 end = Module
 
 and Import : sig
@@ -688,25 +723,25 @@ and ExportLocals : sig
 end = ExportLocals
 
 and Export : sig
+  type _declaration_type = 
+    | FunctionDeclaration of FunctionDeclaration.t
+    | ClassDeclaration of ClassDeclaration.t
+    | VariableDeclaration of VariableDeclaration.t
   type t = {
     _type: string;
     declaration: _declaration_type;
   }
-  and _declaration_type = 
-    | FunctionDeclaration of FunctionDeclaration.t
-    | ClassDeclaration of ClassDeclaration.t
-    | VariableDeclaration of VariableDeclaration.t
 end = Export
 
 and ExportDefault : sig
+  type _body_type = 
+    | FunctionDeclaration of FunctionDeclaration.t
+    | ClassDeclaration of ClassDeclaration.t
+    | Expression of Expression.t
   type t = {
     _type: string;
     body: _body_type;
   }
-  and _body_type = 
-    | FunctionDeclaration of FunctionDeclaration.t
-    | ClassDeclaration of ClassDeclaration.t
-    | Expression of Expression.t
 end = ExportDefault
 
 and ExportFromSpecifier : sig
@@ -747,8 +782,208 @@ and Getter : sig
   }
 end = Getter
 
+and Setter : sig
+  type t = {
+    _type: string;
+    body: FunctionBody.t;
+    name: PropertyName.t;
+    (* The `PropertySetParameterList`. *)
+    param: Parameter.t;
+  }
+end = Setter
 
-(* ... *)
+and DataProperty : sig
+  type t = {
+    _type: string;
+    name: PropertyName.t;
+    expression: Expression.t;
+  }
+end = DataProperty
+
+and ShorthandProperty : sig
+  type t = {
+    _type: string;
+    name: IdentifierExpression.t;
+  }
+end = ShorthandProperty
+
+and ComputedPropertyName : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = ComputedPropertyName
+
+and StaticPropertyName : sig
+  type t = {
+    _type: string;
+    value: string;
+  }
+end = StaticPropertyName
+
+
+(*** Literals ***)
+
+and LiteralBooleanExpression : sig
+  type t = {
+    _type: string;
+    value: bool;
+  }
+end = LiteralBooleanExpression
+
+and LiteralInfinityExpression : sig
+  type t = {
+    _type: string;
+  }
+end = LiteralInfinityExpression
+
+and LiteralNullExpression : sig
+  type t = {
+    _type: string;
+  }
+end = LiteralNullExpression
+
+and LiteralNumericExpression : sig
+  type t = {
+    _type: string;
+    (* value: double *)
+    value: float;
+  }
+end = LiteralNumericExpression
+
+and LiteralRegExpExpression : sig
+  type t = {
+    _type: string;
+    pattern: string;
+    (* Whether the `g` flag is present. *)
+    global: bool;
+    (* Whether the `i` flag is present. *)
+    ignoreCase: bool;
+    (* Whether the `m` flag is present. *)
+    multiLine: bool;
+    (* Whether the `y` flag is present. *)
+    sticky: bool;
+    (* Whether the `u` flag is present. *)
+    unicode: bool;
+  }
+end = LiteralRegExpExpression
+
+and LiteralStringExpression : sig
+  type t = {
+    _type: string;
+    value: string;
+  }
+end = LiteralStringExpression
+
+
+(*** Other Expressions ***)
+
+and ArrayExpression : sig
+  type _elements_type = 
+    | SpreadElement of SpreadElement.t
+    | Expression of Expression.t
+  type t = {
+    _type: string;
+    elements: _elements_type list option;
+  }
+end = ArrayExpression
+
+and ArrowExpression : sig
+  type _body_type = 
+    | FunctionBody of FunctionBody.t
+    | Expression of Expression.t
+  type t = {
+    _type: string;
+    (* True for `AsyncArrowFunction`, false otherwise. *)
+    isAsync: bool;
+    params: FormalParameters.t;
+    body: _body_type;
+  }
+end = ArrowExpression
+
+and AssignmentExpression : sig
+  type t = {
+    _type: string;
+    (* The `LeftHandSideExpression`. *)
+    binding: AssignmentTarget.t;
+    (* The `AssignmentExpression` following the `=`. *)
+    expression: Expression.t;
+  }
+end = AssignmentExpression
+
+and BinaryExpression : sig
+  type t = {
+    _type: string;
+    operator: BinaryOperator.t;
+    left: Expression.t;
+    right: Expression.t;
+  }
+end = BinaryExpression
+
+and CallExpression : sig
+  type _callee_type = 
+    | Expression of Expression.t
+    | Super of Super.t
+  type t = {
+    _type: string;
+    callee: _callee_type;
+    arguments: Arguments.t;
+  }
+end = CallExpression
+
+and CompoundAssignmentExpression : sig
+  type t = {
+    _type: string;
+    (* The `LeftHandSideExpression`. *)
+    binding: SimpleAssignmentTarget.t;
+    (* The `AssignmentExpression`. *)
+    expression: Expression.t;
+  }
+end = CompoundAssignmentExpression
+
+and ComputedMemberExpression : sig
+  type _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
+  type t = {
+    _type: string;
+    _object: _object_types;
+    (* The expression resolving to the name of the property to be accessed. *)
+    expression: Expression.t;
+  }
+end = ComputedMemberExpression
+
+and ConditionalExpression : sig
+  type t = {
+    _type: string;
+    (* The `LogicalORExpression`. *)
+    test: Expression.t;
+    (* The first `AssignmentExpression`. *)
+    consequent: Expression.t;
+    (* The second `AssignmentExpression`. *)
+    alternate: Expression.t;
+  }
+end = ConditionalExpression
+
+and FunctionExpression : sig
+  type t = {
+    _type: string;
+    name: BindingIdentifier.t option;
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
+    isAsync: bool;
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
+    isGenerator: bool;
+    params: FormalParameters.t;
+    body: FunctionBody.t;
+  }
+end = FunctionExpression
+
+and IdentifierExpression : sig
+  type t = {
+    _type: string;
+    name: Identifier.t;
+  }
+end = IdentifierExpression
 
 and NewExpression : sig
   type t = {
@@ -759,8 +994,10 @@ and NewExpression : sig
 end = NewExpression
 
 and NewTargetExpression : sig
-  (* https://stackoverflow.com/a/32458960/5055063 *)
-  type t = { _type: string; }
+  (* ex. https://stackoverflow.com/a/32458960/5055063 *)
+  type t = {
+    _type: string;
+  }
 end = NewTargetExpression
 
 and ObjectExpression : sig
@@ -779,13 +1016,21 @@ and UnaryExpression : sig
 end = UnaryExpression
 
 and StaticMemberExpression : sig
+  type _object_types = 
+    | Expression of Expression.t
+    | Super of Super.t
   type t = {
     _type: string;
+    _object: _object_types;
+    (* The name of the property to be accessed. *)
     property: IdentifierName.t;
   }
 end = StaticMemberExpression
 
 and TemplateExpression : sig
+  type _element_type = 
+    | Expression of Expression.t
+    | TemplateElement of TemplateElement.t
   type t = {
     _type: string;
     (* The second `MemberExpression` or `CallExpression`, if present. *)
@@ -794,20 +1039,18 @@ and TemplateExpression : sig
        TemplateElements and Expressions, beginning and ending with TemplateElement. *)
     elements: _element_type list;
   }
-  and _element_type = 
-    | Expression of Expression.t
-    | TemplateElement of TemplateElement.t
 end = TemplateExpression
 
 and ThisExpression : sig
-  type t = { _type: string; }
+  type t = {
+    _type: string;
+  }
 end = ThisExpression
 
 and UpdateExpression : sig
   type t = {
     _type: string;
-    (* True for `UpdateExpression :: ++ LeftHandSideExpression` and
-       `UpdateExpression :: -- LeftHandSideExpression`, false otherwise. *)
+    (* True for `UpdateExpression :: ++ LeftHandSideExpression` and `UpdateExpression :: -- LeftHandSideExpression`, false otherwise. *)
     isPrefix: bool;
     operator: UpdateOperator.t;
     operand: SimpleAssignmentTarget.t;
