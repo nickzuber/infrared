@@ -427,9 +427,6 @@ and Parameter : sig
 end = Parameter
 
 and BindingWithDefault : sig
-  module Attributes : sig
-    type t
-  end
   type t = {
     _type: string;
     binding: Binding.t;
@@ -438,9 +435,6 @@ and BindingWithDefault : sig
 end = BindingWithDefault
 
 and BindingIdentifier : sig
-  module Attributes : sig
-    type t
-  end
   type t = {
     _type: string;
     name: Identifier.t;
@@ -448,9 +442,6 @@ and BindingIdentifier : sig
 end = BindingIdentifier
 
 and AssignmentTargetIdentifier : sig
-  module Attributes : sig
-    type t
-  end
   type t = {
     _type: string;
     name: Identifier.t;
@@ -473,9 +464,6 @@ and MemberAssignmentTarget : sig
 end = MemberAssignmentTarget
 
 and ComputedMemberAssignmentTarget : sig
-  module Attributes : sig
-    type t
-  end
   type t = {
     _type: string;
     _object: _object_types;
@@ -487,9 +475,6 @@ and ComputedMemberAssignmentTarget : sig
 end = ComputedMemberAssignmentTarget
 
 and StaticMemberAssignmentTarget : sig
-  module Attributes : sig
-    type t
-  end
   type _object_types = 
     | Expression of Expression.t
     | Super of Super.t
@@ -501,9 +486,6 @@ and StaticMemberAssignmentTarget : sig
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
-  module Attributes : sig
-    type t
-  end
   type _element_type = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
