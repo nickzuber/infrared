@@ -1,252 +1,123 @@
 FILE:	tests/_experimental/test.js
 TOKENS:
-  Comment [90m(15:2)[39m
-  String: use strict [90m(17:12)[39m
-  Variable: Const [90m(19:1)[39m
-  Identifier: Node [90m(19:7)[39m
-  Operator: Assignment [90m(19:12)[39m
-  Identifier: require [90m(19:14)[39m
+  String: use strict [90m(1:12)[39m
+  Variable: Const [90m(3:1)[39m
+  Identifier: Node [90m(3:7)[39m
+  Operator: Assignment [90m(3:12)[39m
+  Identifier: require [90m(3:14)[39m
   Expression (
-      String: ../Nodes/multidirectional_tree_node.js [90m(19:61)[39m
-  ) [90m(19:62)[39m
-  Comment [90m(25:2)[39m
-  Variable: Const [90m(26:1)[39m
-  Identifier: KaryTree [90m(26:7)[39m
-  Operator: Assignment [90m(26:16)[39m
-  Function [90m(26:18)[39m
+      String: ../Nodes/multidirectional_tree_node.js [90m(3:61)[39m
+  ) [90m(3:62)[39m
+  Comment [90m(9:2)[39m
+  Variable: Const [90m(10:1)[39m
+  Identifier: KaryTree [90m(10:7)[39m
+  Operator: Assignment [90m(10:16)[39m
+  Function [90m(10:18)[39m
   Expression (
-      Identifier: data [90m(26:27)[39m
-  ) [90m(26:31)[39m
+      Identifier: data [90m(10:27)[39m
+  ) [90m(10:31)[39m
   Block {
       Expression (
-          Identifier: data [90m(27:24)[39m
-      ) [90m(27:28)[39m
-      Identifier: Node [90m(27:19)[39m
-      New [90m(27:15)[39m
-      Operator: Assignment [90m(27:13)[39m
-      Identifier: root [90m(27:8)[39m
-      Operator: Dot [90m(27:7)[39m
-      This [90m(27:3)[39m
-  } [90m(28:1)[39m
-  Comment [90m(34:2)[39m
-  Identifier: KaryTree [90m(35:1)[39m
-  Operator: Dot [90m(35:9)[39m
-  Identifier: prototype [90m(35:10)[39m
-  Operator: Dot [90m(35:19)[39m
-  Identifier: isLeaf [90m(35:20)[39m
-  Operator: Assignment [90m(35:27)[39m
-  Function [90m(35:29)[39m
+          Identifier: data [90m(11:24)[39m
+      ) [90m(11:28)[39m
+      Identifier: Node [90m(11:19)[39m
+      New [90m(11:15)[39m
+      Operator: Assignment [90m(11:13)[39m
+      Identifier: root [90m(11:8)[39m
+      Operator: Dot [90m(11:7)[39m
+      This [90m(11:3)[39m
+  } [90m(12:1)[39m
+  Comment [90m(18:2)[39m
+  Identifier: KaryTree [90m(19:1)[39m
+  Operator: Dot [90m(19:9)[39m
+  Identifier: prototype [90m(19:10)[39m
+  Operator: Dot [90m(19:19)[39m
+  Identifier: isLeaf [90m(19:20)[39m
+  Operator: Assignment [90m(19:27)[39m
+  Function [90m(19:29)[39m
   Expression (
-      Identifier: node [90m(35:38)[39m
-  ) [90m(35:42)[39m
+      Identifier: node [90m(19:38)[39m
+  ) [90m(19:42)[39m
   Block {
       Expression (
-          Number [90m(39:36)[39m
-          Operator: StrictEqual [90m(39:32)[39m
-          Identifier: length [90m(39:25)[39m
-          Operator: Dot [90m(39:24)[39m
-          Identifier: children [90m(39:16)[39m
-          Operator: Dot [90m(39:15)[39m
-          Identifier: node [90m(39:11)[39m
-      ) [90m(39:37)[39m
-      Return [90m(39:3)[39m
+          Number [90m(23:36)[39m
+          Operator: StrictEqual [90m(23:32)[39m
+          Identifier: length [90m(23:25)[39m
+          Operator: Dot [90m(23:24)[39m
+          Identifier: children [90m(23:16)[39m
+          Operator: Dot [90m(23:15)[39m
+          Identifier: node [90m(23:11)[39m
+      ) [90m(23:37)[39m
+      Return [90m(23:3)[39m
       Block {
           Expression (
-              String: Attempting to check the leaves of undefined node in KaryTree.isLeaf [90m(37:93)[39m
-          ) [90m(37:94)[39m
-          Identifier: TypeError [90m(37:15)[39m
-          New [90m(37:11)[39m
-          Throw [90m(37:5)[39m
-      } [90m(38:3)[39m
+              String: Attempting to check the leaves of undefined node in KaryTree.isLeaf [90m(21:93)[39m
+          ) [90m(21:94)[39m
+          Identifier: TypeError [90m(21:15)[39m
+          New [90m(21:11)[39m
+          Throw [90m(21:5)[39m
+      } [90m(22:3)[39m
       Expression (
-          Null [90m(36:46)[39m
-          Operator: StrictEqual [90m(36:42)[39m
-          Identifier: node [90m(36:37)[39m
-          Operator: LogicalOr [90m(36:34)[39m
-          String: undefined [90m(36:32)[39m
-          Operator: StrictEqual [90m(36:18)[39m
-          Identifier: node [90m(36:13)[39m
-          Typeof [90m(36:6)[39m
-      ) [90m(36:50)[39m
-      If [90m(36:3)[39m
+          Null [90m(20:46)[39m
+          Operator: StrictEqual [90m(20:42)[39m
+          Identifier: node [90m(20:37)[39m
+          Operator: LogicalOr [90m(20:34)[39m
+          String: undefined [90m(20:32)[39m
+          Operator: StrictEqual [90m(20:18)[39m
+          Identifier: node [90m(20:13)[39m
+          Typeof [90m(20:6)[39m
+      ) [90m(20:50)[39m
+      If [90m(20:3)[39m
+  } [90m(24:1)[39m
+  Comment [90m(30:2)[39m
+  Identifier: KaryTree [90m(31:1)[39m
+  Operator: Dot [90m(31:9)[39m
+  Identifier: prototype [90m(31:10)[39m
+  Operator: Dot [90m(31:19)[39m
+  Identifier: emptySubtree [90m(31:20)[39m
+  Operator: Assignment [90m(31:33)[39m
+  Function [90m(31:35)[39m
+  Expression (
+      Identifier: node [90m(31:44)[39m
+  ) [90m(31:48)[39m
+  Block {
+      Null [90m(39:10)[39m
+      Operator: Assignment [90m(39:8)[39m
+      Identifier: node [90m(39:3)[39m
+      Expression (
+          Expression (
+              This [90m(38:10)[39m
+          ) [90m(38:14)[39m
+          Identifier: bind [90m(38:5)[39m
+          Operator: Dot [90m(38:4)[39m
+          Block {
+              Null [90m(37:13)[39m
+              Operator: Assignment [90m(37:11)[39m
+              Identifier: child [90m(37:5)[39m
+              Expression (
+                  Identifier: child [90m(36:23)[39m
+              ) [90m(36:28)[39m
+              Identifier: emptySubtree [90m(36:10)[39m
+              Operator: Dot [90m(36:9)[39m
+              This [90m(36:5)[39m
+          } [90m(38:3)[39m
+          Expression (
+              Identifier: child [90m(35:30)[39m
+          ) [90m(35:35)[39m
+          Function [90m(35:21)[39m
+      ) [90m(38:15)[39m
+      Identifier: map [90m(35:17)[39m
+      Operator: Dot [90m(35:16)[39m
+      Identifier: children [90m(35:8)[39m
+      Operator: Dot [90m(35:7)[39m
+      Identifier: node [90m(35:3)[39m
+      Block {
+          Return [90m(33:5)[39m
+      } [90m(34:3)[39m
+      Expression (
+          Null [90m(32:15)[39m
+          Operator: StrictEqual [90m(32:11)[39m
+          Identifier: node [90m(32:6)[39m
+      ) [90m(32:19)[39m
+      If [90m(32:3)[39m
   } [90m(40:1)[39m
-  Comment [90m(46:2)[39m
-  Identifier: KaryTree [90m(47:1)[39m
-  Operator: Dot [90m(47:9)[39m
-  Identifier: prototype [90m(47:10)[39m
-  Operator: Dot [90m(47:19)[39m
-  Identifier: emptySubtree [90m(47:20)[39m
-  Operator: Assignment [90m(47:33)[39m
-  Function [90m(47:35)[39m
-  Expression (
-      Identifier: node [90m(47:44)[39m
-  ) [90m(47:48)[39m
-  Block {
-      Null [90m(55:10)[39m
-      Operator: Assignment [90m(55:8)[39m
-      Identifier: node [90m(55:3)[39m
-      Expression (
-          Expression (
-              This [90m(54:10)[39m
-          ) [90m(54:14)[39m
-          Identifier: bind [90m(54:5)[39m
-          Operator: Dot [90m(54:4)[39m
-          Block {
-              Null [90m(53:13)[39m
-              Operator: Assignment [90m(53:11)[39m
-              Identifier: child [90m(53:5)[39m
-              Expression (
-                  Identifier: child [90m(52:23)[39m
-              ) [90m(52:28)[39m
-              Identifier: emptySubtree [90m(52:10)[39m
-              Operator: Dot [90m(52:9)[39m
-              This [90m(52:5)[39m
-          } [90m(54:3)[39m
-          Expression (
-              Identifier: child [90m(51:30)[39m
-          ) [90m(51:35)[39m
-          Function [90m(51:21)[39m
-      ) [90m(54:15)[39m
-      Identifier: map [90m(51:17)[39m
-      Operator: Dot [90m(51:16)[39m
-      Identifier: children [90m(51:8)[39m
-      Operator: Dot [90m(51:7)[39m
-      Identifier: node [90m(51:3)[39m
-      Block {
-          Return [90m(49:5)[39m
-      } [90m(50:3)[39m
-      Expression (
-          Null [90m(48:15)[39m
-          Operator: StrictEqual [90m(48:11)[39m
-          Identifier: node [90m(48:6)[39m
-      ) [90m(48:19)[39m
-      If [90m(48:3)[39m
-  } [90m(56:1)[39m
-  Comment [90m(62:2)[39m
-  Identifier: KaryTree [90m(63:1)[39m
-  Operator: Dot [90m(63:9)[39m
-  Identifier: prototype [90m(63:10)[39m
-  Operator: Dot [90m(63:19)[39m
-  Identifier: emptyTree [90m(63:20)[39m
-  Operator: Assignment [90m(63:30)[39m
-  Function [90m(63:32)[39m
-  Expression () [90m(63:41)[39m
-  Block {
-      Null [90m(68:15)[39m
-      Operator: Assignment [90m(68:13)[39m
-      Identifier: root [90m(68:8)[39m
-      Operator: Dot [90m(68:7)[39m
-      This [90m(68:3)[39m
-      Expression (
-          Identifier: root [90m(67:26)[39m
-          Operator: Dot [90m(67:25)[39m
-          This [90m(67:21)[39m
-      ) [90m(67:30)[39m
-      Identifier: emptySubtree [90m(67:8)[39m
-      Operator: Dot [90m(67:7)[39m
-      This [90m(67:3)[39m
-      Block {
-          Expression (
-              String: Attempted to empty a nulled tree in KaryTree.emptyTree [90m(65:76)[39m
-          ) [90m(65:77)[39m
-          Identifier: Error [90m(65:15)[39m
-          New [90m(65:11)[39m
-          Throw [90m(65:5)[39m
-      } [90m(66:3)[39m
-      Expression (
-          Null [90m(64:20)[39m
-          Operator: StrictEqual [90m(64:16)[39m
-          Identifier: root [90m(64:11)[39m
-          Operator: Dot [90m(64:10)[39m
-          This [90m(64:6)[39m
-      ) [90m(64:24)[39m
-      If [90m(64:3)[39m
-  } [90m(69:1)[39m
-  Comment [90m(77:2)[39m
-  Identifier: KaryTree [90m(78:1)[39m
-  Operator: Dot [90m(78:9)[39m
-  Identifier: prototype [90m(78:10)[39m
-  Operator: Dot [90m(78:19)[39m
-  Identifier: search [90m(78:20)[39m
-  Operator: Assignment [90m(78:27)[39m
-  Function [90m(78:29)[39m
-  Expression (
-      Identifier: node [90m(78:44)[39m
-      Operator: Comma [90m(78:42)[39m
-      Identifier: data [90m(78:38)[39m
-  ) [90m(78:48)[39m
-  Block {
-      Expression (
-          Block {
-              Expression (
-                  Identifier: child [90m(95:18)[39m
-                  Operator: Comma [90m(95:16)[39m
-                  Identifier: data [90m(95:12)[39m
-              ) [90m(95:23)[39m
-              Identifier: search [90m(95:5)[39m
-          } [90m(96:3)[39m
-          Expression (
-              Identifier: child [90m(94:30)[39m
-          ) [90m(94:35)[39m
-          Function [90m(94:21)[39m
-      ) [90m(96:4)[39m
-      Identifier: map [90m(94:17)[39m
-      Operator: Dot [90m(94:16)[39m
-      Identifier: children [90m(94:8)[39m
-      Operator: Dot [90m(94:7)[39m
-      Identifier: node [90m(94:3)[39m
-      Comment [90m(93:33)[39m
-      Block {
-          Identifier: node [90m(90:12)[39m
-          Return [90m(90:5)[39m
-      } [90m(91:3)[39m
-      Expression (
-          Expression (
-              Identifier: data [90m(89:52)[39m
-              Operator: Dot [90m(89:51)[39m
-              Identifier: node [90m(89:47)[39m
-          ) [90m(89:56)[39m
-          Identifier: stringify [90m(89:37)[39m
-          Operator: Dot [90m(89:36)[39m
-          Identifier: JSON [90m(89:32)[39m
-          Operator: StrictEqual [90m(89:27)[39m
-          Expression (
-              Identifier: data [90m(89:21)[39m
-          ) [90m(89:25)[39m
-          Identifier: stringify [90m(89:11)[39m
-          Operator: Dot [90m(89:10)[39m
-          Identifier: JSON [90m(89:6)[39m
-      ) [90m(89:57)[39m
-      If [90m(89:3)[39m
-      Comment [90m(88:56)[39m
-      Block {
-          Identifier: root [90m(85:17)[39m
-          Operator: Dot [90m(85:16)[39m
-          This [90m(85:12)[39m
-          Operator: Assignment [90m(85:10)[39m
-          Identifier: node [90m(85:5)[39m
-      } [90m(86:3)[39m
-      Expression (
-          String: undefined [90m(84:32)[39m
-          Operator: StrictEqual [90m(84:18)[39m
-          Identifier: node [90m(84:13)[39m
-          Typeof [90m(84:6)[39m
-      ) [90m(84:33)[39m
-      If [90m(84:3)[39m
-      Comment [90m(83:48)[39m
-      Block {
-          Bool [90m(80:12)[39m
-          Return [90m(80:5)[39m
-      } [90m(81:3)[39m
-      Expression (
-          Null [90m(79:15)[39m
-          Operator: StrictEqual [90m(79:11)[39m
-          Identifier: node [90m(79:6)[39m
-      ) [90m(79:19)[39m
-      If [90m(79:3)[39m
-  } [90m(97:1)[39m
-  Identifier: module [90m(99:1)[39m
-  Operator: Dot [90m(99:7)[39m
-  Identifier: exports [90m(99:8)[39m
-  Operator: Assignment [90m(99:16)[39m
-  Identifier: KaryTree [90m(99:18)[39m
