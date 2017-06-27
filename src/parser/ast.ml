@@ -136,9 +136,9 @@ end = UpdateOperator
 (*! others implement this *)
 and Function : sig
   type t = {
-    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise *)
     isAsync: bool;
-    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise *)
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;
@@ -628,7 +628,7 @@ end = ClassDeclaration
 and ClassElement : sig
   type t = {
     _type: string;
-    (* True iff `IsStatic` of ClassElement is true. *)
+    (* True iff `IsStatic` of ClassElement is true *)
     isStatic: bool;
     method_: MethodDefinition.t;
     super: Expression.t option;
@@ -655,7 +655,7 @@ and Import : sig
   type t = {
     _type: string;
     moduleSpecifier: string;
-    (* `ImportedDefaultBinding`, if present. *)
+    (* `ImportedDefaultBinding`, if present *)
     defaultBinding: BindingIdentifier.t option;
     namedImports: ImportSpecifier.t list;
   }
@@ -665,7 +665,7 @@ and ImportNamespace : sig
   type t = {
     _type: string;
     moduleSpecifier: string;
-    (* `ImportedDefaultBinding`, if present. *)
+    (* `ImportedDefaultBinding`, if present *)
     defaultBinding: BindingIdentifier.t option;
     namespaceBinding: BindingIdentifier.t;
   }
@@ -748,9 +748,9 @@ end = ExportLocalSpecifier
 and Method : sig
   type t = {
     _type: string;
-    (* True for `AsyncMethod`, false otherwise. *)
+    (* True for `AsyncMethod`, false otherwise *)
     isAsync: bool;
-    (* True for `GeneratorMethod`, false otherwise. *)
+    (* True for `GeneratorMethod`, false otherwise *)
     isGenerator: bool;
     params: FormalParameters.t;
   }
@@ -769,7 +769,7 @@ and Setter : sig
     _type: string;
     body: FunctionBody.t;
     name: PropertyName.t;
-    (* The `PropertySetParameterList`. *)
+    (* The `PropertySetParameterList` *)
     param: Parameter.t;
   }
 end = Setter
@@ -837,15 +837,15 @@ and LiteralRegExpExpression : sig
   type t = {
     _type: string;
     pattern: string;
-    (* Whether the `g` flag is present. *)
+    (* Whether the `g` flag is present *)
     global: bool;
-    (* Whether the `i` flag is present. *)
+    (* Whether the `i` flag is present *)
     ignoreCase: bool;
-    (* Whether the `m` flag is present. *)
+    (* Whether the `m` flag is present *)
     multiLine: bool;
-    (* Whether the `y` flag is present. *)
+    (* Whether the `y` flag is present *)
     sticky: bool;
-    (* Whether the `u` flag is present. *)
+    (* Whether the `u` flag is present *)
     unicode: bool;
   }
 end = LiteralRegExpExpression
@@ -876,7 +876,7 @@ and ArrowExpression : sig
     | Expression of Expression.t
   type t = {
     _type: string;
-    (* True for `AsyncArrowFunction`, false otherwise. *)
+    (* True for `AsyncArrowFunction`, false otherwise *)
     isAsync: bool;
     params: FormalParameters.t;
     body: body;
@@ -886,9 +886,9 @@ end = ArrowExpression
 and AssignmentExpression : sig
   type t = {
     _type: string;
-    (* The `LeftHandSideExpression`. *)
+    (* The `LeftHandSideExpression` *)
     binding: AssignmentTarget.t;
-    (* The `AssignmentExpression` following the `=`. *)
+    (* The `AssignmentExpression` following the `=` *)
     expression: Expression.t;
   }
 end = AssignmentExpression
@@ -916,9 +916,9 @@ end = CallExpression
 and CompoundAssignmentExpression : sig
   type t = {
     _type: string;
-    (* The `LeftHandSideExpression`. *)
+    (* The `LeftHandSideExpression` *)
     binding: SimpleAssignmentTarget.t;
-    (* The `AssignmentExpression`. *)
+    (* The `AssignmentExpression` *)
     expression: Expression.t;
   }
 end = CompoundAssignmentExpression
@@ -930,7 +930,7 @@ and ComputedMemberExpression : sig
   type t = {
     _type: string;
     _object: _object_types;
-    (* The expression resolving to the name of the property to be accessed. *)
+    (* The expression resolving to the name of the property to be accessed *)
     expression: Expression.t;
   }
 end = ComputedMemberExpression
@@ -938,11 +938,11 @@ end = ComputedMemberExpression
 and ConditionalExpression : sig
   type t = {
     _type: string;
-    (* The `LogicalORExpression`. *)
+    (* The `LogicalORExpression` *)
     test: Expression.t;
-    (* The first `AssignmentExpression`. *)
+    (* The first `AssignmentExpression` *)
     consequent: Expression.t;
-    (* The second `AssignmentExpression`. *)
+    (* The second `AssignmentExpression` *)
     alternate: Expression.t;
   }
 end = ConditionalExpression
@@ -951,9 +951,9 @@ and FunctionExpression : sig
   type t = {
     _type: string;
     name: BindingIdentifier.t option;
-    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise *)
     isAsync: bool;
-    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise *)
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;
@@ -1004,7 +1004,7 @@ and StaticMemberExpression : sig
   type t = {
     _type: string;
     _object: _object_types;
-    (* The name of the property to be accessed. *)
+    (* The name of the property to be accessed *)
     property: IdentifierName.t;
   }
 end = StaticMemberExpression
@@ -1015,10 +1015,10 @@ and TemplateExpression : sig
     | TemplateElement of TemplateElement.t
   type t = {
     _type: string;
-    (* The second `MemberExpression` or `CallExpression`, if present. *)
+    (* The second `MemberExpression` or `CallExpression`, if present *)
     tag: Expression.t option;
     (* The contents of the template. This list must be alternating 
-       TemplateElements and Expressions, beginning and ending with TemplateElement. *)
+       TemplateElements and Expressions, beginning and ending with TemplateElement *)
     elements: element list;
   }
 end = TemplateExpression
@@ -1032,7 +1032,7 @@ end = ThisExpression
 and UpdateExpression : sig
   type t = {
     _type: string;
-    (* True for `UpdateExpression :: ++ LeftHandSideExpression` and `UpdateExpression :: -- LeftHandSideExpression`, false otherwise. *)
+    (* True for `UpdateExpression :: ++ LeftHandSideExpression` and `UpdateExpression :: -- LeftHandSideExpression`, false otherwise *)
     isPrefix: bool;
     operator: UpdateOperator.t;
     operand: SimpleAssignmentTarget.t;
@@ -1118,9 +1118,9 @@ and ForInStatement : sig
   type t = {
     _type: string;
     body: Statement.t;
-    (* The expression or declaration before `in`. *)
+    (* The expression or declaration before `in` *)
     left: declaration;
-    (* The expression after `in`. *)
+    (* The expression after `in` *)
     right: Expression.t;
   }
 end = ForInStatement
@@ -1132,9 +1132,9 @@ and ForOfStatement : sig
   type t = {
     _type: string;
     body: Statement.t;
-    (* The expression or declaration before `of`. *)
+    (* The expression or declaration before `of` *)
     left: declaration;
-    (* The expression after `of`. *)
+    (* The expression after `of` *)
     right: Expression.t;
   }
 end = ForOfStatement
@@ -1146,7 +1146,7 @@ and ForStatement : sig
   type t = {
     _type: string;
     body: Statement.t;
-    (* The expression or declaration before the first `;`, if present. *)
+    (* The expression or declaration before the first `;`, if present *)
     init: declaration option;
     (* The expression before the second `;`, if present *)
     test: Expression.t option;
@@ -1159,9 +1159,9 @@ and IfStatement : sig
   type t = {
     _type: string;
     test: Expression.t;
-    (* The first `Statement`. *)
+    (* The first `Statement` *)
     consequent: Statement.t;
-    (* The second `Statement`, if present. *)
+    (* The second `Statement`, if present *)
     alternate: Statement.t option;
   }
 end = IfStatement
@@ -1193,11 +1193,11 @@ and SwitchStatementWithDefault : sig
   type t = {
     _type: string;
     discriminant: Expression.t;
-    (* The `CaseClauses` before the `DefaultClause`. *)
+    (* The `CaseClauses` before the `DefaultClause` *)
     preDefaultCases: SwitchCase.t list;
-    (* The `DefaultClause`. *)
+    (* The `DefaultClause` *)
     defaultCase: SwitchDefault.t;
-    (* The `CaseClauses` after the `DefaultClause`. *)
+    (* The `CaseClauses` after the `DefaultClause` *)
     postDefaultCases: SwitchCase.t list;
   }
 end = SwitchStatementWithDefault
@@ -1292,9 +1292,9 @@ end = FunctionBody
 and FunctionDeclaration : sig
   type t = {
     _type: string;
-    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise *)
     isAsync: bool;
-    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise *)
     isGenerator: bool;
     params: FormalParameters.t;
     body: FunctionBody.t;
