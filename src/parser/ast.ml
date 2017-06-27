@@ -486,12 +486,12 @@ and StaticMemberAssignmentTarget : sig
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
-  type _element_type = 
+  type element = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
   type t = {
     _type: string;
-    elements: _element_type list option;
+    elements: element list option;
     rest: Binding.t option;
   }
 end = ArrayBinding
@@ -529,13 +529,13 @@ and BindingPropertyIdentifier : sig
 end = BindingPropertyIdentifier
 
 and BindingPropertyProperty : sig
-  type _binding_type = 
+  type binding = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
   type t = {
     _type: string;
     name: PropertyName.t;
-    binding: _binding_type;
+    binding: binding;
   }
 end = BindingPropertyProperty
 
@@ -549,12 +549,12 @@ end = AssignmentTargetWithDefault
 
 and ArrayAssignmentTarget : sig
   (* ex. [a, b] = [10, 20] *)
-  type _element_type = 
+  type element = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
   type t = {
     _type: string;
-    elements: _element_type list option;
+    elements: element list option;
     rest: AssignmentTarget.t option;
   }
 end = ArrayAssignmentTarget
@@ -586,13 +586,13 @@ and AssignmentTargetPropertyIdentifier : sig
 end = AssignmentTargetPropertyIdentifier
 
 and AssignmentTargetPropertyProperty : sig
-  type _binding_type = 
+  type binding = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
   type t = {
     _type: string;
     name: PropertyName.t;
-    binding: _binding_type;
+    binding: binding;
   }
 end = AssignmentTargetPropertyProperty
 
@@ -640,14 +640,14 @@ end = ClassElement
 (*** Modules ***)
 
 and Module : sig
-  type _item_type = 
+  type item = 
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | Statement of Statement.t
   type t = {
     _type: string;
     directives: Directive.t list;
-    items: _item_type list;
+    items: item list;
   }
 end = Module
 
@@ -705,24 +705,24 @@ and ExportLocals : sig
 end = ExportLocals
 
 and Export : sig
-  type _declaration_type = 
+  type declaration = 
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | VariableDeclaration of VariableDeclaration.t
   type t = {
     _type: string;
-    declaration: _declaration_type;
+    declaration: declaration;
   }
 end = Export
 
 and ExportDefault : sig
-  type _body_type = 
+  type body = 
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | Expression of Expression.t
   type t = {
     _type: string;
-    body: _body_type;
+    body: body;
   }
 end = ExportDefault
 
@@ -861,17 +861,17 @@ end = LiteralStringExpression
 (*** Other Expressions ***)
 
 and ArrayExpression : sig
-  type _elements_type = 
+  type element = 
     | SpreadElement of SpreadElement.t
     | Expression of Expression.t
   type t = {
     _type: string;
-    elements: _elements_type list option;
+    elements: element list option;
   }
 end = ArrayExpression
 
 and ArrowExpression : sig
-  type _body_type = 
+  type body = 
     | FunctionBody of FunctionBody.t
     | Expression of Expression.t
   type t = {
@@ -879,7 +879,7 @@ and ArrowExpression : sig
     (* True for `AsyncArrowFunction`, false otherwise. *)
     isAsync: bool;
     params: FormalParameters.t;
-    body: _body_type;
+    body: body;
   }
 end = ArrowExpression
 
@@ -903,12 +903,12 @@ and BinaryExpression : sig
 end = BinaryExpression
 
 and CallExpression : sig
-  type _callee_type = 
+  type callee = 
     | Expression of Expression.t
     | Super of Super.t
   type t = {
     _type: string;
-    callee: _callee_type;
+    callee: callee;
     arguments: Arguments.t;
   }
 end = CallExpression
@@ -1010,7 +1010,7 @@ and StaticMemberExpression : sig
 end = StaticMemberExpression
 
 and TemplateExpression : sig
-  type _element_type = 
+  type element = 
     | Expression of Expression.t
     | TemplateElement of TemplateElement.t
   type t = {
@@ -1019,7 +1019,7 @@ and TemplateExpression : sig
     tag: Expression.t option;
     (* The contents of the template. This list must be alternating 
        TemplateElements and Expressions, beginning and ending with TemplateElement. *)
-    elements: _element_type list;
+    elements: element list;
   }
 end = TemplateExpression
 
@@ -1039,7 +1039,214 @@ and UpdateExpression : sig
   }
 end = UpdateExpression
 
+and YieldExpression : sig
+  type t = {
+    _type: string;
+    expression: Expression.t option;
+  }
+end = YieldExpression
+
+and YieldGeneratorExpression : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = YieldGeneratorExpression
+
+and AwaitExpression : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = AwaitExpression
 
 
+(*** Other Statements ***)
 
+and BlockStatement : sig
+  type t = {
+    _type: string;
+    block: Block.t;
+  }
+end = BlockStatement
+
+and BreakStatement : sig
+  type t = {
+    _type: string;
+    label: Label.t option;
+  }
+end = BreakStatement
+
+and ContinueStatement : sig
+  type t = {
+    _type: string;
+    label: Label.t option;
+  }
+end = ContinueStatement
  
+and DebuggerStatement : sig
+  type t = {
+    _type: string;
+  }
+end = DebuggerStatement
+
+and DoWhileStatement : sig
+  type t = {
+    _type: string;
+    body: Statement.t;
+    test: Expression.t;
+  }
+end = DoWhileStatement
+
+and EmptyStatement : sig
+  type t = {
+    _type: string;
+  }
+end = EmptyStatement
+
+and ExpressionStatement : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = ExpressionStatement
+
+and ForInStatement : sig
+  type declaration = 
+    | VariableDeclaration of VariableDeclaration.t
+    | AssignmentTarget of AssignmentTarget.t
+  type t = {
+    _type: string;
+    body: Statement.t;
+    (* The expression or declaration before `in`. *)
+    left: declaration;
+    (* The expression after `in`. *)
+    right: Expression.t;
+  }
+end = ForInStatement
+
+and ForOfStatement : sig
+  type declaration = 
+    | VariableDeclaration of VariableDeclaration.t
+    | AssignmentTarget of AssignmentTarget.t
+  type t = {
+    _type: string;
+    body: Statement.t;
+    (* The expression or declaration before `of`. *)
+    left: declaration;
+    (* The expression after `of`. *)
+    right: Expression.t;
+  }
+end = ForOfStatement
+
+and ForStatement : sig
+  type declaration = 
+    | VariableDeclaration of VariableDeclaration.t
+    | AssignmentTarget of AssignmentTarget.t
+  type t = {
+    _type: string;
+    body: Statement.t;
+    (* The expression or declaration before the first `;`, if present. *)
+    init: declaration option;
+    (* The expression before the second `;`, if present *)
+    test: Expression.t option;
+    (* The expression after the second `;`, if present *)
+    udpate: Expression.t option;
+  }
+end = ForStatement
+
+and IfStatement : sig
+  type t = {
+    _type: string;
+    test: Expression.t;
+    (* The first `Statement`. *)
+    consequent: Statement.t;
+    (* The second `Statement`, if present. *)
+    alternate: Statement.t option;
+  }
+end = IfStatement
+
+and LabeledStatement : sig
+  type t = {
+    _type: string;
+    label: Label.t;
+    body: Statement.t;
+  }
+end = LabeledStatement
+
+and ReturnStatement : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = ReturnStatement
+
+and SwitchStatement : sig
+  type t = {
+    _type: string;
+    discriminant: Expression.t;
+    cases: SwitchCase.t list;
+  }
+end = SwitchStatement
+
+and SwitchStatementWithDefault : sig
+  type t = {
+    _type: string;
+    discriminant: Expression.t;
+    (* The `CaseClauses` before the `DefaultClause`. *)
+    preDefaultCases: SwitchCase.t list;
+    (* The `DefaultClause`. *)
+    defaultCase: SwitchDefault.t;
+    (* The `CaseClauses` after the `DefaultClause`. *)
+    postDefaultCases: SwitchCase.t list;
+  }
+end = SwitchStatementWithDefault
+
+and ThrowStatement : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = ThrowStatement
+
+and TryCatchStatement : sig
+  type t = {
+    _type: string;
+    body: Body.t;
+    catchClause: CatchClause.t;
+  }
+end = TryCatchStatement
+
+and TryFinallyStatement : sig
+  type t = {
+    _type: string;
+    body: Body.t;
+    catchClause: CatchClause.t option;
+    finalizer: Block.t;
+  }
+end = TryFinallyStatement
+
+and VariableDeclarationStatement : sig
+  type t = {
+    _type: string;
+    declaration: VariableDeclaration.t;
+  }
+end = VariableDeclarationStatement
+
+and WhileStatement : sig
+  type t = {
+    _type: string;
+    body: Statement.t;
+    test: Expression.t;
+  }
+end = WhileStatement
+
+and WithStatement : sig
+  type t = {
+    _type: string;
+    _object: Expression.t;
+    body: Statement.t;
+  }
+end = WithStatement
+
+(*** Other Nodes ***)
