@@ -1250,3 +1250,112 @@ and WithStatement : sig
 end = WithStatement
 
 (*** Other Nodes ***)
+
+and Block : sig
+  type t = {
+    _type: string;
+    statements: Statement.t list;
+  }
+end = Block
+
+and CatchClause : sig
+  type t = {
+    _type: string;
+    binding: Binding.t;
+    body: Block.t;
+  }
+end = CatchClause
+
+and Directive : sig
+  type t = {
+    _type: string;
+    rawValue: string;
+  }
+end = Directive
+
+and FormalParameters : sig
+  type t = {
+    _type: string;
+    items: Parameter.t list;
+    rest: Binding.t option;
+  }
+end = FormalParameters
+
+and FunctionBody : sig
+  type t = {
+    _type: string;
+    directives: Directive.t list;
+    statements: Statement.t list;
+  }
+end = FunctionBody
+
+and FunctionDeclaration : sig
+  type t = {
+    _type: string;
+    (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise. *)
+    isAsync: bool;
+    (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise. *)
+    isGenerator: bool;
+    params: FormalParameters.t;
+    body: FunctionBody.t;
+  }
+end = FunctionDeclaration
+
+and Script : sig
+  type t = {
+    _type: string;
+    directives: Directive.t list;
+    statements: Statement.t list;
+  }
+end = Script
+
+and SpreadElement : sig
+  type t = {
+    _type: string;
+    expression: Expression.t;
+  }
+end = SpreadElement
+
+and Super : sig
+  type t = {
+    _type: string;
+  }
+end = Super
+
+and SwitchCase : sig
+  type t = {
+    _type: string;
+    test: Expression.t;
+    consequent: Statement.t list;
+  }
+end = SwitchCase
+
+and SwitchDefault : sig
+  type t = {
+    _type: string;
+    consequent: Statement.t list;
+  }
+end = SwitchDefault
+
+and TemplateElement : sig
+  type t = {
+    _type: string;
+    rawValue: string;
+  }
+end = TemplateElement
+
+and VariableDeclaration : sig
+  type t = {
+    _type: string;
+    kind: VariableDeclarationKind.t;
+    declarators: VariableDeclarator.t list;
+  }
+end = VariableDeclaration
+
+and VariableDeclarator : sig
+  type t = {
+    _type: string;
+    binding: Binding.t;
+    init: Expression.t option;
+  }
+end = VariableDeclarator
