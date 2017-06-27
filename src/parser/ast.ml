@@ -324,7 +324,7 @@ and NamedObjectProperty : sig
       name: PropertyName.t;
     }
   end
-  and t = 
+  type t = 
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
 end = NamedObjectProperty
@@ -410,7 +410,7 @@ and AssignmentTargetPattern : sig
   type t = 
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
-end = SimpleAssignmentTarget
+end = AssignmentTargetPattern
 
 (* typedef *)
 and AssignmentTarget : sig
@@ -1212,7 +1212,7 @@ end = ThrowStatement
 and TryCatchStatement : sig
   type t = {
     _type: string;
-    body: Body.t;
+    body: Block.t;
     catchClause: CatchClause.t;
   }
 end = TryCatchStatement
@@ -1220,7 +1220,7 @@ end = TryCatchStatement
 and TryFinallyStatement : sig
   type t = {
     _type: string;
-    body: Body.t;
+    body: Block.t;
     catchClause: CatchClause.t option;
     finalizer: Block.t;
   }
