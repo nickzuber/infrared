@@ -1,6 +1,4 @@
 
-module Lex_env = Lexer.Lex_env
-module Token = Lexer.Token
 open Batteries
 open Ast
 open Lex_env
