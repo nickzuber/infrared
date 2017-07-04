@@ -32,5 +32,5 @@ let print_ast asts =
 
 let parse file =
   let lex_env = tokenize file in
-  Token_parser.parse lex_env.token_list
+  Token_parser.parse lex_env.token_list lex_env.source
 

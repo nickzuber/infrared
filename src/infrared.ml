@@ -45,7 +45,8 @@ end = struct
           | cmd when HelpCommand.spec.name = cmd -> HelpCommand.exec commands
           | cmd when TokenizeCommand.spec.name = cmd -> 
             (match args' with
-            | [] -> reportCommandError "no arguments given for tokenizing."
+            | [] -> reportCommandError "no arguments given for tokenizing. \
+                                        Did you forget to include a file name?"
             | arg :: [] -> 
                 Parser.print_tokens (TokenizeCommand.exec ~flags:flags' ~args:[arg])
             | _ -> 

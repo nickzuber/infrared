@@ -1354,7 +1354,7 @@ end = VariableDeclaration
 and VariableDeclarator : sig
   type t = {
     _type: string;
-    binding: Binding.t;
+    binding: BindingIdentifier.t;
     init: Expression.t option;
   }
 end = VariableDeclarator
@@ -1366,3 +1366,19 @@ type t = {
 
 and t' =
   | IdentifierName of IdentifierName.t
+  | VariableDeclarationStatement of VariableDeclarationStatement.t
+  | VariableDeclaration of VariableDeclaration.t
+  | VariableDeclarationKind of VariableDeclarationKind.t
+  | VariableDeclarator of VariableDeclarator.t
+  | Nil
+
+let ast_node_to_string node = 
+  match node with
+  | VariableDeclarationKind t -> 
+    begin
+      match t with
+      | VariableDeclarationKind.Var -> "Var"
+      | VariableDeclarationKind.Let -> "Let"
+      | VariableDeclarationKind.Const -> "Const"
+    end
+  | _ -> "unimplemented"
