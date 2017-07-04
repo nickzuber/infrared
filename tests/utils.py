@@ -4,6 +4,9 @@ import os
 class FoundError(Exception):
     pass
 
+class FailedTest(Exception):
+    pass
+
 class Colour:
     END = '\033[0m'
     BOLD = '\033[1m'
