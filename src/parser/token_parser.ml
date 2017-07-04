@@ -5,19 +5,22 @@ open Ast
 open Loc
 
 exception ParsingError of string
+exception Unimplemented
 
 
 (* Pop first token from token list and return the rest of the list.
  * An error is thrown if there are no tokens in the list before we pop. 
  * Parser_env.t -> Token.t * Token.t list *)
-let safe_pop_token ?(err="Found no tokens to parse") env =
-  let maybe_tokens = pop env in
-  let full_token, env' = 
+let optimistic_pop_token ?(err="Found no tokens to parse") token_list =
+  let maybe_tokens = pop token_list in
+  let full_token, token_list' = 
     match maybe_tokens with
     | Some tuple -> tuple
     | None -> raise (ParsingError err)
-  in full_token, env'
+  in full_token, token_list'
 
+
+(* Parsing Modules *)
 
 module Variable_parser = struct
   let declarator_err = "Looking for declarators, found none. \
@@ -34,85 +37,122 @@ module Variable_parser = struct
       _type = "VariableDeclarator";
       binding; init }
 
-  let rec parse_declarators declarators_so_far env = 
-    let full_token, env' = safe_pop_token env ~err:declarator_pop_err in
-    let token = full_token.body in
-    let loc = full_token.loc in
-    let next_token_body = match peek env' with
-      | Some token -> token.body
-      | None -> Nil_Token
-    in let binding = match token with
+  let rec parse_declarators declarators_so_far token_list = 
+    let token, token_list' = optimistic_pop_token token_list ~err:declarator_pop_err in
+    (* we expect an identifier token *)
+    let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
       | _ -> raise (ParsingError declarator_err)
-    in let continue_status = match next_token_body with
+    (* check next token to see if we have more identifiers *)
+    in let next_token_body = match lookahead token_list' with
+      | Some token -> token.body
+      | None -> Empty_Token
+    in match next_token_body with
       | Operator op ->
         begin
           match op with
           (* done with declarators, parse init. Wrap it up *)
-          | Assignment -> 0
-          (* we have more declarators, no init *)
-          | Comma -> 1
+          | Assignment -> 
+            begin
+              (* @TODO: parse init expression *)
+              let init = None in
+              let declarator = create_declarator binding init in
+              let updated_declarators = declarator :: declarators_so_far in
+              updated_declarators, token_list'
+            end
+          (* we have more declarators, no init yet *)
+          | Comma -> 
+            begin
+              let declarator = create_declarator binding None in
+              let updated_declarators = declarator :: declarators_so_far in
+              let token_list'' = eat token_list' in
+              parse_declarators updated_declarators token_list''
+            end
           | _ -> raise (ParsingError declarator_op_err)
         end
       (* No assignment & done with declarators. Wrap it up *) 
-      | _ -> 2
-    in 
-      if continue_status = 1 then
+      | _ -> 
         begin
           let declarator = create_declarator binding None in
           let updated_declarators = declarator :: declarators_so_far in
-          let env'' = eat env' in
-          parse_declarators updated_declarators env''
+          updated_declarators, token_list'
         end
-      else
-        if continue_status = 0 then
-          begin
-            let init = None in
-            let declarator = create_declarator binding init in
-            declarator :: declarators_so_far
-          end
-        else
-          begin
-            let declarator = create_declarator binding None in
-            declarator :: declarators_so_far
-          end
-
-  let parse_declaration ~t env =
+    
+  let parse_declaration loc ~t token_list =
     let t' = match t with
     | Var -> VariableDeclarationKind.Var
     | Let -> VariableDeclarationKind.Let
     | Const -> VariableDeclarationKind.Const
-    in { VariableDeclaration.
+    in let declarators, token_list' = parse_declarators [] token_list in
+    let node = 
+      { VariableDeclaration.
         _type = "VariableDeclaration";
         kind = t';
-        declarators = parse_declarators [] env }
+        declarators }
+    in node, token_list'
 
-  let parse token loc ~t env =
-    { VariableDeclarationStatement.
-      _type = "VariableDeclarationStatement";
-      declaration = parse_declaration ~t:t env }
+  let parse loc ~t token_list =
+    let declaration, token_list' = parse_declaration loc ~t:t token_list in
+    let node = 
+      { VariableDeclarationStatement.
+        _type = "VariableDeclarationStatement";
+        declaration }
+    in node, token_list'
 end
 
-let init_env tokens source =
-  let faux_ast_loc = { line = -1; column = -1 } in
-  let faux_ast_element = { loc = faux_ast_loc; node = Nil } in
-  { source; tokens; ast = faux_ast_element }
 
-let generic_token_parser full_token env =
-  let token = full_token.body in
-  let loc = full_token.loc in
-  match token with
+(* Generic Parsing Functions *)
+
+let rec generic_token_parser token_list nodes =
+  (* Exit if we're done parsing tokens *)
+  if List.length token_list = 0 then nodes else
+  (* Grab first token and figure out what to do *)
+  let token, token_list' = optimistic_pop_token token_list in
+  match token.body with
   | Variable t -> 
     begin
-      let raw_node = Variable_parser.parse token loc ~t:t env in
-      let node = VariableDeclarationStatement raw_node in
-      (* no need for patternable wrapper
-         just pattern match again _type names since they will be set *)
-      { loc; node }
+      let node, token_list'' = Variable_parser.parse token.loc ~t:t token_list' in
+      let nodes' = node :: nodes in
+      generic_token_parser token_list'' nodes'
     end
-  | _ -> { loc; node = Ast.Nil }
+  | _ -> raise Unimplemented
 
-let parse tokens source = 
-  let env = init_env tokens source in 
-  let full_token, env' = safe_pop_token env in
-  generic_token_parser full_token env'
+let create_module_ast directives token_list = 
+  let items = generic_token_parser token_list [] in
+  { Module.
+    _type = "Module"; directives; items; }
+
+let create_script_ast directives token_list =
+  { Script.
+    _type = "Script";
+    directives;
+    statements = [] }
+
+let parse_directives token_list = 
+  let rec get_all_directives token_list directives =
+    (* No tokens means we're done here *)
+    if List.length token_list = 0 then directives, token_list else
+    (* Tokens left we still want to check for directives *)
+    let first_token = List.hd token_list in
+    match first_token.body with
+    | String directive -> 
+      let token_list' = eat token_list in 
+      let directives' = directive :: directives in
+      get_all_directives token_list' directives'
+    | _ -> directives, token_list
+  in let raw_directives, final_tokens = get_all_directives token_list [] in
+  let final_directives = 
+    List.fold_left 
+      (fun acc rawValue -> 
+        let dir = { Directive._type = "Directive"; rawValue } in
+        dir :: acc)
+      [] raw_directives
+  in final_directives, final_tokens
+
+
+(* Initial parser env of a Module or Script *)
+let parse starting_tokens source =
+  let directives, tokens = parse_directives starting_tokens in
+  (* assuming Module type program *)
+  let ast = create_module_ast directives tokens in
+  { source; tokens; ast }

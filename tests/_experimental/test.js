@@ -1,3 +1,4 @@
 
-var foo = 1
-foo
+'use strict'
+
+var foo, bar;

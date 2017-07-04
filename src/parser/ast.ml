@@ -648,7 +648,7 @@ and Module : sig
   type t = {
     _type: string;
     directives: Directive.t list;
-    items: item list;
+    items: VariableDeclarationStatement.t list;
   }
 end = Module
 
@@ -1359,6 +1359,7 @@ and VariableDeclarator : sig
   }
 end = VariableDeclarator
 
+(*
 type t = {
   loc: Loc.t;
   node: t';
@@ -1382,3 +1383,4 @@ let ast_node_to_string node =
       | VariableDeclarationKind.Const -> "Const"
     end
   | _ -> "unimplemented"
+*)

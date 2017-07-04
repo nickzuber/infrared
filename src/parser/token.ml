@@ -86,7 +86,7 @@ and t' =
   | Syntax_Error of string
   | Unknown_Token of string
   (* End of tokens/file *)
-  | Nil_Token
+  | Empty_Token
 
 and ops =
   (* Compound Assignment Operators *)
@@ -245,7 +245,7 @@ let rec token_to_string tok i =
   (* Error Handling *)
   | Unknown_Token str -> Printf.sprintf "%s\x1b[31mUnknown_Token: %s \x1b[39m" indentation str
   | Syntax_Error str -> Printf.sprintf "%s\x1b[31mSyntax_Error: %s \x1b[39m" indentation str
-  | Nil_Token -> "Nil_Token"
+  | Empty_Token -> "Empty_Token"
 
 and op_to_string = function
   (* Operators *)

@@ -74,8 +74,8 @@ let buf_push lxb env =
   match expr with
   | [] -> env
   | _ -> { env with
-            expr_buffers = Utils.Stack.push stack expr;
-            expr = [] }
+           expr_buffers = Utils.Stack.push stack expr;
+           expr = [] }
 
 (* Pop from expression buffer and combine it with current expression.
   * If the current expression is empty, we combine *)
