@@ -3,7 +3,6 @@
 export OPAM_PACKAGES='ocamlfind core batteries'
 
 ## basic OCaml and opam installation
-
 full_apt_version () {
   package=$1
   version=$2
@@ -37,7 +36,7 @@ UBUNTU_TRUSTY=${UBUNTU_TRUSTY:-"0"}
 INSTALL_XQUARTZ=${INSTALL_XQUARTZ:-"true"}
 
 case "$OCAML_VERSION" in
-    latest) OCAML_VERSION=4.02;;
+    latest) OCAML_VERSION=4.03.0;;
 esac
 
 install_on_linux () {
@@ -146,9 +145,12 @@ echo OPAM_SWITCH=$OPAM_SWITCH     >> .travis-ocaml.env
 
 ocaml -version
 opam --version
-opam --git-version
 
 # install packages from opam
 opam install -q -y ${OPAM_PACKAGES}
 
-make && make test
+
+# make infrared and run tests
+make
+make version
+make test

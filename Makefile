@@ -20,6 +20,9 @@ run:
 infrared:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
+version:
+	./infrared.native version
+
 test:
 	python tests/run_tests.py
 
