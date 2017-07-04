@@ -1,7 +1,4 @@
 
-# OPAM version to install
-export OPAM_VERSION=1.2.2
-
 # OPAM packages needed to build tests
 export OPAM_PACKAGES='ocamlfind core batteries'
 
@@ -150,5 +147,8 @@ echo OPAM_SWITCH=$OPAM_SWITCH     >> .travis-ocaml.env
 ocaml -version
 opam --version
 opam --git-version
+
+# install packages from opam
+opam install -q -y ${OPAM_PACKAGES}
 
 make && make test
