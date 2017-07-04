@@ -151,4 +151,4 @@ ocaml -version
 opam --version
 opam --git-version
 
-echo "AHHHHHHH"
+make && make test
