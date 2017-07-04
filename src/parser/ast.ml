@@ -648,7 +648,7 @@ and Module : sig
   type t = {
     _type: string;
     directives: Directive.t list;
-    items: VariableDeclarationStatement.t list;
+    items: item list;
   }
 end = Module
 

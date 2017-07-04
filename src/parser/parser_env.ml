@@ -34,5 +34,9 @@ let eat ?(n=1) tokens =
     | _ -> tokens
   in inner_eat n tokens
 
-let print_single_ast ast =
-  Printf.printf "%s\n" "unimplemented"
+let rec ast_to_string ?(indent=0) ast =
+  match ast with
+  | _ -> "Unimplemented AST node"
+
+let print_single_ast env =
+  Printf.printf "%s\n" (ast_to_string ~indent:2 env.ast)

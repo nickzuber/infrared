@@ -97,22 +97,25 @@ module Variable_parser = struct
       { VariableDeclarationStatement.
         _type = "VariableDeclarationStatement";
         declaration }
-    in node, token_list'
+    in let wrapped_node = Ast.Statement.VariableDeclarationStatement node in
+    wrapped_node, token_list'
 end
 
 
 (* Generic Parsing Functions *)
 
+(* Parses and collects a list of ast nodes *)
 let rec generic_token_parser token_list nodes =
   (* Exit if we're done parsing tokens *)
   if List.length token_list = 0 then nodes else
-  (* Grab first token and figure out what to do *)
+  (* Steal first token and figure out what to do *)
   let token, token_list' = optimistic_pop_token token_list in
   match token.body with
   | Variable t -> 
     begin
       let node, token_list'' = Variable_parser.parse token.loc ~t:t token_list' in
-      let nodes' = node :: nodes in
+      let wrapped_node = Ast.Module.Statement node in
+      let nodes' = wrapped_node :: nodes in
       generic_token_parser token_list'' nodes'
     end
   | _ -> raise Unimplemented
