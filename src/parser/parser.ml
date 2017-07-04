@@ -16,10 +16,6 @@ let tokenize file =
     final_env
   | None -> final_env
 
-(* WIP *)
-let parse file =
-  tokenize file
-
 let print_single_token_list env =
   Printf.printf "FILE:\t%s\nTOKENS:\n" env.source;
   List.iter (fun tok -> 
@@ -32,4 +28,7 @@ let print_tokens envs =
 
 let print_ast envs =
   List.iter (fun env -> print_single_token_list env) envs
+
+let parse file =
+  Token_parser.parse file
 

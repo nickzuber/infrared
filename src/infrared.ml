@@ -49,6 +49,7 @@ end = struct
             | arg :: [] -> 
                 Parser.print_tokens (TokenizeCommand.exec ~flags:flags' ~args:[arg])
             | _ -> 
+                (* temp *)
                 Printf.printf "\nflags found\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
@@ -56,10 +57,12 @@ end = struct
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
           | cmd when ParseCommand.spec.name = cmd -> 
             (match args' with
-            | [] -> reportCommandError "no arguments given for parsing."
+            | [] -> reportCommandError "no arguments given for parsing. \
+                                        Did you forget to include a file name?"
             | arg :: [] -> 
                 Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:[arg])
             | _ -> 
+                (* temp *)
                 Printf.printf "\nflags found\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
