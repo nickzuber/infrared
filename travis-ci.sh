@@ -36,7 +36,7 @@ UBUNTU_TRUSTY=${UBUNTU_TRUSTY:-"0"}
 INSTALL_XQUARTZ=${INSTALL_XQUARTZ:-"true"}
 
 case "$OCAML_VERSION" in
-    latest) OCAML_VERSION=4.03.0;;
+    latest) OCAML_VERSION=4.02;;
 esac
 
 install_on_linux () {
