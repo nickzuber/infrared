@@ -1360,3 +1360,11 @@ and VariableDeclarator : sig
     init: Expression.t option;
   }
 end = VariableDeclarator
+
+type t = {
+  loc: Loc.t;
+  node: t';
+}
+
+and t' =
+  | IdentifierName of IdentifierName.t
