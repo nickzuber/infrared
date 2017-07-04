@@ -1,0 +1,18 @@
+opam-version: "1.2"
+name: "infrared"
+version: "0.0.1"
+maintainer: "Nicholas Zuber <zuber.nicholas@gmail.com>"
+authors: "Nicholas Zuber <zuber.nicholas@gmail.com>"
+homepage: "https://github.com/nickzuber/infrared"
+bug-reports: "https://github.com/nickzuber/infrared/issues"
+license: "MIT"
+dev-repo: "https://github.com/nickzuber/infrared"
+build: [
+  ["./configure" "--prefix=%{prefix}%"]
+  [make]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "infrared"]
+depends: [
+  "ocamlfind" {build}
+]
