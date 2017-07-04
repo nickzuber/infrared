@@ -680,8 +680,6 @@ and ImportSpecifier : sig
   }
 end = ImportSpecifier
 
-(* <- workin thru shit right over here -> *)
-
 (*? `export * FromClause;` *)
 and ExportAllFrom : sig
   type t = {
