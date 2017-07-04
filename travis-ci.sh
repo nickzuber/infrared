@@ -13,7 +13,7 @@ sudo apt-get install -qq ocaml
 curl -L https://github.com/OCamlPro/opam/archive/${OPAM_VERSION}.tar.gz | tar xz -C /tmp
 pushd /tmp/opam-${OPAM_VERSION}
 ./configure
-make
+make lib-ext
 sudo make install
 opam init
 eval `opam config -env`
