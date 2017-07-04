@@ -430,7 +430,6 @@ end = Parameter
 and BindingWithDefault : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: Binding.t;
     init: Expression.t;
   }
@@ -439,7 +438,6 @@ end = BindingWithDefault
 and BindingIdentifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: Identifier.t;
   }
 end = BindingIdentifier
@@ -447,7 +445,6 @@ end = BindingIdentifier
 and AssignmentTargetIdentifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: Identifier.t;
   }
 end = AssignmentTargetIdentifier
@@ -470,7 +467,6 @@ end = MemberAssignmentTarget
 and ComputedMemberAssignmentTarget : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     _object: _object_types;
     expression: Expression.t;
   }
@@ -485,7 +481,6 @@ and StaticMemberAssignmentTarget : sig
     | Super of Super.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     _object: _object_types;
     property: IdentifierName.t;
   }
@@ -497,7 +492,6 @@ and ArrayBinding : sig
     | BindingWithDefault of BindingWithDefault.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     elements: element list option;
     rest: Binding.t option;
   }
@@ -530,7 +524,6 @@ end = BindingProperty
 and BindingPropertyIdentifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: BindingIdentifier.t;
     init: Expression.t option;
   }
@@ -542,7 +535,6 @@ and BindingPropertyProperty : sig
     | BindingWithDefault of BindingWithDefault.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: PropertyName.t;
     binding: binding;
   }
@@ -551,7 +543,6 @@ end = BindingPropertyProperty
 and AssignmentTargetWithDefault : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: AssignmentTarget.t;
     init: Expression.t;
   }
@@ -564,7 +555,6 @@ and ArrayAssignmentTarget : sig
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     elements: element list option;
     rest: AssignmentTarget.t option;
   }
@@ -573,7 +563,6 @@ end = ArrayAssignmentTarget
 and ObjectAssignmentTarget : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     properties: AssignmentTargetProperty.t list;
   }
 end = ObjectAssignmentTarget
@@ -592,7 +581,6 @@ end = AssignmentTargetProperty
 and AssignmentTargetPropertyIdentifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: AssignmentTargetIdentifier.t;
     init: Expression.t option;
   }
@@ -604,7 +592,6 @@ and AssignmentTargetPropertyProperty : sig
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: PropertyName.t;
     binding: binding;
   }
@@ -624,7 +611,6 @@ end = Class
 and ClassExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: BindingIdentifier.t option;
     super: Expression.t option;
     elements: ClassElement.t list;
@@ -634,7 +620,6 @@ end = ClassExpression
 and ClassDeclaration : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: BindingIdentifier.t;
     super: Expression.t option;
     elements: ClassElement.t list;
@@ -644,7 +629,6 @@ end = ClassDeclaration
 and ClassElement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* True iff `IsStatic` of ClassElement is true *)
     isStatic: bool;
     method_: MethodDefinition.t;
@@ -663,7 +647,6 @@ and Module : sig
     | Statement of Statement.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     directives: Directive.t list;
     items: item list;
   }
@@ -672,7 +655,6 @@ end = Module
 and Import : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     moduleSpecifier: string;
     (* `ImportedDefaultBinding`, if present *)
     defaultBinding: BindingIdentifier.t option;
@@ -683,7 +665,6 @@ end = Import
 and ImportNamespace : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     moduleSpecifier: string;
     (* `ImportedDefaultBinding`, if present *)
     defaultBinding: BindingIdentifier.t option;
@@ -694,7 +675,6 @@ end = ImportNamespace
 and ImportSpecifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: IdentifierName.t option;
     binding: BindingIdentifier.t;
   }
@@ -706,7 +686,6 @@ end = ImportSpecifier
 and ExportAllFrom : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     namedExports: ExportFromSpecifier.t list;
     moduleSpecifier: string;
   }
@@ -715,7 +694,6 @@ end = ExportAllFrom
 and ExportFrom : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     namedExports: ExportLocalSpecifier.t list;
   }
 end = ExportFrom
@@ -723,7 +701,6 @@ end = ExportFrom
 and ExportLocals : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     namedExports: ExportLocalSpecifier.t list;
   }
 end = ExportLocals
@@ -735,7 +712,6 @@ and Export : sig
     | VariableDeclaration of VariableDeclaration.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     declaration: declaration;
   }
 end = Export
@@ -747,7 +723,6 @@ and ExportDefault : sig
     | Expression of Expression.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: body;
   }
 end = ExportDefault
@@ -755,7 +730,6 @@ end = ExportDefault
 and ExportFromSpecifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: IdentifierName.t;
     exportedName: IdentifierName.t option;
   }
@@ -764,7 +738,6 @@ end = ExportFromSpecifier
 and ExportLocalSpecifier : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: IdentifierExpression.t;
     exportedName: IdentifierName.t option;
   }
@@ -776,7 +749,6 @@ end = ExportLocalSpecifier
 and Method : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* True for `AsyncMethod`, false otherwise *)
     isAsync: bool;
     (* True for `GeneratorMethod`, false otherwise *)
@@ -788,7 +760,6 @@ end = Method
 and Getter : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: FunctionBody.t;
     name: PropertyName.t;
   }
@@ -797,7 +768,6 @@ end = Getter
 and Setter : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: FunctionBody.t;
     name: PropertyName.t;
     (* The `PropertySetParameterList` *)
@@ -808,7 +778,6 @@ end = Setter
 and DataProperty : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: PropertyName.t;
     expression: Expression.t;
   }
@@ -817,7 +786,6 @@ end = DataProperty
 and ShorthandProperty : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: IdentifierExpression.t;
   }
 end = ShorthandProperty
@@ -825,7 +793,6 @@ end = ShorthandProperty
 and ComputedPropertyName : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = ComputedPropertyName
@@ -833,7 +800,6 @@ end = ComputedPropertyName
 and StaticPropertyName : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     value: string;
   }
 end = StaticPropertyName
@@ -844,7 +810,6 @@ end = StaticPropertyName
 and LiteralBooleanExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     value: bool;
   }
 end = LiteralBooleanExpression
@@ -852,21 +817,18 @@ end = LiteralBooleanExpression
 and LiteralInfinityExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = LiteralInfinityExpression
 
 and LiteralNullExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = LiteralNullExpression
 
 and LiteralNumericExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* value: double *)
     value: float;
   }
@@ -875,7 +837,6 @@ end = LiteralNumericExpression
 and LiteralRegExpExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     pattern: string;
     (* Whether the `g` flag is present *)
     global: bool;
@@ -893,7 +854,6 @@ end = LiteralRegExpExpression
 and LiteralStringExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     value: string;
   }
 end = LiteralStringExpression
@@ -907,7 +867,6 @@ and ArrayExpression : sig
     | Expression of Expression.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     elements: element list option;
   }
 end = ArrayExpression
@@ -918,7 +877,6 @@ and ArrowExpression : sig
     | Expression of Expression.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* True for `AsyncArrowFunction`, false otherwise *)
     isAsync: bool;
     params: FormalParameters.t;
@@ -929,7 +887,6 @@ end = ArrowExpression
 and AssignmentExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* The `LeftHandSideExpression` *)
     binding: AssignmentTarget.t;
     (* The `AssignmentExpression` following the `=` *)
@@ -940,7 +897,6 @@ end = AssignmentExpression
 and BinaryExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     operator: BinaryOperator.t;
     left: Expression.t;
     right: Expression.t;
@@ -953,7 +909,6 @@ and CallExpression : sig
     | Super of Super.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     callee: callee;
     arguments: Arguments.t;
   }
@@ -962,7 +917,6 @@ end = CallExpression
 and CompoundAssignmentExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* The `LeftHandSideExpression` *)
     binding: SimpleAssignmentTarget.t;
     (* The `AssignmentExpression` *)
@@ -976,7 +930,6 @@ and ComputedMemberExpression : sig
     | Super of Super.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     _object: _object_types;
     (* The expression resolving to the name of the property to be accessed *)
     expression: Expression.t;
@@ -986,7 +939,6 @@ end = ComputedMemberExpression
 and ConditionalExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* The `LogicalORExpression` *)
     test: Expression.t;
     (* The first `AssignmentExpression` *)
@@ -999,7 +951,6 @@ end = ConditionalExpression
 and FunctionExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: BindingIdentifier.t option;
     (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise *)
     isAsync: bool;
@@ -1013,7 +964,6 @@ end = FunctionExpression
 and IdentifierExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     name: Identifier.t;
   }
 end = IdentifierExpression
@@ -1021,7 +971,6 @@ end = IdentifierExpression
 and NewExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     callee: Expression.t;
     arguments: Arguments.t;
   }
@@ -1031,14 +980,12 @@ and NewTargetExpression : sig
   (* ex. https://stackoverflow.com/a/32458960/5055063 *)
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = NewTargetExpression
 
 and ObjectExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     properties: ObjectProperty.t list;
   }
 end = ObjectExpression
@@ -1046,7 +993,6 @@ end = ObjectExpression
 and UnaryExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     operator: UnaryOperator.t;
     operand: Expression.t;
   }
@@ -1058,7 +1004,6 @@ and StaticMemberExpression : sig
     | Super of Super.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     _object: _object_types;
     (* The name of the property to be accessed *)
     property: IdentifierName.t;
@@ -1071,7 +1016,6 @@ and TemplateExpression : sig
     | TemplateElement of TemplateElement.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* The second `MemberExpression` or `CallExpression`, if present *)
     tag: Expression.t option;
     (* The contents of the template. This list must be alternating 
@@ -1083,14 +1027,12 @@ end = TemplateExpression
 and ThisExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = ThisExpression
 
 and UpdateExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* True for `UpdateExpression :: ++ LeftHandSideExpression` and `UpdateExpression :: -- LeftHandSideExpression`, false otherwise *)
     isPrefix: bool;
     operator: UpdateOperator.t;
@@ -1101,7 +1043,6 @@ end = UpdateExpression
 and YieldExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t option;
   }
 end = YieldExpression
@@ -1109,7 +1050,6 @@ end = YieldExpression
 and YieldGeneratorExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = YieldGeneratorExpression
@@ -1117,7 +1057,6 @@ end = YieldGeneratorExpression
 and AwaitExpression : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = AwaitExpression
@@ -1128,7 +1067,6 @@ end = AwaitExpression
 and BlockStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     block: Block.t;
   }
 end = BlockStatement
@@ -1136,7 +1074,6 @@ end = BlockStatement
 and BreakStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     label: Label.t option;
   }
 end = BreakStatement
@@ -1144,7 +1081,6 @@ end = BreakStatement
 and ContinueStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     label: Label.t option;
   }
 end = ContinueStatement
@@ -1152,14 +1088,12 @@ end = ContinueStatement
 and DebuggerStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = DebuggerStatement
 
 and DoWhileStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Statement.t;
     test: Expression.t;
   }
@@ -1168,14 +1102,12 @@ end = DoWhileStatement
 and EmptyStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = EmptyStatement
 
 and ExpressionStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = ExpressionStatement
@@ -1186,7 +1118,6 @@ and ForInStatement : sig
     | AssignmentTarget of AssignmentTarget.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Statement.t;
     (* The expression or declaration before `in` *)
     left: declaration;
@@ -1201,7 +1132,6 @@ and ForOfStatement : sig
     | AssignmentTarget of AssignmentTarget.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Statement.t;
     (* The expression or declaration before `of` *)
     left: declaration;
@@ -1216,7 +1146,6 @@ and ForStatement : sig
     | AssignmentTarget of AssignmentTarget.t
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Statement.t;
     (* The expression or declaration before the first `;`, if present *)
     init: declaration option;
@@ -1230,7 +1159,6 @@ end = ForStatement
 and IfStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     test: Expression.t;
     (* The first `Statement` *)
     consequent: Statement.t;
@@ -1242,7 +1170,6 @@ end = IfStatement
 and LabeledStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     label: Label.t;
     body: Statement.t;
   }
@@ -1251,7 +1178,6 @@ end = LabeledStatement
 and ReturnStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = ReturnStatement
@@ -1259,7 +1185,6 @@ end = ReturnStatement
 and SwitchStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     discriminant: Expression.t;
     cases: SwitchCase.t list;
   }
@@ -1268,7 +1193,6 @@ end = SwitchStatement
 and SwitchStatementWithDefault : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     discriminant: Expression.t;
     (* The `CaseClauses` before the `DefaultClause` *)
     preDefaultCases: SwitchCase.t list;
@@ -1282,7 +1206,6 @@ end = SwitchStatementWithDefault
 and ThrowStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = ThrowStatement
@@ -1290,7 +1213,6 @@ end = ThrowStatement
 and TryCatchStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Block.t;
     catchClause: CatchClause.t;
   }
@@ -1299,7 +1221,6 @@ end = TryCatchStatement
 and TryFinallyStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Block.t;
     catchClause: CatchClause.t option;
     finalizer: Block.t;
@@ -1309,7 +1230,6 @@ end = TryFinallyStatement
 and VariableDeclarationStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     declaration: VariableDeclaration.t;
   }
 end = VariableDeclarationStatement
@@ -1317,7 +1237,6 @@ end = VariableDeclarationStatement
 and WhileStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     body: Statement.t;
     test: Expression.t;
   }
@@ -1326,7 +1245,6 @@ end = WhileStatement
 and WithStatement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     _object: Expression.t;
     body: Statement.t;
   }
@@ -1337,7 +1255,6 @@ end = WithStatement
 and Block : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     statements: Statement.t list;
   }
 end = Block
@@ -1345,7 +1262,6 @@ end = Block
 and CatchClause : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: Binding.t;
     body: Block.t;
   }
@@ -1354,7 +1270,6 @@ end = CatchClause
 and Directive : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     rawValue: string;
   }
 end = Directive
@@ -1362,7 +1277,6 @@ end = Directive
 and FormalParameters : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     items: Parameter.t list;
     rest: Binding.t option;
   }
@@ -1371,7 +1285,6 @@ end = FormalParameters
 and FunctionBody : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     directives: Directive.t list;
     statements: Statement.t list;
   }
@@ -1380,7 +1293,6 @@ end = FunctionBody
 and FunctionDeclaration : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     (* True for `AsyncFunctionExpression` and `AsyncFunctionDeclaration`, false otherwise *)
     isAsync: bool;
     (* True for `GeneratorExpression` and `GeneratorDeclaration`, false otherwise *)
@@ -1393,7 +1305,6 @@ end = FunctionDeclaration
 and Script : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     directives: Directive.t list;
     statements: Statement.t list;
   }
@@ -1402,7 +1313,6 @@ end = Script
 and SpreadElement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     expression: Expression.t;
   }
 end = SpreadElement
@@ -1410,14 +1320,12 @@ end = SpreadElement
 and Super : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
   }
 end = Super
 
 and SwitchCase : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     test: Expression.t;
     consequent: Statement.t list;
   }
@@ -1426,7 +1334,6 @@ end = SwitchCase
 and SwitchDefault : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     consequent: Statement.t list;
   }
 end = SwitchDefault
@@ -1434,7 +1341,6 @@ end = SwitchDefault
 and TemplateElement : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     rawValue: string;
   }
 end = TemplateElement
@@ -1442,7 +1348,6 @@ end = TemplateElement
 and VariableDeclaration : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     kind: VariableDeclarationKind.t;
     declarators: VariableDeclarator.t list;
   }
@@ -1451,7 +1356,6 @@ end = VariableDeclaration
 and VariableDeclarator : sig
   type t = {
     _type: string;
-    _loc: Loc.t;
     binding: Binding.t;
     init: Expression.t option;
   }

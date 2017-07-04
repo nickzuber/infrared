@@ -26,9 +26,11 @@ let print_single_token_list env =
 let print_tokens envs =
   List.iter (fun env -> print_single_token_list env) envs
 
-let print_ast envs =
-  List.iter (fun env -> print_single_token_list env) envs
+let print_ast asts =
+  let open Parser_env in
+  List.iter (fun ast -> print_single_ast ast) asts
 
 let parse file =
-  Token_parser.parse file
+  let lex_env = tokenize file in
+  Token_parser.parse lex_env.token_list
 
