@@ -3,14 +3,10 @@ open Ast
 open Token
 open Lex_env
 
-type valid_initial_ast_node = 
-  | Module of Module.t
-  | Script of Script.t
-
 type t = {
   source: string;
   tokens: Token.t list;
-  ast: Module.t;
+  ast: Program.t;
 }
 
 (* Return the nth token in a list *)

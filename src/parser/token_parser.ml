@@ -105,7 +105,7 @@ end
 (* Generic Parsing Functions *)
 
 (* Parses and collects a list of ast nodes *)
-let rec generic_token_parser token_list nodes =
+let rec module_items_token_parser token_list nodes =
   (* Exit if we're done parsing tokens *)
   if List.length token_list = 0 then nodes else
   (* Steal first token and figure out what to do *)
@@ -116,20 +116,27 @@ let rec generic_token_parser token_list nodes =
       let node, token_list'' = Variable_parser.parse token.loc ~t:t token_list' in
       let wrapped_node = Ast.Module.Statement node in
       let nodes' = wrapped_node :: nodes in
-      generic_token_parser token_list'' nodes'
+      module_items_token_parser token_list'' nodes'
     end
   | _ -> raise Unimplemented
 
 let create_module_ast directives token_list = 
-  let items = generic_token_parser token_list [] in
-  { Module.
-    _type = "Module"; directives; items; }
+  let items = module_items_token_parser token_list [] in
+  let node = 
+    { Module.
+      _type = "Module"; directives; items; }
+  in let wrapped_node = Ast.Program.Module node in
+  wrapped_node
 
+(*
 let create_script_ast directives token_list =
-  { Script.
-    _type = "Script";
-    directives;
-    statements = [] }
+  let statements = generic_token_parser token_list [] in
+  let node = 
+    { Script.
+      _type = "Script"; directives; statements }
+  in let wrapped_node = Ast.Program.Script node in
+  wrapped_node
+*)
 
 let parse_directives token_list = 
   let rec get_all_directives token_list directives =
@@ -151,7 +158,6 @@ let parse_directives token_list =
         dir :: acc)
       [] raw_directives
   in final_directives, final_tokens
-
 
 (* Initial parser env of a Module or Script *)
 let parse starting_tokens source =
