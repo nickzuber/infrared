@@ -30,8 +30,17 @@ let eat ?(n=1) tokens =
     | _ -> tokens
   in inner_eat n tokens
 
+module M = struct
+  type myfpclass = fpclass = FP_normal | FP_subnormal | FP_zero | FP_infinite | FP_nan
+  [@@deriving show]
+end
+
 let rec ast_to_string ?(indent=0) ast =
-  "go away"
+  Format.printf "tree: %a@." (M.show_myfpclass FP_normal);
+  "^"
+(*
+  Printf.sprintf "%s" (Bytes.to_string (M.show_myfpclass FP_normal))
+*)
 
 (*
 let print_doesnt_work node indent =

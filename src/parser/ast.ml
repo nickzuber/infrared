@@ -189,6 +189,7 @@ and Node : sig
     | TemplateElement of TemplateElement.t
     | VariableDeclaration of VariableDeclaration.t
     | VariableDeclarator of VariableDeclarator.t
+    [@@deriving show]
 end = Node
 
 and Program : sig
@@ -200,6 +201,7 @@ and Program : sig
   type t =
     | Script of Script.t
     | Module of Module.t
+    [@@deriving show]
 end = Program
 
 and Statement : sig
@@ -228,6 +230,7 @@ and Statement : sig
     | WithStatement of WithStatement.t
     | FunctionDeclaration of FunctionDeclaration.t
     | EmptyStatement
+    [@@deriving show]
 end = Statement
 
 and IterationStatement : sig
@@ -243,6 +246,7 @@ and IterationStatement : sig
     | ForOfStatement of ForOfStatement.t
     | ForStatement of ForStatement.t
     | WhileStatement of WhileStatement.t
+    [@@deriving show]
 end = IterationStatement
 
 and Expression : sig
@@ -279,6 +283,7 @@ and Expression : sig
     | YieldExpression of YieldExpression.t
     | YieldGeneratorExpression of YieldGeneratorExpression.t
     | AwaitExpression of AwaitExpression.t
+    [@@deriving show]
 end = Expression
 
 and MemberExpression : sig
@@ -294,6 +299,7 @@ and MemberExpression : sig
   type t = 
     | ComputedMemberExpression of ComputedMemberExpression.t
     | StaticMemberExpression of StaticMemberExpression.t
+    [@@deriving show]
 end = MemberExpression
 
 and PropertyName : sig
@@ -305,6 +311,7 @@ and PropertyName : sig
   type t =
     | ComputedPropertyName of ComputedPropertyName.t
     | StaticPropertyName of StaticPropertyName.t
+    [@@deriving show]
 end = PropertyName
 
 and ObjectProperty : sig
@@ -316,6 +323,7 @@ and ObjectProperty : sig
   type t =
     | NamedObjectProperty of NamedObjectProperty.t
     | ShorthandProperty of ShorthandProperty.t
+    [@@deriving show]
 end = ObjectProperty
 
 and NamedObjectProperty : sig
@@ -328,6 +336,7 @@ and NamedObjectProperty : sig
   type t = 
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
+    [@@deriving show]
 end = NamedObjectProperty
 
 and MethodDefinition : sig
@@ -342,6 +351,7 @@ and MethodDefinition : sig
     | Method of Method.t
     | Getter of Getter.t
     | Setter of Setter.t
+    [@@deriving show]
 end = MethodDefinition
 
 and ImportDeclaration : sig
@@ -354,6 +364,7 @@ and ImportDeclaration : sig
   type t = 
     | Import of Import.t
     | ImportNamespace of ImportNamespace.t
+    [@@deriving show]
 end = ImportDeclaration
 
 and ExportDeclaration : sig
@@ -368,6 +379,7 @@ and ExportDeclaration : sig
     | ExportLocals of ExportLocals.t
     | Export of Export.t
     | ExportDefault of ExportDefault.t
+    [@@deriving show]
 end = ExportDeclaration
 
 and VariableReference : sig
@@ -380,6 +392,7 @@ and VariableReference : sig
   type t = 
     | BindingIdentifier of BindingIdentifier.t
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
+    [@@deriving show]
 end = VariableReference
 
 
@@ -390,6 +403,7 @@ and BindingPattern : sig
   type t = 
     | ObjectBinding of ObjectBinding.t
     | ArrayBinding of ArrayBinding.t
+    [@@deriving show]
 end = BindingPattern
 
 (* typedef *)
@@ -397,6 +411,7 @@ and Binding : sig
   type t =
     | BindingPattern of BindingPattern.t
     | BindingIdentifier of BindingIdentifier.t
+    [@@deriving show]
 end = Binding
 
 (* typedef *)
@@ -404,6 +419,7 @@ and SimpleAssignmentTarget : sig
   type t = 
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
     | MemberAssignmentTarget of MemberAssignmentTarget.t
+    [@@deriving show]
 end = SimpleAssignmentTarget
 
 (* typedef *)
@@ -411,6 +427,7 @@ and AssignmentTargetPattern : sig
   type t = 
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
+    [@@deriving show]
 end = AssignmentTargetPattern
 
 (* typedef *)
@@ -418,6 +435,7 @@ and AssignmentTarget : sig
   type t = 
     | AssignmentTargetPattern of AssignmentTargetPattern.t
     | SimpleAssignmentTarget of SimpleAssignmentTarget.t
+    [@@deriving show]
 end = AssignmentTarget 
 
 (* typedef *)
@@ -425,6 +443,7 @@ and Parameter : sig
   type t = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
+    [@@deriving show]
 end = Parameter
 
 and BindingWithDefault : sig
@@ -433,6 +452,7 @@ and BindingWithDefault : sig
     binding: Binding.t;
     init: Expression.t;
   }
+  [@@deriving show]
 end = BindingWithDefault
 
 and BindingIdentifier : sig
@@ -440,6 +460,7 @@ and BindingIdentifier : sig
     _type: string;
     name: Identifier.t;
   }
+  [@@deriving show]
 end = BindingIdentifier
 
 and AssignmentTargetIdentifier : sig
@@ -447,6 +468,7 @@ and AssignmentTargetIdentifier : sig
     _type: string;
     name: Identifier.t;
   }
+  [@@deriving show]
 end = AssignmentTargetIdentifier
 
 and MemberAssignmentTarget : sig
@@ -462,39 +484,46 @@ and MemberAssignmentTarget : sig
   type t = 
     | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
     | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
+    [@@deriving show]
 end = MemberAssignmentTarget
 
 and ComputedMemberAssignmentTarget : sig
-  type t = {
-    _type: string;
-    _object: _object_types;
-    expression: Expression.t;
-  }
-  and _object_types = 
+  type objects = 
     | Expression of Expression.t
     | Super of Super.t
+    [@@deriving show]
+  type t = {
+    _type: string;
+    _object: objects;
+    expression: Expression.t;
+  }
+  [@@deriving show]
 end = ComputedMemberAssignmentTarget
 
 and StaticMemberAssignmentTarget : sig
-  type _object_types = 
+  type objects = 
     | Expression of Expression.t
     | Super of Super.t
+    [@@deriving show]
   type t = {
     _type: string;
-    _object: _object_types;
+    _object: objects;
     property: IdentifierName.t;
   }
+  [@@deriving show]
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
   type element = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
+    [@@deriving show]
   type t = {
     _type: string;
     elements: element list option;
     rest: Binding.t option;
   }
+  [@@deriving show]
 end = ArrayBinding
 
 and ObjectBinding : sig
@@ -508,6 +537,7 @@ and ObjectBinding : sig
     _type: string;
     properties: BindingProperty.t;
   }
+  [@@deriving show]
 end = ObjectBinding
 
 and BindingProperty : sig
@@ -519,6 +549,7 @@ and BindingProperty : sig
   type t = 
     | BindingPropertyIdentifier of BindingPropertyIdentifier.t
     | BindingPropertyProperty of BindingPropertyProperty.t
+    [@@deriving show]
 end = BindingProperty
 
 and BindingPropertyIdentifier : sig
@@ -527,17 +558,20 @@ and BindingPropertyIdentifier : sig
     binding: BindingIdentifier.t;
     init: Expression.t option;
   }
+  [@@deriving show]
 end = BindingPropertyIdentifier
 
 and BindingPropertyProperty : sig
   type binding = 
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
+    [@@deriving show]
   type t = {
     _type: string;
     name: PropertyName.t;
     binding: binding;
   }
+  [@@deriving show]
 end = BindingPropertyProperty
 
 and AssignmentTargetWithDefault : sig
@@ -546,6 +580,7 @@ and AssignmentTargetWithDefault : sig
     binding: AssignmentTarget.t;
     init: Expression.t;
   }
+  [@@deriving show]
 end = AssignmentTargetWithDefault
 
 and ArrayAssignmentTarget : sig
@@ -553,11 +588,13 @@ and ArrayAssignmentTarget : sig
   type element = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+    [@@deriving show]
   type t = {
     _type: string;
     elements: element list option;
     rest: AssignmentTarget.t option;
   }
+  [@@deriving show]
 end = ArrayAssignmentTarget
 
 and ObjectAssignmentTarget : sig
@@ -565,6 +602,7 @@ and ObjectAssignmentTarget : sig
     _type: string;
     properties: AssignmentTargetProperty.t list;
   }
+  [@@deriving show]
 end = ObjectAssignmentTarget
 
 and AssignmentTargetProperty : sig
@@ -576,6 +614,7 @@ and AssignmentTargetProperty : sig
   type t = 
     | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
     | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
+    [@@deriving show]
 end = AssignmentTargetProperty
 
 and AssignmentTargetPropertyIdentifier : sig
@@ -584,17 +623,20 @@ and AssignmentTargetPropertyIdentifier : sig
     binding: AssignmentTargetIdentifier.t;
     init: Expression.t option;
   }
+  [@@deriving show]
 end = AssignmentTargetPropertyIdentifier
 
 and AssignmentTargetPropertyProperty : sig
   type binding = 
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
+    [@@deriving show]
   type t = {
     _type: string;
     name: PropertyName.t;
     binding: binding;
   }
+  [@@deriving show]
 end = AssignmentTargetPropertyProperty
 
 
@@ -606,6 +648,7 @@ and Class : sig
     super: Expression.t option;
     elements: ClassElement.t list;
   }
+  [@@deriving show]
 end = Class
 
 and ClassExpression : sig
@@ -615,6 +658,7 @@ and ClassExpression : sig
     super: Expression.t option;
     elements: ClassElement.t list;
   }
+  [@@deriving show]
 end = ClassExpression
 
 and ClassDeclaration : sig
@@ -624,6 +668,7 @@ and ClassDeclaration : sig
     super: Expression.t option;
     elements: ClassElement.t list;
   }
+  [@@deriving show]
 end = ClassDeclaration
 
 and ClassElement : sig
@@ -635,6 +680,7 @@ and ClassElement : sig
     super: Expression.t option;
     elements: ClassElement.t list;
   }
+  [@@deriving show]
 end = ClassElement
 
 
@@ -645,11 +691,13 @@ and Module : sig
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | Statement of Statement.t
+    [@@deriving show]
   type t = {
     _type: string;
     directives: Directive.t list;
     items: item list;
   }
+  [@@deriving show]
 end = Module
 
 and Import : sig
@@ -660,6 +708,7 @@ and Import : sig
     defaultBinding: BindingIdentifier.t option;
     namedImports: ImportSpecifier.t list;
   }
+  [@@deriving show]
 end = Import
 
 and ImportNamespace : sig
@@ -670,6 +719,7 @@ and ImportNamespace : sig
     defaultBinding: BindingIdentifier.t option;
     namespaceBinding: BindingIdentifier.t;
   }
+  [@@deriving show]
 end = ImportNamespace
 
 and ImportSpecifier : sig
@@ -678,6 +728,7 @@ and ImportSpecifier : sig
     name: IdentifierName.t option;
     binding: BindingIdentifier.t;
   }
+  [@@deriving show]
 end = ImportSpecifier
 
 (*? `export * FromClause;` *)
@@ -687,6 +738,7 @@ and ExportAllFrom : sig
     namedExports: ExportFromSpecifier.t list;
     moduleSpecifier: string;
   }
+  [@@deriving show]
 end = ExportAllFrom
 
 and ExportFrom : sig
@@ -694,6 +746,7 @@ and ExportFrom : sig
     _type: string;
     namedExports: ExportLocalSpecifier.t list;
   }
+  [@@deriving show]
 end = ExportFrom
 
 and ExportLocals : sig
@@ -701,6 +754,7 @@ and ExportLocals : sig
     _type: string;
     namedExports: ExportLocalSpecifier.t list;
   }
+  [@@deriving show]
 end = ExportLocals
 
 and Export : sig
@@ -708,10 +762,12 @@ and Export : sig
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | VariableDeclaration of VariableDeclaration.t
+    [@@deriving show]
   type t = {
     _type: string;
     declaration: declaration;
   }
+  [@@deriving show]
 end = Export
 
 and ExportDefault : sig
@@ -719,10 +775,12 @@ and ExportDefault : sig
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | Expression of Expression.t
+    [@@deriving show]
   type t = {
     _type: string;
     body: body;
   }
+  [@@deriving show]
 end = ExportDefault
 
 and ExportFromSpecifier : sig
@@ -731,6 +789,7 @@ and ExportFromSpecifier : sig
     name: IdentifierName.t;
     exportedName: IdentifierName.t option;
   }
+  [@@deriving show]
 end = ExportFromSpecifier
 
 and ExportLocalSpecifier : sig
@@ -739,6 +798,7 @@ and ExportLocalSpecifier : sig
     name: IdentifierExpression.t;
     exportedName: IdentifierName.t option;
   }
+  [@@deriving show]
 end = ExportLocalSpecifier
 
 
@@ -753,6 +813,7 @@ and Method : sig
     isGenerator: bool;
     params: FormalParameters.t;
   }
+  [@@deriving show]
 end = Method
 
 and Getter : sig
@@ -761,6 +822,7 @@ and Getter : sig
     body: FunctionBody.t;
     name: PropertyName.t;
   }
+  [@@deriving show]
 end = Getter
 
 and Setter : sig
@@ -771,6 +833,7 @@ and Setter : sig
     (* The `PropertySetParameterList` *)
     param: Parameter.t;
   }
+  [@@deriving show]
 end = Setter
 
 and DataProperty : sig
@@ -779,6 +842,7 @@ and DataProperty : sig
     name: PropertyName.t;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = DataProperty
 
 and ShorthandProperty : sig
@@ -786,6 +850,7 @@ and ShorthandProperty : sig
     _type: string;
     name: IdentifierExpression.t;
   }
+  [@@deriving show]
 end = ShorthandProperty
 
 and ComputedPropertyName : sig
@@ -793,6 +858,7 @@ and ComputedPropertyName : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = ComputedPropertyName
 
 and StaticPropertyName : sig
@@ -800,6 +866,7 @@ and StaticPropertyName : sig
     _type: string;
     value: string;
   }
+  [@@deriving show]
 end = StaticPropertyName
 
 
@@ -810,18 +877,21 @@ and LiteralBooleanExpression : sig
     _type: string;
     value: bool;
   }
+  [@@deriving show]
 end = LiteralBooleanExpression
 
 and LiteralInfinityExpression : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = LiteralInfinityExpression
 
 and LiteralNullExpression : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = LiteralNullExpression
 
 and LiteralNumericExpression : sig
@@ -830,6 +900,7 @@ and LiteralNumericExpression : sig
     (* value: double *)
     value: float;
   }
+  [@@deriving show]
 end = LiteralNumericExpression
 
 and LiteralRegExpExpression : sig
@@ -847,6 +918,7 @@ and LiteralRegExpExpression : sig
     (* Whether the `u` flag is present *)
     unicode: bool;
   }
+  [@@deriving show]
 end = LiteralRegExpExpression
 
 and LiteralStringExpression : sig
@@ -854,6 +926,7 @@ and LiteralStringExpression : sig
     _type: string;
     value: string;
   }
+  [@@deriving show]
 end = LiteralStringExpression
 
 
@@ -863,16 +936,19 @@ and ArrayExpression : sig
   type element = 
     | SpreadElement of SpreadElement.t
     | Expression of Expression.t
+  [@@deriving show]
   type t = {
     _type: string;
     elements: element list option;
   }
+  [@@deriving show]
 end = ArrayExpression
 
 and ArrowExpression : sig
   type body = 
     | FunctionBody of FunctionBody.t
     | Expression of Expression.t
+  [@@deriving show]
   type t = {
     _type: string;
     (* True for `AsyncArrowFunction`, false otherwise *)
@@ -880,6 +956,7 @@ and ArrowExpression : sig
     params: FormalParameters.t;
     body: body;
   }
+  [@@deriving show]
 end = ArrowExpression
 
 and AssignmentExpression : sig
@@ -890,6 +967,7 @@ and AssignmentExpression : sig
     (* The `AssignmentExpression` following the `=` *)
     expression: Expression.t;
   }
+  [@@deriving show]
 end = AssignmentExpression
 
 and BinaryExpression : sig
@@ -899,17 +977,20 @@ and BinaryExpression : sig
     left: Expression.t;
     right: Expression.t;
   }
+  [@@deriving show]
 end = BinaryExpression
 
 and CallExpression : sig
   type callee = 
     | Expression of Expression.t
     | Super of Super.t
+  [@@deriving show]
   type t = {
     _type: string;
     callee: callee;
     arguments: Arguments.t;
   }
+  [@@deriving show]
 end = CallExpression
 
 and CompoundAssignmentExpression : sig
@@ -920,6 +1001,7 @@ and CompoundAssignmentExpression : sig
     (* The `AssignmentExpression` *)
     expression: Expression.t;
   }
+  [@@deriving show]
 end = CompoundAssignmentExpression
 
 and ComputedMemberExpression : sig
@@ -932,6 +1014,7 @@ and ComputedMemberExpression : sig
     (* The expression resolving to the name of the property to be accessed *)
     expression: Expression.t;
   }
+  [@@deriving show]
 end = ComputedMemberExpression
 
 and ConditionalExpression : sig
@@ -944,6 +1027,7 @@ and ConditionalExpression : sig
     (* The second `AssignmentExpression` *)
     alternate: Expression.t;
   }
+  [@@deriving show]
 end = ConditionalExpression
 
 and FunctionExpression : sig
@@ -957,6 +1041,7 @@ and FunctionExpression : sig
     params: FormalParameters.t;
     body: FunctionBody.t;
   }
+  [@@deriving show]
 end = FunctionExpression
 
 and IdentifierExpression : sig
@@ -964,6 +1049,7 @@ and IdentifierExpression : sig
     _type: string;
     name: Identifier.t;
   }
+  [@@deriving show]
 end = IdentifierExpression
 
 and NewExpression : sig
@@ -972,6 +1058,7 @@ and NewExpression : sig
     callee: Expression.t;
     arguments: Arguments.t;
   }
+  [@@deriving show]
 end = NewExpression
 
 and NewTargetExpression : sig
@@ -979,6 +1066,7 @@ and NewTargetExpression : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = NewTargetExpression
 
 and ObjectExpression : sig
@@ -994,24 +1082,28 @@ and UnaryExpression : sig
     operator: UnaryOperator.t;
     operand: Expression.t;
   }
+  [@@deriving show]
 end = UnaryExpression
 
 and StaticMemberExpression : sig
   type _object_types = 
     | Expression of Expression.t
     | Super of Super.t
+    [@@deriving show]
   type t = {
     _type: string;
     _object: _object_types;
     (* The name of the property to be accessed *)
     property: IdentifierName.t;
   }
+  [@@deriving show]
 end = StaticMemberExpression
 
 and TemplateExpression : sig
   type element = 
     | Expression of Expression.t
     | TemplateElement of TemplateElement.t
+    [@@deriving show]
   type t = {
     _type: string;
     (* The second `MemberExpression` or `CallExpression`, if present *)
@@ -1020,12 +1112,14 @@ and TemplateExpression : sig
        TemplateElements and Expressions, beginning and ending with TemplateElement *)
     elements: element list;
   }
+  [@@deriving show]
 end = TemplateExpression
 
 and ThisExpression : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = ThisExpression
 
 and UpdateExpression : sig
@@ -1036,6 +1130,7 @@ and UpdateExpression : sig
     operator: UpdateOperator.t;
     operand: SimpleAssignmentTarget.t;
   }
+  [@@deriving show]
 end = UpdateExpression
 
 and YieldExpression : sig
@@ -1043,6 +1138,7 @@ and YieldExpression : sig
     _type: string;
     expression: Expression.t option;
   }
+  [@@deriving show]
 end = YieldExpression
 
 and YieldGeneratorExpression : sig
@@ -1050,6 +1146,7 @@ and YieldGeneratorExpression : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = YieldGeneratorExpression
 
 and AwaitExpression : sig
@@ -1057,6 +1154,7 @@ and AwaitExpression : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = AwaitExpression
 
 
@@ -1067,6 +1165,7 @@ and BlockStatement : sig
     _type: string;
     block: Block.t;
   }
+  [@@deriving show]
 end = BlockStatement
 
 and BreakStatement : sig
@@ -1074,6 +1173,7 @@ and BreakStatement : sig
     _type: string;
     label: Label.t option;
   }
+  [@@deriving show]
 end = BreakStatement
 
 and ContinueStatement : sig
@@ -1081,12 +1181,14 @@ and ContinueStatement : sig
     _type: string;
     label: Label.t option;
   }
+  [@@deriving show]
 end = ContinueStatement
  
 and DebuggerStatement : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = DebuggerStatement
 
 and DoWhileStatement : sig
@@ -1095,12 +1197,14 @@ and DoWhileStatement : sig
     body: Statement.t;
     test: Expression.t;
   }
+  [@@deriving show]
 end = DoWhileStatement
 
 and EmptyStatement : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = EmptyStatement
 
 and ExpressionStatement : sig
@@ -1108,12 +1212,14 @@ and ExpressionStatement : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = ExpressionStatement
 
 and ForInStatement : sig
   type declaration = 
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
+    [@@deriving show]
   type t = {
     _type: string;
     body: Statement.t;
@@ -1122,6 +1228,7 @@ and ForInStatement : sig
     (* The expression after `in` *)
     right: Expression.t;
   }
+  [@@deriving show]
 end = ForInStatement
 
 and ForOfStatement : sig
@@ -1136,12 +1243,14 @@ and ForOfStatement : sig
     (* The expression after `of` *)
     right: Expression.t;
   }
+  [@@deriving show]
 end = ForOfStatement
 
 and ForStatement : sig
   type declaration = 
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
+    [@@deriving show]
   type t = {
     _type: string;
     body: Statement.t;
@@ -1152,6 +1261,7 @@ and ForStatement : sig
     (* The expression after the second `;`, if present *)
     udpate: Expression.t option;
   }
+  [@@deriving show]
 end = ForStatement
 
 and IfStatement : sig
@@ -1163,6 +1273,7 @@ and IfStatement : sig
     (* The second `Statement`, if present *)
     alternate: Statement.t option;
   }
+  [@@deriving show]
 end = IfStatement
 
 and LabeledStatement : sig
@@ -1171,6 +1282,7 @@ and LabeledStatement : sig
     label: Label.t;
     body: Statement.t;
   }
+  [@@deriving show]
 end = LabeledStatement
 
 and ReturnStatement : sig
@@ -1178,6 +1290,7 @@ and ReturnStatement : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = ReturnStatement
 
 and SwitchStatement : sig
@@ -1186,6 +1299,7 @@ and SwitchStatement : sig
     discriminant: Expression.t;
     cases: SwitchCase.t list;
   }
+  [@@deriving show]
 end = SwitchStatement
 
 and SwitchStatementWithDefault : sig
@@ -1199,6 +1313,7 @@ and SwitchStatementWithDefault : sig
     (* The `CaseClauses` after the `DefaultClause` *)
     postDefaultCases: SwitchCase.t list;
   }
+  [@@deriving show]
 end = SwitchStatementWithDefault
 
 and ThrowStatement : sig
@@ -1206,6 +1321,7 @@ and ThrowStatement : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = ThrowStatement
 
 and TryCatchStatement : sig
@@ -1214,6 +1330,7 @@ and TryCatchStatement : sig
     body: Block.t;
     catchClause: CatchClause.t;
   }
+  [@@deriving show]
 end = TryCatchStatement
 
 and TryFinallyStatement : sig
@@ -1223,6 +1340,7 @@ and TryFinallyStatement : sig
     catchClause: CatchClause.t option;
     finalizer: Block.t;
   }
+  [@@deriving show]
 end = TryFinallyStatement
 
 and VariableDeclarationStatement : sig
@@ -1230,6 +1348,7 @@ and VariableDeclarationStatement : sig
     _type: string;
     declaration: VariableDeclaration.t;
   }
+  [@@deriving show]
 end = VariableDeclarationStatement
 
 and WhileStatement : sig
@@ -1238,6 +1357,7 @@ and WhileStatement : sig
     body: Statement.t;
     test: Expression.t;
   }
+  [@@deriving show]
 end = WhileStatement
 
 and WithStatement : sig
@@ -1246,6 +1366,7 @@ and WithStatement : sig
     _object: Expression.t;
     body: Statement.t;
   }
+  [@@deriving show]
 end = WithStatement
 
 (*** Other Nodes ***)
@@ -1255,6 +1376,7 @@ and Block : sig
     _type: string;
     statements: Statement.t list;
   }
+  [@@deriving show]
 end = Block
 
 and CatchClause : sig
@@ -1263,6 +1385,7 @@ and CatchClause : sig
     binding: Binding.t;
     body: Block.t;
   }
+  [@@deriving show]
 end = CatchClause
 
 and Directive : sig
@@ -1270,6 +1393,7 @@ and Directive : sig
     _type: string;
     rawValue: string;
   }
+  [@@deriving show]
 end = Directive
 
 and FormalParameters : sig
@@ -1278,6 +1402,7 @@ and FormalParameters : sig
     items: Parameter.t list;
     rest: Binding.t option;
   }
+  [@@deriving show]
 end = FormalParameters
 
 and FunctionBody : sig
@@ -1286,6 +1411,7 @@ and FunctionBody : sig
     directives: Directive.t list;
     statements: Statement.t list;
   }
+  [@@deriving show]
 end = FunctionBody
 
 and FunctionDeclaration : sig
@@ -1298,6 +1424,7 @@ and FunctionDeclaration : sig
     params: FormalParameters.t;
     body: FunctionBody.t;
   }
+  [@@deriving show]
 end = FunctionDeclaration
 
 and Script : sig
@@ -1306,6 +1433,7 @@ and Script : sig
     directives: Directive.t list;
     statements: Statement.t list;
   }
+  [@@deriving show]
 end = Script
 
 and SpreadElement : sig
@@ -1313,12 +1441,14 @@ and SpreadElement : sig
     _type: string;
     expression: Expression.t;
   }
+  [@@deriving show]
 end = SpreadElement
 
 and Super : sig
   type t = {
     _type: string;
   }
+  [@@deriving show]
 end = Super
 
 and SwitchCase : sig
@@ -1327,6 +1457,7 @@ and SwitchCase : sig
     test: Expression.t;
     consequent: Statement.t list;
   }
+  [@@deriving show]
 end = SwitchCase
 
 and SwitchDefault : sig
@@ -1334,6 +1465,7 @@ and SwitchDefault : sig
     _type: string;
     consequent: Statement.t list;
   }
+  [@@deriving show]
 end = SwitchDefault
 
 and TemplateElement : sig
@@ -1341,6 +1473,7 @@ and TemplateElement : sig
     _type: string;
     rawValue: string;
   }
+  [@@deriving show]
 end = TemplateElement
 
 and VariableDeclaration : sig
@@ -1349,6 +1482,7 @@ and VariableDeclaration : sig
     kind: VariableDeclarationKind.t;
     declarators: VariableDeclarator.t list;
   }
+  [@@deriving show]
 end = VariableDeclaration
 
 and VariableDeclarator : sig
@@ -1357,4 +1491,5 @@ and VariableDeclarator : sig
     binding: BindingIdentifier.t;
     init: Expression.t option;
   }
+  [@@deriving show]
 end = VariableDeclarator
