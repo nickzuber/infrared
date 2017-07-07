@@ -20,8 +20,14 @@ let optimistic_pop_token ?(err="Found no tokens to parse") token_list =
   in full_token, token_list'
 
 
-(* Parsing Modules *)
+(* 
+  Statement.
+    VariableDeclarationStatement
 
+  This is because we only ever have a VDS in the content of
+  a Statement. Might be worthwhile to implement a Statement_parser
+  and parse Variables as thier own thing.
+*)
 module Variable_parser = struct
   let declarator_err = "Looking for declarators, found none. \
                         Failed to create binding"
@@ -102,9 +108,12 @@ module Variable_parser = struct
 end
 
 
-(* Generic Parsing Functions *)
-
-(* Parses and collects a list of ast nodes *)
+(* 
+  Module.
+    ImportDeclaration
+    ExportDeclaration
+    Statement 
+*)
 let rec module_items_token_parser token_list nodes =
   (* Exit if we're done parsing tokens *)
   if List.length token_list = 0 then nodes else
@@ -120,6 +129,10 @@ let rec module_items_token_parser token_list nodes =
     end
   | _ -> raise Unimplemented
 
+(* 
+  Program.
+    Module
+*)
 let create_module_ast directives token_list = 
   let items = module_items_token_parser token_list [] in
   let node = 
@@ -128,7 +141,7 @@ let create_module_ast directives token_list =
   in let wrapped_node = Ast.Program.Module node in
   wrapped_node
 
-(*
+(* @TODO
 let create_script_ast directives token_list =
   let statements = generic_token_parser token_list [] in
   let node = 

@@ -31,8 +31,37 @@ let eat ?(n=1) tokens =
   in inner_eat n tokens
 
 let rec ast_to_string ?(indent=0) ast =
+  "go away"
+
+(*
+let print_doesnt_work node indent =
+  let indentation = String.make indent ' ' in
+  let step = 4 in
   match ast with
+  | Program.Module node -> 
+    begin
+      Printf.sprintf 
+        "%sModule { \n\
+        %sdirective: %s \n\
+        %sitems: %s \n\
+        %s}"
+        indentation
+        (indentation ^ indentation)
+        (List.fold_left 
+          (fun acc directive -> ast_to_string ~indent=(i + step))
+          "" node.directives)
+        (indentation ^ indentation)
+        "[items]"
+        indentation
+    end
+  | Program.Module.Statement statement ->
+    begin
+      match statement with
+      | VariableDeclarationStatement v -> "VariableDeclarationStatement"
+      | _ -> "Unimplemented Statement node"
+    end
   | _ -> "Unimplemented AST node"
+*)
 
 let print_single_ast env =
   Printf.printf "%s\n" (ast_to_string ~indent:2 env.ast)
