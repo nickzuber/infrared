@@ -38,35 +38,6 @@ let rec ast_to_string ?(indent=0) ast =
   Printf.sprintf "%s" (Bytes.to_string (Ast.Program.show ast))
 *)
 
-(*
-let print_doesnt_work node indent =
-  let indentation = String.make indent ' ' in
-  let step = 4 in
-  match ast with
-  | Program.Module node -> 
-    begin
-      Printf.sprintf 
-        "%sModule { \n\
-        %sdirective: %s \n\
-        %sitems: %s \n\
-        %s}"
-        indentation
-        (indentation ^ indentation)
-        (List.fold_left 
-          (fun acc directive -> ast_to_string ~indent=(i + step))
-          "" node.directives)
-        (indentation ^ indentation)
-        "[items]"
-        indentation
-    end
-  | Program.Module.Statement statement ->
-    begin
-      match statement with
-      | VariableDeclarationStatement v -> "VariableDeclarationStatement"
-      | _ -> "Unimplemented Statement node"
-    end
-  | _ -> "Unimplemented AST node"
-*)
-
 let print_single_ast env =
-  Printf.printf "%s\n" (ast_to_string ~indent:2 env.ast)
+  (* We will always start at parsing a Ast.Program if we're parsing right *)
+  Printf.printf "%s\n" (Ast_printer.pp_program ~indent:Ast_printer.step env.ast)
