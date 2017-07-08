@@ -43,21 +43,25 @@ module rec Arguments : sig
   type t = 
     | SpreadElement of SpreadElement.t list
     | Expression of Expression.t list
+    [@@deriving show]
 end = Arguments
 
 (* typedef *)
 and Identifier : sig
   type t = string
+  [@@deriving show]
 end = Identifier
 
 (* typedef *)
 and IdentifierName : sig
   type t = string
+  [@@deriving show]
 end = IdentifierName
 
 (* typedef *)
 and Label : sig
   type t = string
+  [@@deriving show]
 end = Label
 
 (* typedef *)
@@ -65,7 +69,8 @@ and VariableDeclarationKind : sig
   type t = 
     | Var
     | Let
-    | Const 
+    | Const
+    [@@deriving show]
 end = VariableDeclarationKind
 
 (* typedef *)
@@ -83,6 +88,7 @@ and CompoundAssignmentOperator : sig
     | Or                  (*    |=    *)
     | XOr                 (*    ^=    *)
     | And                 (*    &=    *)
+    [@@deriving show]
 end = CompoundAssignmentOperator
 
 (* typedef *)
@@ -113,6 +119,7 @@ and BinaryOperator : sig
     | Or                  (*    |     *)
     | Xor                 (*    ^     *)
     | And                 (*    &     *)
+    [@@deriving show]
 end = BinaryOperator
 
 (* typedef *)
@@ -124,7 +131,8 @@ and UnaryOperator : sig
     | Not                 (*    ~     *)
     | Typeof              
     | Void                
-    | Delete              
+    | Delete
+    [@@deriving show]
 end = UnaryOperator
 
 (* typedef *)
@@ -132,6 +140,7 @@ and UpdateOperator : sig
   type t = 
     | Increment           (*    ++    *)
     | Decrement           (*    --    *)
+    [@@deriving show]
 end = UpdateOperator
 
 (*! others implement this *)
@@ -144,6 +153,7 @@ and Function : sig
     params: FormalParameters.t;
     body: FunctionBody.t;
   }
+  [@@deriving show]
 end = Function
 
 

@@ -30,16 +30,12 @@ let eat ?(n=1) tokens =
     | _ -> tokens
   in inner_eat n tokens
 
-module M = struct
-  type myfpclass = fpclass = FP_normal | FP_subnormal | FP_zero | FP_infinite | FP_nan
-  [@@deriving show]
-end
+(* 
+  Doesn't work due to @@deriving.show exception error with recursive modules
+  https://github.com/whitequark/ppx_deriving/issues/142
 
 let rec ast_to_string ?(indent=0) ast =
-  Format.printf "tree: %a@." (M.show_myfpclass FP_normal);
-  "^"
-(*
-  Printf.sprintf "%s" (Bytes.to_string (M.show_myfpclass FP_normal))
+  Printf.sprintf "%s" (Bytes.to_string (Ast.Program.show ast))
 *)
 
 (*
