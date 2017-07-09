@@ -1,50 +1,70 @@
 
-(* Tab spacing *)
-let step = 2
-let tab = step * 2
+(* Raw json, format using another tool *)
 
-let pp_directive ?(indent=0) node =
+let pp_variable_declaration node =
+  let open Ast.VariableDeclaration in
+  let kind = let open Ast.VariableDeclarationKind in
+    match node.kind with
+    | Var -> "\"Var\""
+    | Let -> "\"Let\""
+    | Const -> "\"Const\"" in
+  let declarators = "\"declarators\""
+  in Printf.sprintf
+    "{\"VariableDeclaration\": { \
+      \"kind\": %s, \
+      \"declarators\": [%s], \
+    }},"
+    kind
+    declarators
+
+
+let pp_variable_declaration_statement node =
+  let open Ast.VariableDeclarationStatement in
+  let declaration = pp_variable_declaration node.declaration
+  in Printf.sprintf
+    "{\"VariableDeclarationStatement\": { \
+      \"declaration\": %s \
+    }},"
+    declaration
+
+
+let pp_statement node =
+  let open Ast.Statement in
+  match node with
+  | VariableDeclarationStatement node -> pp_variable_declaration_statement node
+  | _ -> "\"Unimplemented Statement type\""
+
+let pp_directive node =
   let open Ast.Directive in
-  let indentation = String.make indent ' ' in
-  let indentation_x2 = String.make (indent + step) ' ' in
   Printf.sprintf
-    "%sDirective { \n\
-    %srawValue: \"%s\" \n\
-    %s},\n"
-    indentation
-    indentation_x2
+    "{\"Directive\": { \
+      \"rawValue\": \"%s\" \
+    }},"
     node.rawValue
-    indentation
 
-let pp_module ?(indent=0) node =
+let pp_module node =
   let open Ast.Module in
-  let indentation = String.make indent ' ' in
-  let indentation_x2 = String.make (indent + step) ' ' in
   let directives =
     (List.fold_left
-      (fun acc directive -> acc ^ (pp_directive ~indent:(indent + tab) directive))
+      (fun acc directive -> acc ^ (pp_directive directive))
       "" node.directives) in
-  let items = "items"(* match node.items with
-  | ImportDeclaration node ->
-  | ExportDeclaration node ->
-  | Statement node -> *)
+  let items = 
+      (List.fold_left
+        (fun acc item -> 
+          match item with
+          | Statement node -> pp_statement node
+          | _ -> "\"Unimplemented Module.items type\"")
+        "" node.items)
   in Printf.sprintf
-    "%sModule { \n\
-      %sdirectives: [\n%s%s],\n\
-      %sitems: [\n%s%s],\n\
-    %s}"
-    indentation
-    indentation_x2
+    "{\"Module\": { \
+      \"directives\": [%s], \
+      \"items\": [%s], \
+    }}"
     directives
-    indentation_x2
-    indentation_x2
-    "items\n"
-    indentation_x2
-    indentation
+    items
 
-let pp_program ?(indent=0) node =
+let pp_program node =
   let open Ast.Program in
-  let indentation = String.make indent ' ' in
   match node with
-  (*| Script node -> pp_script ~indent:indent node*)
-  | Module node -> pp_module ~indent:indent node
+  | Module node -> pp_module node
+  | _ -> "\"Unimplemented Program type\""

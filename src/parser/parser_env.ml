@@ -40,4 +40,4 @@ let rec ast_to_string ?(indent=0) ast =
 
 let print_single_ast env =
   (* We will always start at parsing a Ast.Program if we're parsing right *)
-  Printf.printf "%s\n" (Ast_printer.pp_program ~indent:Ast_printer.step env.ast)
+  Printf.printf "%s\n" (Ast_printer.pp_program env.ast)
