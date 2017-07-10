@@ -1,0 +1,30 @@
+{
+    "Module": {
+        "directives": [
+            {
+                "Directive": {
+                    "rawValue": "use strict"
+                }
+            },
+            {
+                "Directive": {
+                    "rawValue": "use strict"
+                }
+            }
+        ],
+        "items": [
+            {
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "kind": "Var",
+                            "declarators": [
+                                "declarators"
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
