@@ -97,7 +97,7 @@ module Variable_parser = struct
         declarators }
     in node, token_list'
 
-  let parse loc ~t token_list =
+  let parse_declaration_statement loc ~t token_list =
     let declaration, token_list' = parse_declaration loc ~t:t token_list in
     let node = 
       { VariableDeclarationStatement.
@@ -122,7 +122,8 @@ let rec module_items_token_parser token_list nodes =
   match token.body with
   | Variable t -> 
     begin
-      let node, token_list'' = Variable_parser.parse token.loc ~t:t token_list' in
+      let node, token_list'' = 
+        Variable_parser.parse_declaration_statement token.loc ~t:t token_list' in
       let wrapped_node = Ast.Module.Statement node in
       let nodes' = wrapped_node :: nodes in
       module_items_token_parser token_list'' nodes'

@@ -29,12 +29,7 @@
  * field would just be its type.
  * 
  *)
-
-(* i imported these but i don't think we need them here?
-module Token = Lexer.Token
-module Lex_env = Lexer.Lex_env
-*)
-
+ 
 
 (*** Supporting types ***)
 
