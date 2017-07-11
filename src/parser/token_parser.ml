@@ -34,14 +34,11 @@ module Variable_parser = struct
   let declarator_pop_err = "Looking for declarators, found no tokens"
   let declarator_op_err = "Looking for declarator list, found illegal operator."
 
-  let create_binding_identifier name = 
-    { BindingIdentifier.
-      _type = "BindingIdentifier"; name }
+  let create_binding_identifier name = BindingIdentifier.(
+    { _type = "BindingIdentifier"; name })
 
-  let create_declarator binding init = 
-    { VariableDeclarator.
-      _type = "VariableDeclarator";
-      binding; init }
+  let create_declarator binding init = VariableDeclarator.(
+    { _type = "VariableDeclarator"; binding; init })
 
   let rec parse_declarators declarators_so_far token_list = 
     let token, token_list' = optimistic_pop_token token_list ~err:declarator_pop_err in
@@ -63,16 +60,16 @@ module Variable_parser = struct
               (* @TODO: parse init expression *)
               let init = None in
               let declarator = create_declarator binding init in
-              let updated_declarators = declarator :: declarators_so_far in
-              updated_declarators, token_list'
+              let updated_declarators = declarator :: declarators_so_far
+              in updated_declarators, token_list'
             end
           (* we have more declarators, no init yet *)
           | Comma -> 
             begin
               let declarator = create_declarator binding None in
               let updated_declarators = declarator :: declarators_so_far in
-              let token_list'' = eat token_list' in
-              parse_declarators updated_declarators token_list''
+              let token_list'' = eat token_list'
+              in parse_declarators updated_declarators token_list''
             end
           | _ -> raise (ParsingError declarator_op_err)
         end
@@ -80,31 +77,28 @@ module Variable_parser = struct
       | _ -> 
         begin
           let declarator = create_declarator binding None in
-          let updated_declarators = declarator :: declarators_so_far in
-          updated_declarators, token_list'
+          let updated_declarators = declarator :: declarators_so_far
+          in updated_declarators, token_list'
         end
     
-  let parse_declaration loc ~t token_list =
+  let parse_declaration loc ~t token_list = VariableDeclaration.(
     let t' = match t with
     | Var -> VariableDeclarationKind.Var
     | Let -> VariableDeclarationKind.Let
     | Const -> VariableDeclarationKind.Const
     in let declarators, token_list' = parse_declarators [] token_list in
-    let node = 
-      { VariableDeclaration.
+    let node = {
         _type = "VariableDeclaration";
         kind = t';
         declarators }
-    in node, token_list'
+    in node, token_list')
 
-  let parse_declaration_statement loc ~t token_list =
+  let parse_declaration_statement loc ~t token_list = VariableDeclarationStatement.(
     let declaration, token_list' = parse_declaration loc ~t:t token_list in
     let node = 
-      { VariableDeclarationStatement.
-        _type = "VariableDeclarationStatement";
-        declaration }
-    in let wrapped_node = Ast.Statement.VariableDeclarationStatement node in
-    wrapped_node, token_list'
+      { _type = "VariableDeclarationStatement"; declaration }
+    in let wrapped_node = Ast.Statement.VariableDeclarationStatement node
+    in wrapped_node, token_list')
 end
 
 
@@ -114,43 +108,33 @@ end
     ExportDeclaration
     Statement 
 *)
-let rec module_items_token_parser token_list nodes =
-  (* Exit if we're done parsing tokens *)
-  if List.length token_list = 0 then nodes else
-  (* Steal first token and figure out what to do *)
-  let token, token_list' = optimistic_pop_token token_list in
-  match token.body with
-  | Variable t -> 
-    begin
-      let node, token_list'' = 
-        Variable_parser.parse_declaration_statement token.loc ~t:t token_list' in
-      let wrapped_node = Ast.Module.Statement node in
-      let nodes' = wrapped_node :: nodes in
-      module_items_token_parser token_list'' nodes'
-    end
-  | _ -> raise Unimplemented
+module Module_parser = struct
+  let rec parse_items token_list nodes =
+    (* Exit if we're done parsing tokens *)
+    if List.length token_list = 0 then nodes else
+    (* Steal first token and figure out what to do *)
+    let token, token_list' = optimistic_pop_token token_list in
+    match token.body with
+    | Variable t -> 
+      begin
+        let node, token_list'' = 
+          Variable_parser.parse_declaration_statement token.loc ~t:t token_list' in
+        let wrapped_node = Ast.Module.Statement node in
+        let nodes' = wrapped_node :: nodes in
+        parse_items token_list'' nodes'
+      end
+    | _ -> raise Unimplemented
+end
 
 (* 
   Program.
     Module
 *)
-let create_module_ast directives token_list = 
-  let items = module_items_token_parser token_list [] in
-  let node = 
-    { Module.
-      _type = "Module"; directives; items; }
-  in let wrapped_node = Ast.Program.Module node in
-  wrapped_node
-
-(* @TODO
-let create_script_ast directives token_list =
-  let statements = generic_token_parser token_list [] in
-  let node = 
-    { Script.
-      _type = "Script"; directives; statements }
-  in let wrapped_node = Ast.Program.Script node in
-  wrapped_node
-*)
+let create_module_ast directives token_list = Module.(
+  let items = Module_parser.parse_items token_list [] in
+  let node = { _type = "Module"; directives; items; } in
+  let wrapped_node = Ast.Program.Module node in
+  wrapped_node)
 
 let parse_directives token_list = 
   let rec get_all_directives token_list directives =
@@ -163,8 +147,8 @@ let parse_directives token_list =
       let token_list' = eat token_list in 
       let directives' = directive :: directives in
       get_all_directives token_list' directives'
-    | _ -> directives, token_list
-  in let raw_directives, final_tokens = get_all_directives token_list [] in
+    | _ -> directives, token_list in
+  let raw_directives, final_tokens = get_all_directives token_list [] in
   let final_directives = 
     List.fold_left 
       (fun acc rawValue -> 
@@ -177,5 +161,5 @@ let parse_directives token_list =
 let parse starting_tokens source =
   let directives, tokens = parse_directives starting_tokens in
   (* assuming Module type program *)
-  let ast = create_module_ast directives tokens in
-  { source; tokens; ast }
+  let ast = create_module_ast directives tokens
+  in { source; tokens; ast }
