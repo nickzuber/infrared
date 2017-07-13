@@ -20,6 +20,16 @@ let optimistic_pop_token ?(err="Found no tokens to parse") token_list =
   in full_token, token_list'
 
 
+(*
+  Expression.
+    LiteralNumericExpression
+    BinaryExpression
+*)
+module Expression_parser = struct
+  let parse loc token_list =
+    1
+end
+
 (* 
   Statement.
     VariableDeclarationStatement
@@ -47,7 +57,7 @@ module Variable_parser = struct
       | Identifier name -> (create_binding_identifier name)
       | _ -> raise (ParsingError declarator_err)
     (* check next token to see if we have more identifiers *)
-    in let next_token_body = match lookahead token_list' with
+    in let next_token_body = match List.hd token_list' with
       | Some token -> token.body
       | None -> Empty_Token
     in match next_token_body with
@@ -87,10 +97,7 @@ module Variable_parser = struct
     | Let -> VariableDeclarationKind.Let
     | Const -> VariableDeclarationKind.Const
     in let declarators, token_list' = parse_declarators [] token_list in
-    let node = {
-        _type = "VariableDeclaration";
-        kind = t';
-        declarators }
+    let node = { _type = "VariableDeclaration"; kind = t'; declarators }
     in node, token_list')
 
   let parse_declaration_statement loc ~t token_list = VariableDeclarationStatement.(

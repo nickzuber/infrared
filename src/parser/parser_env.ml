@@ -9,13 +9,17 @@ type t = {
   ast: Program.t;
 }
 
-(* Return the nth token in a list *)
+(* Return the nth token ahead of the first in a list 
+   Examples:
+     lookahead [1;2;3]        ->   2
+     lookahead [1;2;3] ~n:2   ->   3
+     lookahead [1;2;3] ~n:0   ->   1
+ *)
 let lookahead ?(n=1) tokens =
-  try Some (List.nth tokens (n - 1))
+  try Some (List.nth tokens n)
   with _ -> None
 
-(* Return next token in env if one exists and the rest of the tokens
- * without the first *)
+(* Return next token in env if one exists and the rest of the tokens without the first *)
 let pop tokens = 
   match tokens with
   | t :: toks -> Some (t, toks)
