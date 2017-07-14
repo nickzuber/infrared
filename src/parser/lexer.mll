@@ -158,6 +158,10 @@ rule token env = parse
                         let env = push (Operator CA_RightShiftUnsigned) env lexbuf in
                         token env lexbuf; 
                       }
+  | "=>"              {
+                        let env = push ArrowFunction env lexbuf in
+                        token env lexbuf; 
+                      }
   | "|="              { 
                         let env = push (Operator CA_Or) env lexbuf in
                         token env lexbuf; 

@@ -47,6 +47,7 @@ and t' =
       * Function Expression ( ... ) Block ( ... ) ....
     * *)
   | Function
+  | ArrowFunction
   | If
   | In
   | Instanceof
@@ -201,6 +202,7 @@ let rec token_to_string tok i =
   | Finally -> indentation ^ "Finally"
   | For -> indentation ^ "For"
   | Function -> indentation ^ "Function"
+  | ArrowFunction -> indentation ^ "ArrowFunction"
   | If -> indentation ^ "If"
   | Import -> indentation ^ "Import"
   | In -> indentation ^ "In"
