@@ -34,7 +34,7 @@ let word = letter alphanumeric*
  * These are a list of the symbols which operators are composed of. *)
 let symbols = ['+' '=' '-' '*' '/' '%' '<' '>' '|' '^' '&' ',' '~' '.' ',' '!' ':' '?']
 
-let templatechars = alphanumeric | whitespace | symbols | ['('')' '['']' '{''}']
+let templatechars = alphanumeric | whitespace | symbols | ['('')' '['']']
 
 rule token env = parse
   | whitespace+ | ';' { token env lexbuf }
