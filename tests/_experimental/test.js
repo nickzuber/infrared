@@ -1,5 +1,7 @@
 
-'use strict'
-'use strict'
+// 'use strict'
+// 'use strict'
 
-var foo, bar
+// var foo, bar
+
+`single ${1+1} text ${a} test`

@@ -88,28 +88,35 @@ let buf_pop lxb env =
     | S_Expression -> Expression env.expr 
     | _ -> Syntax_Error "A closure was terminated before it was started"
   in let dressed_closure_token = dress naked_closure_token lxb in
-  match List.hd state with 
-  (* There are no more closures left to resolve *)
-  | S_Default -> { env with
-    state = List.tl env.state;
-    token_list = dressed_closure_token :: env.token_list;
-    expr = [] }
-  | _ ->
-    (* We still have closures left to resolve
-      * Take the most recent expression buffer *)
-    let top_expr = Utils.Stack.peek env.expr_buffers in
-    let stack = Utils.Stack.pop env.expr_buffers in
-    (* If there was an expression buffer [if empty closure there won't be]
-      * then add our closure token to the front an put that back in the working buffer
-      * If not, then we just return the closure token as a list *)
-    let combined_expr = 
-      match top_expr with
-      | Some expr -> dressed_closure_token :: expr
-      | None -> [dressed_closure_token]
-    in { env with 
-      state;
-      expr_buffers = stack;
-      expr = combined_expr }
+  (* If state is empty we shouldn't be here *)
+  if List.length state = 0 then
+    { env with
+      state = [S_Panic];
+      token_list = dressed_closure_token :: env.token_list;
+      expr = [] }
+  else
+    match List.hd state with 
+    (* There are no more closures left to resolve *)
+    | S_Default -> { env with
+      state = List.tl env.state;
+      token_list = dressed_closure_token :: env.token_list;
+      expr = [] }
+    | _ ->
+      (* We still have closures left to resolve
+        * Take the most recent expression buffer *)
+      let top_expr = Utils.Stack.peek env.expr_buffers in
+      let stack = Utils.Stack.pop env.expr_buffers in
+      (* If there was an expression buffer [if empty closure there won't be]
+        * then add our closure token to the front an put that back in the working buffer
+        * If not, then we just return the closure token as a list *)
+      let combined_expr = 
+        match top_expr with
+        | Some expr -> dressed_closure_token :: expr
+        | None -> [dressed_closure_token]
+      in { env with 
+        state;
+        expr_buffers = stack;
+        expr = combined_expr }
 
 let resolve_errors tok env =
   match tok with

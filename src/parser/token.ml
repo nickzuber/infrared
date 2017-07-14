@@ -182,10 +182,10 @@ let rec token_to_string tok i =
             (full_token_to_string ~indent:(i + step) e))
         "" content)
         indentation)
-  | Variable t -> indentation ^ "Variable: " ^ (var_to_string t)
+  | Variable t -> indentation ^ "Variable " ^ (var_to_string t)
   | Number -> indentation ^ "Number"
   | Bool -> indentation ^ "Bool"
-  | String str -> indentation ^ "String: " ^ str
+  | String str -> indentation ^ "String " ^ str
   | Comment -> indentation ^ "Comment"
   | Break -> indentation ^ "Break"
   | Case -> indentation ^ "Case"
@@ -220,16 +220,24 @@ let rec token_to_string tok i =
   | Class -> indentation ^ "Class"
   | Implements -> indentation ^ "Implements"
   | Spread -> indentation ^ "Spread"
-  | TemplateString (str,tok_lists) -> (
-      Printf.sprintf "TemplateString `%s`\n -{\n%s -}"
-      str
-      (List.fold_left 
-        (fun acc toks -> Printf.sprintf "%s - [ %s ]\n" 
-          acc
-          (List.fold_left 
-            (fun acc e -> acc ^ (lazy_token_to_string e)  ^ ", ")
+  | TemplateString (str, tok_lists) -> (
+    if List.length tok_lists = 0 
+      then Printf.sprintf "%sTemplateString `%s` {}" indentation str
+      else Printf.sprintf "%sTemplateString `%s` {\n%s%s}"
+        indentation
+        str
+        (List.fold_left 
+          (fun acc toks -> 
+            Printf.sprintf "%s%s\n"
+            acc
+            (List.fold_left 
+              (fun acc e -> 
+                Printf.sprintf "%s%s\n"
+                acc
+                (full_token_to_string ~indent:(i + step) e))
             "" toks))
-      "" tok_lists))
+        "" tok_lists)
+        indentation)
   | Async -> indentation ^ "Async"
   | Await -> indentation ^ "Await"
   | Enum -> indentation ^ "Enum"
