@@ -298,8 +298,6 @@ and read_template_strings env buf exprs = parse
                     }
   | '`'             {
                       let str = Buffer.contents buf in
-                      let _d = Printf.sprintf "%s" (string_of_int (List.length exprs)) in
-                      print_endline _d;
                       TemplateString (str, exprs)
                     }
   | eof             { Syntax_Error "TemplateString is terminated illegally or not at all" }

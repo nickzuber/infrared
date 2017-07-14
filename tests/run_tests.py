@@ -1,8 +1,8 @@
 
 from __future__ import print_function
 from subprocess import check_output
-from os import listdir
-from os.path import join
+from os import listdir, remove
+from os.path import join, isfile
 from time import sleep
 from utils import Colour, FoundError, FailedTest, getCurrentAbsolutePath, existsIn, EXEC, WHITE_LISTED_EXTENSIONS
 
@@ -37,12 +37,20 @@ for job in jobs:
             actual = check_output([EXEC, job[1], file])
             # Read expected output file
             file_exp_name = file[:-3] + ".exp"
+            file_actual_name = file[:-3] + ".failed"
             file_exp = open(file_exp_name, "r")
             expected = file_exp.read()
             file_exp.close()
             # shitty placeholder do better pls ty
             if (len(actual) != len(expected)):
+                # Create actual output file for error diff against expected
+                file_actual = open(file_actual_name, "w")
+                file_actual.write(actual)
+                file_actual.close()
                 raise FailedTest({"actual": len(actual), "expected": len(expected)})
+            # Remove error output file if one exists
+            if isfile(file_actual_name):
+                remove(file_actual_name)
             print(Colour.GREEN + u'\u2714' + " PASS " + Colour.END + path + "    ")
         except FailedTest as e:
             obj = e.args[0]

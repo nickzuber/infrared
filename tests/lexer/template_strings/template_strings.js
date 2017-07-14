@@ -16,3 +16,7 @@
 `${a}single`
 `single${a}`
 `single ${1+1} ${a} test`
+`single ${1+1} test ${a}`
+`${1+1}single ${a} test`
+`${1+1}single test ${a}`
+`${1+1}single${o} test ${a}`

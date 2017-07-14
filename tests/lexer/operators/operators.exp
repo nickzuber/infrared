@@ -52,8 +52,7 @@ TOKENS:
   Operator: Minus [90m(46:3)[39m
   Number [90m(46:4)[39m
   Number [90m(47:1)[39m
-  Operator: Assignment [90m(47:2)[39m
-  Operator: GreaterThan [90m(47:3)[39m
+  ArrowFunction [90m(47:2)[39m
   Number [90m(47:4)[39m
   Number [90m(48:1)[39m
   Operator: LessThanEqual [90m(48:2)[39m

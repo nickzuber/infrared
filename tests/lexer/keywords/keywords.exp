@@ -31,6 +31,6 @@ TOKENS:
   Class [90m(29:1)[39m
   Import [90m(30:1)[39m
   Enum [90m(31:1)[39m
-  Variable: Var [90m(32:1)[39m
-  Variable: Let [90m(33:1)[39m
-  Variable: Const [90m(34:1)[39m
+  Variable Var [90m(32:1)[39m
+  Variable Let [90m(33:1)[39m
+  Variable Const [90m(34:1)[39m
