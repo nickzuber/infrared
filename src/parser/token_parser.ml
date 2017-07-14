@@ -11,7 +11,7 @@ exception Unimplemented
 (* Pop first token from token list and return the rest of the list.
  * An error is thrown if there are no tokens in the list before we pop. 
  * Parser_env.t -> Token.t * Token.t list *)
-let optimistic_pop_token ?(err="Found no tokens to parse") token_list =
+let optimistic_pop_token ?(err="Found no tokens to parse when we were expecting some") token_list =
   let maybe_tokens = pop token_list in
   let full_token, token_list' = 
     match maybe_tokens with
@@ -19,16 +19,17 @@ let optimistic_pop_token ?(err="Found no tokens to parse") token_list =
     | None -> raise (ParsingError err)
   in full_token, token_list'
 
-
 (*
   Expression.
     LiteralNumericExpression
     BinaryExpression
 *)
-module Expression_parser = struct
+(*module Expression_parser = struct
   let parse loc token_list =
-    1
-end
+    let token, token_list = optimistic_pop_token token_list in
+    match token with
+    | Number -> (* LiteralNumericExpression, BinaryExpression, CallExpression *)
+end*)
 
 (* 
   Statement.
@@ -57,7 +58,7 @@ module Variable_parser = struct
       | Identifier name -> (create_binding_identifier name)
       | _ -> raise (ParsingError declarator_err)
     (* check next token to see if we have more identifiers *)
-    in let next_token_body = match List.hd token_list' with
+    in let next_token_body = match lookahead ~n:0 token_list' with
       | Some token -> token.body
       | None -> Empty_Token
     in match next_token_body with
@@ -71,7 +72,7 @@ module Variable_parser = struct
               let init = None in
               let declarator = create_declarator binding init in
               let updated_declarators = declarator :: declarators_so_far
-              in updated_declarators, token_list'
+              in (List.rev updated_declarators), token_list'
             end
           (* we have more declarators, no init yet *)
           | Comma -> 
@@ -79,7 +80,7 @@ module Variable_parser = struct
               let declarator = create_declarator binding None in
               let updated_declarators = declarator :: declarators_so_far in
               let token_list'' = eat token_list'
-              in parse_declarators updated_declarators token_list''
+              in parse_declarators (List.rev updated_declarators) token_list''
             end
           | _ -> raise (ParsingError declarator_op_err)
         end
@@ -88,7 +89,7 @@ module Variable_parser = struct
         begin
           let declarator = create_declarator binding None in
           let updated_declarators = declarator :: declarators_so_far
-          in updated_declarators, token_list'
+          in (List.rev updated_declarators), token_list'
         end
     
   let parse_declaration loc ~t token_list = VariableDeclaration.(

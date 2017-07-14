@@ -12,7 +12,10 @@ dir_path = getCurrentAbsolutePath(__file__)
 LEXER_TESTS = (join(dir_path, "lexer"), "tokenize")
 PARSER_TESTS = (join(dir_path, "parser"), "parse")
 
-jobs = [LEXER_TESTS, PARSER_TESTS]
+jobs = [
+    LEXER_TESTS,
+    # PARSER_TESTS
+]
 
 for job in jobs:
     print(Colour.BOLD + "\nGENERATING TESTS: " + Colour.END + job[0])

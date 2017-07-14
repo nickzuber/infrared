@@ -23,7 +23,9 @@ let pp_binding_identifier node =
 let pp_variable_declarator node =
   let open Ast.VariableDeclarator in
   let binding = pp_binding_identifier node.binding in
-  let init = pp_expression node.init in
+  let init = match node.init with
+    | Some node -> pp_expression node
+    | None -> "null" in
   let json = Printf.sprintf
     "{\"VariableDeclarator\": { \
       \"binding\": %s, \

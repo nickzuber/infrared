@@ -23,11 +23,11 @@
                                     "VariableDeclarator": {
                                         "binding": {
                                             "VariableDeclarator": {
-                                                "name": "bar"
+                                                "name": "foo"
                                             }
                                         },
                                         "init": [
-                                            "(expression)"
+                                            null
                                         ]
                                     }
                                 },
@@ -35,11 +35,11 @@
                                     "VariableDeclarator": {
                                         "binding": {
                                             "VariableDeclarator": {
-                                                "name": "foo"
+                                                "name": "bar"
                                             }
                                         },
                                         "init": [
-                                            "(expression)"
+                                            null
                                         ]
                                     }
                                 }
