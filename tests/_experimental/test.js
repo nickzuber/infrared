@@ -4,4 +4,4 @@
 
 // var foo, bar
 
-`single ${1+1} text ${a} test`
+`single ${2 + foo} text ${a} test`

@@ -269,12 +269,6 @@ and read_template_strings env buf exprs = parse
                       Buffer.add_string buf (Lexing.lexeme lexbuf);
                       read_template_strings env buf exprs lexbuf
                     }
-  | '`'             {
-                      let str = Buffer.contents buf in
-                      let _d = Printf.sprintf "%s" (string_of_int (List.length exprs)) in
-                      print_endline _d;
-                      TemplateString (str, exprs)
-                    }
   | '$' '{' (templatechars* as raw_expr) '}'
                     {
                       if (String.length raw_expr) = 0 then begin
@@ -289,7 +283,7 @@ and read_template_strings env buf exprs = parse
                         let lexbuf' = Lexing.from_input input in
                         let cooked_expr_env = token new_env lexbuf' in
                         (* Consider checking for errors in cooked_expr_env.error *)
-                        let expr = cooked_expr_env.token_list in
+                        let expr = List.rev cooked_expr_env.token_list in
                         let exprs' = expr :: exprs in
                         read_template_strings env buf exprs' lexbuf
                       end
@@ -297,6 +291,12 @@ and read_template_strings env buf exprs = parse
   | '\n'            {
                       let _ = Lexing.new_line lexbuf in
                       read_template_strings env buf exprs lexbuf
+                    }
+  | '`'             {
+                      let str = Buffer.contents buf in
+                      let _d = Printf.sprintf "%s" (string_of_int (List.length exprs)) in
+                      print_endline _d;
+                      TemplateString (str, exprs)
                     }
   | eof             { Syntax_Error "TemplateString is terminated illegally or not at all" }
   | _ as c          { 

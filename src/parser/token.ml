@@ -228,14 +228,16 @@ let rec token_to_string tok i =
         str
         (List.fold_left 
           (fun acc toks -> 
-            Printf.sprintf "%s%s\n"
+            Printf.sprintf "%s%s(\n%s%s)\n"
             acc
+            (String.make (i + step / 2) ' ')
             (List.fold_left 
               (fun acc e -> 
                 Printf.sprintf "%s%s\n"
                 acc
                 (full_token_to_string ~indent:(i + step) e))
-            "" toks))
+            "" toks)
+            (String.make (i + step / 2) ' '))
         "" tok_lists)
         indentation)
   | Async -> indentation ^ "Async"
