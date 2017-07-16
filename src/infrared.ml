@@ -17,7 +17,7 @@ end = struct
   ]
 
   let reportCommandError msg = 
-    Printf.printf "😬  Well this is awkward, %s\n" msg
+    Printf.printf "\n😬  Well this is awkward, %s\n" msg
 
   let greeting () = 
     Printf.printf "%s%s%s\n\n" "✨  🚀  Infrared v"
@@ -76,6 +76,11 @@ end = struct
           HelpCommand.exec commands
 end
 
-let _ = 
-  InfraredShell.main ()
-
+let _ = Token_parser.(
+  try
+    InfraredShell.main ()
+  with Unimplemented e -> Error_handler.(
+    let explaination = "Unimplemented exception was thrown. \n\
+    \t This usually means we tried to parse something that we didn't know how to. \n\
+    \t Here's some information that came with this exception:\n\n" in
+    report (explaination ^ e) Level.Med))

@@ -39,7 +39,7 @@
                                             }
                                         },
                                         "init": [
-                                            null
+                                            "(expression)"
                                         ]
                                     }
                                 }
