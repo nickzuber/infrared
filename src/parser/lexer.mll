@@ -122,9 +122,17 @@ rule token env = parse
                         let env = push Spread env lexbuf in
                         token env lexbuf
                       }
+  | "instanceof"      {
+                        let env = push (Operator Instanceof) env lexbuf in
+                        token env lexbuf;
+                      }
+  | "in"              {
+                        let env = push (Operator In) env lexbuf in
+                        token env lexbuf;
+                      }
   | "+="              { 
                         let env = push (Operator CA_Plus) env lexbuf in
-                        token env lexbuf; 
+                        token env lexbuf;
                       }
   | "-="              { 
                         let env = push (Operator CA_Minus) env lexbuf in

@@ -368,8 +368,6 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keywords kwd tok)
     "for", For;
     "function", Function;
     "if", If;
-    "in", In;
-    "instanceof", Instanceof;
     "new", New;
     "null", Null;
     "return", Return;

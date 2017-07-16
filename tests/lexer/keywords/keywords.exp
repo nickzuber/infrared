@@ -15,8 +15,8 @@ TOKENS:
   For [90m(13:1)[39m
   Function [90m(14:1)[39m
   If [90m(15:1)[39m
-  In [90m(16:1)[39m
-  Instanceof [90m(17:1)[39m
+  Identifier: in [90m(16:1)[39m
+  Identifier: instanceof [90m(17:1)[39m
   New [90m(18:1)[39m
   Null [90m(19:1)[39m
   Return [90m(20:1)[39m
