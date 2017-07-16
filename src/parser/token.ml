@@ -49,8 +49,6 @@ and t' =
   | Function
   | ArrowFunction
   | If
-  | In
-  | Instanceof
   | New
   | Null
   | Return
@@ -112,6 +110,8 @@ and ops =
   | LessThanEqual          (*    <=    *)
   | GreaterThan            (*    >     *)
   | GreaterThanEqual       (*    >=    *)
+  | In
+  | Instanceof
   | LeftShift              (*    <<    *)
   | RightShift             (*    >>    *)
   | RightShiftUnsigned     (*    >>>   *)
@@ -205,8 +205,6 @@ let rec token_to_string tok i =
   | ArrowFunction -> indentation ^ "ArrowFunction"
   | If -> indentation ^ "If"
   | Import -> indentation ^ "Import"
-  | In -> indentation ^ "In"
-  | Instanceof -> indentation ^ "Instanceof"
   | New -> indentation ^ "New"
   | Return -> indentation ^ "Return"
   | Super -> indentation ^ "Super"
@@ -281,6 +279,8 @@ and op_to_string = function
   | LessThanEqual -> "LessThanEqual"
   | GreaterThan -> "GreaterThan"
   | GreaterThanEqual -> "GreaterThanEqual"
+  | In -> "In"
+  | Instanceof -> "Instanceof"
   | LeftShift -> "LeftShift"
   | RightShift -> "RightShift"
   | RightShiftUnsigned -> "RightShiftUnsigned"

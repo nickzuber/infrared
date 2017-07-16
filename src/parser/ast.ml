@@ -98,7 +98,7 @@ and BinaryOperator : sig
     | GreaterThan         (*    >     *)
     | GreaterThanEqual    (*    >=    *)
     | In
-    | InstanceOf
+    | Instanceof
     | LeftShift           (*    <<    *)
     | RightShift          (*    >>    *)
     | RightShiftUnsigned  (*    >>>   *)

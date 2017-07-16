@@ -42,43 +42,21 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
 *)
 module Expression_parser = struct
   let is_binop = function
-    | Equal
-    | NotEqual
-    | StrictEqual
-    | StrictNotEqual
-    | LessThan
-    | LessThanEqual
-    | GreaterThan
-    | GreaterThanEqual
-    | LeftShift
-    | RightShift
-    | RightShiftUnsigned
-    | Plus
-    | Minus
-    | Mult
-    | Div
-    | Mod
-    | Pow
-    | Comma
-    | LogicalOr
-    | LogicalAnd
-    | Or
-    | Xor
-    | And
-    | Bang
-    | Not
-    | Increment
-    | Decrement
-    | Dot
-    | Colon
-    | Ternary
-    | Assignment -> true
+    | Equal | NotEqual | StrictEqual | StrictNotEqual | LessThan | LessThanEqual
+    | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
+    | Plus | Minus | Mult | Div | Mod | Pow | Comma | LogicalOr | LogicalAnd | Or | Xor
+    | And | Bang | Not | Increment | Decrement | Dot | Colon | Ternary | Assignment -> true
     | _ -> false
 
   let create_binary_operator (op: Token.ops) = Ast.BinaryOperator.(
     match op with
     | Equal -> Equal
-    | _ -> Equal)
+    | NotEqual -> NotEqual
+    | StrictEqual -> StrictEqual
+    | StrictNotEqual -> StrictNotEqual
+    | LessThan -> LessThan
+    | _ -> 
+      raise (ParsingError "Attempted to create a binary operator with an incompatible token"))
 
   (* We currently don't actually know the number's value because I don't think we need to.
    * Might be nice to have, so leaving in the option to add it later if we want to. *)
