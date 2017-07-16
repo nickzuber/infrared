@@ -77,10 +77,12 @@ end = struct
 end
 
 let _ = Token_parser.(
-  try
-    InfraredShell.main ()
-  with Unimplemented e -> Error_handler.(
-    let explaination = "Unimplemented exception was thrown. \n\
+  let explaination = 
+    " exception was thrown. \n\
     \t This usually means we tried to parse something that we didn't know how to. \n\
     \t Here's some information that came with this exception:\n\n" in
-    report (explaination ^ e) Level.Med))
+  try
+    InfraredShell.main ()
+  with 
+  | Unimplemented e -> Error_handler.(report ("Unimplemented" ^ explaination ^ e) Level.Med)
+  | ParsingError e -> Error_handler.(report ("ParsingError" ^ explaination ^ e) Level.Med))

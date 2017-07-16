@@ -48,15 +48,21 @@ module Expression_parser = struct
     | And | Bang | Not | Increment | Decrement | Dot | Colon | Ternary | Assignment -> true
     | _ -> false
 
-  let create_binary_operator (op: Token.ops) = Ast.BinaryOperator.(
-    match op with
-    | Equal -> Equal
-    | NotEqual -> NotEqual
-    | StrictEqual -> StrictEqual
-    | StrictNotEqual -> StrictNotEqual
-    | LessThan -> LessThan
+  let create_binary_operator op_token = Ast.BinaryOperator.(
+    match op_token.body with
+    | Operator Equal -> Equal
+    | Operator NotEqual -> NotEqual
+    | Operator StrictEqual -> StrictEqual
+    | Operator StrictNotEqual -> StrictNotEqual
+    | Operator LessThan -> LessThan
     | _ -> 
-      raise (ParsingError "Attempted to create a binary operator with an incompatible token"))
+      begin
+        let msg = Printf.sprintf
+          "Attempted to create a binary operator with an incompatible token at (%d, %d)"
+          op_token.loc.line
+          op_token.loc.column
+        in raise (ParsingError msg)
+      end)
 
   (* We currently don't actually know the number's value because I don't think we need to.
    * Might be nice to have, so leaving in the option to add it later if we want to. *)
@@ -64,10 +70,10 @@ module Expression_parser = struct
     let value = 0.0
     in { _type = "LiteralNumericExpression"; value })
 
-  let parse_binary_expression left op token_list = BinaryExpression.(
-    (* Eat the binop *)
-    let token_list' = eat token_list in
-    let operator = create_binary_operator op in
+  let parse_binary_expression left token_list = BinaryExpression.(
+    (* Pop the binop *)
+    let op_token, token_list' = optimistic_pop_token token_list in
+    let operator = create_binary_operator op_token in
     let right = left (* should return a token_list after parsing rhs *)
     in { _type = "BinaryExpression"; operator; left; right }, token_list')
 
@@ -83,8 +89,9 @@ module Expression_parser = struct
           begin
             let left = create_number_literal token in
             let wrapped_left = LiteralNumericExpression left in
+            (* we want to preserve the entire token for its metadata *)
             (*! should add to `ast_nodes` and continue *)
-            let expr, token_list'' = (parse_binary_expression wrapped_left op token_list') in
+            let expr, token_list'' = (parse_binary_expression wrapped_left token_list') in
             (Expression.BinaryExpression expr), token_list''
           end
         | _ -> raise (Unimplemented ("Expression_parser.parse: Number -> " ^ (lazy_token_to_string token)))
