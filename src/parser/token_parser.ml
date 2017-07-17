@@ -4,26 +4,7 @@ open Token
 open Ast
 open Loc
 
-      (* LiteralNumericExpression, BinaryExpression, CallExpression *)
-      (*| Number value when (List.length token_list' > 0) -> 
-        begin
-          let next_token = optimistic_peek_token token_list' in
-          match next_token.body with
-          | Operator op when is_binop op -> 
-            begin
-              let left = create_number_literal ~value:value  token in
-              let wrapped_left = LiteralNumericExpression left in
-              (* We want to preserve the entire token for its metadata *)
-              let expr, token_list'' = (parse_binary_expression wrapped_left token_list') in
-              (Expression.BinaryExpression expr), token_list''
-            end
-          | _ -> raise (Unimplemented ("Expression_parser.parse: Number -> " ^ (lazy_token_to_string token)))
-        end
-      | Number value -> (LiteralNumericExpression (create_number_literal ~value:value token)), token_list'
-      | String _ -> raise (Unimplemented ("Expression_parser.parse: String -> " ^ (lazy_token_to_string token)))
-      | Identifier _ -> raise (Unimplemented ("Expression_parser.parse: Identifier -> " ^ (lazy_token_to_string token)))*)
-      (* this actually implies that we're finished parsing this expression,
-      * so we should return `ast_node` here *)
+let working_file = ref "undefined"
 
 exception ParsingError of string
 exception Unimplemented of string
@@ -104,12 +85,10 @@ module Expression_parser = struct
     | Operator Or -> Or
     | Operator Xor -> Xor
     | Operator And -> And
-    | _ -> let msg = Printf.sprintf
-      "Attempted to create a binary operator with an incompatible token at (%d, %d): \n\n%s\n\n"
-      op_token.loc.line
-      op_token.loc.column
-      (lazy_token_to_string op_token)
-      in raise (ParsingError msg))
+    | _ -> 
+      let msg = "Attempted to create a binary operator with an incompatible token" in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:op_token.loc ~msg:msg
+      in raise (ParsingError err))
 
   let create_number_literal ~value token = Ast.LiteralNumericExpression.(
     { _type = "LiteralNumericExpression"; value })
@@ -142,11 +121,10 @@ module Expression_parser = struct
               (* Pass in initial token_list to preserve the binop *)
               let expr, token_list'' = (parse_binary_expression left token_list) in
               (Expression.BinaryExpression expr), token_list''
-            | None -> let msg = Printf.sprintf
-              "Illegal binary operator found when trying to parse an expression (%d, %d)"
-              token.loc.line
-              token.loc.column
-              in raise (ParsingError msg)
+            | None -> 
+              let msg = "Unexpected binary operator found when trying to parse an expression" in
+              let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
+              in raise (ParsingError err)
           end
         | _ -> 
           match last_node with
@@ -298,6 +276,7 @@ let parse_directives token_list =
 
 (* Initial parser env of a Module or Script *)
 let parse starting_tokens source =
+  working_file := source;
   let directives, tokens = parse_directives starting_tokens in
   (* assuming Module type program *)
   let ast = create_module_ast directives tokens

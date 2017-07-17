@@ -1,4 +1,7 @@
 
+open Loc
+
+(* Reports a simple and general error *)
 let report ~msg ~level =
   match level with
   | Level.High ->
@@ -12,3 +15,34 @@ let report ~msg ~level =
   | Level.ParseError ->
     print_endline("\n❗ ParseError: " ^ msg)
 
+(* Locates the offending area in the given source file, converts to a string and returns it. 
+ * This string is generally thrown somewhere else. *)
+let exposed_error ~source ~loc ~msg =
+  let upper_line = ref "" in
+  let offending_line = ref "" in
+  let lower_line = ref "" in
+  let spacing = String.make (loc.column + 3) ' ' in
+  let lines = Batteries.File.lines_of source in
+  let _ = Batteries.Enum.fold 
+    (fun cur_line line -> 
+      if cur_line = (loc.line - 1) then upper_line := line else ();
+      if cur_line = loc.line then offending_line := line else ();
+      if cur_line = (loc.line + 1) then lower_line := line else ();
+      cur_line + 1
+    ) 1 lines
+  in Printf.sprintf "\
+    Error was found in \x1b[33m%s\x1b[39m\n\
+    ❯ %s\n\n\
+    \x1b[90m%d | %s\n\
+    \x1b[90m%d |\x1b[39m %s\n\
+    \x1b[31m%s\x1b[39m\n\
+    \x1b[90m%d | %s \x1b[39m\n"
+    source
+    msg
+    (loc.line - 1)
+    !upper_line
+    loc.line
+    !offending_line
+    (spacing ^ "^")
+    (loc.line + 1)
+    !lower_line
