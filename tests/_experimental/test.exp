@@ -41,12 +41,12 @@
                                                             "value": 1
                                                         }
                                                     },
-                                                    "operator": "Plus",
+                                                    "operator": "Mult",
                                                     "right": {
                                                         "BinaryExpression": {
                                                             "left": {
-                                                                "LiteralNumericExpression": {
-                                                                    "value": 2
+                                                                "IdentifierExpression": {
+                                                                    "name": "i"
                                                                 }
                                                             },
                                                             "operator": "Plus",

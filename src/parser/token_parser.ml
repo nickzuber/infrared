@@ -114,6 +114,9 @@ module Expression_parser = struct
   let create_number_literal ~value token = Ast.LiteralNumericExpression.(
     { _type = "LiteralNumericExpression"; value })
 
+  let create_identifier_literal ~name token = Ast.IdentifierExpression.(
+    { _type = "IdentifierExpression"; name })
+
   let rec parse ?(last_node=None) token_list = Expression.(
     if List.length token_list = 0 then
       match last_node with
@@ -128,6 +131,9 @@ module Expression_parser = struct
         match token.body with
         | Number value -> 
           let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
+          in parse ~last_node:(Some ast_node) token_list'
+        | Identifier name ->
+          let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
           in parse ~last_node:(Some ast_node) token_list'
         | Operator op when is_binop op ->
           begin

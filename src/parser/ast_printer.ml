@@ -46,7 +46,16 @@ let pp_binary_operator node =
   | Xor -> "\"Xor\""
   | And -> "\"And\""
 
-let rec pp_binary_expression node =
+let rec pp_expression node =
+  let open Ast.Expression in
+  let json = match node with
+  | BinaryExpression node -> pp_binary_expression node
+  | LiteralNumericExpression node -> pp_literal_numeric_expression node
+  | IdentifierExpression node -> pp_identifier_expression node
+  | _ -> "\"Unimplemented Expression type\""
+  in remove_trailing_comma json
+
+and pp_binary_expression node =
   let open Ast.BinaryExpression in
   let operator = pp_binary_operator node.operator in
   let left = pp_expression node.left in
@@ -62,13 +71,14 @@ let rec pp_binary_expression node =
     right
   in json
 
-and pp_expression node =
-  let open Ast.Expression in
-  let json = match node with
-  | BinaryExpression node -> pp_binary_expression node
-  | LiteralNumericExpression node -> pp_literal_numeric_expression node
-  | _ -> "\"Unimplemented Expression type\""
-  in remove_trailing_comma json
+and pp_identifier_expression node =
+  let open Ast.IdentifierExpression in
+  let json = Printf.sprintf
+    "{\"IdentifierExpression\": { \
+      \"name\": \"%s\" \
+    }},"
+    node.name
+  in json
 
 let pp_binding_identifier node =
   let open Ast.BindingIdentifier in
