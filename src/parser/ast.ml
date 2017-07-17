@@ -978,8 +978,8 @@ end = AssignmentExpression
 and BinaryExpression : sig
   type t = {
     _type: string;
-    operator: BinaryOperator.t;
     left: Expression.t;
+    operator: BinaryOperator.t;
     right: Expression.t;
   }
   [@@deriving show]

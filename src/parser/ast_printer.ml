@@ -53,12 +53,12 @@ let rec pp_binary_expression node =
   let right = pp_expression node.right in
   let json = Printf.sprintf
     "{\"BinaryExpression\": { \
-      \"operator\": %s, \
       \"left\": %s, \
+      \"operator\": %s, \
       \"right\": %s \
     }},"
-    operator
     left
+    operator
     right
   in json
 

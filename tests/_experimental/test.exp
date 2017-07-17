@@ -36,20 +36,20 @@
                                         "init": [
                                             {
                                                 "BinaryExpression": {
-                                                    "operator": "Plus",
                                                     "left": {
                                                         "LiteralNumericExpression": {
                                                             "value": 1
                                                         }
                                                     },
+                                                    "operator": "Plus",
                                                     "right": {
                                                         "BinaryExpression": {
-                                                            "operator": "Plus",
                                                             "left": {
                                                                 "LiteralNumericExpression": {
                                                                     "value": 2
                                                                 }
                                                             },
+                                                            "operator": "Plus",
                                                             "right": {
                                                                 "LiteralNumericExpression": {
                                                                     "value": 3

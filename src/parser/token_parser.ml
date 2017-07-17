@@ -4,6 +4,27 @@ open Token
 open Ast
 open Loc
 
+      (* LiteralNumericExpression, BinaryExpression, CallExpression *)
+      (*| Number value when (List.length token_list' > 0) -> 
+        begin
+          let next_token = optimistic_peek_token token_list' in
+          match next_token.body with
+          | Operator op when is_binop op -> 
+            begin
+              let left = create_number_literal ~value:value  token in
+              let wrapped_left = LiteralNumericExpression left in
+              (* We want to preserve the entire token for its metadata *)
+              let expr, token_list'' = (parse_binary_expression wrapped_left token_list') in
+              (Expression.BinaryExpression expr), token_list''
+            end
+          | _ -> raise (Unimplemented ("Expression_parser.parse: Number -> " ^ (lazy_token_to_string token)))
+        end
+      | Number value -> (LiteralNumericExpression (create_number_literal ~value:value token)), token_list'
+      | String _ -> raise (Unimplemented ("Expression_parser.parse: String -> " ^ (lazy_token_to_string token)))
+      | Identifier _ -> raise (Unimplemented ("Expression_parser.parse: Identifier -> " ^ (lazy_token_to_string token)))*)
+      (* this actually implies that we're finished parsing this expression,
+      * so we should return `ast_node` here *)
+
 exception ParsingError of string
 exception Unimplemented of string
 
@@ -41,6 +62,8 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
     BinaryExpression
 *)
 module Expression_parser = struct
+  let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
+
   let is_binop = function
     | Equal | NotEqual | StrictEqual | StrictNotEqual | LessThan | LessThanEqual
     | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
@@ -81,50 +104,57 @@ module Expression_parser = struct
     | Operator Or -> Or
     | Operator Xor -> Xor
     | Operator And -> And
-    | _ -> 
-      begin
-        let msg = Printf.sprintf
-          "Attempted to create a binary operator with an incompatible token at (%d, %d)"
-          op_token.loc.line
-          op_token.loc.column
-        in raise (ParsingError msg)
-      end)
+    | _ -> let msg = Printf.sprintf
+      "Attempted to create a binary operator with an incompatible token at (%d, %d): \n\n%s\n\n"
+      op_token.loc.line
+      op_token.loc.column
+      (lazy_token_to_string op_token)
+      in raise (ParsingError msg))
 
   let create_number_literal ~value token = Ast.LiteralNumericExpression.(
     { _type = "LiteralNumericExpression"; value })
 
-  let rec parse token_list = Expression.(
-    let token, token_list' = optimistic_pop_token token_list in
-    match token.body with
-    (* LiteralNumericExpression, BinaryExpression, CallExpression *)
-    | Number value when (List.length token_list' > 0) -> 
+  let rec parse ?(last_node=None) token_list = Expression.(
+    if List.length token_list = 0 then
+      match last_node with
+      | Some ast_node -> ast_node, token_list
+      | None -> let msg = Printf.sprintf
+        "Tried to parse an Expression when there were no tokens at all. We never should have \
+        even entered the Expression parsing subroutine."
+        in raise (ParsingError msg)
+    else
       begin
-        let next_token = optimistic_peek_token token_list' in
-        match next_token.body with
-        | Operator op when is_binop op -> 
+        let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+        match token.body with
+        | Number value -> 
+          let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
+          in parse ~last_node:(Some ast_node) token_list'
+        | Operator op when is_binop op ->
           begin
-            let left = create_number_literal ~value:value  token in
-            let wrapped_left = LiteralNumericExpression left in
-            (* we want to preserve the entire token for its metadata *)
-            (*! should add to `ast_nodes` and continue *)
-            let expr, token_list'' = (parse_binary_expression wrapped_left token_list') in
-            (Expression.BinaryExpression expr), token_list''
+            match last_node with
+            | Some left -> 
+              (* Pass in initial token_list to preserve the binop *)
+              let expr, token_list'' = (parse_binary_expression left token_list) in
+              (Expression.BinaryExpression expr), token_list''
+            | None -> let msg = Printf.sprintf
+              "Illegal binary operator found when trying to parse an expression (%d, %d)"
+              token.loc.line
+              token.loc.column
+              in raise (ParsingError msg)
           end
-        | _ -> raise (Unimplemented ("Expression_parser.parse: Number -> " ^ (lazy_token_to_string token)))
-      end
-    | Number value -> (LiteralNumericExpression (create_number_literal ~value:value token)), token_list'
-    | String _ -> raise (Unimplemented ("Expression_parser.parse: String -> " ^ (lazy_token_to_string token)))
-    | Identifier _ -> raise (Unimplemented ("Expression_parser.parse: Identifier -> " ^ (lazy_token_to_string token)))
-    (* this actually implies that we're finished parsing this expression,
-     * so we should return `ast_node` here *)
-    | _ -> raise (Unimplemented ("Expression_parser.parse -> " ^ (lazy_token_to_string token))))
+        | _ -> 
+          match last_node with
+          (* We return the initial token_list to preserve the popped token *)
+          | Some ast_node -> ast_node, token_list
+          | None -> raise (Unimplemented ("Expression_parser.parse -> " ^ (lazy_token_to_string token)))
+      end)
   
   and parse_binary_expression left token_list = BinaryExpression.(
     (* Pop the binop *)
     let op_token, token_list' = optimistic_pop_token token_list in
     let operator = create_binary_operator op_token in
-    let right, token_list'' = parse token_list' (* should return a token_list after parsing rhs *)
-    in { _type = "BinaryExpression"; operator; left; right }, token_list'')
+    let right, token_list'' = parse token_list'
+    in { _type = "BinaryExpression"; left; operator; right }, token_list'')
 end
 
 (* 
