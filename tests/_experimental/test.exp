@@ -39,7 +39,7 @@
                                                     "operator": "Plus",
                                                     "left": {
                                                         "LiteralNumericExpression": {
-                                                            "value": 0
+                                                            "value": 1
                                                         }
                                                     },
                                                     "right": {
@@ -47,12 +47,12 @@
                                                             "operator": "Plus",
                                                             "left": {
                                                                 "LiteralNumericExpression": {
-                                                                    "value": 0
+                                                                    "value": 2
                                                                 }
                                                             },
                                                             "right": {
                                                                 "LiteralNumericExpression": {
-                                                                    "value": 0
+                                                                    "value": 3
                                                                 }
                                                             }
                                                         }

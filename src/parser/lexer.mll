@@ -99,8 +99,9 @@ rule token env = parse
                           let env = push (Identifier word) env lexbuf in
                           token env lexbuf
                       }
-  | number            {
-                        let env = push Number env lexbuf in
+  | number as n       {
+                        let n_float = float_of_string n in
+                        let env = push (Number n_float) env lexbuf in
                         token env lexbuf
                       }
   | '('|'{'|'[' as c  {

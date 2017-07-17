@@ -90,23 +90,20 @@ module Expression_parser = struct
         in raise (ParsingError msg)
       end)
 
-  (* We currently don't actually know the number's value because I don't think we need to.
-   * Might be nice to have, so leaving in the option to add it later if we want to. *)
-  let create_number_literal token = Ast.LiteralNumericExpression.(
-    let value = 0.0
-    in { _type = "LiteralNumericExpression"; value })
+  let create_number_literal ~value token = Ast.LiteralNumericExpression.(
+    { _type = "LiteralNumericExpression"; value })
 
   let rec parse token_list = Expression.(
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
     (* LiteralNumericExpression, BinaryExpression, CallExpression *)
-    | Number when (List.length token_list' > 0) -> 
+    | Number value when (List.length token_list' > 0) -> 
       begin
         let next_token = optimistic_peek_token token_list' in
         match next_token.body with
         | Operator op when is_binop op -> 
           begin
-            let left = create_number_literal token in
+            let left = create_number_literal ~value:value  token in
             let wrapped_left = LiteralNumericExpression left in
             (* we want to preserve the entire token for its metadata *)
             (*! should add to `ast_nodes` and continue *)
@@ -115,7 +112,7 @@ module Expression_parser = struct
           end
         | _ -> raise (Unimplemented ("Expression_parser.parse: Number -> " ^ (lazy_token_to_string token)))
       end
-    | Number -> (LiteralNumericExpression (create_number_literal token)), token_list'
+    | Number value -> (LiteralNumericExpression (create_number_literal ~value:value token)), token_list'
     | String _ -> raise (Unimplemented ("Expression_parser.parse: String -> " ^ (lazy_token_to_string token)))
     | Identifier _ -> raise (Unimplemented ("Expression_parser.parse: Identifier -> " ^ (lazy_token_to_string token)))
     (* this actually implies that we're finished parsing this expression,

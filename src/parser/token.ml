@@ -23,7 +23,7 @@ and t' =
   | Bool
   (* Surrounded by quotes, not to be confused with Identifiers *)
   | String of string
-  | Number
+  | Number of float
   | Variable of var_t
   (* Standard *)
   | Break
@@ -184,7 +184,7 @@ let rec token_to_string tok i =
         "" content)
         indentation)
   | Variable t -> indentation ^ "Variable " ^ (var_to_string t)
-  | Number -> indentation ^ "Number"
+  | Number n -> indentation ^ "Number " ^ (string_of_float n)
   | Bool -> indentation ^ "Bool"
   | String str -> indentation ^ "String " ^ str
   | Comment -> indentation ^ "Comment"
