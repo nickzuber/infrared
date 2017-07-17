@@ -1,1 +1,72 @@
-{"Module": { "directives": [{"Directive": { "rawValue": "use strict" }}], "items": [{"VariableDeclarationStatement": { "declaration": {"VariableDeclaration": { "kind": "Var", "declarators": [{"VariableDeclarator": { "binding": {"VariableDeclarator": { "name": "foo" }}, "init": [null] }},{"VariableDeclarator": { "binding": {"VariableDeclarator": { "name": "bar" }}, "init": [{"BinaryExpression": { "operator": "Plus", "left": {"LiteralNumericExpression": { "value": 0.000000 }}, "right": {"BinaryExpression": { "operator": "Plus", "left": {"LiteralNumericExpression": { "value": 0.000000 }}, "right": {"LiteralNumericExpression": { "value": 0.000000 }} }} }}] }}] }} }}] }}
+{
+    "Module": {
+        "directives": [
+            {
+                "Directive": {
+                    "rawValue": "use strict"
+                }
+            }
+        ],
+        "items": [
+            {
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "kind": "Var",
+                            "declarators": [
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "foo"
+                                            }
+                                        },
+                                        "init": [
+                                            null
+                                        ]
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "bar"
+                                            }
+                                        },
+                                        "init": [
+                                            {
+                                                "BinaryExpression": {
+                                                    "operator": "Plus",
+                                                    "left": {
+                                                        "LiteralNumericExpression": {
+                                                            "value": 0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "BinaryExpression": {
+                                                            "operator": "Plus",
+                                                            "left": {
+                                                                "LiteralNumericExpression": {
+                                                                    "value": 0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "LiteralNumericExpression": {
+                                                                    "value": 0
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
