@@ -8,8 +8,67 @@ let remove_trailing_comma str =
   else
     str
 
-let pp_expression node =
-  "\"(expression)\""
+let pp_literal_numeric_expression node =
+  let open Ast.LiteralNumericExpression in
+  let json = Printf.sprintf
+    "{\"LiteralNumericExpression\": { \
+      \"value\": %f \
+    }},"
+    node.value
+  in json
+
+let pp_binary_operator node =
+  let open Ast.BinaryOperator in
+  match node with
+  | Equal -> "\"Equal\""
+  | NotEqual -> "\"NotEqual\""
+  | StrictEqual -> "\"StrictEqual\""
+  | StrictNotEqual -> "\"StrictNotEqual\""
+  | LessThan -> "\"LessThan\""
+  | LessThanEqual -> "\"LessThanEqual\""
+  | GreaterThan -> "\"GreaterThan\""
+  | GreaterThanEqual -> "\"GreaterThanEqual\""
+  | In -> "\"In\""
+  | Instanceof -> "\"Instanceof\""
+  | LeftShift -> "\"LeftShift\""
+  | RightShift -> "\"RightShift\""
+  | RightShiftUnsigned -> "\"RightShiftUnsigned\""
+  | Plus -> "\"Plus\""
+  | Minus -> "\"Minus\""
+  | Mult -> "\"Mult\""
+  | Div -> "\"Div\""
+  | Mod -> "\"Mod\""
+  | Pow -> "\"Pow\""
+  | Comma -> "\"Comma\""
+  | LogicalOr -> "\"LogicalOr\""
+  | LogicalAnd -> "\"LogicalAnd\""
+  | Or -> "\"Or\""
+  | Xor -> "\"Xor\""
+  | And -> "\"And\""
+
+let rec pp_binary_expression node =
+  let open Ast.BinaryExpression in
+  let operator = pp_binary_operator node.operator in
+  let left = pp_expression node.left in
+  let right = pp_expression node.right in
+  let json = Printf.sprintf
+    "{\"BinaryExpression\": { \
+      \"operator\": %s, \
+      \"left\": %s, \
+      \"right\": %s \
+    }},"
+    operator
+    left
+    right
+  in json
+
+and pp_expression node =
+  let open Ast.Expression in
+  let json = match node with
+  | BinaryExpression node -> pp_binary_expression node
+  | LiteralNumericExpression node -> pp_literal_numeric_expression node
+  | _ -> "\"Unimplemented Expression type\""
+  in remove_trailing_comma json
 
 let pp_binding_identifier node =
   let open Ast.BindingIdentifier in

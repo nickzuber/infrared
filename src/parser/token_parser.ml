@@ -48,13 +48,39 @@ module Expression_parser = struct
     | And | Bang | Not | Increment | Decrement | Dot | Colon | Ternary | Assignment -> true
     | _ -> false
 
+  (* Note that this takes binary operator tokens and converts them into their binary operator
+   * AST node counterpart *if that counterpart exists as an AST binop*. For example, Assignment 
+   * is considered a binop but is not represented as a binary operator in this AST. This should
+   * be fine though since we would be handling that different anyways. 
+   * CompoundAssignmentOperators are also considered to be something different so they aren't 
+   * represented here. *)
   let create_binary_operator op_token = Ast.BinaryOperator.(
     match op_token.body with
     | Operator Equal -> Equal
     | Operator NotEqual -> NotEqual
-    | Operator StrictEqual -> StrictEqual
+    | Operator StrictEqual -> StrictNotEqual
     | Operator StrictNotEqual -> StrictNotEqual
     | Operator LessThan -> LessThan
+    | Operator LessThanEqual -> LessThanEqual
+    | Operator GreaterThan -> GreaterThan
+    | Operator GreaterThanEqual -> GreaterThanEqual
+    | Operator In -> In
+    | Operator Instanceof -> Instanceof
+    | Operator LeftShift -> LeftShift
+    | Operator RightShift -> RightShift
+    | Operator RightShiftUnsigned -> RightShiftUnsigned
+    | Operator Plus -> Plus
+    | Operator Minus -> Minus
+    | Operator Mult -> Mult
+    | Operator Div -> Div
+    | Operator Mod -> Mod
+    | Operator Pow -> Pow
+    | Operator Comma -> Comma
+    | Operator LogicalOr -> LogicalOr
+    | Operator LogicalAnd -> LogicalAnd
+    | Operator Or -> Or
+    | Operator Xor -> Xor
+    | Operator And -> And
     | _ -> 
       begin
         let msg = Printf.sprintf
@@ -70,14 +96,7 @@ module Expression_parser = struct
     let value = 0.0
     in { _type = "LiteralNumericExpression"; value })
 
-  let parse_binary_expression left token_list = BinaryExpression.(
-    (* Pop the binop *)
-    let op_token, token_list' = optimistic_pop_token token_list in
-    let operator = create_binary_operator op_token in
-    let right = left (* should return a token_list after parsing rhs *)
-    in { _type = "BinaryExpression"; operator; left; right }, token_list')
-
-  let rec parse token_list ast_nodes = Expression.(
+  let rec parse token_list = Expression.(
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
     (* LiteralNumericExpression, BinaryExpression, CallExpression *)
@@ -102,6 +121,13 @@ module Expression_parser = struct
     (* this actually implies that we're finished parsing this expression,
      * so we should return `ast_node` here *)
     | _ -> raise (Unimplemented ("Expression_parser.parse -> " ^ (lazy_token_to_string token))))
+  
+  and parse_binary_expression left token_list = BinaryExpression.(
+    (* Pop the binop *)
+    let op_token, token_list' = optimistic_pop_token token_list in
+    let operator = create_binary_operator op_token in
+    let right, token_list'' = parse token_list' (* should return a token_list after parsing rhs *)
+    in { _type = "BinaryExpression"; operator; left; right }, token_list'')
 end
 
 (* 
@@ -144,7 +170,7 @@ module Variable_parser = struct
           | Assignment -> 
             begin
               (* @TODO: parse init expression *)
-              let init, token_list''' = Expression_parser.parse token_list'' [] in
+              let init, token_list''' = Expression_parser.parse token_list'' in
               let declarator = create_declarator binding (Some init) in
               let updated_declarators = declarator :: declarators_so_far
               in (List.rev updated_declarators), token_list'''

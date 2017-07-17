@@ -1,4 +1,4 @@
 
 'use strict'
 
-var foo, bar = 1 + 2
+var foo, bar = 1 + 2 + 3
