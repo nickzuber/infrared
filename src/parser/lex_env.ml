@@ -9,9 +9,12 @@ type t = {
   state: state_t list;
   expr: Token.t list;
   expr_buffers: Token.t list Utils.Stack.t;
+  (* Location object that overrides the lexbuf location when a token
+   * is being dressed. This is used for if a token starts somewhere else
+   * before we push it into our list. *)
+  locations: Lexing.position Utils.Stack.t;
   (* The token_list is "backwards" -- newest token is 
-    * inserted into the front of the list. 
-    * TODO: Consider using a queue? *)
+    * inserted into the front of the list. *)
   token_list: Token.t list;
   error: (string * Level.t) option;
 }
@@ -34,6 +37,7 @@ let new_env = {
   source = "undefined";
   state = [ S_Default ]; (* I should use a stack for this too *)
   expr = [];
+  locations = Utils.Stack.Nil;
   expr_buffers = Utils.Stack.Nil; (* Empty stack type; TODO: Utils.Stack.create should have optional param *)
   token_list = [];
   error = None;
@@ -51,10 +55,15 @@ let set_error msg env =
   * Tokens that are definitely have wrong positions:
   *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
   *  - Closures <- we don't track when they start, but we dress when they end 
-  *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc *)
-let dress body lxb = 
+  *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc 
+  *
+  * Takes an optional location parameter to use if a token happens to start in a different location. This can
+  * happen when we're parsing closures, comments, syntax errors, etc. *)
+let dress ?(loc=None) body lxb = 
   let open Lexing in
-  let pos = lxb.lex_start_p in
+  let pos = match loc with
+    | Some pos -> pos
+    | None -> lxb.lex_start_p in
   let loc = { Loc.
     line = pos.pos_lnum;
     column = pos.pos_cnum - pos.pos_bol + 1;
@@ -69,11 +78,15 @@ let push ~tok env ~lxb =
 (* Add current expression to the expression buffer
   * and clear current expression. *)
 let buf_push lxb env =
+  let open Lexing in
   let expr = env.expr in
   let stack = env.expr_buffers in
+  let locs = env.locations in
   match expr with
-  | [] -> env
+  | [] -> { env with
+            locations = Utils.Stack.push locs lxb.lex_start_p }
   | _ -> { env with
+           locations = Utils.Stack.push locs lxb.lex_start_p;
            expr_buffers = Utils.Stack.push stack expr;
            expr = [] }
 
@@ -86,13 +99,16 @@ let buf_pop lxb env =
     | S_Array -> Array env.expr 
     | S_Block -> Block env.expr 
     | S_Expression -> Expression env.expr 
-    | _ -> Syntax_Error "A closure was terminated before it was started"
-  in let dressed_closure_token = dress naked_closure_token lxb in
+    | _ -> Syntax_Error "A closure was terminated before it was started" in
+  let closure_pos = Utils.Stack.peek env.locations in
+  let new_locations = Utils.Stack.pop env.locations in
+  let dressed_closure_token = dress naked_closure_token lxb ~loc:closure_pos in
   (* If state is empty we shouldn't be here *)
   if List.length state = 0 then
     { env with
       state = [S_Panic];
       token_list = dressed_closure_token :: env.token_list;
+      locations = new_locations;
       expr = [] }
   else
     match List.hd state with 
@@ -100,6 +116,7 @@ let buf_pop lxb env =
     | S_Default -> { env with
       state = List.tl env.state;
       token_list = dressed_closure_token :: env.token_list;
+      locations = new_locations;
       expr = [] }
     | _ ->
       (* We still have closures left to resolve
@@ -116,6 +133,7 @@ let buf_pop lxb env =
       in { env with 
         state;
         expr_buffers = stack;
+        locations = new_locations;
         expr = combined_expr }
 
 let resolve_errors tok env =
