@@ -32,11 +32,11 @@ let exposed_error ~source ~loc ~msg =
     ) 1 lines
   in Printf.sprintf "\
     Error was found in \x1b[33m%s\x1b[39m\n\
-    ❯ %s\n\n\
-    \x1b[90m%d | %s\n\
-    \x1b[90m%d |\x1b[39m %s\n\
+    \x1b[35m❯\x1b[39m %s\n\n\
+    \x1b[90m%d │ %s\n\
+    \x1b[90m%d │\x1b[39m %s\n\
     \x1b[31m%s\x1b[39m\n\
-    \x1b[90m%d | %s \x1b[39m\n"
+    \x1b[90m%d │ %s \x1b[39m\n"
     source
     msg
     (loc.line - 1)

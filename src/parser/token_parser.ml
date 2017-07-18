@@ -96,43 +96,41 @@ module Expression_parser = struct
   let create_identifier_literal ~name token = Ast.IdentifierExpression.(
     { _type = "IdentifierExpression"; name })
 
-  let rec parse ?(last_node=None) token_list = Expression.(
+  (* Initial parsing phase for an expression. Once we resolve some expression, we want to pass it
+   * in to parse_rest_of_expression to see if there's any more we want to do to it. 
+   * For example, consider the expression `foo()`. On our initial parsing phase, we'd parse the expression
+   * of `foo` as an identifier. We then go on to see if there's something that could augment
+   * this expression, and in this case there is and it becomes a call expression of `foo`. *)
+  let rec parse token_list = Expression.(
+    let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+    match token.body with
+    | Number value -> 
+      let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
+      in parse_rest_of_expression ast_node token_list'
+    | Identifier name ->
+      let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
+      in parse_rest_of_expression ast_node token_list'
+    | _ -> 
+      let msg = "While parsing an expression, we ran into a token we didn't know what to do with." in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
+      in raise (Unimplemented err))
+  
+  and parse_rest_of_expression last_node token_list = Expression.(
     if List.length token_list = 0 then
-      match last_node with
-      | Some ast_node -> ast_node, token_list
-      | None -> let msg = Printf.sprintf
-        "Tried to parse an Expression when there were no tokens at all. We never should have \
-        even entered the Expression parsing subroutine."
-        in raise (ParsingError msg)
+      last_node, token_list
     else
       begin
         let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
         match token.body with
-        | Number value -> 
-          let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
-          in parse ~last_node:(Some ast_node) token_list'
-        | Identifier name ->
-          let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
-          in parse ~last_node:(Some ast_node) token_list'
         | Operator op when is_binop op ->
-          begin
-            match last_node with
-            | Some left -> 
-              (* Pass in initial token_list to preserve the binop *)
-              let expr, token_list'' = (parse_binary_expression left token_list) in
-              (Expression.BinaryExpression expr), token_list''
-            | None -> 
-              let msg = "Unexpected binary operator found when trying to parse an expression" in
-              let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
-              in raise (ParsingError err)
-          end
-        | _ -> 
-          match last_node with
-          (* We return the initial token_list to preserve the popped token *)
-          | Some ast_node -> ast_node, token_list
-          | None -> raise (Unimplemented ("Expression_parser.parse -> " ^ (lazy_token_to_string token)))
+            (* Pass in initial token_list to preserve the binop *)
+            let expr, token_list'' = (parse_binary_expression last_node token_list) in
+            parse_rest_of_expression (Expression.BinaryExpression expr) token_list''
+        (* Since the next token isn't something that could augment this expression, 
+        * we know that this expression is finished. *)
+        | _ -> last_node, token_list
       end)
-  
+
   and parse_binary_expression left token_list = BinaryExpression.(
     (* Pop the binop *)
     let op_token, token_list' = optimistic_pop_token token_list in

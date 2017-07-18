@@ -22,18 +22,6 @@
                                             }
                                         },
                                         "init": [
-                                            null
-                                        ]
-                                    }
-                                },
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "VariableDeclarator": {
-                                                "name": "bar"
-                                            }
-                                        },
-                                        "init": [
                                             {
                                                 "BinaryExpression": {
                                                     "left": {
@@ -41,12 +29,12 @@
                                                             "value": 1
                                                         }
                                                     },
-                                                    "operator": "Mult",
+                                                    "operator": "Plus",
                                                     "right": {
                                                         "BinaryExpression": {
                                                             "left": {
                                                                 "IdentifierExpression": {
-                                                                    "name": "i"
+                                                                    "name": "bar"
                                                                 }
                                                             },
                                                             "operator": "Plus",
