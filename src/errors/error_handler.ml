@@ -22,6 +22,7 @@ let exposed_error ~source ~loc ~msg =
   let offending_line = ref "" in
   let lower_line = ref "" in
   let spacing = String.make (loc.column + 3) ' ' in
+  let arrow = String.make (loc.length) '^' in
   let lines = Batteries.File.lines_of source in
   let _ = Batteries.Enum.fold 
     (fun cur_line line -> 
@@ -43,6 +44,6 @@ let exposed_error ~source ~loc ~msg =
     !upper_line
     loc.line
     !offending_line
-    (spacing ^ "^")
+    (spacing ^ arrow)
     (loc.line + 1)
     !lower_line

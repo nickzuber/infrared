@@ -92,11 +92,12 @@ rule token env = parse
                         token env lexbuf
                       }
   | word as word      {
+                        let word_length = String.length word in
                         try
-                          let env = push (Hashtbl.find keywords word) env lexbuf in
+                          let env = push ~tok:(Hashtbl.find keywords word) env ~lxb:lexbuf ~length:word_length in
                           token env lexbuf
                         with Not_found -> 
-                          let env = push (Identifier word) env lexbuf in
+                          let env = push ~tok:(Identifier word) env ~lxb:lexbuf ~length:word_length in
                           token env lexbuf
                       }
   | number as n       {

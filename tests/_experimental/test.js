@@ -1,3 +1,3 @@
 
 'use strict'
-var foo = 1 + (2 + 3)
+var foo = 1 + bar + 2

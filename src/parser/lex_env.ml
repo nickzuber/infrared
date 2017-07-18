@@ -59,18 +59,24 @@ let set_error msg env =
   *
   * Takes an optional location parameter to use if a token happens to start in a different location. This can
   * happen when we're parsing closures, comments, syntax errors, etc. *)
-let dress ?(loc=None) body lxb = 
+let dress ?(loc=None) ?(length=1) body lxb = 
   let open Lexing in
+  let calculated_length = ref length in
   let pos = match loc with
-    | Some pos -> pos
+    | Some pos -> 
+      let ending_column = lxb.lex_start_p.pos_cnum - lxb.lex_start_p.pos_bol + 1 in
+      let starting_column = pos.pos_cnum - pos.pos_bol + 1 in
+      calculated_length := ending_column - starting_column + 1;
+      pos
     | None -> lxb.lex_start_p in
   let loc = { Loc.
     line = pos.pos_lnum;
     column = pos.pos_cnum - pos.pos_bol + 1;
+    length = !calculated_length;
   } in { loc; body }
 
-let push ~tok env ~lxb =
-  let tok = dress tok lxb in
+let push ?(length=1) ~tok env ~lxb =
+  let tok = dress tok lxb ~length:length in
   match List.hd env.state with
   | S_Default -> { env with token_list = tok :: env.token_list }
   | _ -> { env with expr = tok :: env.expr }
