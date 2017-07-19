@@ -33,14 +33,34 @@
                                                     "right": {
                                                         "BinaryExpression": {
                                                             "left": {
-                                                                "IdentifierExpression": {
-                                                                    "name": "bar"
+                                                                "LiteralNumericExpression": {
+                                                                    "value": 2
                                                                 }
                                                             },
                                                             "operator": "Plus",
                                                             "right": {
-                                                                "LiteralNumericExpression": {
-                                                                    "value": 3
+                                                                "BinaryExpression": {
+                                                                    "left": {
+                                                                        "BinaryExpression": {
+                                                                            "left": {
+                                                                                "LiteralNumericExpression": {
+                                                                                    "value": 4
+                                                                                }
+                                                                            },
+                                                                            "operator": "Plus",
+                                                                            "right": {
+                                                                                "LiteralNumericExpression": {
+                                                                                    "value": 3
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "operator": "Plus",
+                                                                    "right": {
+                                                                        "LiteralNumericExpression": {
+                                                                            "value": 5
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
