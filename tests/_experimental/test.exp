@@ -1,1 +1,74 @@
-{"Module": { "directives": [{"Directive": { "rawValue": "use strict" }}], "items": [{"VariableDeclarationStatement": { "declaration": {"VariableDeclaration": { "kind": "Var", "declarators": [{"VariableDeclarator": { "binding": {"VariableDeclarator": { "name": "foo" }}, "init": [{"BinaryExpression": { "left": {"LiteralNumericExpression": { "value": 1.000000 }}, "operator": "Plus", "right": {"BinaryExpression": { "left": {"LiteralNumericExpression": { "value": 2.000000 }}, "operator": "Plus", "right": {"BinaryExpression": { "left": {"BinaryExpression": { "left": {"LiteralNumericExpression": { "value": 3.000000 }}, "operator": "Plus", "right": {"LiteralNumericExpression": { "value": 4.000000 }} }}, "operator": "Plus", "right": {"LiteralNumericExpression": { "value": 5.000000 }} }} }} }}] }}] }} }}] }}
+{
+    "Module": {
+        "directives": [
+            {
+                "Directive": {
+                    "rawValue": "use strict"
+                }
+            }
+        ],
+        "items": [
+            {
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "declarators": [
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "foo"
+                                            }
+                                        },
+                                        "init": [
+                                            null
+                                        ]
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "bar"
+                                            }
+                                        },
+                                        "init": [
+                                            null
+                                        ]
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "baz"
+                                            }
+                                        },
+                                        "init": [
+                                            {
+                                                "BinaryExpression": {
+                                                    "left": {
+                                                        "LiteralNumericExpression": {
+                                                            "value": 3.0
+                                                        }
+                                                    },
+                                                    "operator": "Plus",
+                                                    "right": {
+                                                        "LiteralNumericExpression": {
+                                                            "value": 4.0
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "kind": "Const"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

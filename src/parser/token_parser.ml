@@ -110,8 +110,8 @@ module Expression_parser = struct
     | Identifier name ->
       let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
       in parse_rest_of_expression ast_node token_list'
-    | Expression inner ->
-      let ast_node, _ = parse inner
+    | Expression expr_token_list ->
+      let ast_node, _ = parse expr_token_list
       in parse_rest_of_expression ast_node token_list'
     | _ -> 
       let msg = "While parsing an expression, we ran into a token we didn't know what to do with." in

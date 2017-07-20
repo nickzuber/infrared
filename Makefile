@@ -33,7 +33,9 @@ generate-tests:
 e-test:
 	./infrared.native parse tests/_experimental/test.js
 e-test-s:
-	./infrared.native parse tests/_experimental/test.js > tests/_experimental/test.exp
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool > tests/_experimental/test.exp
+e-test-p:
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 
 clean:
 	$(OCB) -clean
