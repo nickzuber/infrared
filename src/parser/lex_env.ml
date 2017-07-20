@@ -102,9 +102,9 @@ let buf_pop lxb env =
   let state = List.tl env.state in
   let naked_closure_token = 
     match List.hd env.state with
-    | S_Array -> Array env.expr 
-    | S_Block -> Block env.expr 
-    | S_Expression -> Expression env.expr 
+    | S_Array -> Array (List.rev env.expr)
+    | S_Block -> Block (List.rev env.expr)
+    | S_Expression -> Expression (List.rev env.expr)
     | _ -> Syntax_Error "A closure was terminated before it was started" in
   let closure_pos = Utils.Stack.peek env.locations in
   let new_locations = Utils.Stack.pop env.locations in
