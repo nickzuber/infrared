@@ -4,9 +4,10 @@ Roadmap for Infrared
 
 Currently working on:
 
+```
 Lexer -> Parser -> Type System
          ^^^^^^
-
+```
 
 Setting Up your Environment
 ---------------------------
