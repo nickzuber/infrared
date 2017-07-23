@@ -45,10 +45,6 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
 module Expression_parser = struct
   let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
 
-  let is_comma = function
-    | Comma -> true
-    | _ -> false
-
   let is_binop = function
     | Equal | NotEqual | StrictEqual | StrictNotEqual | LessThan | LessThanEqual
     | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
