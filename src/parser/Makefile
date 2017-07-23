@@ -1,7 +1,7 @@
 
 warn:
-	echo "\tocamlbuild knows how to handle ocamllex by itself"
-	echo "\tso don't use this makefile as a build step"
+	@echo "ocamlbuild knows how to handle ocamllex by itself"
+	@echo "so don't use this makefile as a build step"
 
 all:
 	ocamllex lexer.mll
