@@ -98,7 +98,7 @@
                                     "VariableDeclarator": {
                                         "binding": {
                                             "VariableDeclarator": {
-                                                "name": "nick"
+                                                "name": "item"
                                             }
                                         },
                                         "init": [
