@@ -1,13 +1,12 @@
 Infrared
 ========
 
-Fast light weight inferred static type checker in real time for JavaScript. This is a work in progress.
+Fast light weight inferred static type checker in real time for JavaScript.
 
-<!-- These badges aren't configured -->
+[![state](https://img.shields.io/badge/state-work%20in%20progress-yellow.svg)]()
 [![Build Status](https://travis-ci.org/nickzuber/infrared.svg?branch=master)]()
 [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg)]()
 [![active](https://img.shields.io/badge/project-active-brightgreen.svg)]()
-[![state](https://img.shields.io/badge/state-work%20in%20progress-yellow.svg)]()
 [![License](https://img.shields.io/badge/license-MIT%20Licence-blue.svg)]()
 
 
