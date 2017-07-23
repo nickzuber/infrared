@@ -35,9 +35,10 @@
 
 (* typedef *)
 module rec Arguments : sig
-  type t = 
-    | SpreadElement of SpreadElement.t list
-    | Expression of Expression.t list
+  type arguments =
+    | SpreadElement of SpreadElement.t
+    | Expression of Expression.t
+  type t = arguments list
     [@@deriving show]
 end = Arguments
 

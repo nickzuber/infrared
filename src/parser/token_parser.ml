@@ -45,6 +45,10 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
 module Expression_parser = struct
   let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
 
+  let is_comma = function
+    | Comma -> true
+    | _ -> false
+
   let is_binop = function
     | Equal | NotEqual | StrictEqual | StrictNotEqual | LessThan | LessThanEqual
     | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
@@ -96,42 +100,84 @@ module Expression_parser = struct
   let create_identifier_literal ~name token = Ast.IdentifierExpression.(
     { _type = "IdentifierExpression"; name })
 
+  let create_call_expression ~callee ~arguments token = Ast.CallExpression.(
+    { _type = "CallExpression"; callee; arguments })
+
+  let create_spread_element ~expression token = Ast.SpreadElement.(
+    { _type = "SpreadElement"; expression })
+
   (* Initial parsing phase for an expression. Once we resolve some expression, we want to pass it
    * in to parse_rest_of_expression to see if there's any more we want to do to it. 
    * For example, consider the expression `foo()`. On our initial parsing phase, we'd parse the expression
    * of `foo` as an identifier. We then go on to see if there's something that could augment
    * this expression, and in this case there is and it becomes a call expression of `foo`. *)
-  let rec parse token_list = Expression.(
+  let rec parse ?(early_bail_token=None) token_list = Expression.(
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
     | Number value -> 
       let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
-      in parse_rest_of_expression ast_node token_list'
+      in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Identifier name ->
       let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
-      in parse_rest_of_expression ast_node token_list'
-    | Expression expr_token_list ->
-      let ast_node, _ = parse expr_token_list
-      in parse_rest_of_expression ast_node token_list'
+      in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
+    | Expression inner_token_list ->
+      let ast_node, _ = parse inner_token_list
+      in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | _ -> 
       let msg = "While parsing an expression, we ran into a token we didn't know what to do with." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
       in raise (Unimplemented err))
   
-  and parse_rest_of_expression last_node token_list = Expression.(
+  and parse_rest_of_expression ?(early_bail_token=None) last_node token_list = Expression.(
     if List.length token_list = 0 then
       last_node, token_list
     else
       begin
         let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
-        match token.body with
-        | Operator op when is_binop op ->
-            (* Pass in initial token_list to preserve the binop *)
-            let expr, token_list'' = (parse_binary_expression last_node token_list) in
-            parse_rest_of_expression (Expression.BinaryExpression expr) token_list''
-        (* Since the next token isn't something that could augment this expression, 
-        * we know that this expression is finished. *)
-        | _ -> last_node, token_list
+        (* See if we want to bail out of this method early.
+           NOTE: Early bailing currently eats the bailed token. *)
+        match early_bail_token with
+        | Some bail_token when bail_token = token.body -> last_node, token_list'
+        | _ -> 
+          begin
+            match token.body with
+            | Operator op when is_binop op ->
+                (* Pass in initial token_list to preserve the binop *)
+                let expr, token_list'' = (parse_binary_expression last_node token_list) in
+                parse_rest_of_expression (Expression.BinaryExpression expr) token_list''
+            | Expression inner_token_list ->
+              let callee = Ast.CallExpression.Expression last_node in
+              let arguments = parse_arguments inner_token_list in
+              let ast_node = (CallExpression (create_call_expression ~callee:callee ~arguments:arguments token))
+              in ast_node, token_list'
+            (* Since the next token isn't something that could augment this expression, 
+            * we know that this expression is finished. *)
+            | _ -> last_node, token_list
+          end
+      end)
+
+  and parse_arguments ?(arguments_so_far=[]) token_list = Arguments.(
+    if List.length token_list = 0 then
+      arguments_so_far
+    else
+      begin
+        let bail_token = Some (Operator Comma) in
+        let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+        (* Can be either a SpreadElement or Expression *)
+        let ast_node, token_list'' =
+          match token.body with
+          (* SpreadElement *)
+          | Spread ->
+            let expression, token_list'' = parse ~early_bail_token:bail_token token_list' in
+            let ast_node = create_spread_element ~expression:expression token in
+            (Ast.Arguments.SpreadElement ast_node), token_list''
+          (* Expression *)
+          | _ -> 
+            (* Pass in original token_list to preserve the token we popped *)
+            let ast_node, token_list'' = parse ~early_bail_token:bail_token token_list in
+            (Ast.Arguments.Expression ast_node), token_list'' in
+        let arguments_so_far' = ast_node :: arguments_so_far
+        in parse_arguments ~arguments_so_far:arguments_so_far' token_list''
       end)
 
   and parse_binary_expression left token_list = BinaryExpression.(
@@ -198,11 +244,9 @@ module Variable_parser = struct
         end
       (* No assignment & done with declarators. Wrap it up *) 
       | _ -> 
-        begin
-          let declarator = create_declarator binding None in
-          let updated_declarators = declarator :: declarators_so_far
-          in (List.rev updated_declarators), token_list''
-        end
+        let declarator = create_declarator binding None in
+        let updated_declarators = declarator :: declarators_so_far
+        in (List.rev updated_declarators), token_list''
     
   let parse_declaration ~t token_list = VariableDeclaration.(
     let t' = match t with
@@ -250,6 +294,7 @@ end
 *)
 let create_module_ast directives token_list = Module.(
   let items = Module_parser.parse_items token_list [] in
+  let items = List.rev items in
   let node = { _type = "Module"; directives; items; } in
   let wrapped_node = Ast.Program.Module node in
   wrapped_node)

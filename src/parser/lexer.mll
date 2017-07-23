@@ -53,14 +53,14 @@ rule token env = parse
                         let tok = swallow_single_comment lexbuf in
                         let env = env
                           |> resolve_errors tok
-                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                          |> push ~tok:(tok) ~lxb:(lexbuf) ~length:2 in
                         token env lexbuf
                       }
   | "/*"              {
                         let tok = swallow_multi_comment lexbuf in
                         let env = env
                           |> resolve_errors tok
-                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                          |> push ~tok:(tok) ~lxb:(lexbuf) ~length:2 in
                         token env lexbuf
                       }
   | "#!"              {
@@ -70,11 +70,12 @@ rule token env = parse
                           else Syntax_Error "Illegal hashbang found"
                         in let env = env
                           |> resolve_errors tok
-                          |> push ~tok:(tok) ~lxb:(lexbuf) in
+                          |> push ~tok:(tok) ~lxb:(lexbuf) ~length:2 in
                         token env lexbuf
                       }
-  | "true" | "false"  {
-                        let env = push Bool env lexbuf in
+  | "true" | "false" as boolean {
+                        let length = String.length boolean in
+                        let env = push ~tok:Bool env ~lxb:lexbuf ~length:length in
                         token env lexbuf
                       }
   | '`'               {
@@ -101,8 +102,9 @@ rule token env = parse
                           token env lexbuf
                       }
   | number as n       {
+                        let length = String.length n in
                         let n_float = float_of_string n in
-                        let env = push (Number n_float) env lexbuf in
+                        let env = push ~tok:(Number n_float) env ~lxb:lexbuf ~length:length in
                         token env lexbuf
                       }
   | '('|'{'|'[' as c  {
@@ -121,11 +123,11 @@ rule token env = parse
                         token env lexbuf
                       }
   | "..."             {
-                        let env = push Spread env lexbuf in
+                        let env = push ~tok:Spread env ~lxb:lexbuf ~length:3 in
                         token env lexbuf
                       }
   | "instanceof"      {
-                        let env = push (Operator Instanceof) env lexbuf in
+                        let env = push ~tok:(Operator Instanceof) env ~lxb:lexbuf ~length:10 in
                         token env lexbuf;
                       }
   | "in"              {

@@ -48,18 +48,61 @@
                                             {
                                                 "BinaryExpression": {
                                                     "left": {
-                                                        "LiteralNumericExpression": {
-                                                            "value": 3.0
+                                                        "IdentifierExpression": {
+                                                            "name": "i"
                                                         }
                                                     },
                                                     "operator": "Plus",
                                                     "right": {
-                                                        "LiteralNumericExpression": {
-                                                            "value": 4.0
+                                                        "BinaryExpression": {
+                                                            "left": {
+                                                                "BinaryExpression": {
+                                                                    "left": {
+                                                                        "LiteralNumericExpression": {
+                                                                            "value": 3.0
+                                                                        }
+                                                                    },
+                                                                    "operator": "Plus",
+                                                                    "right": {
+                                                                        "LiteralNumericExpression": {
+                                                                            "value": 4.0
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "operator": "Plus",
+                                                            "right": {
+                                                                "LiteralNumericExpression": {
+                                                                    "value": 5.0
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "kind": "Const"
+                        }
+                    }
+                }
+            },
+            {
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "declarators": [
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "VariableDeclarator": {
+                                                "name": "nick"
+                                            }
+                                        },
+                                        "init": [
+                                            "Unimplemented Expression type"
                                         ]
                                     }
                                 }

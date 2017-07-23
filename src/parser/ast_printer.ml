@@ -159,9 +159,10 @@ let pp_module node =
   let items = 
     List.fold_left
       (fun acc item -> 
-        match item with
+        let item = match item with
         | Statement node -> pp_statement node
-        | _ -> "\"Unimplemented Module.items type\"")
+        | _ -> "\"Unimplemented Module.items type\""
+        in acc ^ item ^ ",")
       "" node.items in
   let json = Printf.sprintf
     "{\"Module\": { \
