@@ -52,6 +52,7 @@ let rec pp_expression node =
   | BinaryExpression node -> pp_binary_expression node
   | LiteralNumericExpression node -> pp_literal_numeric_expression node
   | IdentifierExpression node -> pp_identifier_expression node
+  | CallExpression node -> pp_call_expression node
   | _ -> "\"Unimplemented Expression type\""
   in remove_trailing_comma json
 
@@ -69,6 +70,43 @@ and pp_binary_expression node =
     left
     operator
     right
+  in json
+
+and pp_call_expression node =
+  let open Ast.CallExpression in
+  let callee = match node.callee with
+    | Expression node -> pp_expression node
+    | Super node -> "\"Unimplemented CallExpression.callee.super type\"" in
+  let arguments = 
+    List.fold_left
+      (fun acc item -> 
+        let item = pp_argument item
+        in acc ^ item ^ ",")
+      "" node.arguments in
+  let json = Printf.sprintf
+    "{\"CallExpression\": { \
+      \"callee\": %s, \
+      \"arguments\": [%s] \
+    }},"
+    callee
+    (remove_trailing_comma arguments)
+  in json
+
+and pp_argument node =
+  let open Ast.Arguments in
+  let json = match node with
+    | SpreadElement node -> pp_spread_element node
+    | Expression node -> pp_expression node
+  in remove_trailing_comma json
+
+and pp_spread_element node =
+  let open Ast.SpreadElement in
+  let expression = pp_expression node.expression in
+  let json = Printf.sprintf
+    "{\"SpreadElement\": { \
+      \"expression\": %s \
+    }},"
+    expression
   in json
 
 and pp_identifier_expression node =
@@ -137,8 +175,8 @@ let pp_variable_declaration_statement node =
 let pp_statement node =
   let open Ast.Statement in
   let json = match node with
-  | VariableDeclarationStatement node -> pp_variable_declaration_statement node
-  | _ -> "\"Unimplemented Statement type\""
+    | VariableDeclarationStatement node -> pp_variable_declaration_statement node
+    | _ -> "\"Unimplemented Statement type\""
   in remove_trailing_comma json
 
 let pp_directive node =

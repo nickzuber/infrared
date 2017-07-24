@@ -143,7 +143,8 @@ module Expression_parser = struct
             | Expression inner_token_list ->
               let callee = Ast.CallExpression.Expression last_node in
               let arguments = parse_arguments inner_token_list in
-              let ast_node = (CallExpression (create_call_expression ~callee:callee ~arguments:arguments token))
+              let arguments' = List.rev arguments in
+              let ast_node = (CallExpression (create_call_expression ~callee:callee ~arguments:arguments' token))
               in ast_node, token_list'
             (* Since the next token isn't something that could augment this expression, 
             * we know that this expression is finished. *)
