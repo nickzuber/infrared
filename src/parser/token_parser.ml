@@ -39,10 +39,7 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
 
 
 (* 
-  Module.
-    ImportDeclaration
-    ExportDeclaration
-    Statement 
+  Module
 *)
 module rec Module_parser : sig
   val parse_items : Token.t list -> Ast.Module.item list -> Ast.Module.item list
@@ -53,15 +50,13 @@ end = struct
     (* Steal first token and figure out what to do *)
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
-    | Variable t -> 
+    (*| Identifier _*)
+    | Variable _ -> 
       (*let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in*)
       let node, token_list'' = Statement_parser.parse token_list in
       let wrapped_node = Ast.Module.Statement node in
       let ast_nodes' = wrapped_node :: ast_nodes in
       parse_items token_list'' ast_nodes'
-    (*| Identifier name ->
-      let node, token_list'' = Statement_parser.parse token_list in
-      let wrapped_*)
     (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall 
        at the end of the match statement once everything is implemented. *)
     | Comment -> parse_items token_list' ast_nodes
@@ -288,15 +283,13 @@ end = struct
 
   let rec parse_declarators declarators_so_far token_list = 
     let token, token_list' = optimistic_pop_token token_list ~err:declarator_pop_err in
-    (* we expect an identifier token *)
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
       | _ -> 
         let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_err
         in raise (ParsingError err) in
-    (* check next token to see if we have more identifiers 
-     * Pattern match the token body specifiecally here so we can return
-     * return an Empty_token if need be *)
+    (* Check next token to see if we have more identifiers.
+     * Pattern match the token body specifiecally here so we can return an Empty_token if need be *)
     let next_token_body, token_list'' = match pop token_list' with
       | Some (token, new_token_list) -> token.body, new_token_list
       | None -> Empty_Token, token_list' in
@@ -327,14 +320,14 @@ end = struct
       | _ -> 
         let declarator = create_declarator binding None in
         let updated_declarators = declarator :: declarators_so_far
-        in (List.rev updated_declarators), token_list''
+        in (List.rev updated_declarators), token_list'
     
   let parse_declaration ~t token_list = VariableDeclaration.(
     let t' = match t with
-    | Var -> VariableDeclarationKind.Var
-    | Let -> VariableDeclarationKind.Let
-    | Const -> VariableDeclarationKind.Const
-    in let declarators, token_list' = parse_declarators [] token_list in
+      | Var -> VariableDeclarationKind.Var
+      | Let -> VariableDeclarationKind.Let
+      | Const -> VariableDeclarationKind.Const in
+    let declarators, token_list' = parse_declarators [] token_list in
     let node = { _type = "VariableDeclaration"; kind = t'; declarators }
     in node, token_list')
 
@@ -347,8 +340,8 @@ end
 
 
 (* 
-  Program.
-    Module
+  Program
+  TODO: make module Program
 *)
 let create_module_ast directives token_list = Module.(
   let items = Module_parser.parse_items token_list [] in

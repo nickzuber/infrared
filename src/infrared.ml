@@ -83,7 +83,8 @@ let _ = Token_parser.(
     InfraredShell.main ()
   with 
   | Unimplemented e -> 
-    let explaination_middle = "This usually means we encountered something that we don't know how to parse yet." in
+    let explaination_middle = "This usually means we encountered something that we should be able \
+      to parse, but just don't know how yet." in
     Error_handler.(report 
       (Printf.sprintf
       "Unimplemented %s\n\t%s\n\t%s\n\n%s"

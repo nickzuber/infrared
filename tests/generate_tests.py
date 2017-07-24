@@ -14,7 +14,7 @@ PARSER_TESTS = (join(dir_path, "parser"), "parse")
 
 jobs = [
     LEXER_TESTS,
-    # PARSER_TESTS
+    PARSER_TESTS
 ]
 
 for job in jobs:
