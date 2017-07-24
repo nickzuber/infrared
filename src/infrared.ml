@@ -77,12 +77,29 @@ end = struct
 end
 
 let _ = Token_parser.(
-  let explaination = 
-    " exception was thrown. \n\
-    \t This usually means we tried to parse something that we didn't know how to. \n\
-    \t Here's some information that came with this exception:\n\n" in
+  let explaination_start = "exception was thrown." in
+  let explaination_end = "Here's some information that came with this exception:" in
   try
     InfraredShell.main ()
   with 
-  | Unimplemented e -> Error_handler.(report ("Unimplemented" ^ explaination ^ e) Level.Med)
-  | ParsingError e -> Error_handler.(report ("ParsingError" ^ explaination ^ e) Level.Med))
+  | Unimplemented e -> 
+    let explaination_middle = "This usually means we encountered something that we don't know how to parse yet." in
+    Error_handler.(report 
+      (Printf.sprintf
+      "Unimplemented %s\n\t%s\n\t%s\n\n%s"
+      explaination_start
+      explaination_middle
+      explaination_end
+      e)
+      Level.Med)
+  | ParsingError e -> 
+    let explaination_middle = "This usually means we tried to parse something that we can't, so \
+      there's probably a mistake in your code." in
+    Error_handler.(report 
+      (Printf.sprintf
+      "ParsingError %s\n%s\n%s\n\n%s"
+      explaination_start
+      explaination_middle
+      explaination_end
+      e)
+      Level.ParseError))

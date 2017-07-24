@@ -11,9 +11,9 @@ let report ~msg ~level =
   | Level.Low ->
       print_endline("\n🙆  Warning: " ^ msg)
   | Level.SyntaxError ->
-    print_endline("\n💥 SyntaxError: " ^ msg)
+    print_endline("\n💥  SyntaxError: " ^ msg)
   | Level.ParseError ->
-    print_endline("\n💩 ParseError: " ^ msg)
+    print_endline("\n💩  ParseError: " ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)

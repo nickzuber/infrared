@@ -9,16 +9,15 @@ let working_file = ref "undefined"
 exception ParsingError of string
 exception Unimplemented of string
 
-let default_pop_error = "Found no tokens to pop when we were expecting some"
-let default_peek_error = "Found no tokens to peek at when we were expecting some"
-let default_lookahead_error = "Found no tokens to lookahead when we were expecting some"
+let default_pop_error = "Found no tokens to pop when we were expecting some."
+let default_peek_error = "Found no tokens to peek at when we were expecting some."
+let default_lookahead_error = "Found no tokens to lookahead when we were expecting some."
 
 (* Pop first token from token list and return the rest of the list.
- * An error is thrown if there are no tokens in the list before we pop. 
- * Parser_env.t -> Token.t * Token.t list *)
+ * An error is thrown if there are no tokens in the list before we pop. *)
 let optimistic_pop_token ?(err=default_pop_error) token_list =
   let maybe_tokens = pop token_list in
-  let full_token, token_list' = 
+  let full_token, token_list' =
     match maybe_tokens with
     | Some tuple -> tuple
     | None -> raise (ParsingError err)
@@ -193,9 +192,8 @@ end
   and parse Variables as thier own thing.
 *)
 module Variable_parser = struct
-  let declarator_err = "Looking for declarators, found none. \
-                        Failed to create binding"
-  let declarator_pop_err = "Looking for declarators, found no tokens"
+  let declarator_err = "Looking for an identifier, but we found something else instead."
+  let declarator_pop_err = "Looking for declarators, found no tokens."
   let declarator_op_err = "Looking for declarator list, found illegal operator."
 
   let create_binding_identifier name = BindingIdentifier.(
@@ -209,7 +207,9 @@ module Variable_parser = struct
     (* we expect an identifier token *)
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
-      | _ -> raise (ParsingError declarator_err) in
+      | _ -> 
+        let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_err
+        in raise (ParsingError err) in
     (* check next token to see if we have more identifiers 
      * Pattern match the token body specifiecally here so we can return
      * return an Empty_token if need be *)
@@ -223,7 +223,6 @@ module Variable_parser = struct
           (* done with declarators, parse init. Wrap it up *)
           | Assignment -> 
             begin
-              (* @TODO: parse init expression *)
               let init, token_list''' = Expression_parser.parse token_list'' in
               let declarator = create_declarator binding (Some init) in
               let updated_declarators = declarator :: declarators_so_far
@@ -236,7 +235,9 @@ module Variable_parser = struct
               let updated_declarators = declarator :: declarators_so_far
               in parse_declarators updated_declarators token_list''
             end
-          | _ -> raise (ParsingError declarator_op_err)
+          | _ -> 
+            let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_op_err
+            in raise (ParsingError err)
         end
       (* No assignment & done with declarators. Wrap it up *) 
       | _ -> 
