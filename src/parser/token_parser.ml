@@ -36,12 +36,86 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
   | Some token -> token
   | None -> raise (ParsingError err)
 
+
+
+(* 
+  Module.
+    ImportDeclaration
+    ExportDeclaration
+    Statement 
+*)
+module rec Module_parser : sig
+  val parse_items : Token.t list -> Ast.Module.item list -> Ast.Module.item list
+end = struct
+  let rec parse_items token_list ast_nodes =
+    (* Exit if we're done parsing tokens *)
+    if List.length token_list = 0 then ast_nodes else
+    (* Steal first token and figure out what to do *)
+    let token, token_list' = optimistic_pop_token token_list in
+    match token.body with
+    | Variable t -> 
+      (*let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in*)
+      let node, token_list'' = Statement_parser.parse token_list in
+      let wrapped_node = Ast.Module.Statement node in
+      let ast_nodes' = wrapped_node :: ast_nodes in
+      parse_items token_list'' ast_nodes'
+    (*| Identifier name ->
+      let node, token_list'' = Statement_parser.parse token_list in
+      let wrapped_*)
+    (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall 
+       at the end of the match statement once everything is implemented. *)
+    | Comment -> parse_items token_list' ast_nodes
+    | _ ->
+      let tok = lazy_token_to_string token in
+      let msg = "We haven't implemented a way to parse this token yet in Module items: " ^ tok in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
+      raise (Unimplemented err)
+end
+
+
+
+(*
+  Statement.
+    VariableDeclarationStatement
+*)
+and Statement_parser : sig
+  val parsing_pop_err : string
+  val parse : Token.t list -> Ast.Statement.t * Token.t list
+end = struct
+  let parsing_pop_err = default_pop_error ^ " when parsing a Statement."
+
+  let parse token_list =    
+    let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+    match token.body with
+    | Variable t ->
+      let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in
+      let ast_node = Ast.Statement.VariableDeclarationStatement node
+      in ast_node, token_list''
+    | _ -> raise (Unimplemented "ahh")
+
+end
+
+
+
 (*
   Expression.
     LiteralNumericExpression
     BinaryExpression
 *)
-module Expression_parser = struct
+and Expression_parser : sig
+  val parsing_pop_err : string
+  val is_binop : Token.ops -> bool
+  val create_binary_operator : Token.t -> Ast.BinaryOperator.t
+  val create_number_literal : value:float -> 'a -> Ast.LiteralNumericExpression.t
+  val create_identifier_literal : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
+  val create_call_expression : callee:Ast.CallExpression.callee -> arguments:Ast.Arguments.t -> 'a -> Ast.CallExpression.t
+  val create_boolean_literal : 'a -> Ast.LiteralBooleanExpression.t
+  val create_spread_element : expression:Ast.Expression.t -> 'a -> Ast.SpreadElement.t
+  val parse : ?early_bail_token:Token.t' option -> Token.t list -> Ast.Expression.t * Token.t list
+  val parse_rest_of_expression : ?early_bail_token:Token.t' option -> Ast.Expression.t -> Token.t list -> Ast.Expression.t * Token.t list
+  val parse_arguments : ?arguments_so_far:Ast.Arguments.arguments list -> Token.t list -> Ast.Arguments.arguments list
+  val parse_binary_expression : Ast.Expression.t -> Token.t list -> Ast.BinaryExpression.t * Token.t list
+end = struct
   let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
 
   let is_binop = function
@@ -190,15 +264,18 @@ module Expression_parser = struct
     in { _type = "BinaryExpression"; left; operator; right }, token_list'')
 end
 
-(* 
-  Statement.
-    VariableDeclarationStatement
 
-  This is because we only ever have a VDS in the content of
-  a Statement. Might be worthwhile to implement a Statement_parser
-  and parse Variables as thier own thing.
+
+(* 
+  VariableDeclarationStatement
 *)
-module Variable_parser = struct
+and Variable_parser : sig 
+  val create_binding_identifier : Ast.Identifier.t -> Ast.BindingIdentifier.t
+  val create_declarator : Ast.BindingIdentifier.t -> Ast.Expression.t option -> Ast.VariableDeclarator.t
+  val parse_declarators : Ast.VariableDeclarator.t list -> Token.t list -> Ast.VariableDeclarator.t list * Token.t list
+  val parse_declaration : t:Token.var_t -> Token.t list -> Ast.VariableDeclaration.t * Token.t list
+  val parse_declaration_statement : t:Token.var_t -> Token.t list -> Ast.VariableDeclarationStatement.t * Token.t list
+end = struct
   let declarator_err = "Looking for an identifier, but we found something else instead."
   let declarator_pop_err = "Looking for declarators, found no tokens."
   let declarator_op_err = "Looking for declarator list, found illegal operator."
@@ -263,41 +340,11 @@ module Variable_parser = struct
 
   let parse_declaration_statement ~t token_list = VariableDeclarationStatement.(
     let declaration, token_list' = parse_declaration ~t:t token_list in
-    let node = { _type = "VariableDeclarationStatement"; declaration } in
-    let wrapped_node = Ast.Statement.VariableDeclarationStatement node
-    in wrapped_node, token_list')
+    let node = { _type = "VariableDeclarationStatement"; declaration }
+    in node, token_list')
 end
 
 
-(* 
-  Module.
-    ImportDeclaration
-    ExportDeclaration
-    Statement 
-*)
-module Module_parser = struct
-  let rec parse_items token_list ast_nodes =
-    (* Exit if we're done parsing tokens *)
-    if List.length token_list = 0 then ast_nodes else
-    (* Steal first token and figure out what to do *)
-    let token, token_list' = optimistic_pop_token token_list in
-    match token.body with
-    | Variable t -> 
-      begin
-        let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in
-        let wrapped_node = Ast.Module.Statement node in
-        let ast_nodes' = wrapped_node :: ast_nodes in
-        parse_items token_list'' ast_nodes'
-      end
-    (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall 
-       at the end of the match statement once everything is implemented. *)
-    | Comment -> parse_items token_list' ast_nodes
-    | _ ->
-      let tok = lazy_token_to_string token in
-      let msg = "We haven't implemented a way to parse this token yet in Module items: " ^ tok in
-      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
-      raise (Unimplemented err)
-end
 
 (* 
   Program.
