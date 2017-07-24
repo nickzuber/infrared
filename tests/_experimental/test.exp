@@ -102,7 +102,51 @@
                                             }
                                         },
                                         "init": [
-                                            "Unimplemented Expression type"
+                                            {
+                                                "CallExpression": {
+                                                    "arguments": [
+                                                        {
+                                                            "BinaryExpression": {
+                                                                "left": {
+                                                                    "LiteralNumericExpression": {
+                                                                        "value": 2.0
+                                                                    }
+                                                                },
+                                                                "operator": "Plus",
+                                                                "right": {
+                                                                    "LiteralNumericExpression": {
+                                                                        "value": 3.0
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "IdentifierExpression": {
+                                                                "name": "baz"
+                                                            }
+                                                        },
+                                                        {
+                                                            "LiteralNumericExpression": {
+                                                                "value": 2.0
+                                                            }
+                                                        },
+                                                        {
+                                                            "SpreadElement": {
+                                                                "expression": {
+                                                                    "IdentifierExpression": {
+                                                                        "name": "bar"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "callee": {
+                                                        "IdentifierExpression": {
+                                                            "name": "foo"
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         ]
                                     }
                                 }
