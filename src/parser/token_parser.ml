@@ -50,7 +50,7 @@ end = struct
     (* Steal first token and figure out what to do *)
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
-    (*| Identifier _*)
+    | Identifier _
     | Variable _ -> 
       (*let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in*)
       let node, token_list'' = Statement_parser.parse token_list in
@@ -338,7 +338,6 @@ end
 
 (* 
   Program
-  TODO: make module Program
 *)
 and Program : sig
   val create_module_ast : Ast.Directive.t list -> Token.t list -> Ast.Program.t
