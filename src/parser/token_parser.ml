@@ -70,8 +70,7 @@ end
 
 
 (*
-  Statement.
-    VariableDeclarationStatement
+  Statement
 *)
 and Statement_parser : sig
   val parsing_pop_err : string
@@ -93,9 +92,7 @@ end
 
 
 (*
-  Expression.
-    LiteralNumericExpression
-    BinaryExpression
+  Expression
 *)
 and Expression_parser : sig
   val parsing_pop_err : string
@@ -297,7 +294,7 @@ end = struct
       | Operator op ->
         begin
           match op with
-          (* done with declarators, parse init. Wrap it up *)
+          (* Done with declarators, parse init. Wrap it up *)
           | Assignment -> 
             begin
               let init, token_list''' = Expression_parser.parse token_list'' in
@@ -305,7 +302,7 @@ end = struct
               let updated_declarators = declarator :: declarators_so_far
               in (List.rev updated_declarators), token_list'''
             end
-          (* we have more declarators, no init yet *)
+          (* We have more declarators, no init yet *)
           | Comma -> 
             begin
               let declarator = create_declarator binding None in
@@ -343,38 +340,44 @@ end
   Program
   TODO: make module Program
 *)
-let create_module_ast directives token_list = Module.(
-  let items = Module_parser.parse_items token_list [] in
-  let items = List.rev items in
-  let node = { _type = "Module"; directives; items; } in
-  let wrapped_node = Ast.Program.Module node in
-  wrapped_node)
+and Program : sig
+  val create_module_ast : Ast.Directive.t list -> Token.t list -> Ast.Program.t
+  val parse_directives : Token.t list -> Ast.Directive.t list * Token.t list
+  val parse : Token.t list -> string -> Parser_env.t
+end = struct
+  let create_module_ast directives token_list = Module.(
+    let items = Module_parser.parse_items token_list [] in
+    let items = List.rev items in
+    let node = { _type = "Module"; directives; items; } in
+    let wrapped_node = Ast.Program.Module node in
+    wrapped_node)
 
-let parse_directives token_list = 
-  let rec get_all_directives token_list directives =
-    (* No tokens means we're done here *)
-    if List.length token_list = 0 then directives, token_list else
-    (* Tokens left we still want to check for directives *)
-    let first_token = List.hd token_list in
-    match first_token.body with
-    | String directive -> 
-      let token_list' = eat token_list in 
-      let directives' = directive :: directives in
-      get_all_directives token_list' directives'
-    | _ -> directives, token_list in
-  let raw_directives, final_tokens = get_all_directives token_list [] in
-  let final_directives = 
-    List.fold_left 
-      (fun acc rawValue -> 
-        let dir = { Directive._type = "Directive"; rawValue } in
-        dir :: acc)
-      [] raw_directives
-  in final_directives, final_tokens
+  let parse_directives token_list = 
+    let rec get_all_directives token_list directives =
+      (* No tokens means we're done here *)
+      if List.length token_list = 0 then directives, token_list else
+      (* Tokens left we still want to check for directives *)
+      let first_token = List.hd token_list in
+      match first_token.body with
+      | String directive -> 
+        let token_list' = eat token_list in 
+        let directives' = directive :: directives in
+        get_all_directives token_list' directives'
+      | _ -> directives, token_list in
+    let raw_directives, final_tokens = get_all_directives token_list [] in
+    let final_directives = 
+      List.fold_left 
+        (fun acc rawValue -> 
+          let dir = { Directive._type = "Directive"; rawValue } in
+          dir :: acc)
+        [] raw_directives
+    in final_directives, final_tokens
 
-(* Initial parser env of a Module or Script *)
-let parse starting_tokens source =
-  working_file := source;
-  let directives, tokens = parse_directives starting_tokens in
-  (* assuming Module type program *)
-  let ast = create_module_ast directives tokens
-  in { source; tokens; ast }
+  (* Initial parser env of a Module or Script *)
+  let parse starting_tokens source =
+    working_file := source;
+    let directives, tokens = parse_directives starting_tokens in
+    (* assuming Module type program *)
+    let ast = create_module_ast directives tokens
+    in { source; tokens; ast }
+end

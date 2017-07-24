@@ -2,6 +2,7 @@
 open Batteries
 open Ast
 open Lex_env
+module Program_parser = Token_parser.Program
 
 let tokenize file =
   let input = open_in file in
@@ -33,5 +34,5 @@ let print_ast asts =
 let parse file =
   let lex_env = tokenize file in
   let corrected_token_list = List.rev lex_env.token_list in
-  Token_parser.parse corrected_token_list lex_env.source
+  Program_parser.parse corrected_token_list lex_env.source
 
