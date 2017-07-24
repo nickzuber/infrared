@@ -283,7 +283,10 @@ module Module_parser = struct
         let ast_nodes' = wrapped_node :: ast_nodes in
         parse_items token_list'' ast_nodes'
       end
-    | _ -> raise (Unimplemented ("Module_parser.parse_items -> " ^ (lazy_token_to_string token)))
+    | _ ->
+      let msg = "We haven't implemented a way to parse this token yet in Module items." in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
+      raise (Unimplemented err)
 end
 
 (* 
