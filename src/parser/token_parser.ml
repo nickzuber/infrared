@@ -98,6 +98,9 @@ module Expression_parser = struct
   let create_call_expression ~callee ~arguments token = Ast.CallExpression.(
     { _type = "CallExpression"; callee; arguments })
 
+  let create_boolean_literal token = Ast.LiteralBooleanExpression.(
+    { _type = "LiteralBooleanExpression"; value = true })
+
   let create_spread_element ~expression token = Ast.SpreadElement.(
     { _type = "SpreadElement"; expression })
 
@@ -114,6 +117,9 @@ module Expression_parser = struct
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Identifier name ->
       let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
+      in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
+    | Bool -> 
+      let ast_node = (LiteralBooleanExpression (create_boolean_literal token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Expression inner_token_list ->
       let ast_node, _ = parse inner_token_list
@@ -283,8 +289,12 @@ module Module_parser = struct
         let ast_nodes' = wrapped_node :: ast_nodes in
         parse_items token_list'' ast_nodes'
       end
+    (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall 
+       at the end of the match statement once everything is implemented. *)
+    | Comment -> parse_items token_list' ast_nodes
     | _ ->
-      let msg = "We haven't implemented a way to parse this token yet in Module items." in
+      let tok = lazy_token_to_string token in
+      let msg = "We haven't implemented a way to parse this token yet in Module items: " ^ tok in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
       raise (Unimplemented err)
 end

@@ -18,12 +18,13 @@ let report ~msg ~level =
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
 let exposed_error ~source ~loc ~msg =
+  let base_offset = 3 in
   let most_upper_line = ref "" in
   let upper_line = ref "" in
   let offending_line = ref "" in
   let lower_line = ref "" in
   let most_lower_line = ref "" in
-  let spacing = String.make (loc.column + 3) ' ' in
+  let spacing = String.make (loc.column + base_offset + 3) ' ' in
   let arrow = String.make (loc.length) '^' in
   let lines = Batteries.File.lines_of source in
   let _ = Batteries.Enum.fold 
@@ -38,12 +39,12 @@ let exposed_error ~source ~loc ~msg =
   in Printf.sprintf "\
     Error was found in \x1b[33m%s\x1b[39m\n\
     \x1b[35m❯\x1b[39m %s\n\n\
-    \x1b[90m%d │ %s\n\
-    \x1b[90m%d │ %s\n\
-    \x1b[90m%d │\x1b[39m %s\n\
+    \x1b[90m%4d │ %s\n\
+    \x1b[90m%4d │ %s\n\
+    \x1b[90m%4d │\x1b[39m %s\n\
     \x1b[31m%s\x1b[39m\n\
-    \x1b[90m%d │ %s \x1b[39m\n\
-    \x1b[90m%d │ %s \x1b[39m\n"
+    \x1b[90m%4d │ %s \x1b[39m\n\
+    \x1b[90m%4d │ %s \x1b[39m\n"
     source
     msg
     (loc.line - 2)

@@ -262,23 +262,24 @@ and Expression : sig
     }
   end
   type t = 
+    | IdentifierExpression of IdentifierExpression.t
+    | LiteralNumericExpression of LiteralNumericExpression.t
+    | LiteralBooleanExpression of LiteralBooleanExpression.t
+    | BinaryExpression of BinaryExpression.t
+    | CallExpression of CallExpression.t
+    (* Unimplemented in parser (below) *)
     | MemberExpression of MemberExpression.t
     | ClassExpression of ClassExpression.t
-    | LiteralBooleanExpression of LiteralBooleanExpression.t
     | LiteralInfinityExpression of LiteralInfinityExpression.t
     | LiteralNullExpression of LiteralNullExpression.t
-    | LiteralNumericExpression of LiteralNumericExpression.t
     | LiteralRegExpExpression of LiteralRegExpExpression.t
     | LiteralStringExpression of LiteralStringExpression.t
     | ArrayExpression of ArrayExpression.t
     | ArrowExpression of ArrowExpression.t
     | AssignmentExpression of AssignmentExpression.t
-    | BinaryExpression of BinaryExpression.t
-    | CallExpression of CallExpression.t
     | CompoundAssignmentExpression of CompoundAssignmentExpression.t
     | ConditionalExpression of ConditionalExpression.t
     | FunctionExpression of FunctionExpression.t
-    | IdentifierExpression of IdentifierExpression.t
     | NewExpression of NewExpression.t
     | NewTargetExpression of NewTargetExpression.t
     | ObjectExpression of ObjectExpression.t
