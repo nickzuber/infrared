@@ -17,6 +17,8 @@ jobs = [
     PARSER_TESTS
 ]
 
+exit_with_failure = False
+
 for job in jobs:
     print(Colour.BOLD + "\nRUNNING TESTS: " + Colour.END + job[0])
     try: 
@@ -53,8 +55,14 @@ for job in jobs:
                 remove(file_actual_name)
             print(Colour.GREEN + u'\u2714' + " PASS " + Colour.END + path + "    ")
         except FailedTest as e:
+            exit_with_failure = True
             obj = e.args[0]
             print(Colour.RED + u'\u2715' + " FAIL " + Colour.END + path + ": " +
                   Colour.LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + Colour.END)
         except:
+            exit_with_failure = True
             print(Colour.RED + u'\u2715' + " ERROR " + Colour.END + path + "    ")
+
+# Exit non zero error code so ci fails
+if exit_with_failure:
+    raise FailedTest

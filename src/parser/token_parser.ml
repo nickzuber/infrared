@@ -51,7 +51,8 @@ end = struct
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
     | Identifier _
-    | Variable _ -> 
+    | Variable _ 
+      ->
       (*let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in*)
       let node, token_list'' = Statement_parser.parse token_list in
       let wrapped_node = Ast.Module.Statement node in
@@ -74,9 +75,13 @@ end
 *)
 and Statement_parser : sig
   val parsing_pop_err : string
+  val create_expression_statement: Ast.Expression.t -> Ast.ExpressionStatement.t
   val parse : Token.t list -> Ast.Statement.t * Token.t list
 end = struct
   let parsing_pop_err = default_pop_error ^ " when parsing a Statement."
+
+  let create_expression_statement expression = Ast.ExpressionStatement.(
+    { _type = "ExpressionStatement"; expression })
 
   let parse token_list =    
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
@@ -85,8 +90,25 @@ end = struct
       let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in
       let ast_node = Ast.Statement.VariableDeclarationStatement node
       in ast_node, token_list''
-    | _ -> raise (Unimplemented "ahh")
-
+    | Identifier name ->
+      begin
+        (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
+        match (peek token_list') with
+          (* | Some token ->  *)
+          | _ -> 
+            (* Either no token or no reasonable token is next *)
+            let node = Expression_parser.create_identifier_expression name in
+            (* All these wraps seem a little convoluted.. wondering if if there's a better way.
+             * Whiteboard this out later and make sure *)
+            let node = Ast.Expression.IdentifierExpression node in
+            let ast_node = create_expression_statement node in
+            let ast_node = Ast.Statement.ExpressionStatement ast_node
+            in ast_node, token_list'
+      end
+    | _ ->
+      let msg = "While parsing a statement, we ran into a token we didn't know what to do with." in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
+      in raise (Unimplemented err)
 end
 
 
@@ -97,6 +119,7 @@ end
 and Expression_parser : sig
   val parsing_pop_err : string
   val is_binop : Token.ops -> bool
+  val create_identifier_expression : string -> Ast.IdentifierExpression.t
   val create_binary_operator : Token.t -> Ast.BinaryOperator.t
   val create_number_literal : value:float -> 'a -> Ast.LiteralNumericExpression.t
   val create_identifier_literal : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
@@ -154,6 +177,9 @@ end = struct
       let msg = "Attempted to create a binary operator with an incompatible token" in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:op_token.loc ~msg:msg
       in raise (ParsingError err))
+
+  let create_identifier_expression name = Ast.IdentifierExpression.(
+    { _type = "IdentifierExpression"; name })
 
   let create_number_literal ~value token = Ast.LiteralNumericExpression.(
     { _type = "LiteralNumericExpression"; value })
@@ -328,6 +354,8 @@ end = struct
     let node = { _type = "VariableDeclaration"; kind = t'; declarators }
     in node, token_list')
 
+  (* This returns a statement.. I feel weird about this we might want to move this
+   * into the Statement_parser module *)
   let parse_declaration_statement ~t token_list = VariableDeclarationStatement.(
     let declaration, token_list' = parse_declaration ~t:t token_list in
     let node = { _type = "VariableDeclarationStatement"; declaration }
