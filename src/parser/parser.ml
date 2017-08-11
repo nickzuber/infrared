@@ -33,6 +33,10 @@ let print_ast asts =
 
 let parse file =
   let lex_env = tokenize file in
-  let corrected_token_list = List.rev lex_env.token_list in
-  Program_parser.parse corrected_token_list lex_env.source
+  (* We don't do anything with comments at the moment and I highly doubt we ever will,
+   * so remove them so they don't get in our way when parsing *)
+  let token_list = lex_env.token_list
+    |> List.rev
+    |> List.filter (fun token -> Token.(token.body <> Comment))
+  in Program_parser.parse token_list lex_env.source
 
