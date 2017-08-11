@@ -10,6 +10,6 @@ foo
 // AssignmentExpression
 foo = 2
 // AssignmentExpression with BinaryExpression
-foo = 1 - i + (3 * 4) / 5 %
+foo = 1 - i + (3 * 4) / 5 + +
 // BinaryExpression with AssignmentExpression
 foo, bar = 2 + true
