@@ -267,6 +267,7 @@ and Expression : sig
     | LiteralBooleanExpression of LiteralBooleanExpression.t
     | BinaryExpression of BinaryExpression.t
     | CallExpression of CallExpression.t
+    | AssignmentExpression of AssignmentExpression.t
     (* Unimplemented in parser (below) *)
     | MemberExpression of MemberExpression.t
     | ClassExpression of ClassExpression.t
@@ -276,7 +277,6 @@ and Expression : sig
     | LiteralStringExpression of LiteralStringExpression.t
     | ArrayExpression of ArrayExpression.t
     | ArrowExpression of ArrowExpression.t
-    | AssignmentExpression of AssignmentExpression.t
     | CompoundAssignmentExpression of CompoundAssignmentExpression.t
     | ConditionalExpression of ConditionalExpression.t
     | FunctionExpression of FunctionExpression.t

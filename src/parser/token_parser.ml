@@ -78,6 +78,7 @@ and Statement_parser : sig
   val is_operator : Token.t -> bool
   val create_expression_statement: Ast.Expression.t -> Ast.ExpressionStatement.t
   val parse : Token.t list -> Ast.Statement.t * Token.t list
+  val parse_identifier_statement : name:Ast.Identifier.t -> Token.t list -> Ast.ExpressionStatement.t * Token.t list
 end = struct
   let parsing_pop_err = default_pop_error ^ " when parsing a Statement."
 
@@ -89,6 +90,36 @@ end = struct
   let create_expression_statement expression = Ast.ExpressionStatement.(
     { _type = "ExpressionStatement"; expression })
 
+  let parse_identifier_statement ~name token_list =
+    let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+    (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
+    match (peek token_list') with
+    | Some next_token when is_operator next_token -> 
+      begin
+        match next_token.body with
+        | Operator op when op = Token.Assignment ->
+          (* Pass in the original token_list to keep the identifier token *)
+          let node, token_list'' = Expression_parser.create_assignment_expression ~name:name token_list in
+          let node' = Ast.Expression.AssignmentExpression node in
+          let ast_node = create_expression_statement node' in
+          ast_node, token_list''
+        | Operator op when op = Token.Comma ->
+          let msg = "Comma" in
+          let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
+          in raise (Unimplemented err)
+        | _ -> 
+          let msg = "Encountered an unexpected operator, did you mean to do this?" in
+          let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
+          in raise (ParsingError err)
+      end
+    | _ -> 
+      (* Either no token or no reasonable token is next *)
+      let node = Expression_parser.create_identifier_expression ~name:name token in
+      (* All these wraps seem a little convoluted.. wondering if if there's a better way. *)
+      let node' = Ast.Expression.IdentifierExpression node in
+      let ast_node = create_expression_statement node'
+      in ast_node, token_list'
+
   let parse token_list =    
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
@@ -97,34 +128,10 @@ end = struct
       let ast_node = Ast.Statement.VariableDeclarationStatement node
       in ast_node, token_list''
     | Identifier name ->
-      begin
-        (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
-        match (peek token_list') with
-        | Some next_token when is_operator next_token -> 
-          begin
-            match next_token.body with
-            | Operator op when op = Token.Assignment ->
-              let msg = "Assignment" in
-              let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
-              in raise (Unimplemented err)
-            | Operator op when op = Token.Comma ->
-              let msg = "Comma" in
-              let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
-              in raise (Unimplemented err)
-            | _ -> 
-              let msg = "Encountered an unexpected operator, did you mean to do this?" in
-              let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
-              in raise (ParsingError err)
-          end
-        | _ -> 
-          (* Either no token or no reasonable token is next *)
-          let node = Expression_parser.create_identifier_expression ~name:name token in
-          (* All these wraps seem a little convoluted.. wondering if if there's a better way. *)
-          let node = Ast.Expression.IdentifierExpression node in
-          let ast_node = create_expression_statement node in
-          let ast_node' = Ast.Statement.ExpressionStatement ast_node
-          in ast_node', token_list'
-      end
+      (* Pass in token_list with the Identifier still in it so we can use that token later *)
+      let node, token_list'' = parse_identifier_statement ~name:name token_list in
+      let ast_node = Ast.Statement.ExpressionStatement node
+      in ast_node, token_list''
     | _ ->
       let msg = "While parsing a statement, we ran into a token we didn't know what to do with." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
@@ -139,6 +146,8 @@ end
 and Expression_parser : sig
   val parsing_pop_err : string
   val is_binop : Token.ops -> bool
+  val create_assignment_target : Token.t list -> Ast.AssignmentTarget.t * Token.t list
+  val create_assignment_expression : name:string -> Token.t list -> Ast.AssignmentExpression.t * Token.t list
   val create_identifier_expression : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
   val create_binary_operator : Token.t -> Ast.BinaryOperator.t
   val create_number_literal : value:float -> 'a -> Ast.LiteralNumericExpression.t
@@ -300,6 +309,32 @@ end = struct
     let operator = create_binary_operator op_token in
     let right, token_list'' = parse token_list'
     in { _type = "BinaryExpression"; left; operator; right }, token_list'')
+
+    let create_assignment_target_identifier ~name token = Ast.AssignmentTargetIdentifier.(
+    { _type = "AssignmentTargetIdentifier"; name })
+
+  let create_assignment_target token_list = Ast.AssignmentTarget.(
+    let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
+    match token.body with
+    | Identifier name ->
+      let node = create_assignment_target_identifier ~name:name token in
+      (* The things we do for type safety.. *)
+      let ast_node = Ast.SimpleAssignmentTarget.AssignmentTargetIdentifier node in
+      let ast_node' = Ast.AssignmentTarget.SimpleAssignmentTarget ast_node
+      in ast_node', token_list'
+    | _ ->
+      let msg = "Don't know what to do with this when creating an AssignmentTarget" in
+      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
+      in raise (Unimplemented err))
+
+  let create_assignment_expression ~name token_list = Ast.AssignmentExpression.(
+    (* Not passing in the name here makes it a bit redundant but it helps with the abstraction *)
+    let binding, token_list' = create_assignment_target token_list in
+    (* Eat the assignment token *)
+    let token_list'' = eat token_list' in
+    let expression, token_list'' = parse token_list''
+    in { _type = "AssignmentExpression"; binding; expression }, token_list''
+  )
 end
 
 
