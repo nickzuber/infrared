@@ -5,15 +5,15 @@ open Loc
 let report ~msg ~level =
   match level with
   | Level.High ->
-    print_endline("\n😲  FatalError: " ^ msg)
+    print_endline("\n🆘  \x1b[1;31mFatal Error\x1b[0;39m — " ^ msg)
   | Level.Med ->
-      print_endline("\n😰  Error: " ^ msg)
+    print_endline("\n🚫  \x1b[1;31mError\x1b[0;39m — " ^ msg)
   | Level.Low ->
-      print_endline("\n🙆  Warning: " ^ msg)
+    print_endline("\n🚸  \x1b[1;33mWarning\x1b[0;39m — " ^ msg)
   | Level.SyntaxError ->
-    print_endline("\n💥  SyntaxError: " ^ msg)
+    print_endline("\n🅾️  \x1b[1;31mSyntax Error\x1b[0;39m — " ^ msg)
   | Level.ParseError ->
-    print_endline("\n💩  ParseError: " ^ msg)
+    print_endline("\n⭕️  \x1b[1;31mParsing Error\x1b[0;39m — " ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
@@ -37,7 +37,7 @@ let exposed_error ~source ~loc ~msg =
     ) 1 lines
   in Printf.sprintf "\
     Error was found in \x1b[4;33m%s\x1b[0;39m at %d:%d\n\
-    \x1b[35m❯\x1b[39m %s\n\n\
+    \x1b[35m❯\x1b[39m \x1b[3m%s\x1b[0m\n\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │\x1b[39m %s\n\
