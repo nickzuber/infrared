@@ -5,19 +5,20 @@ open Loc
 let report ~msg ~level =
   match level with
   | Level.High ->
-    print_endline("\n🆘  \x1b[1;31mFatal Error\x1b[0;39m — " ^ msg)
+    print_endline("\n\x1b[1;97;41m FATAL ERROR \x1b[0;39;0m " ^ msg)
   | Level.Med ->
-    print_endline("\n🚫  \x1b[1;31mError\x1b[0;39m — " ^ msg)
+    print_endline("\n\x1b[1;97;101m ERROR \x1b[0;39;0m " ^ msg)
   | Level.Low ->
-    print_endline("\n🚸  \x1b[1;33mWarning\x1b[0;39m — " ^ msg)
+    print_endline("\n\x1b[1;30;43m WARNING \x1b[0;39;0m " ^ msg)
   | Level.SyntaxError ->
-    print_endline("\n🅾️  \x1b[1;31mSyntax Error\x1b[0;39m — " ^ msg)
+    print_endline("\n\x1b[1;97;101m SYNTAX ERROR \x1b[0;39;0m " ^ msg)
   | Level.ParseError ->
-    print_endline("\n⭕️  \x1b[1;31mParsing Error\x1b[0;39m — " ^ msg)
+    print_endline("\n\x1b[1;97;101m PARSING ERROR \x1b[0;39;0m " ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
 let exposed_error ~source ~loc ~msg =
+  let source_path, source_file = Utils.depath source in
   let most_upper_line = ref "" in
   let upper_line = ref "" in
   let offending_line = ref "" in
@@ -36,15 +37,16 @@ let exposed_error ~source ~loc ~msg =
       cur_line + 1
     ) 1 lines
   in Printf.sprintf "\
-    Error was found in \x1b[4;33m%s\x1b[0;39m at %d:%d\n\
-    \x1b[35m❯\x1b[39m \x1b[3m%s\x1b[0m\n\n\
+    %s\x1b[1m%s\x1b[0m \x1b[90m(%d:%d)\x1b[39m\n\n\
+    \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │\x1b[39m %s\n\
    \x1b[90m     │\x1b[31m%s\x1b[39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n"
-    source
+    source_file
+    source_path
     loc.line
     loc.column
     msg

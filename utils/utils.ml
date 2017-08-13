@@ -1,5 +1,7 @@
 (* Generic Stack data structure *)
 
+exception PopFromEmptyList
+
 module Stack : sig
   type 'a t = Node of 'a * 'a t | Nil
   val create : 'a -> 'a t
@@ -39,3 +41,19 @@ let rest l =
   match l with
   | _ :: r -> r
   | _ -> l
+
+let pop_last_element lst =
+  let rec loop original rest =
+    match original with
+    | [] -> raise PopFromEmptyList
+    | hd :: [] -> hd, rest
+    | hd :: tl -> loop tl (rest @ [hd])
+  in loop lst []
+
+(* Split a path into two parts; the target and its path 
+ * Eg. `path/to/some/file` -> `path/to/some/`, `file` *)
+let depath path = Core.Std.(
+  let parts = String.split_on_chars ~on:['/'] path in
+  let target, rest_of_path = pop_last_element parts in
+  let rest_of_path_string = String.concat ~sep:"/" rest_of_path
+  in target, rest_of_path_string ^ "/")
