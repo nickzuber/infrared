@@ -51,9 +51,7 @@ end = struct
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
     | Identifier _
-    | Variable _ 
-      ->
-      (*let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in*)
+    | Variable _ ->
       let node, token_list'' = Statement_parser.parse token_list in
       let wrapped_node = Ast.Module.Statement node in
       let ast_nodes' = wrapped_node :: ast_nodes in
@@ -63,7 +61,7 @@ end = struct
     | Comment -> parse_items token_list' ast_nodes
     | _ ->
       let tok = lazy_token_to_string token in
-      let msg = "We haven't implemented a way to parse this token yet in Module items: " ^ tok in
+      let msg = "We haven't implemented a way to parse this token yet in Module items\n\n\t " ^ tok in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
       raise (Unimplemented err)
 end
@@ -101,10 +99,10 @@ end = struct
           (* Pass in the original token_list to keep the identifier token *)
           let node, token_list'' = Expression_parser.create_assignment_expression ~name:name token_list in
           let node' = Ast.Expression.AssignmentExpression node in
-          let ast_node = create_expression_statement node' in
+          let ast_node = create_expression_statement node' in  (* Wrap node in ExpressionStatement *)
           ast_node, token_list''
         | Operator op when op = Token.Comma ->
-          let msg = "Comma" in
+          let msg = "Comma in identifier statement" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
           in raise (Unimplemented err)
         | _ -> 
@@ -158,7 +156,7 @@ and Expression_parser : sig
   val parse : ?early_bail_token:Token.t' option -> Token.t list -> Ast.Expression.t * Token.t list
   val parse_rest_of_expression : ?early_bail_token:Token.t' option -> Ast.Expression.t -> Token.t list -> Ast.Expression.t * Token.t list
   val parse_arguments : ?arguments_so_far:Ast.Arguments.arguments list -> Token.t list -> Ast.Arguments.arguments list
-  val parse_binary_expression : Ast.Expression.t -> Token.t list -> Ast.BinaryExpression.t * Token.t list
+  val parse_binary_expression : Ast.Expression.t -> ?early_bail_token:Token.t' option -> Token.t list -> Ast.BinaryExpression.t * Token.t list
 end = struct
   let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
 
@@ -233,19 +231,19 @@ end = struct
   let rec parse ?(early_bail_token=None) token_list = Expression.(
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
-    | Number value -> 
+    | Number value ->
       let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Identifier name ->
       let ast_node = (IdentifierExpression (create_identifier_literal ~name:name token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
-    | Bool -> 
+    | Bool ->
       let ast_node = (LiteralBooleanExpression (create_boolean_literal token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Expression inner_token_list ->
       let ast_node, _ = parse inner_token_list
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
-    | _ -> 
+    | _ ->
       let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n  \
         This doesn't necessarily mean this token is valid." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
@@ -264,9 +262,11 @@ end = struct
         | _ -> 
           begin
             match token.body with
+            (* | Operator op when op = Assignment ->
+              assignment expression, remember these have an early_bail_token of a comma (at least?) *)
             | Operator op when is_binop op ->
                 (* Pass in initial token_list to preserve the binop *)
-                let expr, token_list'' = (parse_binary_expression last_node token_list) in
+                let expr, token_list'' = (parse_binary_expression last_node ~early_bail_token:early_bail_token token_list) in
                 parse_rest_of_expression (Expression.BinaryExpression expr) token_list''
             | Expression inner_token_list ->
               let callee = Ast.CallExpression.Expression last_node in
@@ -304,11 +304,11 @@ end = struct
         in parse_arguments ~arguments_so_far:arguments_so_far' token_list''
       end)
 
-  and parse_binary_expression left token_list = BinaryExpression.(
+  and parse_binary_expression left ?(early_bail_token=None) token_list = BinaryExpression.(
     (* Pop the binop *)
     let op_token, token_list' = optimistic_pop_token token_list in
     let operator = create_binary_operator op_token in
-    let right, token_list'' = parse token_list'
+    let right, token_list'' = parse ~early_bail_token:early_bail_token token_list'
     in { _type = "BinaryExpression"; left; operator; right }, token_list'')
 
     let create_assignment_target_identifier ~name token = Ast.AssignmentTargetIdentifier.(
@@ -333,8 +333,10 @@ end = struct
     let binding, token_list' = create_assignment_target token_list in
     (* Eat the assignment token *)
     let token_list'' = eat token_list' in
-    let expression, token_list'' = parse token_list''
-    in { _type = "AssignmentExpression"; binding; expression }, token_list''
+    let bail_token = Some (Operator Comma) in
+    let expression, token_list'' = parse ~early_bail_token:bail_token token_list''
+    in Printf.printf "%s\n" (Token.lazy_token_to_string (optimistic_peek_token token_list''));
+    { _type = "AssignmentExpression"; binding; expression }, token_list''
   )
 end
 
@@ -350,7 +352,7 @@ and Variable_parser : sig
   val parse_declaration : t:Token.var_t -> Token.t list -> Ast.VariableDeclaration.t * Token.t list
   val parse_declaration_statement : t:Token.var_t -> Token.t list -> Ast.VariableDeclarationStatement.t * Token.t list
 end = struct
-  let declarator_err = "Looking for an identifier, but we found something else instead."
+  let declarator_err = "We were expecting to find an identifier here."
   let declarator_pop_err = "Looking for declarators, found no tokens."
   let declarator_op_err = "Looking for declarator list, found illegal operator."
 
