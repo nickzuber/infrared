@@ -61,7 +61,7 @@ end = struct
     | Comment -> parse_items token_list' ast_nodes
     | _ ->
       let tok = lazy_token_to_string token in
-      let msg = "We haven't implemented a way to parse this token yet in Module items\n\n\t " ^ tok in
+      let msg = "We haven't implemented a way to parse this token yet in Module items\n    " ^ tok in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
       raise (Unimplemented err)
 end
@@ -92,7 +92,7 @@ end = struct
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
     match (peek token_list') with
-    | Some next_token when is_operator next_token -> 
+    | Some next_token when is_operator next_token ->
       begin
         match next_token.body with
         | Operator op when op = Token.Assignment ->
@@ -244,7 +244,7 @@ end = struct
       let ast_node, _ = parse inner_token_list
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | _ ->
-      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n  \
+      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
         This doesn't necessarily mean this token is valid." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
       in raise (Unimplemented err))
@@ -334,8 +334,7 @@ end = struct
     (* Eat the assignment token *)
     let token_list'' = eat token_list' in
     let bail_token = Some (Operator Comma) in
-    let expression, token_list'' = parse ~early_bail_token:bail_token token_list''
-    in Printf.printf "%s\n" (Token.lazy_token_to_string (optimistic_peek_token token_list''));
+    let expression, token_list'' = parse ~early_bail_token:bail_token token_list'' in
     { _type = "AssignmentExpression"; binding; expression }, token_list''
   )
 end

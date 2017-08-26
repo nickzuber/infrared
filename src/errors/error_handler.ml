@@ -37,7 +37,7 @@ let exposed_error ~source ~loc ~msg =
       cur_line + 1
     ) 1 lines
   in Printf.sprintf "\
-    %s\x1b[35;1m%s\x1b[39;0m \x1b[90m(%d:%d)\x1b[39m\n\n\
+    %s\x1b[1m%s\x1b[0m \x1b[90m(%d:%d)\x1b[39m\n\n\
     \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │ %s\n\
