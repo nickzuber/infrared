@@ -80,6 +80,5 @@ let _ = Token_parser.(
   try
     InfraredShell.main ()
   with 
-  | Unimplemented e -> Error_handler.(report e Level.Med)
+  | Unimplemented e -> Error_handler.(report e Level.UnknownError)
   | ParsingError e -> Error_handler.(report e Level.ParseError))
-

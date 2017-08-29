@@ -1,17 +1,17 @@
 
 'use strict'
 
-// VariableDeclarations
-let foo = 1
+// // VariableDeclarations
+// let foo = 1
 
-// VariableDeclarations
-let foo, bar = 1
+// // VariableDeclarations
+// let foo, bar = 1
 
-// BinaryExpressions and VariableDeclarations
-const foo, bar, baz = 1 - i + (3 * 5) / 5
+// // BinaryExpressions and VariableDeclarations
+// const foo, bar, baz = 1 - i + (3 * 5) / 5
 
 // CallExpressions and SpreadElements
-const item = foo((2 + 3), baz, 1 + 2, ...bar)
+const item = foo((2 + 3), baz, 1 - 2, ...bar)
 
 // IdentifierExpression
 foo

@@ -6,4 +6,5 @@ type t =
   | Low
   | SyntaxError
   | ParseError
+  | UnknownError
 

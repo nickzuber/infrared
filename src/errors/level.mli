@@ -1,1 +1,1 @@
-type t = High | Med | Low | SyntaxError | ParseError
+type t = High | Med | Low | SyntaxError | ParseError | UnknownError

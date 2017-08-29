@@ -36,6 +36,18 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
   | Some token -> token
   | None -> raise (ParsingError err)
 
+(* If given token matches the top of the token list, we remove
+ * that token from the top of the list. *)
+let eat_if_on_top maybe_token_body token_list =
+  if List.length token_list = 0 then
+    token_list
+  else
+    begin
+      let top_token = optimistic_peek_token token_list in
+      match maybe_token_body with
+      | Some token_body when token_body = top_token.body -> eat token_list
+      | _ -> token_list
+    end
 
 
 (* 
@@ -241,10 +253,11 @@ end = struct
       let ast_node = (LiteralBooleanExpression (create_boolean_literal token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Expression inner_token_list ->
+      (* No bail token here intentionally *)
       let ast_node, _ = parse inner_token_list
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | _ ->
-      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
+      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n    \
         This doesn't necessarily mean this token is valid." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
       in raise (Unimplemented err))
@@ -256,9 +269,9 @@ end = struct
       begin
         let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
         (* See if we want to bail out of this method early.
-           NOTE: Early bailing currently eats the bailed token. *)
+           NOTE: Early bailing currently does NOT eat the bailed token. *)
         match early_bail_token with
-        | Some bail_token when bail_token = token.body -> last_node, token_list'
+        | Some bail_token when bail_token = token.body -> last_node, token_list
         | _ -> 
           begin
             match token.body with
@@ -267,7 +280,7 @@ end = struct
             | Operator op when is_binop op ->
                 (* Pass in initial token_list to preserve the binop *)
                 let expr, token_list'' = (parse_binary_expression last_node ~early_bail_token:early_bail_token token_list) in
-                parse_rest_of_expression (Expression.BinaryExpression expr) token_list''
+                parse_rest_of_expression (Expression.BinaryExpression expr) ~early_bail_token:early_bail_token token_list''
             | Expression inner_token_list ->
               let callee = Ast.CallExpression.Expression last_node in
               let arguments = parse_arguments inner_token_list in
@@ -293,12 +306,14 @@ end = struct
           (* SpreadElement *)
           | Spread ->
             let expression, token_list'' = parse ~early_bail_token:bail_token token_list' in
+            let token_list'' = eat_if_on_top bail_token token_list'' in
             let ast_node = create_spread_element ~expression:expression token in
             (Ast.Arguments.SpreadElement ast_node), token_list''
           (* Expression *)
           | _ -> 
             (* Pass in original token_list to preserve the token we popped *)
             let ast_node, token_list'' = parse ~early_bail_token:bail_token token_list in
+            let token_list'' = eat_if_on_top bail_token token_list'' in
             (Ast.Arguments.Expression ast_node), token_list'' in
         let arguments_so_far' = ast_node :: arguments_so_far
         in parse_arguments ~arguments_so_far:arguments_so_far' token_list''
@@ -335,6 +350,7 @@ end = struct
     let token_list'' = eat token_list' in
     let bail_token = Some (Operator Comma) in
     let expression, token_list'' = parse ~early_bail_token:bail_token token_list'' in
+    (* CONTINUE *)
     { _type = "AssignmentExpression"; binding; expression }, token_list''
   )
 end

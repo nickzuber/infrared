@@ -16,6 +16,8 @@ let report ~msg ~level =
     print_endline("\n\x1b[1;97;101m SYNTAX ERROR \x1b[0;39;0m " ^ msg)
   | Level.ParseError ->
     print_endline("\n\x1b[1;97;101m PARSING ERROR \x1b[0;39;0m " ^ msg)
+  | Level.UnknownError ->
+    print_endline("\n\x1b[1;30;43m UNKNOWN ERROR \x1b[0;39;0m " ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
