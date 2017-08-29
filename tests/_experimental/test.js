@@ -17,7 +17,10 @@ const item = foo((2 + 3), baz, 1 + 2, ...bar)
 foo
 
 // AssignmentExpression
-foo = 1 + 2, 3, 4
+// foo = 1, 2
+
+// AssignmentExpression
+foo = 1 % 2, 3, 4
 
 // AssignmentExpression
 foo = bar
