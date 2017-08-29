@@ -244,8 +244,8 @@ end = struct
       let ast_node, _, _ = parse inner_token_list
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | _ ->
-      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
-        This doesn't necessarily mean this token is valid." in
+      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n    \
+        This doesn't necessarily mean this is an error, nor that it's not an error." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
       in raise (Unimplemented err))
   

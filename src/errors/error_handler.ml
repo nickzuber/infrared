@@ -1,7 +1,7 @@
 
 open Loc
 
-let use_inline_error_marking = false
+let use_inline_error_marking = true
 
 (* Reports a simple and general error *)
 let report ~msg ~level =
@@ -76,7 +76,8 @@ and expose_error_fallback ~source ~loc ~msg =
 
 (* Error message with colored markings to indicate an error.
  * const foo = var
- *              `-. var is red here
+ *              │
+ *              └── `var` is red here
  *)
 and exposed_error_with_markings ~source ~loc ~msg =
   let source_path, source_file = Utils.depath source in
@@ -100,7 +101,7 @@ and exposed_error_with_markings ~source ~loc ~msg =
     \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │ %s\n\
-    \x1b[39m%4d │ %s\x1b[31m%s\x1b[39m%s\n\
+    \x1b[39m%4d │ %s\x1b[41m%s\x1b[49m%s\n\
     \x1b[90m%4d │ %s \x1b[39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n"
     source_file
