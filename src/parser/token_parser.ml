@@ -16,9 +16,9 @@ let default_lookahead_error = "Found no tokens to lookahead when we were expecti
 (* Pop first token from token list and return the rest of the list.
  * An error is thrown if there are no tokens in the list before we pop. *)
 let optimistic_pop_token ?(err=default_pop_error) token_list =
-  let maybe_tokens = pop token_list in
+  let maybe_token = pop token_list in
   let full_token, token_list' =
-    match maybe_tokens with
+    match maybe_token with
     | Some tuple -> tuple
     | None -> raise (ParsingError err)
   in full_token, token_list'
@@ -31,8 +31,8 @@ let optimistic_peek_token ?(err=default_peek_error) token_list =
  * call this function when we're absolutely sure that we have a token to look
  * at (or are absolutely sure there _should_ be a token we want to look at) *)
 let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
-  let token = lookahead ~n:n tokens in
-  match token with
+  let maybe_token = lookahead ~n:n tokens in
+  match maybe_token with
   | Some token -> token
   | None -> raise (ParsingError err)
 
