@@ -8,6 +8,8 @@ let remove_trailing_comma str =
   else
     str
 
+
+(* Independents *)
 let pp_literal_numeric_expression node =
   let open Ast.LiteralNumericExpression in
   let json = Printf.sprintf
@@ -46,15 +48,70 @@ let pp_binary_operator node =
   | Xor -> "\"Xor\""
   | And -> "\"And\""
 
+(* Dependents *)
 let rec pp_expression node =
   let open Ast.Expression in
   let json = match node with
   | BinaryExpression node -> pp_binary_expression node
   | LiteralNumericExpression node -> pp_literal_numeric_expression node
+  | LiteralBooleanExpression node -> pp_literal_boolean_expression node
   | IdentifierExpression node -> pp_identifier_expression node
   | CallExpression node -> pp_call_expression node
+  | AssignmentExpression node -> pp_assignment_expression node
   | _ -> "\"Unimplemented Expression type\""
   in remove_trailing_comma json
+
+and pp_literal_boolean_expression node =
+  let open Ast.LiteralBooleanExpression in
+  let json = Printf.sprintf
+    "{\"LiteralBooleanExpression\": { \
+      \"value\": %s \
+    }},"
+    (string_of_bool node.value)
+  in json
+
+and pp_assignment_expression node =
+  let open Ast.AssignmentExpression in
+  let binding = pp_assignment_target node.binding in
+  let expression = pp_expression node.expression in
+  let json = Printf.sprintf
+    "{\"AssignmentExpression\": { \
+      \"binding\": %s, \
+      \"expression\": %s \
+    }},"
+    binding
+    expression
+  in json
+
+and pp_assignment_target node =
+  let open Ast.AssignmentTarget in
+  let json = match node with
+    | AssignmentTargetPattern node -> pp_assignment_target_pattern node
+    | SimpleAssignmentTarget node -> pp_simple_assignment_target node
+  in remove_trailing_comma json
+
+and pp_assignment_target_pattern node =
+  let open Ast.AssignmentTargetPattern in
+  let json = match node with
+    | ObjectAssignmentTarget node -> "\"Unimplemented ObjectAssignmentTarget\""
+    | ArrayAssignmentTarget node -> "\"Unimplemented ArrayAssignmentTarget\""
+  in remove_trailing_comma json
+
+and pp_simple_assignment_target node =
+  let open Ast.SimpleAssignmentTarget in
+  let json = match node with
+    | AssignmentTargetIdentifier node -> pp_assignment_target_identifier node
+    | MemberAssignmentTarget node -> "\"Unimplemented MemberAssignmentTarget\""
+  in remove_trailing_comma json
+
+and pp_assignment_target_identifier node =
+  let open Ast.AssignmentTargetIdentifier in
+  let json = Printf.sprintf
+    "{\"AssignmentTargetIdentifier\": { \
+      \"name\": \"%s\" \
+    }},"
+    node.name
+  in json
 
 and pp_binary_expression node =
   let open Ast.BinaryExpression in
@@ -118,7 +175,7 @@ and pp_identifier_expression node =
     node.name
   in json
 
-let pp_binding_identifier node =
+and pp_binding_identifier node =
   let open Ast.BindingIdentifier in
   let json = Printf.sprintf
     "{\"VariableDeclarator\": { \
@@ -127,7 +184,7 @@ let pp_binding_identifier node =
     node.name
   in json
 
-let pp_variable_declarator node =
+and pp_variable_declarator node =
   let open Ast.VariableDeclarator in
   let binding = pp_binding_identifier node.binding in
   let init = match node.init with
@@ -142,7 +199,7 @@ let pp_variable_declarator node =
     init
   in json
 
-let pp_variable_declaration node =
+and pp_variable_declaration node =
   let open Ast.VariableDeclaration in
   let kind = let open Ast.VariableDeclarationKind in
     match node.kind with
@@ -162,7 +219,7 @@ let pp_variable_declaration node =
     (remove_trailing_comma declarators)
   in json
 
-let pp_variable_declaration_statement node =
+and pp_variable_declaration_statement node =
   let open Ast.VariableDeclarationStatement in
   let declaration = pp_variable_declaration node.declaration in
   let json = Printf.sprintf
@@ -172,14 +229,25 @@ let pp_variable_declaration_statement node =
     (remove_trailing_comma declaration)
   in json
 
-let pp_statement node =
+and pp_statement node =
   let open Ast.Statement in
   let json = match node with
     | VariableDeclarationStatement node -> pp_variable_declaration_statement node
+    | ExpressionStatement node -> pp_expression_statement node
     | _ -> "\"Unimplemented Statement type\""
   in remove_trailing_comma json
 
-let pp_directive node =
+and pp_expression_statement node =
+  let open Ast.ExpressionStatement in
+  let expression = pp_expression node.expression in
+  let json = Printf.sprintf
+    "{\"ExpressionStatement\": { \
+      \"expression\": %s \
+    }},"
+    (remove_trailing_comma expression)
+  in json
+
+and pp_directive node =
   let open Ast.Directive in
   let json = Printf.sprintf
     "{\"Directive\": { \
@@ -188,7 +256,7 @@ let pp_directive node =
     node.rawValue
   in json
 
-let pp_module node =  
+and pp_module node =  
   let open Ast.Module in
   let directives =
     List.fold_left
@@ -211,7 +279,7 @@ let pp_module node =
     (remove_trailing_comma items)
   in json
 
-let pp_program node =
+and pp_program node =
   let open Ast.Program in
   let json = match node with
   | Module node -> pp_module node

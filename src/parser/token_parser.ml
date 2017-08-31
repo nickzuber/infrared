@@ -36,19 +36,25 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
   | Some token -> token
   | None -> raise (ParsingError err)
 
-(* If given token matches the top of the token list, we remove
- * that token from the top of the list. *)
-let eat_if_on_top maybe_token_body token_list =
+(* ... *)
+let match_top_token maybe_token_body token_list =
   if List.length token_list = 0 then
-    token_list
+    false
   else
     begin
       let top_token = optimistic_peek_token token_list in
       match maybe_token_body with
-      | Some token_body when token_body = top_token.body -> eat token_list
-      | _ -> token_list
+      | Some token_body when token_body = top_token.body -> true
+      | _ -> false
     end
 
+(* If given token matches the top of the token list, we remove
+ * that token from the top of the list. *)
+let eat_if_on_top maybe_token_body token_list =
+  if match_top_token maybe_token_body token_list then
+    eat token_list
+  else
+    token_list
 
 (* 
   Module
@@ -109,10 +115,19 @@ end = struct
         match next_token.body with
         | Operator op when op = Token.Assignment ->
           (* Pass in the original token_list to keep the identifier token *)
-          let node, token_list'' = Expression_parser.create_assignment_expression ~name:name token_list in
+          let node, token_list'', bailed_early_for_comma = Expression_parser.create_assignment_expression ~name:name token_list in
           let node' = Ast.Expression.AssignmentExpression node in
-          let ast_node = create_expression_statement node' in  (* Wrap node in ExpressionStatement *)
-          ast_node, token_list''
+          (* Create a binary expression with this comma, assignment expression on the left *)
+          let ast_node, token_list''' = if bailed_early_for_comma then
+            (* ... *)
+            let node, token_list''' = Expression_parser.create_binary_expression node' token_list'' in
+            let wrapped_node = Expression.BinaryExpression node
+            (* Wrap node in ExpressionStatement *)
+            in create_expression_statement wrapped_node, token_list'''
+          else
+            (* Wrap node in ExpressionStatement *)
+            create_expression_statement node', token_list''
+          in ast_node, token_list'''
         | Operator op when op = Token.Comma ->
           let msg = "Comma in identifier statement" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
@@ -157,7 +172,7 @@ and Expression_parser : sig
   val parsing_pop_err : string
   val is_binop : Token.ops -> bool
   val create_assignment_target : Token.t list -> Ast.AssignmentTarget.t * Token.t list
-  val create_assignment_expression : name:string -> Token.t list -> Ast.AssignmentExpression.t * Token.t list
+  val create_assignment_expression : name:string -> Token.t list -> Ast.AssignmentExpression.t * Token.t list * bool
   val create_identifier_expression : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
   val create_binary_operator : Token.t -> Ast.BinaryOperator.t
   val create_number_literal : value:float -> 'a -> Ast.LiteralNumericExpression.t
@@ -168,7 +183,7 @@ and Expression_parser : sig
   val parse : ?early_bail_token:Token.t' option -> Token.t list -> Ast.Expression.t * Token.t list
   val parse_rest_of_expression : ?early_bail_token:Token.t' option -> Ast.Expression.t -> Token.t list -> Ast.Expression.t * Token.t list
   val parse_arguments : ?arguments_so_far:Ast.Arguments.arguments list -> Token.t list -> Ast.Arguments.arguments list
-  val parse_binary_expression : Ast.Expression.t -> ?early_bail_token:Token.t' option -> Token.t list -> Ast.BinaryExpression.t * Token.t list
+  val create_binary_expression : Ast.Expression.t -> ?early_bail_token:Token.t' option -> Token.t list -> Ast.BinaryExpression.t * Token.t list
 end = struct
   let parsing_pop_err = default_pop_error ^ " when parsing an Expression."
 
@@ -279,7 +294,7 @@ end = struct
               assignment expression, remember these have an early_bail_token of a comma (at least?) *)
             | Operator op when is_binop op ->
                 (* Pass in initial token_list to preserve the binop *)
-                let expr, token_list'' = (parse_binary_expression last_node ~early_bail_token:early_bail_token token_list) in
+                let expr, token_list'' = (create_binary_expression last_node ~early_bail_token:early_bail_token token_list) in
                 parse_rest_of_expression (Expression.BinaryExpression expr) ~early_bail_token:early_bail_token token_list''
             | Expression inner_token_list ->
               let callee = Ast.CallExpression.Expression last_node in
@@ -309,7 +324,6 @@ end = struct
             let token_list'' = eat_if_on_top bail_token token_list'' in
             let ast_node = create_spread_element ~expression:expression token in
             (Ast.Arguments.SpreadElement ast_node), token_list''
-          (* Expression *)
           | _ -> 
             (* Pass in original token_list to preserve the token we popped *)
             let ast_node, token_list'' = parse ~early_bail_token:bail_token token_list in
@@ -319,7 +333,9 @@ end = struct
         in parse_arguments ~arguments_so_far:arguments_so_far' token_list''
       end)
 
-  and parse_binary_expression left ?(early_bail_token=None) token_list = BinaryExpression.(
+  (* NOTE: We pass in the token_list with the binop on top, we don't try to explicitly pass
+   * the binop ourselves. *)
+  and create_binary_expression left ?(early_bail_token=None) token_list = BinaryExpression.(
     (* Pop the binop *)
     let op_token, token_list' = optimistic_pop_token token_list in
     let operator = create_binary_operator op_token in
@@ -350,8 +366,8 @@ end = struct
     let token_list'' = eat token_list' in
     let bail_token = Some (Operator Comma) in
     let expression, token_list'' = parse ~early_bail_token:bail_token token_list'' in
-    (* CONTINUE *)
-    { _type = "AssignmentExpression"; binding; expression }, token_list''
+    let bailed_early_for_comma = match_top_token bail_token token_list'' in
+    { _type = "AssignmentExpression"; binding; expression }, token_list'', bailed_early_for_comma
   )
 end
 
