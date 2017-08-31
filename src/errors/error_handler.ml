@@ -7,17 +7,17 @@ let use_inline_error_marking = true
 let report ~msg ~level =
   match level with
   | Level.High ->
-    print_endline("\n\x1b[1;97;41m FATAL ERROR \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;97;41m fatal error \x1b[0;39;0m " ^ msg)
   | Level.Med ->
-    print_endline("\n\x1b[1;97;101m ERROR \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;97;101m error \x1b[0;39;0m " ^ msg)
   | Level.Low ->
-    print_endline("\n\x1b[1;30;43m WARNING \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;30;43m warning \x1b[0;39;0m " ^ msg)
   | Level.SyntaxError ->
-    print_endline("\n\x1b[1;97;101m SYNTAX ERROR \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;97;101m syntax error \x1b[0;39;0m " ^ msg)
   | Level.ParseError ->
-    print_endline("\n\x1b[1;97;101m PARSING ERROR \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;97;101m parsing error \x1b[0;39;0m " ^ msg)
   | Level.UnknownError ->
-    print_endline("\n\x1b[1;30;43m UNKNOWN ERROR \x1b[0;39;0m " ^ msg)
+    print_endline("\n\x1b[1;30;43m unknown error \x1b[0;39;0m " ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
