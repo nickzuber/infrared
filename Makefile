@@ -37,8 +37,12 @@ e-test-s:
 e-test-p:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 
+
+view:
+	node viewer/app.js
+
 clean:
 	$(OCB) -clean
 
-.PHONY: all run infrared test generate_tests clean 
+.PHONY: all run infrared test generate_tests view clean 
 

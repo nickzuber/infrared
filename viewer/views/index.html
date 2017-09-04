@@ -41,7 +41,7 @@ var tree = d3.cluster()
 var stratify = d3.stratify()
     .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
 
-d3.json("https://github.com/nickzuber/infrared/blob/master/tests/_experimental/test.exp", function(error, treeData) {
+d3.json("test.json", function(error, treeData) {
   if (error) throw error;
 
   var root = d3.hierarchy(treeData);

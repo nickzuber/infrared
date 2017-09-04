@@ -1,0 +1,12 @@
+{
+  "name": "viewer",
+  "version": "1.0.0",
+  "main": "app.js",
+	"scripts": {
+		"app": "node app.js"
+	},
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
