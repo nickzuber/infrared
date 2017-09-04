@@ -14,6 +14,7 @@ let pp_literal_numeric_expression node =
   let open Ast.LiteralNumericExpression in
   let json = Printf.sprintf
     "{\"LiteralNumericExpression\": { \
+      \"type\": \"LiteralNumericExpression\", \
       \"value\": %f \
     }},"
     node.value
@@ -65,6 +66,7 @@ and pp_literal_boolean_expression node =
   let open Ast.LiteralBooleanExpression in
   let json = Printf.sprintf
     "{\"LiteralBooleanExpression\": { \
+      \"type\": \"LiteralBooleanExpression\", \
       \"value\": %s \
     }},"
     (string_of_bool node.value)
@@ -76,6 +78,7 @@ and pp_assignment_expression node =
   let expression = pp_expression node.expression in
   let json = Printf.sprintf
     "{\"AssignmentExpression\": { \
+      \"type\": \"AssignmentExpression\", \
       \"binding\": %s, \
       \"expression\": %s \
     }},"
@@ -108,6 +111,7 @@ and pp_assignment_target_identifier node =
   let open Ast.AssignmentTargetIdentifier in
   let json = Printf.sprintf
     "{\"AssignmentTargetIdentifier\": { \
+      \"type\": \"AssignmentTargetIdentifier\", \
       \"name\": \"%s\" \
     }},"
     node.name
@@ -120,6 +124,7 @@ and pp_binary_expression node =
   let right = pp_expression node.right in
   let json = Printf.sprintf
     "{\"BinaryExpression\": { \
+      \"type\": \"BinaryExpression\", \
       \"left\": %s, \
       \"operator\": %s, \
       \"right\": %s \
@@ -142,6 +147,7 @@ and pp_call_expression node =
       "" node.arguments in
   let json = Printf.sprintf
     "{\"CallExpression\": { \
+      \"type\": \"CallExpression\", \
       \"callee\": %s, \
       \"arguments\": [%s] \
     }},"
@@ -161,6 +167,7 @@ and pp_spread_element node =
   let expression = pp_expression node.expression in
   let json = Printf.sprintf
     "{\"SpreadElement\": { \
+      \"type\": \"SpreadElement\", \
       \"expression\": %s \
     }},"
     expression
@@ -170,6 +177,7 @@ and pp_identifier_expression node =
   let open Ast.IdentifierExpression in
   let json = Printf.sprintf
     "{\"IdentifierExpression\": { \
+      \"type\": \"IdentifierExpression\", \
       \"name\": \"%s\" \
     }},"
     node.name
@@ -178,7 +186,8 @@ and pp_identifier_expression node =
 and pp_binding_identifier node =
   let open Ast.BindingIdentifier in
   let json = Printf.sprintf
-    "{\"VariableDeclarator\": { \
+    "{\"BindingIdentifier\": { \
+      \"type\": \"BindingIdentifier\", \
       \"name\": \"%s\" \
     }},"
     node.name
@@ -192,6 +201,7 @@ and pp_variable_declarator node =
     | None -> "null" in
   let json = Printf.sprintf
     "{\"VariableDeclarator\": { \
+      \"type\": \"VariableDeclarator\", \
       \"binding\": %s, \
       \"init\": [%s] \
     }},"
@@ -212,6 +222,7 @@ and pp_variable_declaration node =
       "" node.declarators in
   let json = Printf.sprintf
     "{\"VariableDeclaration\": { \
+      \"type\": \"VariableDeclaration\", \
       \"kind\": %s, \
       \"declarators\": [%s] \
     }},"
@@ -224,6 +235,7 @@ and pp_variable_declaration_statement node =
   let declaration = pp_variable_declaration node.declaration in
   let json = Printf.sprintf
     "{\"VariableDeclarationStatement\": { \
+      \"type\": \"VariableDeclarationStatement\", \
       \"declaration\": %s \
     }},"
     (remove_trailing_comma declaration)
@@ -242,6 +254,7 @@ and pp_expression_statement node =
   let expression = pp_expression node.expression in
   let json = Printf.sprintf
     "{\"ExpressionStatement\": { \
+      \"type\": \"ExpressionStatement\", \
       \"expression\": %s \
     }},"
     (remove_trailing_comma expression)
@@ -251,6 +264,7 @@ and pp_directive node =
   let open Ast.Directive in
   let json = Printf.sprintf
     "{\"Directive\": { \
+      \"type\": \"Directive\", \
       \"rawValue\": \"%s\" \
     }},"
     node.rawValue
@@ -272,6 +286,7 @@ and pp_module node =
       "" node.items in
   let json = Printf.sprintf
     "{\"Module\": { \
+      \"type\": \"Module\", \
       \"directives\": [%s], \
       \"items\": [%s] \
     }}"

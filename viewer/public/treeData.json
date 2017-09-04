@@ -1,0 +1,226 @@
+{
+    "name": "Module",
+    "children": [
+        {
+            "name": "VariableDeclarationStatement",
+            "children": [
+                {
+                    "name": "VariableDeclaration",
+                    "children": [
+                        {
+                            "name": "VariableDeclarator",
+                            "children": [
+                                {
+                                    "name": "BindingIdentifier",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "VariableDeclarator",
+                            "children": [
+                                {
+                                    "name": "BindingIdentifier",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "VariableDeclarator",
+                            "children": [
+                                {
+                                    "name": "BindingIdentifier",
+                                    "children": []
+                                },
+                                {
+                                    "name": "BinaryExpression",
+                                    "children": [
+                                        {
+                                            "name": "LiteralNumericExpression",
+                                            "children": []
+                                        },
+                                        {
+                                            "name": "BinaryExpression",
+                                            "children": [
+                                                {
+                                                    "name": "IdentifierExpression",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "name": "BinaryExpression",
+                                                    "children": [
+                                                        {
+                                                            "name": "BinaryExpression",
+                                                            "children": [
+                                                                {
+                                                                    "name": "LiteralNumericExpression",
+                                                                    "children": []
+                                                                },
+                                                                {
+                                                                    "name": "LiteralNumericExpression",
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "LiteralNumericExpression",
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "VariableDeclarationStatement",
+            "children": [
+                {
+                    "name": "VariableDeclaration",
+                    "children": [
+                        {
+                            "name": "VariableDeclarator",
+                            "children": [
+                                {
+                                    "name": "BindingIdentifier",
+                                    "children": []
+                                },
+                                {
+                                    "name": "BinaryExpression",
+                                    "children": [
+                                        {
+                                            "name": "LiteralNumericExpression",
+                                            "children": []
+                                        },
+                                        {
+                                            "name": "BinaryExpression",
+                                            "children": [
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "VariableDeclarationStatement",
+            "children": [
+                {
+                    "name": "VariableDeclaration",
+                    "children": [
+                        {
+                            "name": "VariableDeclarator",
+                            "children": [
+                                {
+                                    "name": "BindingIdentifier",
+                                    "children": []
+                                },
+                                {
+                                    "name": "CallExpression",
+                                    "children": [
+                                        {
+                                            "name": "BinaryExpression",
+                                            "children": [
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "IdentifierExpression",
+                                            "children": []
+                                        },
+                                        {
+                                            "name": "BinaryExpression",
+                                            "children": [
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "SpreadElement",
+                                            "children": [
+                                                {
+                                                    "name": "IdentifierExpression",
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "IdentifierExpression",
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ExpressionStatement",
+            "children": [
+                {
+                    "name": "BinaryExpression",
+                    "children": [
+                        {
+                            "name": "AssignmentExpression",
+                            "children": [
+                                {
+                                    "name": "AssignmentTargetIdentifier",
+                                    "children": []
+                                },
+                                {
+                                    "name": "LiteralNumericExpression",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "BinaryExpression",
+                            "children": [
+                                {
+                                    "name": "LiteralNumericExpression",
+                                    "children": []
+                                },
+                                {
+                                    "name": "LiteralNumericExpression",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

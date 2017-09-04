@@ -8,7 +8,7 @@ const _port = 8080
 const app = express()
 
 // Allow access to file directory
-app.use(express.static(path.join(__dirname, 'scripts')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Set up routes
 app.get('/', (req, res) => res.sendFile(`${__dirname}/views/index.html`))

@@ -33,13 +33,15 @@ generate-tests:
 e-test:
 	./infrared.native parse tests/_experimental/test.js
 e-test-s:
-	./infrared.native parse tests/_experimental/test.js | python -m json.tool > tests/_experimental/test.exp
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool > tests/_experimental/test.json
 e-test-p:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 
 
 view:
+	node viewer/ast_to_treedata.js > viewer/public/treeData.json && \
 	node viewer/app.js
+
 
 clean:
 	$(OCB) -clean
