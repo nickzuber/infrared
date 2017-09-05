@@ -24,4 +24,6 @@ function createTreeNode (astNode) {
 
 const treeNode = createTreeNode(ast)
 
+// Logging here prints to stdout which we pipe into a file later
+// Kinda jank but does the job
 console.log(JSON.stringify(treeNode, null, 4))
