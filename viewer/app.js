@@ -15,5 +15,5 @@ app.get('/', (req, res) => res.sendFile(`${__dirname}/views/index.html`))
 app.get('*', (req, res) => res.send('404 error: page not found'))
 
 // Create server
-app.listen(port, () => console.log(`Ready on port ${port}...))
+app.listen(port, () => console.log(`Ready on port ${port}...`))
 
