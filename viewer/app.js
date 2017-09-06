@@ -3,7 +3,7 @@
 const express = require('express')
 const path = require('path')
 
-const _port = 8080
+const port = 8080
 
 const app = express()
 
@@ -15,7 +15,5 @@ app.get('/', (req, res) => res.sendFile(`${__dirname}/views/index.html`))
 app.get('*', (req, res) => res.send('404 error: page not found'))
 
 // Create server
-app.listen(_port, function(){
-	console.log('Ready on port ' + _port + '...')
-})
+app.listen(port, () => console.log(`Ready on port ${port}...))
 
