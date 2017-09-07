@@ -34,6 +34,7 @@ e-test:
 	./infrared.native parse tests/_experimental/test.js
 e-test-s:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool > tests/_experimental/test.json
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
 e-test-p:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 

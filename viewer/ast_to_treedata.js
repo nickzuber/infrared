@@ -37,8 +37,12 @@ function addDescription (node) {
             return node.name
         case 'BinaryExpression':
             return node.operator
+        case 'VariableDeclaration':
+            return node.kind
+        case 'Directive':
+            return node.rawValue
         default:
-            return ''
+            return null
     }
 }
 
