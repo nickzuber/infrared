@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <title>AST Viewer</title>
+  <title>Infrared – AST Viewer</title>
   <style>
   @import url('https://rsms.me/interface/interface.css');
   
+  svg {
+    padding: 0 100px;
+  }
+
   .node circle {
     fill: #EB3349;
     stroke: #ffaaae;
-    stroke-width: 4px;
+    stroke-width: 5px;
   }
 
-  .node text {
+  text {
     fill: #32383E;
     font: 14px Interface, sans-serif;
+    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  }
+
+  .link-text {
+    fill: #2D99D3 !important;
   }
 
   .description {
     fill: #9CAFBE !important;
-  }
-
-  .node--internal text {
-    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
   }
 
   .link {
@@ -35,73 +40,74 @@
 </head>
 <body>
 
-<!-- load the d3.js library -->      
-<script src="//d3js.org/d3.v4.min.js"></script>
+<!-- 
+  load the d3.js library
+  note that we use v3.5.17
+-->      
+<script src="./d3.min.js"></script>
 
 <script>
-
+// https://stackoverflow.com/questions/24360847/i-want-to-add-text-on-the-link-in-d3-js-tree-graph
 const WIDTH_OF_VIEWER = 5000
 const HEIGHT_OF_VIEWER = 1000
 
+var tree = d3.layout.tree()
+    .size([HEIGHT_OF_VIEWER, WIDTH_OF_VIEWER - 160]);
 
-// set the dimensions and margins of the diagram
-var margin = { top: 20, right: 90, bottom: 30, left: 90 },
-    width = WIDTH_OF_VIEWER - margin.left - margin.right,
-    height = HEIGHT_OF_VIEWER - margin.top - margin.bottom;
+var diagonal = d3.svg.diagonal()
+    .projection(function (d) {
+        return [d.y, d.x];
+    });
 
-// declares a tree layout and assigns the size
-var treemap = d3.tree()
-  .size([height, width]);
+var svg = d3.select("body").append("svg")
+    .attr("width", WIDTH_OF_VIEWER)
+    .attr("height", HEIGHT_OF_VIEWER)
+    .append("g")
+    .attr("transform", "translate(40,0)");
 
-// load the external data
 d3.json("treeData.json", function(error, treeData) {
   if (error) throw error;
-  
-  // assigns the data to a hierarchy using parent-child relationships
-  var nodes = d3.hierarchy(treeData, function(d) {
-    return d.children;
-  });
 
-  // maps the node data to the tree layout
-  nodes = treemap(nodes);
+  var root = treeData,
+      nodes = tree.nodes(root),
+      links = tree.links(nodes);
 
-  // append the svg object to the body of the page
-  // appends a 'group' element to 'svg'
-  // moves the 'group' element to the top left margin
-  var svg = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom),
-    g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  
-  // adds the links between the nodes
-  var link = g.selectAll(".link")
-    .data(nodes.descendants().slice(1))
-    .enter().append("path")
-    .attr("class", "link")
-    .attr("d", function(d) {
-       return "M" + d.y + "," + d.x
-        + "C" + (d.y + d.parent.y) / 2 + "," + d.x
-        + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
-        + " " + d.parent.y + "," + d.parent.x;
-    });
+  var link = svg.selectAll(".link")
+      .data(links)
+      .enter()
+      .append("g")
+      .attr("class", "link");
 
-  // adds each node as a group
-  var node = g.selectAll(".node")
-    .data(nodes.descendants())
-    .enter().append("g")
-    .attr("class", function(d) { 
-      return "node" + (d.children ? " node--internal" : " node--leaf");
-    })
-    .attr("transform", function(d) { 
-      return "translate(" + d.y + "," + d.x + ")";
-    });
+  link.append("path")
+      .attr("fill", "none")
+      .attr("d", diagonal);
 
-  // adds the circle to the node
+  link.append("text")
+      .attr("stroke", "none")
+      .attr("fill", "none")
+      .attr("transform", function(d) {
+          return "translate(" +
+              ((d.source.y + d.target.y)/2) + "," + 
+              ((d.source.x + d.target.x)/2) + ")";
+      })   
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .attr('class', 'link-text')
+      .text(d => d.target.rule);
+
+  var node = svg.selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function (d) {
+          return "translate(" + d.y + "," + d.x + ")";
+      });
+
   node.append("circle")
-    .attr("r", 10);
+      .attr("r", 10);
 
-  // adds the text to the node
+  // adds the main text to the node
   node.append("text")
     .attr("dy", ".35em")
     .attr("x", function(d) {
@@ -110,11 +116,9 @@ d3.json("treeData.json", function(error, treeData) {
     .style("text-anchor", function(d) { 
       return d.children ? "end" : "start";
     })
-    .text(function(d) {
-      return d.data.name;
-    });
+    .text(d => d.name)
 
-  // adds the text to the node
+  // adds the description text to the node
   node.append("text")
     .attr("dy", ".35em")
     .attr("x", function(d) {
@@ -127,10 +131,8 @@ d3.json("treeData.json", function(error, treeData) {
     .style("text-anchor", function(d) { 
       return d.children ? "end" : "start";
     })
-    .text(function(d) {
-      return 'some useful data?';
-    });
+    .text(d => d.description)
 });
-    
+
 </script>
 </body>

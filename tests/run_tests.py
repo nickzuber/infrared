@@ -53,11 +53,11 @@ for job in jobs:
             # Remove error output file if one exists
             if isfile(file_actual_name):
                 remove(file_actual_name)
-            print(Colour.GREEN + u'\u2714' + " PASS " + Colour.END + path + "    ")
+            print(Colour.GREEN + u'\u2713' + " success " + Colour.END + path + "    ")
         except FailedTest as e:
             exit_with_failure = True
             obj = e.args[0]
-            print(Colour.RED + u'\u2715' + " FAIL " + Colour.END + path + ": " +
+            print(Colour.RED + u'\u2715' + " failure " + Colour.END + path + ": " +
                   Colour.LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + Colour.END)
         except:
             exit_with_failure = True
@@ -65,4 +65,6 @@ for job in jobs:
 
 # Exit non zero error code so ci fails
 if exit_with_failure:
-    raise FailedTest
+  print('')
+  raise FailedTest
+
