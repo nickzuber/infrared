@@ -48,25 +48,40 @@
 
 <script>
 // https://stackoverflow.com/questions/24360847/i-want-to-add-text-on-the-link-in-d3-js-tree-graph
-const WIDTH_OF_VIEWER = 5000
-const HEIGHT_OF_VIEWER = 1000
 
-var tree = d3.layout.tree()
-    .size([HEIGHT_OF_VIEWER, WIDTH_OF_VIEWER - 160]);
-
-var diagonal = d3.svg.diagonal()
-    .projection(function (d) {
-        return [d.y, d.x];
-    });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", WIDTH_OF_VIEWER)
-    .attr("height", HEIGHT_OF_VIEWER)
-    .append("g")
-    .attr("transform", "translate(40,0)");
+function sizeOfJSON (root) {
+  let node = root
+  function loop (node, depth) {
+    let paths = node.children.reduce((acc, child) => {
+      acc.push(loop(child, depth + 1))
+      return acc
+    }, [])
+    return Math.max(...paths, depth)
+  }
+  return loop(root, 1)
+}
 
 d3.json("treeData.json", function(error, treeData) {
   if (error) throw error;
+
+  const treeDepth = sizeOfJSON(treeData)
+
+  const WIDTH_OF_VIEWER = treeDepth * 400
+  const HEIGHT_OF_VIEWER = 1000
+
+  var tree = d3.layout.tree()
+      .size([HEIGHT_OF_VIEWER, WIDTH_OF_VIEWER - 160]);
+
+  var diagonal = d3.svg.diagonal()
+      .projection(function (d) {
+          return [d.y, d.x];
+      });
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", WIDTH_OF_VIEWER)
+      .attr("height", HEIGHT_OF_VIEWER)
+      .append("g")
+      .attr("transform", "translate(40,0)");
 
   var root = treeData,
       nodes = tree.nodes(root),
