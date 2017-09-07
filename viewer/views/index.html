@@ -49,13 +49,9 @@
 <script>
 // https://stackoverflow.com/questions/24360847/i-want-to-add-text-on-the-link-in-d3-js-tree-graph
 
-function sizeOfJSON (root) {
-  let node = root
-  function loop (node, depth) {
-    let paths = node.children.reduce((acc, child) => {
-      acc.push(loop(child, depth + 1))
-      return acc
-    }, [])
+function treeHeight (root) {
+  const loop = (node, depth) => {
+    let paths = node.children.reduce((acc, child) => acc.concat(loop(child, depth + 1)), [])
     return Math.max(...paths, depth)
   }
   return loop(root, 1)
@@ -64,9 +60,9 @@ function sizeOfJSON (root) {
 d3.json("treeData.json", function(error, treeData) {
   if (error) throw error;
 
-  const treeDepth = sizeOfJSON(treeData)
+  const height = treeHeight(treeData)
 
-  const WIDTH_OF_VIEWER = treeDepth * 400
+  const WIDTH_OF_VIEWER = height * 400
   const HEIGHT_OF_VIEWER = 1000
 
   var tree = d3.layout.tree()
