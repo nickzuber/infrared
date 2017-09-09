@@ -44,7 +44,7 @@ for job in jobs:
             file_exp = open(file_exp_name, "w")
             file_exp.write(output)
             file_exp.close()
-            print(Colour.GREEN + u'\u2714' + " done " + Colour.END + path + "    ")
+            print(Colour.GREEN + u'\u2713' + " done " + Colour.END + path + "    ")
         except FoundError:
             print(Colour.RED + u'\u2715' + " fail " + Colour.END + path + ": " + 
                   Colour.LIGHT_GRAY + "Syntax_Error or Unknown_Token encountered" + Colour.END)
