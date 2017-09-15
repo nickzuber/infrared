@@ -25,12 +25,16 @@ Since Infrared only cares about inferring and checking data types of your progra
 
 #### Greedy optimizations
 
-One thing that we do is **greedy grouping**. When we're parsing a file and we encounter a situation where we need to group nodes in a certain order, we take the greedy approach and group nodes left to right. This is different than how most JavaScript interpreters operate, which usually group nodes from right to left. 
+One thing that we do is **greedy grouping**. When we're parsing a file and we encounter a situation where we need to group nodes in a certain order, we take the greedy approach and group nodes left to right. This is different than how most JavaScript interpreters operate, which usually group nodes from right to left. Consider the following example comparing how the AST specification Shift groups nodes in a binary expression verses how we do it in Infrared.
 
 <p align="center"><img src="/.github/ast_example_text.png"></p>
 
 <img align="right" width="400px" src="/.github/ast_example_shift.png" />
 <img width="400px" src="/.github/ast_example_infrared.png" />
+
+<br /><br /><br /><br /><br />
+
+Using this greedy approach, we avoid having to make any lookahead operations. Instead of looking for the ending nodes and grouping backwards, Infrared just uses the context of the operation to march on forward, anticipating and grouping things as we go along. We sacrifice proper ordering for the speed of moving quickly. However, since all we care about are type comparisons, we can totally get away with doing this. Link to da proof why yo
 
 Overview
 --------
