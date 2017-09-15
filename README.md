@@ -14,12 +14,14 @@ Why use this?
 
 Blah.
 
-What to know about Infrared
----------------------------
+Things to Know
+--------------
+
+### Shortcuts and Tricks
 
 Since Infrared only cares about inferring and checking data types of your program, we're able to make some assumptions about certain things which help make Infrared extra fast.
 
-### Greedy optimizations
+#### Greedy optimizations
 
 One thing that we do is **greedy grouping**. When we're parsing a file and we encounter a situation where we need to group nodes in a certain order, we take the greedy approach and group nodes left to right. This is different than how most JavaScript interpreters operate, which usually group nodes from right to left. 
 
