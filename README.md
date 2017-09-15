@@ -23,8 +23,10 @@ Since Infrared only cares about inferring and checking data types of your progra
 
 One thing that we do is **greedy grouping**. When we're parsing a file and we encounter a situation where we need to group nodes in a certain order, we take the greedy approach and group nodes left to right. This is different than how most JavaScript interpreters operate, which usually group nodes from right to left. 
 
-<img src=".github/ast_example_infrared" />
-<img src=".github/ast_example_shift" />
+<p align="center"><img src="/.github/ast_example_text.png"></p>
+
+<img align="right" width="400px" src="/.github/ast_example_infrared.png" />
+<img width="400px" src="/.github/ast_example_shift.png" />
 
 Overview
 --------
