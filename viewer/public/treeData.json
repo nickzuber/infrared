@@ -11,48 +11,61 @@
             "name": "ExpressionStatement",
             "children": [
                 {
-                    "name": "AssignmentExpression",
+                    "name": "BinaryExpression",
                     "children": [
                         {
-                            "name": "AssignmentTargetIdentifier",
-                            "children": [],
-                            "description": null,
-                            "rule": "binding"
-                        },
-                        {
-                            "name": "BinaryExpression",
+                            "name": "AssignmentExpression",
                             "children": [
+                                {
+                                    "name": "AssignmentTargetIdentifier",
+                                    "children": [],
+                                    "description": null,
+                                    "rule": "binding"
+                                },
                                 {
                                     "name": "LiteralNumericExpression",
                                     "children": [],
                                     "description": 1,
-                                    "rule": "left"
-                                },
+                                    "rule": "expression"
+                                }
+                            ],
+                            "description": null,
+                            "rule": "left"
+                        },
+                        {
+                            "name": "CallExpression",
+                            "children": [
                                 {
                                     "name": "BinaryExpression",
                                     "children": [
                                         {
                                             "name": "LiteralNumericExpression",
                                             "children": [],
-                                            "description": 2,
+                                            "description": 1,
                                             "rule": "left"
                                         },
                                         {
                                             "name": "LiteralNumericExpression",
                                             "children": [],
-                                            "description": 3,
+                                            "description": 2,
                                             "rule": "right"
                                         }
                                     ],
                                     "description": "Plus",
-                                    "rule": "right"
+                                    "rule": "arguments"
+                                },
+                                {
+                                    "name": "IdentifierExpression",
+                                    "children": [],
+                                    "description": "String",
+                                    "rule": "callee"
                                 }
                             ],
-                            "description": "Plus",
-                            "rule": "expression"
+                            "description": null,
+                            "rule": "right"
                         }
                     ],
-                    "description": null,
+                    "description": "Comma",
                     "rule": "expression"
                 }
             ],

@@ -20,7 +20,7 @@
 // // a = 1 + b   ,   c    ,    d = e
 // a = 1 + b, c, d = e
 
-foo = 1 + 2 + 3
+foo = 1, String(1 + 2)
 
 // // BinaryExpression with AssignmentExpression
 // foo, bar = 2 + true
