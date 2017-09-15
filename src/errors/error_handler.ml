@@ -1,7 +1,7 @@
 
 open Loc
 
-let use_inline_error_marking = true
+let use_inline_error_marking = false
 
 (* Reports a simple and general error *)
 let report ~msg ~level =

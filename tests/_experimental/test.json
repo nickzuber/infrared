@@ -10,59 +10,49 @@
         ],
         "items": [
             {
-                "VariableDeclarationStatement": {
-                    "declaration": {
-                        "VariableDeclaration": {
-                            "declarators": [
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "BindingIdentifier": {
-                                                "name": "foo",
-                                                "type": "BindingIdentifier"
-                                            }
-                                        },
-                                        "init": [
-                                            {
-                                                "BinaryExpression": {
-                                                    "left": {
-                                                        "LiteralNumericExpression": {
-                                                            "type": "LiteralNumericExpression",
-                                                            "value": 1.0
-                                                        }
-                                                    },
-                                                    "operator": "Plus",
-                                                    "right": {
-                                                        "BinaryExpression": {
-                                                            "left": {
-                                                                "LiteralNumericExpression": {
-                                                                    "type": "LiteralNumericExpression",
-                                                                    "value": 2.0
-                                                                }
-                                                            },
-                                                            "operator": "Plus",
-                                                            "right": {
-                                                                "LiteralNumericExpression": {
-                                                                    "type": "LiteralNumericExpression",
-                                                                    "value": 3.0
-                                                                }
-                                                            },
-                                                            "type": "BinaryExpression"
-                                                        }
-                                                    },
-                                                    "type": "BinaryExpression"
-                                                }
-                                            }
-                                        ],
-                                        "type": "VariableDeclarator"
-                                    }
+                "ExpressionStatement": {
+                    "expression": {
+                        "AssignmentExpression": {
+                            "binding": {
+                                "AssignmentTargetIdentifier": {
+                                    "name": "foo",
+                                    "type": "AssignmentTargetIdentifier"
                                 }
-                            ],
-                            "kind": "Var",
-                            "type": "VariableDeclaration"
+                            },
+                            "expression": {
+                                "BinaryExpression": {
+                                    "left": {
+                                        "LiteralNumericExpression": {
+                                            "type": "LiteralNumericExpression",
+                                            "value": 1.0
+                                        }
+                                    },
+                                    "operator": "Plus",
+                                    "right": {
+                                        "BinaryExpression": {
+                                            "left": {
+                                                "LiteralNumericExpression": {
+                                                    "type": "LiteralNumericExpression",
+                                                    "value": 2.0
+                                                }
+                                            },
+                                            "operator": "Plus",
+                                            "right": {
+                                                "LiteralNumericExpression": {
+                                                    "type": "LiteralNumericExpression",
+                                                    "value": 3.0
+                                                }
+                                            },
+                                            "type": "BinaryExpression"
+                                        }
+                                    },
+                                    "type": "BinaryExpression"
+                                }
+                            },
+                            "type": "AssignmentExpression"
                         }
                     },
-                    "type": "VariableDeclarationStatement"
+                    "type": "ExpressionStatement"
                 }
             }
         ],

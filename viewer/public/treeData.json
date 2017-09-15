@@ -8,19 +8,25 @@
             "rule": "directives"
         },
         {
-            "name": "VariableDeclarationStatement",
+            "name": "ExpressionStatement",
             "children": [
                 {
-                    "name": "VariableDeclaration",
+                    "name": "AssignmentExpression",
                     "children": [
                         {
-                            "name": "VariableDeclarator",
+                            "name": "AssignmentTargetIdentifier",
+                            "children": [],
+                            "description": null,
+                            "rule": "binding"
+                        },
+                        {
+                            "name": "BinaryExpression",
                             "children": [
                                 {
-                                    "name": "BindingIdentifier",
+                                    "name": "LiteralNumericExpression",
                                     "children": [],
-                                    "description": "foo",
-                                    "rule": "binding"
+                                    "description": 1,
+                                    "rule": "left"
                                 },
                                 {
                                     "name": "BinaryExpression",
@@ -28,39 +34,26 @@
                                         {
                                             "name": "LiteralNumericExpression",
                                             "children": [],
-                                            "description": 1,
+                                            "description": 2,
                                             "rule": "left"
                                         },
                                         {
-                                            "name": "BinaryExpression",
-                                            "children": [
-                                                {
-                                                    "name": "LiteralNumericExpression",
-                                                    "children": [],
-                                                    "description": 2,
-                                                    "rule": "left"
-                                                },
-                                                {
-                                                    "name": "LiteralNumericExpression",
-                                                    "children": [],
-                                                    "description": 3,
-                                                    "rule": "right"
-                                                }
-                                            ],
-                                            "description": "Plus",
+                                            "name": "LiteralNumericExpression",
+                                            "children": [],
+                                            "description": 3,
                                             "rule": "right"
                                         }
                                     ],
                                     "description": "Plus",
-                                    "rule": "init"
+                                    "rule": "right"
                                 }
                             ],
-                            "description": null,
-                            "rule": "declarators"
+                            "description": "Plus",
+                            "rule": "expression"
                         }
                     ],
-                    "description": "Var",
-                    "rule": "declaration"
+                    "description": null,
+                    "rule": "expression"
                 }
             ],
             "description": null,
