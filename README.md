@@ -17,6 +17,8 @@ Blah.
 Things to Know
 --------------
 
+It's important to realize that Infrared is a different tool than something like [Flow](https://github.com/facebook/flow). 
+
 ### Shortcuts and Tricks
 
 Since Infrared only cares about inferring and checking data types of your program, we're able to make some assumptions about certain things which help make Infrared extra fast.
@@ -27,8 +29,8 @@ One thing that we do is **greedy grouping**. When we're parsing a file and we en
 
 <p align="center"><img src="/.github/ast_example_text.png"></p>
 
-<img align="right" width="400px" src="/.github/ast_example_infrared.png" />
-<img width="400px" src="/.github/ast_example_shift.png" />
+<img align="right" width="400px" src="/.github/ast_example_shift.png" />
+<img width="400px" src="/.github/ast_example_infrared.png" />
 
 Overview
 --------
