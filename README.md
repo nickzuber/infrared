@@ -9,10 +9,12 @@ Fast light weight inferred static type checker in real time for JavaScript.
 [![active](https://img.shields.io/badge/project-active-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/license-MIT%20Licence-blue.svg)]()
 
-Why use this?
--------------
+What Does This Do For Me?
+-------------------------
 
-Blah.
+Infrared is a tool that quickly and statically analyzes your JavaScript programs for strict type errors. In other words, we find places in your code where you're accidentally trying to do weird or illegal things with your variables and functions.
+
+A common example of this might be the infamous `undefined is not a function` type error.
 
 Things to Know
 --------------
