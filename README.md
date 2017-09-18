@@ -12,9 +12,29 @@ Fast light weight inferred static type checker in real time for JavaScript.
 What Does This Do For Me?
 -------------------------
 
-Infrared is a tool that quickly and statically analyzes your JavaScript programs for strict type errors. In other words, we find places in your code where you're accidentally trying to do weird or illegal things with your variables and functions.
+Infrared is a tool that quickly and statically analyzes your JavaScript programs for strict type errors. In other words, we find places in your code where you're accidentally that we would consider to be a mistake or a type error.
 
-A common example of this might be the infamous `undefined is not a function` type error.
+For example, we consider implicit coersions to be type errors.
+
+```js
+function add1 (n) {
+  return n + 1
+}
+
+add1('73')  // type error: add1 expects a number
+```
+
+```js
+add1('73')
+
+function add1 (n) {
+  return n + 1   // type error: tried to add 1 to a string
+}
+```
+
+Notice how the ordering of the function definition and the function call make a difference when a type is inferred. Since Infrared infers the type system all on its own, it makes assumptions about what it sees when it sees it. 
+
+In the first example, we see that there's a function named `add1` that takes a single argument called `n`. While looking at the contents of `add1`, we see that you're trying to add 1 to `n` so Infrared assumes that `n` is a number. In the second example, we see the function call of `add1('73')`, so Infrared thinks that the function `add1` takes a single argument of a string. So when we get to `return n + 1`, we think you're trying to add 1 to a string which would implicitly coerce the `1` to a string, which we already said is a type error as far as Infrared is concerned. 
 
 Things to Know
 --------------
