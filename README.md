@@ -58,7 +58,7 @@ One thing that we do is **greedy grouping**. When we're parsing a file and we en
 
 Using this greedy approach, we avoid having to make any lookahead operations. Instead of looking for the ending nodes and grouping backwards, Infrared just uses the context of the operation to march on forward, anticipating and grouping things as we go along. We sacrifice proper ordering for the speed of moving quickly. However, since all we care about are type comparisons, we can totally get away with doing this in some cases.
 
-We only would ever change the ordering of a node if it is a **binary expression**, such that it is a node that takes some nodes on the left and on the right. In the specific case of a binary expression, it's totally fine to be able to change the ordering of its left and right nodes if we want to. 
+We only would ever change the ordering of a node if it is a **binary expression**, such that it is a node that takes some nodes on the left and on the right. In the specific case of a binary expression, it's totally fine to be able to change the ordering of its left and right nodes if we want to. If you don't believe me, [see for yourself!](proofs/binary_expression_commutativity.pdf)
 
 Overview
 --------
