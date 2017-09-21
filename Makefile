@@ -1,4 +1,3 @@
-
 OCB_FLAGS = -use-ocamlfind -pkg core,batteries,ppx_deriving.show -tags thread
 OCB =       ocamlbuild $(OCB_FLAGS)
 

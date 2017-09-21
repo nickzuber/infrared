@@ -145,7 +145,7 @@ end = struct
       let ast_node = create_expression_statement node'
       in ast_node, token_list'
 
-  let parse token_list =    
+  let parse token_list =
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
     | Variable t ->
