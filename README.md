@@ -6,13 +6,7 @@
 </div>
 
 <div align="center">
-  <strong>:sparkles: Be more productive :rocket:</strong>
-</div>
-
-<div align="center">
-  <img src=".github/subheader_gray.png"
-       width="650px"
-       alt="Fast light weight inferred static type checker in real time for JavaScript" />
+  <strong>:sparkles: Fast light weight inferred static type checker in real time for JavaScript :rocket:</strong>
 </div>
 
 <br />
