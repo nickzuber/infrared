@@ -1,7 +1,7 @@
 
 <div align="center">
   <img src=".github/infrared_gray.png"
-	   width="380px"
+	   width="320px"
        alt="Infrared" />
 </div>
 
@@ -9,7 +9,8 @@
   <strong>:turtle: Collaborate and Create :sparkles:</strong>
 </div>
 <div align="center">
-  Create & share TeX snippets with rich math typesetting and markdown support.
+  <img src=".github/subheader_gray.png"
+       alt="Fast light weight inferred static type checker in real time for JavaScript" />
 </div>
 
 <br />
