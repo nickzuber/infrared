@@ -8,8 +8,12 @@
 <div align="center">
   <strong>:turtle: Collaborate and Create :sparkles:</strong>
 </div>
+
+<br />
+
 <div align="center">
   <img src=".github/subheader_gray.png"
+       width="650px"
        alt="Fast light weight inferred static type checker in real time for JavaScript" />
 </div>
 
