@@ -31,12 +31,12 @@
 
 <div align="center">
   <h3>
-    <a href="https://github.com/nickzuber/infrared">
-      Website
+    <a href="">
+      <strike>Website</strike>
     </a>
     <span> | </span>
-    <a href="https://github.com/nickzuber/infrared">
-      Handbook
+    <a href="">
+      <strike>Handbook</strike>
     </a>
     <span> | </span>
     <a href="https://github.com/nickzuber/infrared/issues">
