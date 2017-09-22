@@ -37,19 +37,19 @@
 
 <div align="center">
   <h3>
-    <a href="https://markup-app.com">
+    <a href="#">
       Website
     </a>
     <span> | </span>
-    <a href="https://khan.github.io/KaTeX/function-support.html">
+    <a href="#">
       Handbook
     </a>
     <span> | </span>
-    <a href="https://github.com/markup-app/markup/issues">
+    <a href="https://github.com/nickzuber/infrared/issues">
       Issues
     </a>
     <span> | </span>
-    <a href="https://github.com/markup-app/markup/pulls">
+    <a href="https://github.com/nickzuber/infrared/pulls">
       Contributing
     </a>
   </h3>
@@ -58,21 +58,10 @@
 <div align="center">
   <sub>Built with ❤︎ by
   <a href="https://nickzuber.com/">Nick Zuber</a> and
-  <a href="https://github.com/markup-app/markup/graphs/contributors">
+  <a href="https://github.com/nickzuber/infrared/graphs/contributors">
     contributors
   </a>
 </div>
-
-
-
-
-
-Infrared
-========
-
-Fast light weight inferred static type checker in real time for JavaScript.
-
-
 
 What Does This Do For Me?
 -------------------------
