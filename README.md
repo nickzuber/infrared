@@ -31,11 +31,11 @@
 
 <div align="center">
   <h3>
-    <a href="">
+    <a>
       <strike>Website</strike>
     </a>
     <span> | </span>
-    <a href="">
+    <a>
       <strike>Handbook</strike>
     </a>
     <span> | </span>
