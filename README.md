@@ -1,13 +1,65 @@
+
+<div align="center">
+  <img src=".github/infrared_gray.png"
+	   width="380px"
+       alt="Infrared" />
+</div>
+
+<div align="center">
+  <strong>:turtle: Collaborate and Create :sparkles:</strong>
+</div>
+<div align="center">
+  Create & share TeX snippets with rich math typesetting and markdown support.
+</div>
+
+<br />
+
+<div align="center">
+  [![state](https://img.shields.io/badge/state-work%20in%20progress-yellow.svg)]()
+  [![Build Status](https://travis-ci.org/nickzuber/infrared.svg?branch=master)]()
+  [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg)]()
+  [![active](https://img.shields.io/badge/project-active-brightgreen.svg)]()
+  [![License](https://img.shields.io/badge/license-MIT%20Licence-blue.svg)]()
+</div>
+
+<div align="center">
+  <h3>
+    <a href="https://markup-app.com">
+      Website
+    </a>
+    <span> | </span>
+    <a href="https://khan.github.io/KaTeX/function-support.html">
+      Handbook
+    </a>
+    <span> | </span>
+    <a href="https://github.com/markup-app/markup/issues">
+      Issues
+    </a>
+    <span> | </span>
+    <a href="https://github.com/markup-app/markup/pulls">
+      Contributing
+    </a>
+  </h3>
+</div>
+
+<div align="center">
+  <sub>Built with ❤︎ by
+  <a href="https://nickzuber.com/">Nick Zuber</a> and
+  <a href="https://github.com/markup-app/markup/graphs/contributors">
+    contributors
+  </a>
+</div>
+
+
+
+
+
 Infrared
 ========
 
 Fast light weight inferred static type checker in real time for JavaScript.
 
-[![state](https://img.shields.io/badge/state-work%20in%20progress-yellow.svg)]()
-[![Build Status](https://travis-ci.org/nickzuber/infrared.svg?branch=master)]()
-[![Uptime Robot status](https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg)]()
-[![active](https://img.shields.io/badge/project-active-brightgreen.svg)]()
-[![License](https://img.shields.io/badge/license-MIT%20Licence-blue.svg)]()
+
 
 What Does This Do For Me?
 -------------------------
