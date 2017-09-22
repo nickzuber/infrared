@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src=".github/infrared_gray.png"
+  <img src=".github/infrared_black.png"
 	   width="320px"
        alt="Infrared" />
 </div>
