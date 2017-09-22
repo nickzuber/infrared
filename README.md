@@ -15,11 +15,21 @@
 <br />
 
 <div align="center">
-  [![state](https://img.shields.io/badge/state-work%20in%20progress-yellow.svg)]()
-  [![Build Status](https://travis-ci.org/nickzuber/infrared.svg?branch=master)]()
-  [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg)]()
-  [![active](https://img.shields.io/badge/project-active-brightgreen.svg)]()
-  [![License](https://img.shields.io/badge/license-MIT%20Licence-blue.svg)]()
+  <a href="#">
+    <img src="https://img.shields.io/badge/state-work%20in%20progress-yellow.svg" />
+  </a>
+  <a href="#">
+    <img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" />
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg" />
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/project-active-brightgreen.svg" />
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" />
+  </a>
 </div>
 
 <div align="center">
