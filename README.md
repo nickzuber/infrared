@@ -6,10 +6,8 @@
 </div>
 
 <div align="center">
-  <strong>:turtle: Collaborate and Create :sparkles:</strong>
+  <strong>:sparkles: Be more productive :rocket:</strong>
 </div>
-
-<br />
 
 <div align="center">
   <img src=".github/subheader_gray.png"
