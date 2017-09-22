@@ -56,9 +56,24 @@
     contributors
   </a>
 </div>
+  
+# Important Notice — The Current State of Infrared
 
-What Does This Do For Me?
--------------------------
+Now don't get too excited yet young homie, Infrared is still under development. However, this means there's tons of room to [help out and contribute](https://github.com/nickzuber/infrared/pulls) if that's your jam.
+
+As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
+
+|      Components      | Approx. % Completed |
+|:--------------------:|:-------------------:|
+|       Tokenizer      |         100%        |
+|        Parser        |         40%         |
+|    Type Inference    |          0%         |
+|   JSON Transformer   |         40%         |
+|      AST Viewer      |         100%        |
+| File Watching System |        75%..?       |
+|   Testing Framework  |         90%         |
+
+# What Does This Do For Me?
 
 Infrared is a tool that quickly and statically analyzes your JavaScript programs for strict type errors. In other words, we find places in your code where you're accidentally that we would consider to be a mistake or a type error.
 
@@ -84,8 +99,7 @@ Notice how the ordering of the function definition and the function call make a 
 
 In the first example, we see that there's a function named `add1` that takes a single argument called `n`. While looking at the contents of `add1`, we see that you're trying to add 1 to `n` so Infrared assumes that `n` is a number. In the second example, we see the function call of `add1('73')`, so Infrared thinks that the function `add1` takes a single argument of a string. So when we get to `return n + 1`, we think you're trying to add 1 to a string which would implicitly coerce the `1` to a string, which we already said is a type error as far as Infrared is concerned. 
 
-Things to Know
---------------
+# Things to Know
 
 It's important to realize that Infrared is a different tool than something like [Flow](https://github.com/facebook/flow). 
 
@@ -108,22 +122,14 @@ Using this greedy approach, we avoid having to make any lookahead operations. In
 
 We only would ever change the ordering of a node if it is a **binary expression**, such that it is a node that takes some nodes on the left and on the right. In the specific case of a binary expression, it's totally fine to be able to change the ordering of its left and right nodes if we want to. If you don't believe me, [see for yourself!](proofs/binary_expression_commutativity.pdf)
 
-Overview
---------
+# Installation
 
-Blah.
+> Not a thing yet.
 
-Installation
-------------
+# Usage
 
-Blah.
+> Kind of a thing but not really a thing yet.
 
-Usage
------
-
-Blah.
-
-License
--------
+# License
 
 This software is free to use under the MIT License. See [this reference](https://opensource.org/licenses/MIT) for license text and copyright information.
