@@ -32,11 +32,11 @@
 <div align="center">
   <h3>
     <a>
-      <strike>Website</strike>
+      Website
     </a>
     <span> | </span>
     <a>
-      <strike>Handbook</strike>
+      Handbook
     </a>
     <span> | </span>
     <a href="https://github.com/nickzuber/infrared/issues">
