@@ -63,7 +63,7 @@ Now don't get too excited yet young homie, Infrared is still under development. 
 
 As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
 
-<div align="center">
+<center>
   |      Components      |   Approx. % Completed  |
   |:--------------------:|:---------------------- |
   |       Tokenizer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   |
@@ -73,7 +73,7 @@ As development continues I'll try my best to update the current state of the pro
   |      AST Viewer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   |
   | File Watching System | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░   |
   |   Testing Framework  | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░   |
-</div>
+</center>
 
 ## What Does This Do For Me?
 
