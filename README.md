@@ -65,13 +65,13 @@ As development continues I'll try my best to update the current state of the pro
 
 |      Components      |  Approx. % Completed |
 |:--------------------:|:--------------------:|
-|       Tokenizer      | ████████████████████ |
-|        Parser        | ████████░░░░░░░░░░░░ |
-|    Type Inference    | ░░░░░░░░░░░░░░░░░░░░ |
-|   JSON Transformer   | ████████░░░░░░░░░░░░ |
-|      AST Viewer      | ████████████████████ |
-| File Watching System | ███████████████░░░░░ |
-|   Testing Framework  | ██████████████████░░ |
+|       Tokenizer      |████████████████████  |
+|        Parser        |████████░░░░░░░░░░░░  |
+|    Type Inference    |░░░░░░░░░░░░░░░░░░░░  |
+|   JSON Transformer   |████████░░░░░░░░░░░░  |
+|      AST Viewer      |████████████████████  |
+| File Watching System |███████████████░░░░░  |
+|   Testing Framework  |██████████████████░░  |
 
 ## What Does This Do For Me?
 
