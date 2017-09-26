@@ -63,15 +63,15 @@ Now don't get too excited yet young homie, Infrared is still under development. 
 
 As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
 
-|      Components      |   Approx. % Completed  |
-|:--------------------:|:---------------------- |
-|       Tokenizer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   |
-|        Parser        | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░   |
-|    Type Inference    | ░░░░░░░░░░░░░░░░░░░░   |
-|   JSON Transformer   | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░   |
-|      AST Viewer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   |
-| File Watching System | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░   |
-|   Testing Framework  | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░   |
+|      Components      |    Approx. % Completed    |
+|:--------------------:|:------------------------- |
+|       Tokenizer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100% |
+|        Parser        | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░  40%  |
+|    Type Inference    | ░░░░░░░░░░░░░░░░░░░░ 100%  |
+|   JSON Transformer   | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░  40%  |
+|      AST Viewer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%  |
+| File Watching System | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░  70%  |
+|   Testing Framework  | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░  90%  |
 
 ## What Does This Do For Me?
 
