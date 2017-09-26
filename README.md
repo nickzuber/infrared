@@ -63,15 +63,15 @@ Now don't get too excited yet young homie, Infrared is still under development. 
 
 As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
 
-|      Components      | Approx. % Completed |
-|:--------------------:|:-------------------:|
-|       Tokenizer      |         100%        |
-|        Parser        |         40%         |
-|    Type Inference    |          0%         |
-|   JSON Transformer   |         40%         |
-|      AST Viewer      |         100%        |
-| File Watching System |        75%..?       |
-|   Testing Framework  |         90%         |
+|      Components      |  Approx. % Completed |
+|:--------------------:|:--------------------:|
+|       Tokenizer      | ████████████████████ |
+|        Parser        | ████████░░░░░░░░░░░░ |
+|    Type Inference    | ░░░░░░░░░░░░░░░░░░░░ |
+|   JSON Transformer   | ████████░░░░░░░░░░░░ |
+|      AST Viewer      | ████████████████████ |
+| File Watching System | ███████████████░░░░░ |
+|   Testing Framework  | ██████████████████░░ |
 
 ## What Does This Do For Me?
 
