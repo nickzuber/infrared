@@ -16,14 +16,15 @@
 
 // // AssignmentExpression with BinaryExpression
 // foo = 1 - i + (3 * 4) / 5 
+// a = 1 + b, c, d
 
 // // a = 1 + b   ,   c    ,    d = e
 // a = 1 + b, c, d = e
 
-foo = 1, String(1,.)
-
 // // BinaryExpression with AssignmentExpression
 // foo, bar = 2 + true
+
+var foo, bar, baz, x = 2
 
 // // BinaryExpression with AssignmentExpression
 // foo = bar = baz

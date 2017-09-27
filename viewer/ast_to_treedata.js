@@ -41,6 +41,8 @@ function addDescription (node) {
             return node.kind
         case 'Directive':
             return node.rawValue
+        case 'AssignmentTargetIdentifier':
+            return node.name
         default:
             return null
     }

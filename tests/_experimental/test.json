@@ -10,62 +10,77 @@
         ],
         "items": [
             {
-                "ExpressionStatement": {
-                    "expression": {
-                        "BinaryExpression": {
-                            "left": {
-                                "AssignmentExpression": {
-                                    "binding": {
-                                        "AssignmentTargetIdentifier": {
-                                            "name": "foo",
-                                            "type": "AssignmentTargetIdentifier"
-                                        }
-                                    },
-                                    "expression": {
-                                        "LiteralNumericExpression": {
-                                            "type": "LiteralNumericExpression",
-                                            "value": 1.0
-                                        }
-                                    },
-                                    "type": "AssignmentExpression"
-                                }
-                            },
-                            "operator": "Comma",
-                            "right": {
-                                "CallExpression": {
-                                    "arguments": [
-                                        {
-                                            "BinaryExpression": {
-                                                "left": {
-                                                    "LiteralNumericExpression": {
-                                                        "type": "LiteralNumericExpression",
-                                                        "value": 1.0
-                                                    }
-                                                },
-                                                "operator": "Plus",
-                                                "right": {
-                                                    "LiteralNumericExpression": {
-                                                        "type": "LiteralNumericExpression",
-                                                        "value": 2.0
-                                                    }
-                                                },
-                                                "type": "BinaryExpression"
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "declarators": [
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "BindingIdentifier": {
+                                                "name": "foo",
+                                                "type": "BindingIdentifier"
                                             }
-                                        }
-                                    ],
-                                    "callee": {
-                                        "IdentifierExpression": {
-                                            "name": "String",
-                                            "type": "IdentifierExpression"
-                                        }
-                                    },
-                                    "type": "CallExpression"
+                                        },
+                                        "init": [
+                                            null
+                                        ],
+                                        "type": "VariableDeclarator"
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "BindingIdentifier": {
+                                                "name": "bar",
+                                                "type": "BindingIdentifier"
+                                            }
+                                        },
+                                        "init": [
+                                            null
+                                        ],
+                                        "type": "VariableDeclarator"
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "BindingIdentifier": {
+                                                "name": "baz",
+                                                "type": "BindingIdentifier"
+                                            }
+                                        },
+                                        "init": [
+                                            null
+                                        ],
+                                        "type": "VariableDeclarator"
+                                    }
+                                },
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "BindingIdentifier": {
+                                                "name": "x",
+                                                "type": "BindingIdentifier"
+                                            }
+                                        },
+                                        "init": [
+                                            {
+                                                "LiteralNumericExpression": {
+                                                    "type": "LiteralNumericExpression",
+                                                    "value": 2.0
+                                                }
+                                            }
+                                        ],
+                                        "type": "VariableDeclarator"
+                                    }
                                 }
-                            },
-                            "type": "BinaryExpression"
+                            ],
+                            "kind": "Var",
+                            "type": "VariableDeclaration"
                         }
                     },
-                    "type": "ExpressionStatement"
+                    "type": "VariableDeclarationStatement"
                 }
             }
         ],
