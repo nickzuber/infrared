@@ -128,8 +128,14 @@ end = struct
             (* Wrap node in ExpressionStatement *)
             create_expression_statement node', token_list''
           in ast_node, token_list'''
+        (* NOTE: we might end up handling a comma and a regular binop the same
+           actually, I think this depends on if we're doing an assignment or not *)
         | Operator op when op = Token.Comma ->
-          let msg = "Comma in identifier statement" in
+          let msg = "HALTING: Comma in identifier statement" in
+          let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
+          in raise (Unimplemented err)
+        | Operator op when Expression_parser.is_binop op ->
+          let msg = "HALTING: binop in identifier statement" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
           in raise (Unimplemented err)
         | _ -> 

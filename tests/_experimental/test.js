@@ -24,7 +24,7 @@
 // // BinaryExpression with AssignmentExpression
 // foo, bar = 2 + true
 
-var foo, bar, baz, x = 2
+foo + bar
 
 // // BinaryExpression with AssignmentExpression
 // foo = bar = baz
