@@ -58,7 +58,7 @@ and expose_error_fallback ~source ~loc ~msg =
     \x1b[39m%4d │ %s\n\
    \x1b[90m     │\x1b[1;31m%s\x1b[0;39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n\
-    \x1b[90m%4d │ %s \x1b[39m\n"
+    \x1b[90m%4d │ %s \x1b[39m"
     source_file
     source_path
     loc.line
@@ -105,7 +105,7 @@ and exposed_error_with_markings ~source ~loc ~msg =
     \x1b[90m%4d │ %s\n\
     \x1b[39m%4d │ %s\x1b[41m%s\x1b[49m%s\n\
     \x1b[90m%4d │ %s \x1b[39m\n\
-    \x1b[90m%4d │ %s \x1b[39m\n"
+    \x1b[90m%4d │ %s \x1b[39m"
     source_file
     source_path
     loc.line
