@@ -39,6 +39,7 @@ e-test-p:
 
 
 view:
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
 	node viewer/ast_to_treedata.js > viewer/public/treeData.json && \
 	node viewer/app.js
 

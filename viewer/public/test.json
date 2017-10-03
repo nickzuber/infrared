@@ -10,77 +10,119 @@
         ],
         "items": [
             {
-                "VariableDeclarationStatement": {
-                    "declaration": {
-                        "VariableDeclaration": {
-                            "declarators": [
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "BindingIdentifier": {
-                                                "name": "foo",
-                                                "type": "BindingIdentifier"
-                                            }
-                                        },
-                                        "init": [
-                                            null
-                                        ],
-                                        "type": "VariableDeclarator"
-                                    }
-                                },
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "BindingIdentifier": {
-                                                "name": "bar",
-                                                "type": "BindingIdentifier"
-                                            }
-                                        },
-                                        "init": [
-                                            null
-                                        ],
-                                        "type": "VariableDeclarator"
-                                    }
-                                },
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "BindingIdentifier": {
-                                                "name": "baz",
-                                                "type": "BindingIdentifier"
-                                            }
-                                        },
-                                        "init": [
-                                            null
-                                        ],
-                                        "type": "VariableDeclarator"
-                                    }
-                                },
-                                {
-                                    "VariableDeclarator": {
-                                        "binding": {
-                                            "BindingIdentifier": {
-                                                "name": "x",
-                                                "type": "BindingIdentifier"
-                                            }
-                                        },
-                                        "init": [
-                                            {
+                "ExpressionStatement": {
+                    "expression": {
+                        "BinaryExpression": {
+                            "left": {
+                                "IdentifierExpression": {
+                                    "name": "foo",
+                                    "type": "IdentifierExpression"
+                                }
+                            },
+                            "operator": "Comma",
+                            "right": {
+                                "AssignmentExpression": {
+                                    "binding": {
+                                        "AssignmentTargetIdentifier": {
+                                            "name": "bar",
+                                            "type": "AssignmentTargetIdentifier"
+                                        }
+                                    },
+                                    "expression": {
+                                        "BinaryExpression": {
+                                            "left": {
                                                 "LiteralNumericExpression": {
                                                     "type": "LiteralNumericExpression",
-                                                    "value": 2.0
+                                                    "value": 1.0
                                                 }
-                                            }
-                                        ],
-                                        "type": "VariableDeclarator"
-                                    }
+                                            },
+                                            "operator": "Plus",
+                                            "right": {
+                                                "BinaryExpression": {
+                                                    "left": {
+                                                        "LiteralNumericExpression": {
+                                                            "type": "LiteralNumericExpression",
+                                                            "value": 2.0
+                                                        }
+                                                    },
+                                                    "operator": "Minus",
+                                                    "right": {
+                                                        "LiteralNumericExpression": {
+                                                            "type": "LiteralNumericExpression",
+                                                            "value": 3.0
+                                                        }
+                                                    },
+                                                    "type": "BinaryExpression"
+                                                }
+                                            },
+                                            "type": "BinaryExpression"
+                                        }
+                                    },
+                                    "type": "AssignmentExpression"
                                 }
-                            ],
-                            "kind": "Var",
-                            "type": "VariableDeclaration"
+                            },
+                            "type": "BinaryExpression"
                         }
                     },
-                    "type": "VariableDeclarationStatement"
+                    "type": "ExpressionStatement"
+                }
+            },
+            {
+                "ExpressionStatement": {
+                    "expression": {
+                        "BinaryExpression": {
+                            "left": {
+                                "IdentifierExpression": {
+                                    "name": "foo",
+                                    "type": "IdentifierExpression"
+                                }
+                            },
+                            "operator": "Comma",
+                            "right": {
+                                "BinaryExpression": {
+                                    "left": {
+                                        "IdentifierExpression": {
+                                            "name": "bar",
+                                            "type": "IdentifierExpression"
+                                        }
+                                    },
+                                    "operator": "Comma",
+                                    "right": {
+                                        "BinaryExpression": {
+                                            "left": {
+                                                "IdentifierExpression": {
+                                                    "name": "baz",
+                                                    "type": "IdentifierExpression"
+                                                }
+                                            },
+                                            "operator": "Comma",
+                                            "right": {
+                                                "AssignmentExpression": {
+                                                    "binding": {
+                                                        "AssignmentTargetIdentifier": {
+                                                            "name": "x",
+                                                            "type": "AssignmentTargetIdentifier"
+                                                        }
+                                                    },
+                                                    "expression": {
+                                                        "LiteralNumericExpression": {
+                                                            "type": "LiteralNumericExpression",
+                                                            "value": 1.0
+                                                        }
+                                                    },
+                                                    "type": "AssignmentExpression"
+                                                }
+                                            },
+                                            "type": "BinaryExpression"
+                                        }
+                                    },
+                                    "type": "BinaryExpression"
+                                }
+                            },
+                            "type": "BinaryExpression"
+                        }
+                    },
+                    "type": "ExpressionStatement"
                 }
             }
         ],

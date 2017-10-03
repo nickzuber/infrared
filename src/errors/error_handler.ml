@@ -56,7 +56,7 @@ and expose_error_fallback ~source ~loc ~msg =
     \x1b[90m%4d │ %s\n\
     \x1b[90m%4d │ %s\n\
     \x1b[39m%4d │ %s\n\
-   \x1b[90m     │\x1b[31m%s\x1b[39m\n\
+   \x1b[90m     │\x1b[1;31m%s\x1b[0;39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n\
     \x1b[90m%4d │ %s \x1b[39m\n"
     source_file
