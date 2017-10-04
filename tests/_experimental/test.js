@@ -24,9 +24,11 @@
 // // BinaryExpression with AssignmentExpression
 // foo, bar = 2 + true
 
-foo, bar = 1 + 2 - 3 instanceof 4
+// foo, bar = 1 + 2 - 3
 
-foo, bar, baz, x = 1
+// foo, bar, baz, x = 1
+
+foo + bar
 
 // // BinaryExpression with AssignmentExpression
 // foo = bar = baz

@@ -1,4 +1,7 @@
-
+(* Monolithic file that contains all the different kinds of parsers we use. Unfortunately, it
+   must be this way, for the OCaml compiler gods have forsaken us. Basically, since these parser
+   modules are all or mostly recursive, we can't separate them into different files.
+   https://stackoverflow.com/questions/42395707/ocaml-is-it-possible-to-define-mutually-recursive-data-structures-in-separate-f*)
 open Parser_env
 open Token
 open Ast
@@ -398,7 +401,7 @@ end
 
 
 (* 
-  VariableDeclarationStatement
+  Variable
 *)
 and Variable_parser : sig 
   val create_binding_identifier : Ast.Identifier.t -> Ast.BindingIdentifier.t
