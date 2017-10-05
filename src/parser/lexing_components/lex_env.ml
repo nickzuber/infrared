@@ -54,7 +54,6 @@ let set_error msg env =
   * incorrect sometimes, due to _when_ we dress these tokens.
   * Tokens that are definitely have wrong positions:
   *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
-  *  - Closures <- we don't track when they start, but we dress when they end 
   *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc 
   *
   * Takes an optional location parameter to use if a token happens to start in a different location. This can
