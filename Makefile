@@ -4,6 +4,9 @@ OCB =       ocamlbuild $(OCB_FLAGS)
 MODULES = src/commands \
           src/watch \
           src/parser \
+          src/parser/lexing_components \
+          src/parser/parsing_components \
+          src/parser/ast_components \
           src/typechecker \
           src/errors \
           core \
