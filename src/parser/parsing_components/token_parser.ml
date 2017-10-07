@@ -1,7 +1,7 @@
 (* Monolithic file that contains all the different kinds of parsers we use. Unfortunately, it
-   must be this way, for the OCaml compiler gods have forsaken us. Basically, since these parser
-   modules are all or mostly recursive, we can't separate them into different files.
-   https://stackoverflow.com/questions/42395707/ocaml-is-it-possible-to-define-mutually-recursive-data-structures-in-separate-f *)
+ * must be this way, for the OCaml compiler gods have forsaken us. Basically, since these parser
+ * modules are all or mostly recursive, we can't separate them into different files.
+ * https://stackoverflow.com/questions/42395707/ocaml-is-it-possible-to-define-mutually-recursive-data-structures-in-separate-f *)
 
 open Parser_env
 open Token
@@ -40,7 +40,6 @@ let optimistic_lookahead ?(n=1) ?(err=default_lookahead_error) tokens =
   | Some token -> token
   | None -> raise (ParsingError err)
 
-(* ... *)
 let match_top_token maybe_token_body token_list =
   if List.length token_list = 0 then
     false
@@ -60,9 +59,7 @@ let eat_if_on_top maybe_token_body token_list =
   else
     token_list
 
-(* 
-  Module
-*)
+(** Module *)
 module rec Module_parser : sig
   val parse_items : Token.t list -> Ast.Module.item list -> Ast.Module.item list
 end = struct
@@ -90,9 +87,7 @@ end
 
 
 
-(*
-  Statement
-*)
+(** Statement *)
 and Statement_parser : sig
   val parsing_pop_err : string
   val is_operator : Token.t -> bool
@@ -179,9 +174,7 @@ end
 
 
 
-(*
-  Expression
-*)
+(** Expression *)
 and Expression_parser : sig
   val parsing_pop_err : string
   val is_binop : Token.ops -> bool
@@ -293,14 +286,14 @@ end = struct
       in raise (Unimplemented err))
   
   (* This is kind of janky, but `last_node_name` contains some meta data about the last node we just parsed,
-     notably a string that represents its name (only set IF it's an `IdentifierExpression`). We do this because
-     sometimes we want to get the previous node's name IF it's an `IdentifierExpression`, but since `last_node`
-     is from the generic module `Expression`, we can never _assume_ it's an `IdentifierExpression` so we can
-     never ask it for its name value. 
-     
-     This is because our AST is a module, not a type. Therefore we can't try to match some structure to see if
-     our `Expression` is of the submodule `IdentifierExpression`. If there's a better way to handle this, I'll
-     gladly change it, but in the mean time this does the trick and I can't really think of a cleaner way to do this. *)
+   * notably a string that represents its name (only set IF it's an `IdentifierExpression`). We do this because
+   * sometimes we want to get the previous node's name IF it's an `IdentifierExpression`, but since `last_node`
+   * is from the generic module `Expression`, we can never _assume_ it's an `IdentifierExpression` so we can
+   * never ask it for its name value. 
+   * 
+   * This is because our AST is a module, not a type. Therefore we can't try to match some structure to see if
+   * our `Expression` is of the submodule `IdentifierExpression`. If there's a better way to handle this, I'll
+   * gladly change it, but in the mean time this does the trick and I can't really think of a cleaner way to do this. *)
   and parse_rest_of_expression ?(early_bail_token=None) ?(last_node_name="") last_node token_list = Expression.(
     if List.length token_list = 0 then
       last_node, token_list
@@ -308,7 +301,7 @@ end = struct
       begin
         let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
         (* See if we want to bail out of this method early.
-           NOTE: Early bailing currently does NOT eat the bailed token. *)
+         * NOTE: Early bailing currently does NOT eat the bailed token. *)
         match early_bail_token with
         | Some bail_token when bail_token = token.body -> last_node, token_list
         | _ -> 
@@ -336,7 +329,7 @@ end = struct
               let ast_node = (CallExpression (create_call_expression ~callee:callee ~arguments:arguments' token))
               in ast_node, token_list'
             (* Since the next token isn't something that could augment this expression, 
-            * we know that this expression is finished. *)
+             * we know that this expression is finished. *)
             | _ -> last_node, token_list
           end
       end)
@@ -401,9 +394,7 @@ end
 
 
 
-(* 
-  Variable
-*)
+(** Variable *)
 and Variable_parser : sig 
   val create_binding_identifier : Ast.Identifier.t -> Ast.BindingIdentifier.t
   val create_declarator : Ast.BindingIdentifier.t -> Ast.Expression.t option -> Ast.VariableDeclarator.t
@@ -481,9 +472,7 @@ end
 
 
 
-(* 
-  Program
-*)
+(** Program *)
 and Program : sig
   val create_module_ast : Ast.Directive.t list -> Token.t list -> Ast.Program.t
   val parse_directives : Token.t list -> Ast.Directive.t list * Token.t list

@@ -13,7 +13,7 @@ type t = {
    * is being dressed. This is used for if a token starts somewhere else
    * before we push it into our list. *)
   locations: Lexing.position Utils.Stack.t;
-  (* The token_list is "backwards" -- newest token is 
+  (* The token_list is "backwards" -- newest token is
     * inserted into the front of the list. *)
   token_list: Token.t list;
   error: (string * Level.t) option;
@@ -81,7 +81,7 @@ let push ?(length=1) ~tok env ~lxb =
   | _ -> { env with expr = tok :: env.expr }
 
 (* Add current expression to the expression buffer
-  * and clear current expression. *)
+ * and clear current expression. *)
 let buf_push lxb env =
   let open Lexing in
   let expr = env.expr in
