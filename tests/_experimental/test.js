@@ -28,7 +28,8 @@
 
 // foo, bar, baz, x = 1
 
-foo + bar
+// foo + bar
+var foo = 1 + 2 + 3 + 4 + 5 + 6 + 7
 
 // // BinaryExpression with AssignmentExpression
 // foo = bar = baz
