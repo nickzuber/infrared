@@ -52,7 +52,7 @@ let pop_last_element lst =
 
 (* Split a path into two parts; the target and its path 
  * Eg. `path/to/some/file` -> `path/to/some/`, `file` *)
-let depath path = Core.Std.(
+let depath path = Core.(
   let parts = String.split_on_chars ~on:['/'] path in
   let target, rest_of_path = pop_last_element parts in
   let rest_of_path_string = String.concat ~sep:"/" rest_of_path

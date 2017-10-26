@@ -58,7 +58,7 @@ let set_error msg env =
   *
   * Takes an optional location parameter to use if a token happens to start in a different location. This can
   * happen when we're parsing closures, comments, syntax errors, etc. *)
-let dress ?(loc=None) ?(length=1) body lxb = 
+let dress ?(loc=None) ?(length=1) body lxb =
   let open Lexing in
   let calculated_length = ref length in
   let pos = match loc with

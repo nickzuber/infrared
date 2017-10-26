@@ -1,5 +1,5 @@
 
-open Core.Std
+open Core
 open CommandSpec
 
 let print_version () =
