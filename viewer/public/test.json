@@ -18,7 +18,7 @@
                                     "VariableDeclarator": {
                                         "binding": {
                                             "BindingIdentifier": {
-                                                "name": "foo",
+                                                "name": "a",
                                                 "type": "BindingIdentifier"
                                             }
                                         },
@@ -46,7 +46,7 @@
                                                                     "left": {
                                                                         "LiteralNumericExpression": {
                                                                             "type": "LiteralNumericExpression",
-                                                                            "value": 3.0
+                                                                            "value": 2.0
                                                                         }
                                                                     },
                                                                     "operator": "Plus",
@@ -55,7 +55,7 @@
                                                                             "left": {
                                                                                 "LiteralNumericExpression": {
                                                                                     "type": "LiteralNumericExpression",
-                                                                                    "value": 4.0
+                                                                                    "value": 2.0
                                                                                 }
                                                                             },
                                                                             "operator": "Plus",
@@ -64,7 +64,7 @@
                                                                                     "left": {
                                                                                         "LiteralNumericExpression": {
                                                                                             "type": "LiteralNumericExpression",
-                                                                                            "value": 5.0
+                                                                                            "value": 2.0
                                                                                         }
                                                                                     },
                                                                                     "operator": "Plus",
@@ -73,14 +73,38 @@
                                                                                             "left": {
                                                                                                 "LiteralNumericExpression": {
                                                                                                     "type": "LiteralNumericExpression",
-                                                                                                    "value": 6.0
+                                                                                                    "value": 2.0
                                                                                                 }
                                                                                             },
                                                                                             "operator": "Plus",
                                                                                             "right": {
-                                                                                                "LiteralNumericExpression": {
-                                                                                                    "type": "LiteralNumericExpression",
-                                                                                                    "value": 7.0
+                                                                                                "BinaryExpression": {
+                                                                                                    "left": {
+                                                                                                        "LiteralNumericExpression": {
+                                                                                                            "type": "LiteralNumericExpression",
+                                                                                                            "value": 2.0
+                                                                                                        }
+                                                                                                    },
+                                                                                                    "operator": "Plus",
+                                                                                                    "right": {
+                                                                                                        "BinaryExpression": {
+                                                                                                            "left": {
+                                                                                                                "LiteralNumericExpression": {
+                                                                                                                    "type": "LiteralNumericExpression",
+                                                                                                                    "value": 2.0
+                                                                                                                }
+                                                                                                            },
+                                                                                                            "operator": "Plus",
+                                                                                                            "right": {
+                                                                                                                "LiteralNumericExpression": {
+                                                                                                                    "type": "LiteralNumericExpression",
+                                                                                                                    "value": 2.0
+                                                                                                                }
+                                                                                                            },
+                                                                                                            "type": "BinaryExpression"
+                                                                                                        }
+                                                                                                    },
+                                                                                                    "type": "BinaryExpression"
                                                                                                 }
                                                                                             },
                                                                                             "type": "BinaryExpression"

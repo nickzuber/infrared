@@ -22,8 +22,10 @@
 // a = 1 + b, c, d = e
 
 // // BinaryExpression with AssignmentExpression
-foo = 2 + true
-foo, bar = 2 + true
+// foo = 2 + true
+// foo, bar = 2 + true
+
+var a = 1 + 2+ 2+ 2+ 2+ 2+ 2+ 2+ 2
 
 // foo, bar = 1 + 2 - 3
 

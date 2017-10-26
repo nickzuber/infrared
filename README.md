@@ -1,77 +1,28 @@
+# Infrared <a href="#"><img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
 
-<div align="center">
-  <img src=".github/infrared_black.png"
-	   width="320px"
-       alt="Infrared" />
-</div>
+> Fast light weight inferred static type checker in real time for JavaScript
 
-<div align="center">
-  <strong>:sparkles: Fast light weight inferred static type checker in real time for JavaScript :rocket:</strong>
-</div>
+Infrared is a [bottom-up](https://en.wikipedia.org/wiki/Bottom-up_parsing) canonical [LR(1) parser](https://en.wikipedia.org/wiki/Canonical_LR_parser) that statically analyzes [Ecmascript 2016 JavaScript](http://es6-features.org/) to an abstract syntax tree based heavily on [Shift specifications](http://shift-ast.org/), and then infers a simple and strict type system onto your program.
 
-<br />
-
-<div align="center">
-  <a href="#">
-    <img src="https://img.shields.io/badge/state-work%20in%20progress-yellow.svg" />
-  </a>
-  <a href="#">
-    <img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" />
-  </a>
-  <a href="#">
-    <img src="https://img.shields.io/uptimerobot/status/m778918918-3e92c097147760ee39d02d36.svg" />
-  </a>
-  <a href="#">
-    <img src="https://img.shields.io/badge/project-active-brightgreen.svg" />
-  </a>
-  <a href="#">
-    <img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" />
-  </a>
-</div>
-
-<div align="center">
-  <h3>
-    <a>
-      Website
-    </a>
-    <span> | </span>
-    <a>
-      Handbook
-    </a>
-    <span> | </span>
-    <a href="https://github.com/nickzuber/infrared/issues">
-      Issues
-    </a>
-    <span> | </span>
-    <a href="https://github.com/nickzuber/infrared/pulls">
-      Contributing
-    </a>
-  </h3>
-</div>
-
-<div align="center">
-  <sub>Built with ❤︎ by
-  <a href="https://nickzuber.com/">Nick Zuber</a> and
-  <a href="https://github.com/nickzuber/infrared/graphs/contributors">
-    contributors
-  </a>
-</div>
-  
-## Important Notice — The Current State of Infrared
+## Now hold on just a minute there Jack...
 
 Now don't get too excited yet young homie, Infrared is still under development. However, this means there's tons of room to [help out and contribute](https://github.com/nickzuber/infrared/pulls) if that's your jam.
 
 As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
 
-|      Components      |    Approx. % Completed    |
-|:--------------------:|:------------------------- |
-|       Tokenizer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100% |
-|        Parser        | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░  40% |
-|    Type Inference    | ░░░░░░░░░░░░░░░░░░░░ 100% |
-|   JSON Transformer   | ▓▓▓▓▓▓▓▓░░░░░░░░░░░░  40% |
-|      AST Viewer      | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100% |
-| File Watching System | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░  70% |
-|   Testing Framework  | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░  90% |
+```
+┌──────────────────────┬─────────────────────────────┐
+│ Components           │ Approx. % Completed         │
+├──────────────────────┼──────────────────────┬──────┤
+│ Tokenizer            │ ████████████████████ │ 100% │
+│ Parser               │ ████████             │  40% │
+│ Type Inference       │                      │ 100% │
+│ JSON Transformer     │ ████████             │  40% │
+│ AST Viewer           │ ████████████████████ │ 100% │
+│ File Watching System │ ███████████████      │  70% │
+│ Testing Framework    │ ██████████████████   │  90% │
+└──────────────────────┴──────────────────────┴──────┘
+```
 
 ## What Does This Do For Me?
 
