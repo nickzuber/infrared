@@ -51,7 +51,7 @@ end = struct
             | _ -> 
                 (* temp *)
                 Printf.printf "\nflags found\n";
-                Core.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
+                Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
                 Parser.print_tokens (TokenizeCommand.exec ~flags:flags' ~args:args'))
           | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
@@ -64,7 +64,7 @@ end = struct
             | _ -> 
                 (* temp *)
                 Printf.printf "\nflags found\n";
-                Core.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
+                Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
                 Printf.printf "\nPRINTING FILES FOUND: \n";
                 Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args'))
           | cmd when TypeCheckCommand.spec.name = cmd ->

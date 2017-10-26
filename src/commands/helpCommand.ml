@@ -1,5 +1,5 @@
 
-open Core
+open Core.Std
 open CommandSpec
 open Flag
 
