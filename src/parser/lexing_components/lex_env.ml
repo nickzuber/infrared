@@ -33,7 +33,7 @@ let state_to_string = function
   | S_Expression -> "S_Expression"
   | S_Panic -> "S_Panic"
 
-let new_env = { 
+let new_env = {
   source = "undefined";
   state = [ S_Default ]; (* I should use a stack for this too *)
   expr = [];
