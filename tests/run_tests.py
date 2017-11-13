@@ -61,7 +61,7 @@ for job in jobs:
                   Colour.LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + Colour.END)
         except:
             exit_with_failure = True
-            print(Colour.RED + u'\u2715' + " ERROR " + Colour.END + path + "    ")
+            print(Colour.RED + u'\u2715' + " error " + Colour.END + path + "    ")
 
 # Exit non zero error code so ci fails
 if exit_with_failure:

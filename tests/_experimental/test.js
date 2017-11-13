@@ -1,5 +1,4 @@
-
-'use strict'
+'use strict';
 
 // // IdentifierExpression
 // foo
@@ -22,8 +21,8 @@
 // a = 1 + b, c, d = e
 
 // // BinaryExpression with AssignmentExpression
-foo = 2 + true
-foo, bar = 2 + true
+// foo = 2 + true
+// foo, bar = 2 + true
 
 // foo, bar = 1 + 2 - 3
 

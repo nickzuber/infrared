@@ -1,8 +1,7 @@
-S src/**
-S utils/**
-S tests/**
-S core/**
+S /src/
+S /utils/
+S /core/
 
-B _build/**
+B /_build/
 
 PKG core batteries ppx_deriving.show

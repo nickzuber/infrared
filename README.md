@@ -2,7 +2,7 @@
 
 > Fast light weight inferred static type checker in real time for JavaScript
 
-Infrared is a [bottom-up](https://en.wikipedia.org/wiki/Bottom-up_parsing) canonical [LR(1) parser](https://en.wikipedia.org/wiki/Canonical_LR_parser) that statically analyzes [Ecmascript 2016 JavaScript](http://es6-features.org/) to an abstract syntax tree based heavily on [Shift specifications](http://shift-ast.org/), and then infers a simple and strict type system onto your program.
+Infrared is a [top-down](https://en.wikipedia.org/wiki/Top-down_parsing) [LL(1) parser](https://en.wikipedia.org/wiki/LL_parser) that statically analyzes [ES2017 JavaScript](http://es6-features.org/). We construct an abstract syntax tree that's heavily influenced by the [Shift specifications](http://shift-ast.org/), and then infer a simple and strict type system.
 
 ## Now hold on just a minute there Jack...
 
