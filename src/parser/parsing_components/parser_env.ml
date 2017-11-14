@@ -9,7 +9,7 @@ type t = {
   ast: Program.t;
 }
 
-(* Return the nth token ahead of the first in a list 
+(* Return the nth token ahead of the first in a list
    Examples:
      lookahead [1;2;3]        ->   Some 2
      lookahead [1;2;3] ~n:2   ->   Some 3

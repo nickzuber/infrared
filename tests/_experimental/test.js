@@ -1,7 +1,7 @@
 'use strict';
 
-// // IdentifierExpression
-foo
+// IdentifierExpression
+foo = 1 + 2
 
 // // AssignmentExpression
 // foo = 1

@@ -63,7 +63,7 @@ let eat_if_on_top maybe_token_body token_list =
 module rec Module_parser : sig
   val parse_items : Token.t list -> Ast.Module.item list -> Ast.Module.item list
 end = struct
-  let rec parse_items token_list ast_nodes =
+  let rec parse_items token_list ast_nodes = Dev.__debug__ token_list "Module_parser.parse_items";
     (* Exit if we're done parsing tokens *)
     if List.length token_list = 0 then ast_nodes else
     (* Steal first token and figure out what to do *)
@@ -105,7 +105,7 @@ end = struct
   let create_expression_statement expression = Ast.ExpressionStatement.(
     { _type = "ExpressionStatement"; expression })
 
-  let parse_identifier_statement ~name token_list =
+  let parse_identifier_statement ~name token_list = Dev.__debug__ token_list "Statement_parser.parse_identifier_statement";
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
     match (peek token_list') with
@@ -154,7 +154,7 @@ end = struct
       let ast_node = create_expression_statement node'
       in ast_node, token_list'
 
-  let parse token_list =
+  let parse token_list = Dev.__debug__ token_list "Statement_parser.parse";
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
     | Variable t ->
@@ -263,7 +263,7 @@ end = struct
    * For example, consider the expression `foo()`. On our initial parsing phase, we'd parse the expression
    * of `foo` as an identifier. We then go on to see if there's something that could augment
    * this expression, and in this case there is and it becomes a call expression of `foo`. *)
-  let rec parse ?(early_bail_token=None) token_list = Expression.(
+  let rec parse ?(early_bail_token=None) token_list = Dev.__debug__ token_list "Expression_parser.parse"; Expression.(
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
     | Number value ->
@@ -294,7 +294,8 @@ end = struct
    * This is because our AST is a module, not a type. Therefore we can't try to match some structure to see if
    * our `Expression` is of the submodule `IdentifierExpression`. If there's a better way to handle this, I'll
    * gladly change it, but in the mean time this does the trick and I can't really think of a cleaner way to do this. *)
-  and parse_rest_of_expression ?(early_bail_token=None) ?(last_node_name="") last_node token_list = Expression.(
+  and parse_rest_of_expression ?(early_bail_token=None) ?(last_node_name="") last_node token_list = 
+                               Dev.__debug__ token_list "Expression_parser.parse_rest_of_expression"; Expression.(
     if List.length token_list = 0 then
       last_node, token_list
     else
@@ -334,7 +335,7 @@ end = struct
           end
       end)
 
-  and parse_arguments ?(arguments_so_far=[]) token_list = Arguments.(
+  and parse_arguments ?(arguments_so_far=[]) token_list = Dev.__debug__ token_list "Expression_parser.parse_arguments"; Arguments.(
     if List.length token_list = 0 then
       arguments_so_far
     else
@@ -361,7 +362,7 @@ end = struct
 
   (* NOTE: We pass in the token_list with the binop on top, we don't try to explicitly pass
    * the binop ourselves. *)
-  and create_binary_expression left ?(early_bail_token=None) token_list = BinaryExpression.(
+  and create_binary_expression left ?(early_bail_token=None) token_list = Dev.__debug__ token_list "Expression_parser.create_binary_expression"; BinaryExpression.(
     (* Pop the binop *)
     let op_token, token_list' = optimistic_pop_token token_list in
     let operator = create_binary_operator op_token in
@@ -411,7 +412,7 @@ end = struct
   let create_declarator binding init = VariableDeclarator.(
     { _type = "VariableDeclarator"; binding; init })
 
-  let rec parse_declarators declarators_so_far token_list = 
+  let rec parse_declarators declarators_so_far token_list = Dev.__debug__ token_list "Variable_parser.parse_declarators";
     let token, token_list' = optimistic_pop_token token_list ~err:declarator_pop_err in
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
