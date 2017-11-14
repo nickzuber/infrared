@@ -10,61 +10,59 @@
         ],
         "items": [
             {
-                "ExpressionStatement": {
-                    "expression": {
-                        "BinaryExpression": {
-                            "left": {
-                                "IdentifierExpression": {
-                                    "name": "foo",
-                                    "type": "IdentifierExpression"
-                                }
-                            },
-                            "operator": "Comma",
-                            "right": {
-                                "AssignmentExpression": {
-                                    "binding": {
-                                        "AssignmentTargetIdentifier": {
-                                            "name": "bar",
-                                            "type": "AssignmentTargetIdentifier"
-                                        }
-                                    },
-                                    "expression": {
-                                        "BinaryExpression": {
-                                            "left": {
-                                                "LiteralNumericExpression": {
-                                                    "type": "LiteralNumericExpression",
-                                                    "value": 1.0
-                                                }
-                                            },
-                                            "operator": "Plus",
-                                            "right": {
+                "VariableDeclarationStatement": {
+                    "declaration": {
+                        "VariableDeclaration": {
+                            "declarators": [
+                                {
+                                    "VariableDeclarator": {
+                                        "binding": {
+                                            "BindingIdentifier": {
+                                                "name": "foo",
+                                                "type": "BindingIdentifier"
+                                            }
+                                        },
+                                        "init": [
+                                            {
                                                 "BinaryExpression": {
                                                     "left": {
                                                         "LiteralNumericExpression": {
                                                             "type": "LiteralNumericExpression",
-                                                            "value": 2.0
+                                                            "value": 1.0
                                                         }
                                                     },
-                                                    "operator": "Minus",
+                                                    "operator": "Plus",
                                                     "right": {
-                                                        "LiteralNumericExpression": {
-                                                            "type": "LiteralNumericExpression",
-                                                            "value": 3.0
+                                                        "BinaryExpression": {
+                                                            "left": {
+                                                                "LiteralNumericExpression": {
+                                                                    "type": "LiteralNumericExpression",
+                                                                    "value": 2.0
+                                                                }
+                                                            },
+                                                            "operator": "Plus",
+                                                            "right": {
+                                                                "LiteralNumericExpression": {
+                                                                    "type": "LiteralNumericExpression",
+                                                                    "value": 3.0
+                                                                }
+                                                            },
+                                                            "type": "BinaryExpression"
                                                         }
                                                     },
                                                     "type": "BinaryExpression"
                                                 }
-                                            },
-                                            "type": "BinaryExpression"
-                                        }
-                                    },
-                                    "type": "AssignmentExpression"
+                                            }
+                                        ],
+                                        "type": "VariableDeclarator"
+                                    }
                                 }
-                            },
-                            "type": "BinaryExpression"
+                            ],
+                            "kind": "Var",
+                            "type": "VariableDeclaration"
                         }
                     },
-                    "type": "ExpressionStatement"
+                    "type": "VariableDeclarationStatement"
                 }
             }
         ],

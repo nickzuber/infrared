@@ -19,7 +19,7 @@
                                 {
                                     "name": "BindingIdentifier",
                                     "children": [],
-                                    "description": "a",
+                                    "description": "foo",
                                     "rule": "binding"
                                 },
                                 {
@@ -41,87 +41,9 @@
                                                     "rule": "left"
                                                 },
                                                 {
-                                                    "name": "BinaryExpression",
-                                                    "children": [
-                                                        {
-                                                            "name": "LiteralNumericExpression",
-                                                            "children": [],
-                                                            "description": 2,
-                                                            "rule": "left"
-                                                        },
-                                                        {
-                                                            "name": "BinaryExpression",
-                                                            "children": [
-                                                                {
-                                                                    "name": "LiteralNumericExpression",
-                                                                    "children": [],
-                                                                    "description": 2,
-                                                                    "rule": "left"
-                                                                },
-                                                                {
-                                                                    "name": "BinaryExpression",
-                                                                    "children": [
-                                                                        {
-                                                                            "name": "LiteralNumericExpression",
-                                                                            "children": [],
-                                                                            "description": 2,
-                                                                            "rule": "left"
-                                                                        },
-                                                                        {
-                                                                            "name": "BinaryExpression",
-                                                                            "children": [
-                                                                                {
-                                                                                    "name": "LiteralNumericExpression",
-                                                                                    "children": [],
-                                                                                    "description": 2,
-                                                                                    "rule": "left"
-                                                                                },
-                                                                                {
-                                                                                    "name": "BinaryExpression",
-                                                                                    "children": [
-                                                                                        {
-                                                                                            "name": "LiteralNumericExpression",
-                                                                                            "children": [],
-                                                                                            "description": 2,
-                                                                                            "rule": "left"
-                                                                                        },
-                                                                                        {
-                                                                                            "name": "BinaryExpression",
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "name": "LiteralNumericExpression",
-                                                                                                    "children": [],
-                                                                                                    "description": 2,
-                                                                                                    "rule": "left"
-                                                                                                },
-                                                                                                {
-                                                                                                    "name": "LiteralNumericExpression",
-                                                                                                    "children": [],
-                                                                                                    "description": 2,
-                                                                                                    "rule": "right"
-                                                                                                }
-                                                                                            ],
-                                                                                            "description": "Plus",
-                                                                                            "rule": "right"
-                                                                                        }
-                                                                                    ],
-                                                                                    "description": "Plus",
-                                                                                    "rule": "right"
-                                                                                }
-                                                                            ],
-                                                                            "description": "Plus",
-                                                                            "rule": "right"
-                                                                        }
-                                                                    ],
-                                                                    "description": "Plus",
-                                                                    "rule": "right"
-                                                                }
-                                                            ],
-                                                            "description": "Plus",
-                                                            "rule": "right"
-                                                        }
-                                                    ],
-                                                    "description": "Plus",
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": [],
+                                                    "description": 3,
                                                     "rule": "right"
                                                 }
                                             ],
