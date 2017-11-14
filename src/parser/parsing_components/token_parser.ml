@@ -372,12 +372,11 @@ end = struct
     { _type = "AssignmentTargetIdentifier"; name })
 
   and create_assignment_target ~name token_list = Ast.AssignmentTarget.(
-    let token_list' = eat token_list in
+    (* let token_list' = eat token_list in -- I DONT THINK WE SHOULD BE EATING THIS, MIGHT BE LEFTOVER FROM WHEN WE USED TO EAT BINOP  *)
     let node = create_assignment_target_identifier ~name:name in
-    (* The things we do for type safety.. *)
     let ast_node = Ast.SimpleAssignmentTarget.AssignmentTargetIdentifier node in
     let ast_node' = Ast.AssignmentTarget.SimpleAssignmentTarget ast_node
-    in ast_node', token_list'
+    in ast_node', token_list
   )
 
   (* Expects the `name` to be the name of the binding identifier 
