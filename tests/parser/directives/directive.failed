@@ -1,0 +1,8 @@
+[90m ┌---------------------------┐
+[90m┌┤ Module_parser.parse_items │
+[90m│└---------------------------┘
+[90m├─ TOKEN      := [35mEmpty_Token
+[90m└─ TOKEN_LIST := [39m[33m[90m[39m
+
+{"Module": { "type": "Module", "directives": [{"Directive": { "type": "Directive", "rawValue": "use strict" }}], "items": [] }}
+
