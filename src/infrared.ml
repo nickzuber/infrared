@@ -72,11 +72,11 @@ end = struct
             | [] -> reportCommandError "no arguments given for parsing. \
                                         Did you forget to include a file name?"
             | arg :: [] -> 
-                Parser.print_typecheck (TypeCheckCommand.exec ~flags:flags' ~args:[arg])
+                TypeCheckCommand.exec ~flags:flags' ~args:[arg]
             | _ -> 
                 (* temp *)
                 (* Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags'; *)
-                Parser.print_typecheck (TypeCheckCommand.exec ~flags:flags' ~args:args'))
+                TypeCheckCommand.exec ~flags:flags' ~args:args')
           | _ -> raise Not_found
         with Not_found ->
           reportCommandError ("you've entered an invalid command: \n\t" ^ cmd ^ "\n");

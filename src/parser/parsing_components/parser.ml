@@ -40,12 +40,10 @@ let print_tokens envs =
 let print_ast asts = Parser_env.(
   List.iter (fun ast -> print_single_ast ast) asts)
 
-let print_typecheck asts_and_path_list =
-  List.iter (fun asts_and_path ->
-    let ast, path = asts_and_path in
-    let path = "\x1b[90m" ^ path ^ "\x1b[39m" in
-    Printf.printf "✨  \x1b[32mLooks good %s\x1b[37m\n" path)
-  asts_and_path_list
+let print_typecheck asts_and_path =
+  let ast, path = asts_and_path in
+  let path = "\x1b[90m" ^ path ^ "\x1b[39m" in
+  Printf.printf "✨  \x1b[32mLooks good %s\x1b[37m\n" path
 
 let parse_may_throw file =
   let maybe_lex_env = tokenize file in
