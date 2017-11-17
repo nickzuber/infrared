@@ -16,7 +16,7 @@ type t = {
   (* The token_list is "backwards" -- newest token is
     * inserted into the front of the list. *)
   token_list: Token.t list;
-  error: (string * Level.t) option;
+  error: (string * Level.t) option;  (* we might not use this *)
 }
 
 and state_t = 

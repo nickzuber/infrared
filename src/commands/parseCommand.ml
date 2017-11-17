@@ -8,10 +8,13 @@ let generate_ast_list ~args ~flags =
     match response with
     | Some paths -> acc @ paths
     | None -> acc) [] args in
+  let files = List.sort (fun a b -> String.compare a b) files in
   if List.length files > 0 then
     List.fold_left (fun acc path ->
-        let ast = Parser.parse path in
-        acc @ [ast]) 
+        let maybe_ast = Parser.parse path in
+        match maybe_ast with
+        | Some ast -> acc @ [ast]
+        | None -> acc)
     [] files
   else 
     (Error_handler.report 

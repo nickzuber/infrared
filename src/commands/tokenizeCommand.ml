@@ -10,8 +10,10 @@ let generate_token_list ~args ~flags =
     | None -> acc) [] args in
   if List.length files > 0 then
     List.fold_left (fun acc path ->
-        let ast = Parser.tokenize path in
-        acc @ [ast]) 
+        let maybe_ast = Parser.tokenize path in
+        match maybe_ast with
+        | Some ast -> acc @ [ast]
+        | None -> acc)
     [] files
   else 
     (Error_handler.report 

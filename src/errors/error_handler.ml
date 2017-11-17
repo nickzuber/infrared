@@ -7,17 +7,17 @@ let use_inline_error_marking = false
 let report ~msg ~level =
   match level with
   | Level.High ->
-    print_endline("\n\x1b[1;97;41m fatal error \x1b[0;39;0m " ^ msg)
+    print_endline("❌ \x1b[31m Fatal error \x1b[39m" ^ msg)
   | Level.Med ->
-    print_endline("\n\x1b[1;97;101m error \x1b[0;39;0m " ^ msg)
+    print_endline("❌ \x1b[31m Error \x1b[39m" ^ msg)
   | Level.Low ->
-    print_endline("\n\x1b[1;30;43m warning \x1b[0;39;0m " ^ msg)
+    print_endline("🚧 \x1b[33m Warning \x1b[39m" ^ msg)
   | Level.SyntaxError ->
-    print_endline("\n\x1b[1;97;101m syntax error \x1b[0;39;0m " ^ msg)
+    print_endline("🚧 \x1b[33m Syntax error \x1b[39m" ^ msg)
   | Level.ParseError ->
-    print_endline("\n\x1b[1;97;101m parsing error \x1b[0;39;0m " ^ msg)
+    print_endline("❌ \x1b[31m Parsing error \x1b[39m" ^ msg)
   | Level.UnknownError ->
-    print_endline("\n\x1b[1;30;43m unknown error \x1b[0;39;0m " ^ msg)
+    print_endline("🚧 \x1b[33m Unknown error \x1b[39m" ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it. 
  * This string is generally thrown somewhere else. *)
@@ -32,7 +32,8 @@ let rec exposed_error ~source ~loc ~msg =
  *             ^^^
  *)
 and expose_error_fallback ~source ~loc ~msg =
-  let source_path, source_file = Utils.depath source in
+  (* let source_path, source_file = Utils.depath source in *)
+  let source_file = "\x1b[90m" ^ source ^ "\x1b[39m" in
   let most_upper_line = ref "" in
   let upper_line = ref "" in
   let offending_line = ref "" in
@@ -51,21 +52,14 @@ and expose_error_fallback ~source ~loc ~msg =
       cur_line + 1
     ) 1 lines
   in Printf.sprintf "\
-    %s\x1b[1m%s\x1b[0m \x1b[90m(%d:%d)\x1b[39m\n\n\
-    \x1b[31m  ● \x1b[39m%s\n\n\
-    \x1b[90m%4d │ %s\n\
+    %s\n\
+    \x1b[39m   \x1b[39m%s\n\n\
     \x1b[90m%4d │ %s\n\
     \x1b[39m%4d │ %s\n\
    \x1b[90m     │\x1b[1;31m%s\x1b[0;39m\n\
-    \x1b[90m%4d │ %s \x1b[39m\n\
-    \x1b[90m%4d │ %s \x1b[39m"
+    \x1b[90m%4d │ %s \x1b[39m\n"
     source_file
-    source_path
-    loc.line
-    loc.column
     msg
-    (loc.line - 2)
-    !most_upper_line
     (loc.line - 1)
     !upper_line
     loc.line
@@ -73,8 +67,6 @@ and expose_error_fallback ~source ~loc ~msg =
     (spacing ^ arrow)
     (loc.line + 1)
     !lower_line
-    (loc.line + 2)
-    !most_lower_line
 
 (* Error message with colored markings to indicate an error.
  * const foo = var

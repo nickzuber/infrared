@@ -65,10 +65,18 @@ end = struct
                 (* temp *)
                 Printf.printf "\nflags found\n";
                 Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
-                Printf.printf "\nPRINTING FILES FOUND: \n";
+                Printf.printf "\nParsing files found: \n";
                 Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args'))
           | cmd when TypeCheckCommand.spec.name = cmd ->
-              (ignore ("this"))
+            (match args' with
+            | [] -> reportCommandError "no arguments given for parsing. \
+                                        Did you forget to include a file name?"
+            | arg :: [] -> 
+                Parser.print_typecheck (TypeCheckCommand.exec ~flags:flags' ~args:[arg])
+            | _ -> 
+                (* temp *)
+                (* Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags'; *)
+                Parser.print_typecheck (TypeCheckCommand.exec ~flags:flags' ~args:args'))
           | _ -> raise Not_found
         with Not_found ->
           reportCommandError ("you've entered an invalid command: \n\t" ^ cmd ^ "\n");
@@ -79,6 +87,4 @@ let _ = Token_parser.(
   try
     InfraredShell.main ()
   with 
-  | Unimplemented e -> Error_handler.(report e Level.UnknownError)
-  | ParsingError e -> Error_handler.(report e Level.ParseError));
-  print_endline ""
+  | _ -> Error_handler.(report "Uncaught error was thrown.\n" Level.High))

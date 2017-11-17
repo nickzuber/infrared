@@ -1,4 +1,6 @@
 
+let __DEV__ = false
+
 open Token
 
 let mock_loc = { Loc.
@@ -12,6 +14,7 @@ let mock_token = { Token.
 }
 
 let __debug__ ?(token=mock_token) token_list call_source =
+  if __DEV__ <> true then () else
   let token_string = lazy_token_to_string token in
   let line = String.make ((String.length call_source) + 2) '-' in
   Printf.printf "\x1b[90m ┌%s┐\n" line;
