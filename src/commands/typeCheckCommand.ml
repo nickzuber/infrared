@@ -6,11 +6,7 @@ open CommandSpec
    typecheck, since we won't be calling Parse.parse anymore. *)
 let check_files ~args ~flags =
   (* let _ = List.exists (fun x -> x = "--flag-we-care-about") flags in *)
-  let files = List.fold_left (fun acc arg -> 
-    let response = Fs.extract_files arg in
-    match response with
-    | Some paths -> acc @ paths
-    | None -> acc) [] args in
+  let files = FileParser.get_files_from_args args in
   let files = List.sort (fun a b -> String.compare a b) files in
   if List.length files > 0 then
     List.iter (fun path ->

@@ -62,4 +62,3 @@ TOKENS:
   Operator: StrictNotEqual [90m(51:1)[39m
   Operator: StrictEqual [90m(51:4)[39m
   Operator: Equal [90m(51:7)[39m
-

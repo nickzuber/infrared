@@ -3,11 +3,7 @@ open CommandSpec
 open Ast
 
 let generate_ast_list ~args ~flags =
-  let files = List.fold_left (fun acc arg -> 
-    let response = Fs.extract_files arg in
-    match response with
-    | Some paths -> acc @ paths
-    | None -> acc) [] args in
+  let files = FileParser.get_files_from_args args in
   let files = List.sort (fun a b -> String.compare a b) files in
   if List.length files > 0 then
     List.fold_left (fun acc path ->
