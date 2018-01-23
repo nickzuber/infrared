@@ -11,48 +11,22 @@
             "name": "ExpressionStatement",
             "children": [
                 {
-                    "name": "BinaryExpression",
+                    "name": "AssignmentExpression",
                     "children": [
+                        {
+                            "name": "AssignmentTargetIdentifier",
+                            "children": [],
+                            "description": "a",
+                            "rule": "binding"
+                        },
                         {
                             "name": "AssignmentExpression",
                             "children": [
                                 {
                                     "name": "AssignmentTargetIdentifier",
                                     "children": [],
-                                    "description": "a",
+                                    "description": "b",
                                     "rule": "binding"
-                                },
-                                {
-                                    "name": "BinaryExpression",
-                                    "children": [
-                                        {
-                                            "name": "LiteralNumericExpression",
-                                            "children": [],
-                                            "description": 1,
-                                            "rule": "left"
-                                        },
-                                        {
-                                            "name": "IdentifierExpression",
-                                            "children": [],
-                                            "description": "b",
-                                            "rule": "right"
-                                        }
-                                    ],
-                                    "description": "Plus",
-                                    "rule": "expression"
-                                }
-                            ],
-                            "description": null,
-                            "rule": "left"
-                        },
-                        {
-                            "name": "BinaryExpression",
-                            "children": [
-                                {
-                                    "name": "IdentifierExpression",
-                                    "children": [],
-                                    "description": "c",
-                                    "rule": "left"
                                 },
                                 {
                                     "name": "AssignmentExpression",
@@ -60,25 +34,38 @@
                                         {
                                             "name": "AssignmentTargetIdentifier",
                                             "children": [],
-                                            "description": "d",
+                                            "description": "c",
                                             "rule": "binding"
                                         },
                                         {
-                                            "name": "IdentifierExpression",
-                                            "children": [],
-                                            "description": "e",
+                                            "name": "AssignmentExpression",
+                                            "children": [
+                                                {
+                                                    "name": "AssignmentTargetIdentifier",
+                                                    "children": [],
+                                                    "description": "d",
+                                                    "rule": "binding"
+                                                },
+                                                {
+                                                    "name": "IdentifierExpression",
+                                                    "children": [],
+                                                    "description": "e",
+                                                    "rule": "expression"
+                                                }
+                                            ],
+                                            "description": null,
                                             "rule": "expression"
                                         }
                                     ],
                                     "description": null,
-                                    "rule": "right"
+                                    "rule": "expression"
                                 }
                             ],
-                            "description": "Comma",
-                            "rule": "right"
+                            "description": null,
+                            "rule": "expression"
                         }
                     ],
-                    "description": "Comma",
+                    "description": null,
                     "rule": "expression"
                 }
             ],

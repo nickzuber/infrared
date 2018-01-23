@@ -30,7 +30,7 @@ As development continues I'll try my best to update the current state of the pro
 
 <!-- ### Goals -->
 
-## How and Why It Works — LR(k) Parsing vs LL(k) Parsing 
+## How and Why It Works — LR(k) Parsing vs LL(k) Parsing
 
 > Some neat implementation details and all that good stuff.
 
@@ -44,11 +44,11 @@ One interesting design choice is that we've constructed an leftmost derivation p
 
 ### 1.) Efficiency and Compatibility
 
-It really doesn't make much of a difference _in general_ when it comes to the efficiency of an LL parser and an LR parser. The LL approach has opportunities to be less performant (due to backtracking, mainly), however the [speed of both approaches are comparable](http://www.garshol.priv.no/download/text/bnf.html#id4.3.). 
+It really doesn't make much of a difference _in general_ when it comes to the efficiency of an LL parser and an LR parser. The LL approach has opportunities to be less performant (due to backtracking, mainly), however the [speed of both approaches are comparable](http://www.garshol.priv.no/download/text/bnf.html#id4.3.).
 
-Now we also need to worry about compatibility with JavaScript itself. Most JS compilers are written with a LR approach; even the AST specification we use here [implemented with a rightmost derivation approach](#). If we were to _evaluate_ JS, this would _absolutely_ make a difference. With precedence optimizations aside, imagine a simple expression of `1 - 2 + 3`. If we were to take a leftmost derivation approach, this would be evaluated as `(1 - (2 + 3)) = -4`, _however_, using a rightmost approach we'd get `((1 - 2) + 3) = 2`. 
+Now we also need to worry about compatibility with JavaScript itself. Most JS compilers are written with a LR approach; even the AST specification we use here [implemented with a rightmost derivation approach](#). If we were to _evaluate_ JS, this would _absolutely_ make a difference. With precedence optimizations aside, imagine a simple expression of `1 - 2 + 3`. If we were to take a leftmost derivation approach, this would be evaluated as `(1 - (2 + 3)) = -4`, _however_, using a rightmost approach we'd get `((1 - 2) + 3) = 2`.
 
-So we know this choice matters when evaluating JS, but does it matter when inferring a type system? To be honest, I thought about this question quite a bit and had come to the conclusion that **it does not**! To put my own mind at rest, as well as any skeptics out there, I [wrote a short paper proving that this proposition holds true](proofs/binary_expression_commutativity.pdf). There might be some mistakes in there; feel free to call me out on it! The basic idea is that no matter the ordering of binary nodes in an AST, the inferred types will always propagate to the top all the same. 
+So we know this choice matters when evaluating JS, but does it matter when inferring a type system? To be honest, I thought about this question quite a bit and had come to the conclusion that **it does not**! To put my own mind at rest, as well as any skeptics out there, I [wrote a short paper proving that this proposition holds true](proofs/binary_expression_commutativity.pdf). There might be some mistakes in there; feel free to call me out on it! The basic idea is that no matter the ordering of binary nodes in an AST, the inferred types will always propagate to the top all the same.
 
 ### 1.1) Backtracking and Recursive Decent
 
@@ -71,6 +71,38 @@ One of my main goals with this project is to produce meaningful messages. This i
 ## Usage
 
 > Now let's figure out how to actually use this thing.
+
+## Contributing
+
+> Getting into the swing of things.
+
+We have a few tools that help with the development process.
+
+### AST Viewer
+
+<img src=".github/viewer.png" alt="AST Viewer example" />
+
+```
+$ make view
+./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
+node viewer/ast_to_treedata.js > viewer/public/treeData.json && \
+	node viewer/app.js
+Ready on port 8080...
+```
+
+will parse the code in the experimental testing file into an AST and generate a visual representation for you.
+
+### Development Debugging Mode
+
+Navigate over to `./src/utils.dev.ml` and turn on the development flag.
+
+```ocaml
+let __DEV__ = true
+```
+
+and now when you parse a file, a trace of the token list, current token, and subroutine will be printed to the console.
+
+<img src=".github/debug" alt="Debugging output example" />
 
 ## License
 

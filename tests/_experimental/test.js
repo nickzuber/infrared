@@ -28,7 +28,7 @@
 
 // foo, bar, baz, x = 1
 
-foo + bar
+a = b = c = d = e
 
 // BinaryExpression with AssignmentExpression
 // foo = bar = baz

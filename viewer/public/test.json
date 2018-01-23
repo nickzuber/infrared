@@ -12,67 +12,53 @@
             {
                 "ExpressionStatement": {
                     "expression": {
-                        "BinaryExpression": {
-                            "left": {
+                        "AssignmentExpression": {
+                            "binding": {
+                                "AssignmentTargetIdentifier": {
+                                    "name": "a",
+                                    "type": "AssignmentTargetIdentifier"
+                                }
+                            },
+                            "expression": {
                                 "AssignmentExpression": {
                                     "binding": {
                                         "AssignmentTargetIdentifier": {
-                                            "name": "a",
+                                            "name": "b",
                                             "type": "AssignmentTargetIdentifier"
                                         }
                                     },
                                     "expression": {
-                                        "BinaryExpression": {
-                                            "left": {
-                                                "LiteralNumericExpression": {
-                                                    "type": "LiteralNumericExpression",
-                                                    "value": 1.0
-                                                }
-                                            },
-                                            "operator": "Plus",
-                                            "right": {
-                                                "IdentifierExpression": {
-                                                    "name": "b",
-                                                    "type": "IdentifierExpression"
-                                                }
-                                            },
-                                            "type": "BinaryExpression"
-                                        }
-                                    },
-                                    "type": "AssignmentExpression"
-                                }
-                            },
-                            "operator": "Comma",
-                            "right": {
-                                "BinaryExpression": {
-                                    "left": {
-                                        "IdentifierExpression": {
-                                            "name": "c",
-                                            "type": "IdentifierExpression"
-                                        }
-                                    },
-                                    "operator": "Comma",
-                                    "right": {
                                         "AssignmentExpression": {
                                             "binding": {
                                                 "AssignmentTargetIdentifier": {
-                                                    "name": "d",
+                                                    "name": "c",
                                                     "type": "AssignmentTargetIdentifier"
                                                 }
                                             },
                                             "expression": {
-                                                "IdentifierExpression": {
-                                                    "name": "e",
-                                                    "type": "IdentifierExpression"
+                                                "AssignmentExpression": {
+                                                    "binding": {
+                                                        "AssignmentTargetIdentifier": {
+                                                            "name": "d",
+                                                            "type": "AssignmentTargetIdentifier"
+                                                        }
+                                                    },
+                                                    "expression": {
+                                                        "IdentifierExpression": {
+                                                            "name": "e",
+                                                            "type": "IdentifierExpression"
+                                                        }
+                                                    },
+                                                    "type": "AssignmentExpression"
                                                 }
                                             },
                                             "type": "AssignmentExpression"
                                         }
                                     },
-                                    "type": "BinaryExpression"
+                                    "type": "AssignmentExpression"
                                 }
                             },
-                            "type": "BinaryExpression"
+                            "type": "AssignmentExpression"
                         }
                     },
                     "type": "ExpressionStatement"
