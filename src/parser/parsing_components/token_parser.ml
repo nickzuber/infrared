@@ -75,7 +75,7 @@ end = struct
       let wrapped_node = Ast.Module.Statement node in
       let ast_nodes' = wrapped_node :: ast_nodes in
       parse_items token_list'' ast_nodes'
-    (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall 
+    (* @TODO no need to explicitly implement skippable tokens, this will be handled by the catchall
        at the end of the match statement once everything is implemented. *)
     | Comment -> parse_items token_list' ast_nodes
     | _ ->
@@ -141,12 +141,12 @@ end = struct
           let msg = "HALTING: binop in identifier statement" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
           in raise (Unimplemented err)
-        | _ -> 
+        | _ ->
           let msg = "Encountered an unexpected operator, did you mean to do this?" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
           in raise (ParsingError err)
       end
-    | _ -> 
+    | _ ->
       (* Either no token or no reasonable token is next *)
       let node = Expression_parser.create_identifier_expression ~name:name token in
       (* All these wraps seem a little convoluted.. wondering if if there's a better way. *)
@@ -203,10 +203,10 @@ end = struct
     | _ -> false
 
   (* Note that this takes binary operator tokens and converts them into their binary operator
-   * AST node counterpart *if that counterpart exists as an AST binop*. For example, Assignment 
+   * AST node counterpart *if that counterpart exists as an AST binop*. For example, Assignment
    * is considered a binop but is not represented as a binary operator in this AST. This should
-   * be fine though since we would be handling that different anyways. 
-   * CompoundAssignmentOperators are also considered to be something different so they aren't 
+   * be fine though since we would be handling that different anyways.
+   * CompoundAssignmentOperators are also considered to be something different so they aren't
    * represented here. *)
   let create_binary_operator op_token = Ast.BinaryOperator.(
     match op_token.body with
@@ -235,7 +235,7 @@ end = struct
     | Operator Or -> Or
     | Operator Xor -> Xor
     | Operator And -> And
-    | _ -> 
+    | _ ->
       let msg = "Attempted to create a binary operator with an incompatible token" in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:op_token.loc ~msg:msg
       in raise (ParsingError err))
@@ -259,7 +259,7 @@ end = struct
     { _type = "SpreadElement"; expression })
 
   (* Initial parsing phase for an expression. Once we resolve some expression, we want to pass it
-   * in to parse_rest_of_expression to see if there's any more we want to do to it. 
+   * in to parse_rest_of_expression to see if there's any more we want to do to it.
    * For example, consider the expression `foo()`. On our initial parsing phase, we'd parse the expression
    * of `foo` as an identifier. We then go on to see if there's something that could augment
    * this expression, and in this case there is and it becomes a call expression of `foo`. *)
@@ -280,21 +280,21 @@ end = struct
       let ast_node, _ = parse inner_token_list
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | _ ->
-      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n    \
+      let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
         This doesn't necessarily mean this token is valid." in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
       in raise (Unimplemented err))
-  
+
   (* This is kind of janky, but `last_node_name` contains some meta data about the last node we just parsed,
    * notably a string that represents its name (only set IF it's an `IdentifierExpression`). We do this because
    * sometimes we want to get the previous node's name IF it's an `IdentifierExpression`, but since `last_node`
    * is from the generic module `Expression`, we can never _assume_ it's an `IdentifierExpression` so we can
-   * never ask it for its name value. 
-   * 
+   * never ask it for its name value.
+   *
    * This is because our AST is a module, not a type. Therefore we can't try to match some structure to see if
    * our `Expression` is of the submodule `IdentifierExpression`. If there's a better way to handle this, I'll
    * gladly change it, but in the mean time this does the trick and I can't really think of a cleaner way to do this. *)
-  and parse_rest_of_expression ?(early_bail_token=None) ?(last_node_name="") last_node token_list = 
+  and parse_rest_of_expression ?(early_bail_token=None) ?(last_node_name="") last_node token_list =
                                Dev.__debug__ token_list "Expression_parser.parse_rest_of_expression"; Expression.(
     if List.length token_list = 0 then
       last_node, token_list
@@ -305,12 +305,13 @@ end = struct
          * NOTE: Early bailing currently does NOT eat the bailed token. *)
         match early_bail_token with
         | Some bail_token when bail_token = token.body -> last_node, token_list
-        | _ -> 
+        | _ ->
           begin
             match token.body with
             | Operator op when op = Assignment ->
-              (* last_node assignment binding *)
-              let node, token_list'', bailed_early_for_comma = create_assignment_expression ~name:last_node_name token_list in
+              (*  *)
+              (* `last_node` assignment binding, notice the assignment token has been eaten by the pattern match statement *)
+              let node, token_list'', bailed_early_for_comma = create_assignment_expression ~name:last_node_name token_list' in
               let node' = Ast.Expression.AssignmentExpression node in
               let ast_node, token_list''' = if bailed_early_for_comma then
                 let node, token_list''' = create_binary_expression node' token_list'' in
@@ -329,7 +330,7 @@ end = struct
               let arguments' = List.rev arguments in
               let ast_node = (CallExpression (create_call_expression ~callee:callee ~arguments:arguments' token))
               in ast_node, token_list'
-            (* Since the next token isn't something that could augment this expression, 
+            (* Since the next token isn't something that could augment this expression,
              * we know that this expression is finished. *)
             | _ -> last_node, token_list
           end
@@ -351,7 +352,7 @@ end = struct
             let token_list'' = eat_if_on_top bail_token token_list'' in
             let ast_node = create_spread_element ~expression:expression token in
             (Ast.Arguments.SpreadElement ast_node), token_list''
-          | _ -> 
+          | _ ->
             (* Pass in original token_list to preserve the token we popped *)
             let ast_node, token_list'' = parse ~early_bail_token:bail_token token_list in
             let token_list'' = eat_if_on_top bail_token token_list'' in
@@ -380,10 +381,10 @@ end = struct
     in ast_node', token_list
   )
 
-  (* Expects the `name` to be the name of the binding identifier 
+  (* Expects the `name` to be the name of the binding identifier
      Expects the front token of `token_list` to NOT include its binary operator
       - eat this binop before you pass it to this function *)
-  and create_assignment_expression ~name token_list = Ast.AssignmentExpression.(
+  and create_assignment_expression ~name token_list = Dev.__debug__ token_list "Expression_parser.create_assignment_expression"; Ast.AssignmentExpression.(
     let binding, token_list' = create_assignment_target ~name:name token_list in
     let bail_token = Some (Operator Comma) in
     let expression, token_list'' = parse ~early_bail_token:bail_token token_list' in
@@ -395,7 +396,7 @@ end
 
 
 (** Variable *)
-and Variable_parser : sig 
+and Variable_parser : sig
   val create_binding_identifier : Ast.Identifier.t -> Ast.BindingIdentifier.t
   val create_declarator : Ast.BindingIdentifier.t -> Ast.Expression.t option -> Ast.VariableDeclarator.t
   val parse_declarators : Ast.VariableDeclarator.t list -> Token.t list -> Ast.VariableDeclarator.t list * Token.t list
@@ -416,7 +417,7 @@ end = struct
     let token, token_list' = optimistic_pop_token token_list ~err:declarator_pop_err in
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
-      | _ -> 
+      | _ ->
         let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_err
         in raise (ParsingError err) in
     (* Check next token to see if we have more identifiers.
@@ -429,7 +430,7 @@ end = struct
         begin
           match op with
           (* Done with declarators, parse init. Wrap it up *)
-          | Assignment -> 
+          | Assignment ->
             begin
               let init, token_list''' = Expression_parser.parse token_list'' in
               let declarator = create_declarator binding (Some init) in
@@ -437,22 +438,22 @@ end = struct
               in (List.rev updated_declarators), token_list'''
             end
           (* We have more declarators, no init yet *)
-          | Comma -> 
+          | Comma ->
             begin
               let declarator = create_declarator binding None in
               let updated_declarators = declarator :: declarators_so_far
               in parse_declarators updated_declarators token_list''
             end
-          | _ -> 
+          | _ ->
             let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_op_err
             in raise (ParsingError err)
         end
-      (* No assignment & done with declarators. Wrap it up *) 
-      | _ -> 
+      (* No assignment & done with declarators. Wrap it up *)
+      | _ ->
         let declarator = create_declarator binding None in
         let updated_declarators = declarator :: declarators_so_far
         in (List.rev updated_declarators), token_list'
-    
+
   let parse_declaration ~t token_list = VariableDeclaration.(
     let t' = match t with
       | Var -> VariableDeclarationKind.Var
@@ -485,22 +486,22 @@ end = struct
     let wrapped_node = Ast.Program.Module node in
     wrapped_node)
 
-  let parse_directives token_list = 
+  let parse_directives token_list =
     let rec get_all_directives token_list directives =
       (* No tokens means we're done here *)
       if List.length token_list = 0 then directives, token_list else
       (* Tokens left we still want to check for directives *)
       let first_token = List.hd token_list in
       match first_token.body with
-      | String directive -> 
-        let token_list' = eat token_list in 
+      | String directive ->
+        let token_list' = eat token_list in
         let directives' = directive :: directives in
         get_all_directives token_list' directives'
       | _ -> directives, token_list in
     let raw_directives, final_tokens = get_all_directives token_list [] in
-    let final_directives = 
-      List.fold_left 
-        (fun acc rawValue -> 
+    let final_directives =
+      List.fold_left
+        (fun acc rawValue ->
           let dir = { Directive._type = "Directive"; rawValue } in
           dir :: acc)
         [] raw_directives

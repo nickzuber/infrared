@@ -1,7 +1,7 @@
 'use strict';
 
 // IdentifierExpression
-foo = 1 + 2(
+// foo = 1 + 2()
 
 // // AssignmentExpression
 // foo = 1
@@ -14,10 +14,10 @@ foo = 1 + 2(
 // foo = 1 % 2, 3, 4
 
 // // AssignmentExpression with BinaryExpression
-// foo = 1 - i + (3 * 4) / 5 
+// foo = 1 - i + (3 * 4) / 5
 // a = 1 + b, c, d
 
-// // a = 1 + b   ,   c    ,    d = e
+// a = 1 + b   ,   c    ,    d = e
 // a = 1 + b, c, d = e
 
 // // BinaryExpression with AssignmentExpression
@@ -28,7 +28,7 @@ foo = 1 + 2(
 
 // foo, bar, baz, x = 1
 
-// foo + bar
+foo + bar
 
-// // BinaryExpression with AssignmentExpression
+// BinaryExpression with AssignmentExpression
 // foo = bar = baz

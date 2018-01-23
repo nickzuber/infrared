@@ -29,7 +29,7 @@ let tokenize file =
 
 let print_single_token_list env =
   Printf.printf "FILE:\t%s\nTOKENS:\n" env.source;
-  List.iter (fun tok -> 
+  List.iter (fun tok ->
     Printf.printf "%s\n"
     (Token.full_token_to_string ~indent:2 tok))
   (List.rev env.token_list)
@@ -58,7 +58,7 @@ let parse_may_throw file =
     end
   | None -> None
 
-(* We still want parse to return and continue in our program. 
+(* We still want parse to return and continue in our program.
    Catch parsing errors here, report, and move on. *)
 let parse file = Token_parser.(
   try

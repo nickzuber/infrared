@@ -14,12 +14,12 @@ MODULES = src/commands \
 
 INCLUDE_MODULES = $(foreach dir, $(MODULES), -I $(dir))
 
-all: infrared
+all: build
 
 run:
 	make && make test
 
-infrared:
+build:
 	$(OCB) $(INCLUDE_MODULES) src/infrared.native
 
 version:
@@ -50,5 +50,4 @@ view:
 clean:
 	$(OCB) -clean
 
-.PHONY: all run infrared test generate_tests view clean 
-
+.PHONY: all run build test generate_tests view clean

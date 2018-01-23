@@ -12,8 +12,8 @@ let generate_ast_list ~args ~flags =
         | Some ast -> acc @ [ast]
         | None -> acc)
     [] files
-  else 
-    (Error_handler.report 
+  else
+    (Error_handler.report
       ~msg:("No files found with given path") ~level:(Level.Low); [])
 
 let spec = CommandSpec.create
