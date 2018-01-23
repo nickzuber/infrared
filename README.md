@@ -102,7 +102,7 @@ let __DEV__ = true
 
 and now when you parse a file, a trace of the token list, current token, and subroutine will be printed to the console.
 
-<img src=".github/debug" alt="Debugging output example" />
+<img src=".github/debug.png" alt="Debugging output example" />
 
 ## License
 
