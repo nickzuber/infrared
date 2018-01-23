@@ -133,14 +133,10 @@ end = struct
           in ast_node, token_list'''
         (* NOTE: we might end up handling a comma and a regular binop the same
            actually, I think this depends on if we're doing an assignment or not *)
-        | Operator op when op = Token.Comma ->
+        | Operator op when Expression_parser.is_binop_for_binexp op ->
           let node, token_list'' = Expression_parser.parse token_list in
           let wrapped_node = create_expression_statement node
           in wrapped_node, token_list''
-        | Operator op when Expression_parser.is_binop op ->
-          let msg = "HALTING: binop in identifier statement" in
-          let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
-          in raise (Unimplemented err)
         | _ ->
           let msg = "Encountered an unexpected operator, did you mean to do this?" in
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
@@ -178,6 +174,7 @@ end
 and Expression_parser : sig
   val parsing_pop_err : string
   val is_binop : Token.ops -> bool
+  val is_binop_for_binexp : Token.ops -> bool
   val create_assignment_target : name:Ast.Identifier.t -> Token.t list -> Ast.AssignmentTarget.t * Token.t list
   val create_assignment_expression : name:string -> Token.t list -> Ast.AssignmentExpression.t * Token.t list * bool
   val create_identifier_expression : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
@@ -200,6 +197,13 @@ end = struct
     | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
     | Plus | Minus | Mult | Div | Mod | Pow | Comma | LogicalOr | LogicalAnd | Or | Xor
     | And | Bang | Not | Increment | Decrement | Dot | Colon | Ternary | Assignment -> true
+    | _ -> false
+
+  let is_binop_for_binexp = function
+    | NotEqual | StrictEqual | StrictNotEqual | LessThan | LessThanEqual
+    | GreaterThan | GreaterThanEqual | LeftShift | RightShift | RightShiftUnsigned
+    | Plus | Minus | Mult | Div | Mod | Pow | Comma | LogicalOr | LogicalAnd | Or | Xor
+    | And | Not -> true
     | _ -> false
 
   (* Note that this takes binary operator tokens and converts them into their binary operator
