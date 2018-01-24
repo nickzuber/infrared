@@ -1,4 +1,4 @@
-FILE:	/Users/nick/projects/infrared/tests/lexer/operators/operators.js
+FILE:	/Users/nick/projects/infrared/tests/lexer/operator/operators.js
 TOKENS:
   Operator: CA_Plus [90m(1:1)[39m
   Operator: CA_Minus [90m(2:1)[39m

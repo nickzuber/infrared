@@ -1,4 +1,4 @@
-FILE:	/Users/nick/projects/infrared/tests/lexer/strings/strings.js
+FILE:	/Users/nick/projects/infrared/tests/lexer/string/strings.js
 TOKENS:
   String  [90m(1:2)[39m
   String single [90m(2:8)[39m

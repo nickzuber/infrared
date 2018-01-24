@@ -1,4 +1,4 @@
-FILE:	/Users/nick/projects/infrared/tests/lexer/template_strings/template_strings.js
+FILE:	/Users/nick/projects/infrared/tests/lexer/template_string/template_strings.js
 TOKENS:
   TemplateString `` {} [90m(1:2)[39m
   TemplateString `single` {} [90m(2:8)[39m

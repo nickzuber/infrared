@@ -4,7 +4,7 @@ from subprocess import check_output
 from os import listdir, remove
 from os.path import join, isfile
 from time import sleep
-from utils import Colour, FoundError, FailedTest, getCurrentAbsolutePath, existsIn, EXEC, WHITE_LISTED_EXTENSIONS
+from utils import Colour, FoundError, FailedTest, IncompleteTest, getCurrentAbsolutePath, existsIn, EXEC, WHITE_LISTED_EXTENSIONS
 
 dir_path = getCurrentAbsolutePath(__file__)
 
@@ -21,7 +21,7 @@ exit_with_failure = False
 
 for job in jobs:
     print(Colour.BOLD + "\nRUNNING TESTS: " + Colour.END + job[0])
-    try: 
+    try:
         # We don't want to check any dotfiles in these directories
         directories = [f for f in listdir(job[0]) if f[0] != "."]
     except:
@@ -29,12 +29,13 @@ for job in jobs:
         continue
     for path in directories:
         real_path = join(job[0], path)
-        print(Colour.LIGHT_GRAY + u'\u25F4' + " RUNNING " + Colour.END + path, end="\r")
+        print(Colour.LIGHT_GRAY + u'\u25CC' + " RUNNING " + Colour.END + path, end="\r")
         try:
             # Find test file (we only expect 1 file at the moment)
             files = listdir(real_path)
             files_valid = [f for f in files if existsIn(WHITE_LISTED_EXTENSIONS, f[-3:])]
-            if len(files_valid) != 1: raise
+            if len(files_valid) != 1:
+                raise IncompleteTest()
             file = join(real_path, files_valid[0])
             actual = check_output([EXEC, job[1], file])
             # Read expected output file
@@ -53,18 +54,19 @@ for job in jobs:
             # Remove error output file if one exists
             if isfile(file_actual_name):
                 remove(file_actual_name)
-            print(Colour.GREEN + u'\u2713' + " success " + Colour.END + path + "    ")
+            print(Colour.GREEN + u'\u2713' + " success    " + Colour.END + path + "    ")
         except FailedTest as e:
             exit_with_failure = True
             obj = e.args[0]
-            print(Colour.RED + u'\u2715' + " failure " + Colour.END + path + ": " +
+            print(Colour.RED + u'\u2715' + " failure    " + Colour.END + path + ": " +
                   Colour.LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + Colour.END)
+        except IncompleteTest as _:
+            print(Colour.LIGHT_GRAY + u'\u25CC' + " incomplete " + Colour.END + path + "    ")
         except:
             exit_with_failure = True
-            print(Colour.RED + u'\u2715' + " error " + Colour.END + path + "    ")
+            print(Colour.RED + u'\u2715' + " error      " + Colour.END + path + "    ")
 
 # Exit non zero error code so ci fails
 if exit_with_failure:
   print('')
   raise FailedTest
-

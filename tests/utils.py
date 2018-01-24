@@ -7,6 +7,9 @@ class FoundError(Exception):
 class FailedTest(Exception):
     pass
 
+class IncompleteTest(Exception):
+    pass
+
 class Colour:
     END = '\033[0m'
     BOLD = '\033[1m'

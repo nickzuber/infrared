@@ -139,9 +139,9 @@ and pp_call_expression node =
   let callee = match node.callee with
     | Expression node -> pp_expression node
     | Super node -> "\"Unimplemented CallExpression.callee.super type\"" in
-  let arguments = 
+  let arguments =
     List.fold_left
-      (fun acc item -> 
+      (fun acc item ->
         let item = pp_argument item
         in acc ^ item ^ ",")
       "" node.arguments in
@@ -270,15 +270,15 @@ and pp_directive node =
     node.rawValue
   in json
 
-and pp_module node =  
+and pp_module node =
   let open Ast.Module in
   let directives =
     List.fold_left
       (fun acc directive -> acc ^ (pp_directive directive))
       "" node.directives in
-  let items = 
+  let items =
     List.fold_left
-      (fun acc item -> 
+      (fun acc item ->
         let item = match item with
         | Statement node -> pp_statement node
         | _ -> "\"Unimplemented Module.items type\""

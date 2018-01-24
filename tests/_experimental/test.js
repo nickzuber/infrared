@@ -31,4 +31,5 @@
 // foo + bar + c
 
 // BinaryExpression with AssignmentExpression
-foo = bar = baz
+// foo = bar = baz
+(a + b)
