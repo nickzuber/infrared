@@ -31,23 +31,22 @@ test:
 generate-tests:
 	python tests/generate_tests.py
 
-# @TEMP
-e-test:
+try:
 	./infrared.native parse tests/_experimental/test.js
-e-test-s:
+
+try-save:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool > tests/_experimental/test.json
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
-e-test-p:
-	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 
+try-pretty:
+	./infrared.native parse tests/_experimental/test.js | python -m json.tool
 
 view:
 	./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
 	node viewer/ast_to_treedata.js > viewer/public/treeData.json && \
 	node viewer/app.js
 
-
 clean:
 	$(OCB) -clean
 
-.PHONY: all run build test generate_tests view clean
+.PHONY: all run build version test generate-tests try try-save try-pretty view clean
