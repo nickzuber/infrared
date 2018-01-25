@@ -70,6 +70,7 @@ end = struct
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
     | Identifier _
+    | Number _
     | Variable _ ->
       let node, token_list'' = Statement_parser.parse token_list in
       let wrapped_node = Ast.Module.Statement node in
@@ -80,7 +81,7 @@ end = struct
     | Comment -> parse_items token_list' ast_nodes
     | _ ->
       let tok = lazy_token_to_string token in
-      let msg = "We haven't implemented a way to parse this token yet in Module items\n    " ^ tok in
+      let msg = "We haven't implemented a way to parse this token yet in Module items:\n>> " ^ tok in
       let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
       raise (Unimplemented err)
 end
@@ -153,6 +154,11 @@ end = struct
   let parse token_list = Dev.__debug__ token_list "Statement_parser.parse";
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
+    | Number v ->
+      let node, token_list'' = Expression_parser.parse token_list in
+      let node' = create_expression_statement node in
+      let ast_node = Ast.Statement.ExpressionStatement node'
+      in ast_node, token_list''
     | Variable t ->
       let node, token_list'' = Variable_parser.parse_declaration_statement ~t:t token_list' in
       let ast_node = Ast.Statement.VariableDeclarationStatement node

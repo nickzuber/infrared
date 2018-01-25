@@ -1,5 +1,5 @@
 
-var _ = test({...d})
+1()
 
 // IdentifierExpression
 // foo = 1 + 2()
