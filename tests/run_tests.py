@@ -20,6 +20,8 @@ jobs = [
 exit_with_failure = False
 
 for job in jobs:
+    total = 0
+    successes = 0
     print(Colour.BOLD + "\nRUNNING TESTS: " + Colour.END + job[0])
     try:
         # We don't want to check any dotfiles in these directories
@@ -28,6 +30,7 @@ for job in jobs:
         print("Directory was not found: " + job[0])
         continue
     for path in directories:
+        total = total + 1
         real_path = join(job[0], path)
         print(Colour.LIGHT_GRAY + u'\u25CC' + " RUNNING " + Colour.END + path, end="\r")
         try:
@@ -54,6 +57,7 @@ for job in jobs:
             # Remove error output file if one exists
             if isfile(file_actual_name):
                 remove(file_actual_name)
+            successes = successes + 1
             print(Colour.GREEN + u'\u2713' + " success    " + Colour.END + path + "    ")
         except FailedTest as e:
             exit_with_failure = True
@@ -65,6 +69,8 @@ for job in jobs:
         except:
             exit_with_failure = True
             print(Colour.RED + u'\u2715' + " error      " + Colour.END + path + "    ")
+    ending_art = Colour.GREEN + u'\u2713' if successes == total else Colour.RED + u'\u2715'
+    print("\n" + ending_art + Colour.END + " Successfully completed {}/{} tests\n".format(successes, total))
 
 # Exit non zero error code so ci fails
 if exit_with_failure:

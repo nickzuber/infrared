@@ -6,7 +6,7 @@ nick + test
 
 var a = 1
 
-var
+var const
 
 var test
 

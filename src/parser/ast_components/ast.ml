@@ -3,7 +3,7 @@
  * https://blogs.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
  *
  * This AST implementation is based off of the Shift AST specification
- * described here: http://shift-ast.org/ 
+ * described here: http://shift-ast.org/
  *
  * Note for translating spec.idl to ocaml:
  * ```
@@ -14,8 +14,8 @@
  *   type t =
  *     | B of B.t
  * end = A
- * 
- * and B : sig 
+ *
+ * and B : sig
  *   type t = { ...attributes }
  * end = B
  * ```
@@ -27,9 +27,9 @@
  * A module will only have an __attributes__ field if it is not a terminal
  * module. If it is a terminal module, then technically its __attribute__
  * field would just be its type.
- * 
+ *
  *)
- 
+
 
 (*** Supporting types ***)
 
@@ -62,7 +62,7 @@ end = Label
 
 (* typedef *)
 and VariableDeclarationKind : sig
-  type t = 
+  type t =
     | Var
     | Let
     | Const
@@ -70,8 +70,8 @@ and VariableDeclarationKind : sig
 end = VariableDeclarationKind
 
 (* typedef *)
-and CompoundAssignmentOperator : sig 
-  type t = 
+and CompoundAssignmentOperator : sig
+  type t =
     | Plus                (*    +=    *)
     | Minus               (*    -=    *)
     | Mult                (*    *=    *)
@@ -88,8 +88,8 @@ and CompoundAssignmentOperator : sig
 end = CompoundAssignmentOperator
 
 (* typedef *)
-and BinaryOperator : sig 
-  type t = 
+and BinaryOperator : sig
+  type t =
     | Equal               (*    ==    *)
     | NotEqual            (*    !=    *)
     | StrictEqual         (*    ===   *)
@@ -120,20 +120,20 @@ end = BinaryOperator
 
 (* typedef *)
 and UnaryOperator : sig
-  type t = 
+  type t =
     | Plus                (*    +     *)
     | Minus               (*    -     *)
     | Bang                (*    !     *)
     | Not                 (*    ~     *)
-    | Typeof              
-    | Void                
+    | Typeof
+    | Void
     | Delete
     [@@deriving show]
 end = UnaryOperator
 
 (* typedef *)
 and UpdateOperator : sig
-  type t = 
+  type t =
     | Increment           (*    ++    *)
     | Decrement           (*    --    *)
     [@@deriving show]
@@ -161,11 +161,11 @@ and Node : sig
       _type: string;
     }
   end
-  type t = 
+  type t =
     | Program of Program.t
     | Statement of Statement.t
     | Expression of Expression.t
-    | PropertyName of PropertyName.t 
+    | PropertyName of PropertyName.t
     | ObjectProperty of ObjectProperty.t
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
@@ -216,7 +216,7 @@ and Statement : sig
       _type: string;
     }
   end
-  type t = 
+  type t =
     | IterationStatement of IterationStatement.t
     | ClassDeclaration of ClassDeclaration.t
     | BlockStatement of BlockStatement.t
@@ -246,7 +246,7 @@ and IterationStatement : sig
       body: Statement.t;
     }
   end
-  type t = 
+  type t =
     | DoWhileStatement of DoWhileStatement.t
     | ForInStatement of ForInStatement.t
     | ForOfStatement of ForOfStatement.t
@@ -261,7 +261,7 @@ and Expression : sig
       _type: string;
     }
   end
-  type t = 
+  type t =
     | IdentifierExpression of IdentifierExpression.t
     | LiteralNumericExpression of LiteralNumericExpression.t
     | LiteralBooleanExpression of LiteralBooleanExpression.t
@@ -295,7 +295,7 @@ end = Expression
 
 and MemberExpression : sig
   module Attributes : sig
-    type _object_types = 
+    type _object_types =
       | Expression of Expression.t
       | Super of Super.t
     type t = {
@@ -303,7 +303,7 @@ and MemberExpression : sig
       _object: _object_types;
     }
   end
-  type t = 
+  type t =
     | ComputedMemberExpression of ComputedMemberExpression.t
     | StaticMemberExpression of StaticMemberExpression.t
     [@@deriving show]
@@ -340,7 +340,7 @@ and NamedObjectProperty : sig
       name: PropertyName.t;
     }
   end
-  type t = 
+  type t =
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
     [@@deriving show]
@@ -354,7 +354,7 @@ and MethodDefinition : sig
       body: FunctionBody.t;
     }
   end
-  type t = 
+  type t =
     | Method of Method.t
     | Getter of Getter.t
     | Setter of Setter.t
@@ -368,7 +368,7 @@ and ImportDeclaration : sig
       moduleSpecifier: string;
     }
   end
-  type t = 
+  type t =
     | Import of Import.t
     | ImportNamespace of ImportNamespace.t
     [@@deriving show]
@@ -396,7 +396,7 @@ and VariableReference : sig
       name: Identifier.t;
     }
   end
-  type t = 
+  type t =
     | BindingIdentifier of BindingIdentifier.t
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
     [@@deriving show]
@@ -407,7 +407,7 @@ end = VariableReference
 
 (* typedef *)
 and BindingPattern : sig
-  type t = 
+  type t =
     | ObjectBinding of ObjectBinding.t
     | ArrayBinding of ArrayBinding.t
     [@@deriving show]
@@ -423,7 +423,7 @@ end = Binding
 
 (* typedef *)
 and SimpleAssignmentTarget : sig
-  type t = 
+  type t =
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
     | MemberAssignmentTarget of MemberAssignmentTarget.t
     [@@deriving show]
@@ -431,7 +431,7 @@ end = SimpleAssignmentTarget
 
 (* typedef *)
 and AssignmentTargetPattern : sig
-  type t = 
+  type t =
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
     [@@deriving show]
@@ -439,15 +439,15 @@ end = AssignmentTargetPattern
 
 (* typedef *)
 and AssignmentTarget : sig
-  type t = 
+  type t =
     | AssignmentTargetPattern of AssignmentTargetPattern.t
     | SimpleAssignmentTarget of SimpleAssignmentTarget.t
     [@@deriving show]
-end = AssignmentTarget 
+end = AssignmentTarget
 
 (* typedef *)
 and Parameter : sig
-  type t = 
+  type t =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
     [@@deriving show]
@@ -480,7 +480,7 @@ end = AssignmentTargetIdentifier
 
 and MemberAssignmentTarget : sig
   module Attributes : sig
-    type _object_types = 
+    type _object_types =
       | Expression of Expression.t
       | Super of Super.t
     type t = {
@@ -488,14 +488,14 @@ and MemberAssignmentTarget : sig
       _object: _object_types;
     }
   end
-  type t = 
+  type t =
     | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
     | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
     [@@deriving show]
 end = MemberAssignmentTarget
 
 and ComputedMemberAssignmentTarget : sig
-  type objects = 
+  type objects =
     | Expression of Expression.t
     | Super of Super.t
     [@@deriving show]
@@ -508,7 +508,7 @@ and ComputedMemberAssignmentTarget : sig
 end = ComputedMemberAssignmentTarget
 
 and StaticMemberAssignmentTarget : sig
-  type objects = 
+  type objects =
     | Expression of Expression.t
     | Super of Super.t
     [@@deriving show]
@@ -521,7 +521,7 @@ and StaticMemberAssignmentTarget : sig
 end = StaticMemberAssignmentTarget
 
 and ArrayBinding : sig
-  type element = 
+  type element =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
     [@@deriving show]
@@ -553,7 +553,7 @@ and BindingProperty : sig
       _type: string;
     }
   end
-  type t = 
+  type t =
     | BindingPropertyIdentifier of BindingPropertyIdentifier.t
     | BindingPropertyProperty of BindingPropertyProperty.t
     [@@deriving show]
@@ -569,7 +569,7 @@ and BindingPropertyIdentifier : sig
 end = BindingPropertyIdentifier
 
 and BindingPropertyProperty : sig
-  type binding = 
+  type binding =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
     [@@deriving show]
@@ -592,7 +592,7 @@ end = AssignmentTargetWithDefault
 
 and ArrayAssignmentTarget : sig
   (* ex. [a, b] = [10, 20] *)
-  type element = 
+  type element =
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
     [@@deriving show]
@@ -618,7 +618,7 @@ and AssignmentTargetProperty : sig
       _type: string;
     }
   end
-  type t = 
+  type t =
     | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
     | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
     [@@deriving show]
@@ -634,7 +634,7 @@ and AssignmentTargetPropertyIdentifier : sig
 end = AssignmentTargetPropertyIdentifier
 
 and AssignmentTargetPropertyProperty : sig
-  type binding = 
+  type binding =
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
     [@@deriving show]
@@ -694,7 +694,7 @@ end = ClassElement
 (*** Modules ***)
 
 and Module : sig
-  type item = 
+  type item =
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | Statement of Statement.t
@@ -765,7 +765,7 @@ and ExportLocals : sig
 end = ExportLocals
 
 and Export : sig
-  type declaration = 
+  type declaration =
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | VariableDeclaration of VariableDeclaration.t
@@ -778,7 +778,7 @@ and Export : sig
 end = Export
 
 and ExportDefault : sig
-  type body = 
+  type body =
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | Expression of Expression.t
@@ -940,7 +940,7 @@ end = LiteralStringExpression
 (*** Other Expressions ***)
 
 and ArrayExpression : sig
-  type element = 
+  type element =
     | SpreadElement of SpreadElement.t
     | Expression of Expression.t
   [@@deriving show]
@@ -952,7 +952,7 @@ and ArrayExpression : sig
 end = ArrayExpression
 
 and ArrowExpression : sig
-  type body = 
+  type body =
     | FunctionBody of FunctionBody.t
     | Expression of Expression.t
   [@@deriving show]
@@ -988,7 +988,7 @@ and BinaryExpression : sig
 end = BinaryExpression
 
 and CallExpression : sig
-  type callee = 
+  type callee =
     | Expression of Expression.t
     | Super of Super.t
   [@@deriving show]
@@ -1012,7 +1012,7 @@ and CompoundAssignmentExpression : sig
 end = CompoundAssignmentExpression
 
 and ComputedMemberExpression : sig
-  type _object_types = 
+  type _object_types =
     | Expression of Expression.t
     | Super of Super.t
   type t = {
@@ -1093,7 +1093,7 @@ and UnaryExpression : sig
 end = UnaryExpression
 
 and StaticMemberExpression : sig
-  type _object_types = 
+  type _object_types =
     | Expression of Expression.t
     | Super of Super.t
     [@@deriving show]
@@ -1107,7 +1107,7 @@ and StaticMemberExpression : sig
 end = StaticMemberExpression
 
 and TemplateExpression : sig
-  type element = 
+  type element =
     | Expression of Expression.t
     | TemplateElement of TemplateElement.t
     [@@deriving show]
@@ -1115,7 +1115,7 @@ and TemplateExpression : sig
     _type: string;
     (* The second `MemberExpression` or `CallExpression`, if present *)
     tag: Expression.t option;
-    (* The contents of the template. This list must be alternating 
+    (* The contents of the template. This list must be alternating
        TemplateElements and Expressions, beginning and ending with TemplateElement *)
     elements: element list;
   }
@@ -1190,7 +1190,7 @@ and ContinueStatement : sig
   }
   [@@deriving show]
 end = ContinueStatement
- 
+
 and DebuggerStatement : sig
   type t = {
     _type: string;
@@ -1223,7 +1223,7 @@ and ExpressionStatement : sig
 end = ExpressionStatement
 
 and ForInStatement : sig
-  type declaration = 
+  type declaration =
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
     [@@deriving show]
@@ -1239,7 +1239,7 @@ and ForInStatement : sig
 end = ForInStatement
 
 and ForOfStatement : sig
-  type declaration = 
+  type declaration =
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
   type t = {
@@ -1254,7 +1254,7 @@ and ForOfStatement : sig
 end = ForOfStatement
 
 and ForStatement : sig
-  type declaration = 
+  type declaration =
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
     [@@deriving show]

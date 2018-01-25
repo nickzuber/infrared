@@ -11,6 +11,7 @@ TOKENS:
   Operator: Assignment [90m(7:7)[39m
   Number 1. [90m(7:9)[39m
   Variable Var [90m(9:1)[39m
+  Variable Const [90m(9:5)[39m
   Variable Var [90m(11:1)[39m
   Identifier: test [90m(11:5)[39m
   Variable Var [90m(13:1)[39m

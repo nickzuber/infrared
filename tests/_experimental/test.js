@@ -1,4 +1,5 @@
-'use strict';
+
+var _ = test({...d})
 
 // IdentifierExpression
 // foo = 1 + 2()
@@ -32,4 +33,3 @@
 
 // BinaryExpression with AssignmentExpression
 // foo = bar = baz
-(a + b)

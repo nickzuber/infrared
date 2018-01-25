@@ -2,71 +2,53 @@
     "name": "Module",
     "children": [
         {
-            "name": "Directive",
-            "children": [],
-            "description": "use strict",
-            "rule": "directives"
-        },
-        {
-            "name": "ExpressionStatement",
+            "name": "VariableDeclarationStatement",
             "children": [
                 {
-                    "name": "AssignmentExpression",
+                    "name": "VariableDeclaration",
                     "children": [
                         {
-                            "name": "AssignmentTargetIdentifier",
-                            "children": [],
-                            "description": "a",
-                            "rule": "binding"
-                        },
-                        {
-                            "name": "AssignmentExpression",
+                            "name": "VariableDeclarator",
                             "children": [
                                 {
-                                    "name": "AssignmentTargetIdentifier",
+                                    "name": "BindingIdentifier",
                                     "children": [],
-                                    "description": "b",
+                                    "description": "_",
                                     "rule": "binding"
                                 },
                                 {
-                                    "name": "AssignmentExpression",
+                                    "name": "CallExpression",
                                     "children": [
                                         {
-                                            "name": "AssignmentTargetIdentifier",
-                                            "children": [],
-                                            "description": "c",
-                                            "rule": "binding"
-                                        },
-                                        {
-                                            "name": "AssignmentExpression",
+                                            "name": "SpreadElement",
                                             "children": [
-                                                {
-                                                    "name": "AssignmentTargetIdentifier",
-                                                    "children": [],
-                                                    "description": "d",
-                                                    "rule": "binding"
-                                                },
                                                 {
                                                     "name": "IdentifierExpression",
                                                     "children": [],
-                                                    "description": "e",
+                                                    "description": "d",
                                                     "rule": "expression"
                                                 }
                                             ],
                                             "description": null,
-                                            "rule": "expression"
+                                            "rule": "arguments"
+                                        },
+                                        {
+                                            "name": "IdentifierExpression",
+                                            "children": [],
+                                            "description": "test",
+                                            "rule": "callee"
                                         }
                                     ],
                                     "description": null,
-                                    "rule": "expression"
+                                    "rule": "init"
                                 }
                             ],
                             "description": null,
-                            "rule": "expression"
+                            "rule": "declarators"
                         }
                     ],
-                    "description": null,
-                    "rule": "expression"
+                    "description": "Var",
+                    "rule": "declaration"
                 }
             ],
             "description": null,
