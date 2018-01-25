@@ -20,6 +20,16 @@ let pp_literal_numeric_expression node =
     node.value
   in json
 
+  let pp_literal_string_expression node =
+  let open Ast.LiteralStringExpression in
+  let json = Printf.sprintf
+    "{\"LiteralStringExpression\": { \
+      \"type\": \"LiteralStringExpression\", \
+      \"value\": \"%s\" \
+    }},"
+    node.value
+  in json
+
 let pp_binary_operator node =
   let open Ast.BinaryOperator in
   match node with
@@ -55,6 +65,7 @@ let rec pp_expression node =
   let json = match node with
   | BinaryExpression node -> pp_binary_expression node
   | LiteralNumericExpression node -> pp_literal_numeric_expression node
+  | LiteralStringExpression node -> pp_literal_string_expression node
   | LiteralBooleanExpression node -> pp_literal_boolean_expression node
   | IdentifierExpression node -> pp_identifier_expression node
   | CallExpression node -> pp_call_expression node

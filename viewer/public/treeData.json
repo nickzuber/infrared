@@ -20,22 +20,27 @@
                                     "name": "CallExpression",
                                     "children": [
                                         {
-                                            "name": "SpreadElement",
-                                            "children": [
-                                                {
-                                                    "name": "IdentifierExpression",
-                                                    "children": [],
-                                                    "description": "d",
-                                                    "rule": "expression"
-                                                }
-                                            ],
+                                            "name": "IdentifierExpression",
+                                            "children": [],
+                                            "description": "a",
+                                            "rule": "arguments"
+                                        },
+                                        {
+                                            "name": "IdentifierExpression",
+                                            "children": [],
+                                            "description": "b",
+                                            "rule": "arguments"
+                                        },
+                                        {
+                                            "name": "LiteralStringExpression",
+                                            "children": [],
                                             "description": null,
                                             "rule": "arguments"
                                         },
                                         {
                                             "name": "IdentifierExpression",
                                             "children": [],
-                                            "description": "test",
+                                            "description": "require",
                                             "rule": "callee"
                                         }
                                     ],

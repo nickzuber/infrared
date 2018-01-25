@@ -69,6 +69,7 @@ end = struct
     (* Steal first token and figure out what to do *)
     let token, token_list' = optimistic_pop_token token_list in
     match token.body with
+    | Expression _
     | Identifier _
     | Number _
     | Variable _ ->
@@ -154,7 +155,12 @@ end = struct
   let parse token_list = Dev.__debug__ token_list "Statement_parser.parse";
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
-    | Number v ->
+    | Expression _ ->
+      let node, token_list'' = Expression_parser.parse token_list in
+      let node' = create_expression_statement node in
+      let ast_node = Ast.Statement.ExpressionStatement node'
+      in ast_node, token_list''
+    | Number _ ->
       let node, token_list'' = Expression_parser.parse token_list in
       let node' = create_expression_statement node in
       let ast_node = Ast.Statement.ExpressionStatement node'
@@ -185,6 +191,7 @@ and Expression_parser : sig
   val create_assignment_expression : name:string -> Token.t list -> Ast.AssignmentExpression.t * Token.t list * bool
   val create_identifier_expression : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
   val create_binary_operator : Token.t -> Ast.BinaryOperator.t
+  val create_string_literal : value:string -> 'a -> Ast.LiteralStringExpression.t
   val create_number_literal : value:float -> 'a -> Ast.LiteralNumericExpression.t
   val create_identifier_literal : name:Ast.Identifier.t -> 'a -> Ast.IdentifierExpression.t
   val create_call_expression : callee:Ast.CallExpression.callee -> arguments:Ast.Arguments.t -> 'a -> Ast.CallExpression.t
@@ -256,6 +263,9 @@ end = struct
   let create_number_literal ~value token = Ast.LiteralNumericExpression.(
     { _type = "LiteralNumericExpression"; value })
 
+  let create_string_literal ~value token = Ast.LiteralStringExpression.(
+    { _type = "LiteralStringExpression"; value })
+
   let create_identifier_literal ~name token = Ast.IdentifierExpression.(
     { _type = "IdentifierExpression"; name })
 
@@ -276,6 +286,9 @@ end = struct
   let rec parse ?(early_bail_token=None) token_list = Dev.__debug__ token_list "Expression_parser.parse"; Expression.(
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     match token.body with
+    | String value ->
+      let ast_node = (LiteralStringExpression (create_string_literal ~value:value token))
+      in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
     | Number value ->
       let ast_node = (LiteralNumericExpression (create_number_literal ~value:value token))
       in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
