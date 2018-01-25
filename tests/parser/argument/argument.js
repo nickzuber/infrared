@@ -1,0 +1,5 @@
+var _ = test(a)
+var _ = test(a, b)
+var _ = test(a, b, c)
+var _ = test(a, b, c, ...d)
+var _ = test(...d)
