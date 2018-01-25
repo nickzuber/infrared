@@ -1,1 +1,1 @@
-var _ = require(a, b, "c");
+require(a, false, "c");

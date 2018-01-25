@@ -111,6 +111,7 @@ end = struct
     let token, token_list' = optimistic_pop_token ~err:parsing_pop_err token_list in
     (* Peek at next token, look for an operator. Look for something like a binop or an assignment *)
     match (peek token_list') with
+    (* See an identifier and then an operator *)
     | Some next_token when is_operator next_token ->
       begin
         match next_token.body with
@@ -144,10 +145,24 @@ end = struct
           let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
           in raise (ParsingError err)
       end
-    | _ ->
-      (* Either no token or no reasonable token is next *)
+    (* Haven't hit the end of the file, more tokens to parse. We could either continue onto the next
+       token set or have something like a function call. *)
+    | Some next_token ->
+      begin
+        match next_token.body with
+        | Expression inner ->
+          let node, token_list'' = Expression_parser.parse token_list in
+          let wrapped_node = create_expression_statement node
+          in wrapped_node, token_list''
+        | _ ->
+          let node = Expression_parser.create_identifier_expression ~name:name token in
+          let node' = Ast.Expression.IdentifierExpression node in
+          let ast_node = create_expression_statement node'
+          in ast_node, token_list'
+      end
+    (* No tokens left, we have an identifier expresion and that's the end of the file *)
+    | None ->
       let node = Expression_parser.create_identifier_expression ~name:name token in
-      (* All these wraps seem a little convoluted.. wondering if if there's a better way. *)
       let node' = Ast.Expression.IdentifierExpression node in
       let ast_node = create_expression_statement node'
       in ast_node, token_list'
