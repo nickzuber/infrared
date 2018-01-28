@@ -1,1 +1,1 @@
-require(a, false, "c");
+require('package').OutputPatcher

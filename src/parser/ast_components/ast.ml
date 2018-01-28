@@ -268,13 +268,13 @@ and Expression : sig
     | BinaryExpression of BinaryExpression.t
     | CallExpression of CallExpression.t
     | AssignmentExpression of AssignmentExpression.t
+    | LiteralStringExpression of LiteralStringExpression.t
     (* Unimplemented in parser (below) *)
     | MemberExpression of MemberExpression.t
     | ClassExpression of ClassExpression.t
     | LiteralInfinityExpression of LiteralInfinityExpression.t
     | LiteralNullExpression of LiteralNullExpression.t
     | LiteralRegExpExpression of LiteralRegExpExpression.t
-    | LiteralStringExpression of LiteralStringExpression.t
     | ArrayExpression of ArrayExpression.t
     | ArrowExpression of ArrowExpression.t
     | CompoundAssignmentExpression of CompoundAssignmentExpression.t
