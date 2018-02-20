@@ -19,7 +19,7 @@ let report ~msg ~level =
   | Level.UnknownError ->
     print_endline("🚧 \x1b[33m Unknown error \x1b[39m" ^ msg)
 
-(* Locates the offending area in the given source file, converts to a string and returns it. 
+(* Locates the offending area in the given source file, converts to a string and returns it.
  * This string is generally thrown somewhere else. *)
 let rec exposed_error ~source ~loc ~msg =
   if use_inline_error_marking <> true then
@@ -42,8 +42,8 @@ and expose_error_fallback ~source ~loc ~msg =
   let spacing = String.make (loc.column) ' ' in
   let arrow = String.make (loc.length) '^' in
   let lines = Batteries.File.lines_of source in
-  let _ = Batteries.Enum.fold 
-    (fun cur_line line -> 
+  let _ = Batteries.Enum.fold
+    (fun cur_line line ->
       if cur_line = (loc.line - 2) then most_upper_line := line else ();
       if cur_line = (loc.line - 1) then upper_line := line else ();
       if cur_line = loc.line then offending_line := line else ();
@@ -54,10 +54,10 @@ and expose_error_fallback ~source ~loc ~msg =
   in Printf.sprintf "\
     %s\n\
     \x1b[39m   \x1b[39m%s\n\n\
-    \x1b[90m%4d │ %s\n\
-    \x1b[39m%4d │ %s\n\
-   \x1b[90m     │\x1b[1;31m%s\x1b[0;39m\n\
-    \x1b[90m%4d │ %s \x1b[39m\n"
+    \x1b[90m%4d | %s\n\
+    \x1b[39m%4d | %s\n\
+   \x1b[90m     |\x1b[1;31m%s\x1b[0;39m\n\
+    \x1b[90m%4d | %s \x1b[39m\n"
     source_file
     msg
     (loc.line - 1)
@@ -81,8 +81,8 @@ and exposed_error_with_markings ~source ~loc ~msg =
   let lower_line = ref "" in
   let most_lower_line = ref "" in
   let lines = Batteries.File.lines_of source in
-  let _ = Batteries.Enum.fold 
-    (fun cur_line line -> 
+  let _ = Batteries.Enum.fold
+    (fun cur_line line ->
       if cur_line = (loc.line - 2) then most_upper_line := line else ();
       if cur_line = (loc.line - 1) then upper_line := line else ();
       if cur_line = loc.line then offending_line := line else ();
@@ -93,11 +93,11 @@ and exposed_error_with_markings ~source ~loc ~msg =
   in Printf.sprintf "\
     %s\x1b[1m%s\x1b[0m \x1b[90m(%d:%d)\x1b[39m\n\n\
     \x1b[31m  ● \x1b[39m%s\n\n\
-    \x1b[90m%4d │ %s\n\
-    \x1b[90m%4d │ %s\n\
-    \x1b[39m%4d │ %s\x1b[41m%s\x1b[49m%s\n\
-    \x1b[90m%4d │ %s \x1b[39m\n\
-    \x1b[90m%4d │ %s \x1b[39m"
+    \x1b[90m%4d | %s\n\
+    \x1b[90m%4d | %s\n\
+    \x1b[39m%4d | %s\x1b[41m%s\x1b[49m%s\n\
+    \x1b[90m%4d | %s \x1b[39m\n\
+    \x1b[90m%4d | %s \x1b[39m\n"
     source_file
     source_path
     loc.line
