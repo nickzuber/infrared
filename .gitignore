@@ -9,3 +9,7 @@ _build
 node_modules
 .vscode
 
+# Coq
+*.glob
+*.aux
+*.vo
