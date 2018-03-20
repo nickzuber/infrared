@@ -5,22 +5,74 @@
             "name": "ExpressionStatement",
             "children": [
                 {
-                    "name": "AssignmentExpression",
+                    "name": "BinaryExpression",
                     "children": [
                         {
-                            "name": "AssignmentTargetIdentifier",
-                            "children": [],
-                            "description": "foo",
-                            "rule": "binding"
+                            "name": "AssignmentExpression",
+                            "children": [
+                                {
+                                    "name": "AssignmentTargetIdentifier",
+                                    "children": [],
+                                    "description": "foo",
+                                    "rule": "binding"
+                                },
+                                {
+                                    "name": "LiteralStringExpression",
+                                    "children": [],
+                                    "description": null,
+                                    "rule": "expression"
+                                }
+                            ],
+                            "description": null,
+                            "rule": "left"
                         },
                         {
-                            "name": "LiteralNumericExpression",
-                            "children": [],
-                            "description": 1,
-                            "rule": "expression"
+                            "name": "BinaryExpression",
+                            "children": [
+                                {
+                                    "name": "LiteralNumericExpression",
+                                    "children": [],
+                                    "description": 2,
+                                    "rule": "left"
+                                },
+                                {
+                                    "name": "BinaryExpression",
+                                    "children": [
+                                        {
+                                            "name": "LiteralNumericExpression",
+                                            "children": [],
+                                            "description": 3,
+                                            "rule": "left"
+                                        },
+                                        {
+                                            "name": "AssignmentExpression",
+                                            "children": [
+                                                {
+                                                    "name": "AssignmentTargetIdentifier",
+                                                    "children": [],
+                                                    "description": "bar",
+                                                    "rule": "binding"
+                                                },
+                                                {
+                                                    "name": "LiteralNumericExpression",
+                                                    "children": [],
+                                                    "description": 1,
+                                                    "rule": "expression"
+                                                }
+                                            ],
+                                            "description": null,
+                                            "rule": "right"
+                                        }
+                                    ],
+                                    "description": "Comma",
+                                    "rule": "right"
+                                }
+                            ],
+                            "description": "Comma",
+                            "rule": "right"
                         }
                     ],
-                    "description": null,
+                    "description": "Comma",
                     "rule": "expression"
                 }
             ],
@@ -31,22 +83,113 @@
             "name": "ExpressionStatement",
             "children": [
                 {
-                    "name": "AssignmentExpression",
+                    "name": "BinaryExpression",
                     "children": [
                         {
-                            "name": "AssignmentTargetIdentifier",
-                            "children": [],
-                            "description": "foo",
-                            "rule": "binding"
+                            "name": "AssignmentExpression",
+                            "children": [
+                                {
+                                    "name": "AssignmentTargetIdentifier",
+                                    "children": [],
+                                    "description": "foo",
+                                    "rule": "binding"
+                                },
+                                {
+                                    "name": "LiteralStringExpression",
+                                    "children": [],
+                                    "description": null,
+                                    "rule": "expression"
+                                }
+                            ],
+                            "description": null,
+                            "rule": "left"
                         },
                         {
-                            "name": "LiteralStringExpression",
-                            "children": [],
-                            "description": null,
-                            "rule": "expression"
+                            "name": "BinaryExpression",
+                            "children": [
+                                {
+                                    "name": "LiteralNumericExpression",
+                                    "children": [],
+                                    "description": 2,
+                                    "rule": "left"
+                                },
+                                {
+                                    "name": "BinaryExpression",
+                                    "children": [
+                                        {
+                                            "name": "LiteralStringExpression",
+                                            "children": [],
+                                            "description": null,
+                                            "rule": "left"
+                                        },
+                                        {
+                                            "name": "BinaryExpression",
+                                            "children": [
+                                                {
+                                                    "name": "AssignmentExpression",
+                                                    "children": [
+                                                        {
+                                                            "name": "AssignmentTargetIdentifier",
+                                                            "children": [],
+                                                            "description": "bar",
+                                                            "rule": "binding"
+                                                        },
+                                                        {
+                                                            "name": "LiteralNumericExpression",
+                                                            "children": [],
+                                                            "description": 1,
+                                                            "rule": "expression"
+                                                        }
+                                                    ],
+                                                    "description": null,
+                                                    "rule": "left"
+                                                },
+                                                {
+                                                    "name": "BinaryExpression",
+                                                    "children": [
+                                                        {
+                                                            "name": "LiteralNumericExpression",
+                                                            "children": [],
+                                                            "description": 2,
+                                                            "rule": "left"
+                                                        },
+                                                        {
+                                                            "name": "AssignmentExpression",
+                                                            "children": [
+                                                                {
+                                                                    "name": "AssignmentTargetIdentifier",
+                                                                    "children": [],
+                                                                    "description": "baz",
+                                                                    "rule": "binding"
+                                                                },
+                                                                {
+                                                                    "name": "LiteralNumericExpression",
+                                                                    "children": [],
+                                                                    "description": 2,
+                                                                    "rule": "expression"
+                                                                }
+                                                            ],
+                                                            "description": null,
+                                                            "rule": "right"
+                                                        }
+                                                    ],
+                                                    "description": "Comma",
+                                                    "rule": "right"
+                                                }
+                                            ],
+                                            "description": "Comma",
+                                            "rule": "right"
+                                        }
+                                    ],
+                                    "description": "Comma",
+                                    "rule": "right"
+                                }
+                            ],
+                            "description": "Comma",
+                            "rule": "right"
                         }
                     ],
-                    "description": null,
+                    "description": "Comma",
                     "rule": "expression"
                 }
             ],
