@@ -1,0 +1,6 @@
+DIGEST 5eb772438dfe2e04746611b956ce7d5f
+Fbinary_expression_commutativity
+prf 8:21 <> my_first_proof
+R44:47 Coq.Init.Logic <> :type_scope:x_'->'_x not
+R48:48 binary_expression_commutativity <> A var
+R43:43 binary_expression_commutativity <> A var
