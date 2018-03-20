@@ -82,8 +82,12 @@ end = struct
       | Comment -> parse_items token_list' ast_nodes
       | _ ->
         let tok = lazy_token_to_string token in
-        let msg = "We haven't implemented a way to parse this token yet in Module items:\n>> " ^ tok in
-        let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg in
+        let reason = "We haven't implemented a way to parse this token yet in Module items:\n>> " ^ tok in
+        let err = Error_handler.exposed_error
+            ~source:(!working_file)
+            ~loc:token.loc
+            ~msg:reason
+            ~reason:reason in
         raise (Unimplemented err)
 end
 
@@ -141,9 +145,13 @@ end = struct
           let wrapped_node = create_expression_statement node
           in wrapped_node, token_list''
         | _ ->
-          let msg = "Encountered an unexpected operator, did you mean to do this?" in
-          let err = Error_handler.exposed_error ~source:(!working_file) ~loc:next_token.loc ~msg:msg
-          in raise (ParsingError err)
+          let reason = "Encountered an unexpected operator, did you mean to do this?" in
+          let err = Error_handler.exposed_error
+              ~source:(!working_file)
+              ~loc:next_token.loc
+              ~reason:reason
+              ~msg:reason in
+          raise (ParsingError err)
       end
     (* Haven't hit the end of the file, more tokens to parse. We could either continue onto the next
        token set or have something like a function call. *)
@@ -190,9 +198,13 @@ end = struct
       let ast_node = Ast.Statement.ExpressionStatement node
       in ast_node, token_list''
     | _ ->
-      let msg = "While parsing a statement, we ran into a token we didn't know what to do with." in
-      let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
-      in raise (Unimplemented err)
+      let reason = "While parsing a statement, we ran into a token we didn't know what to do with." in
+      let err = Error_handler.exposed_error
+          ~source:(!working_file)
+          ~loc:token.loc
+          ~reason:reason
+          ~msg:reason in
+      raise (Unimplemented err)
 end
 
 
@@ -268,9 +280,13 @@ end = struct
       | Operator Xor -> Xor
       | Operator And -> And
       | _ ->
-        let msg = "Attempted to create a binary operator with an incompatible token" in
-        let err = Error_handler.exposed_error ~source:(!working_file) ~loc:op_token.loc ~msg:msg
-        in raise (ParsingError err))
+        let reason = "Attempted to create a binary operator with an incompatible token" in
+        let err = Error_handler.exposed_error
+            ~source:(!working_file)
+            ~loc:op_token.loc
+            ~reason:reason
+            ~msg:reason in
+        raise (ParsingError err))
 
   let create_identifier_expression ~name token = Ast.IdentifierExpression.(
       { _type = "IdentifierExpression"; name })
@@ -318,10 +334,14 @@ end = struct
         let ast_node, _ = parse inner_token_list
         in parse_rest_of_expression ~early_bail_token:early_bail_token ast_node token_list'
       | _ ->
-        let msg = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
-                   This doesn't necessarily mean this token is valid." in
-        let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:msg
-        in raise (Unimplemented err))
+        let reason = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
+                      This doesn't necessarily mean this token is valid." in
+        let err = Error_handler.exposed_error
+            ~source:(!working_file)
+            ~loc:token.loc
+            ~reason:reason
+            ~msg:reason in
+        raise (Unimplemented err))
 
   (* This is kind of janky, but `last_node_name` contains some meta data about the last node we just parsed,
    * notably a string that represents its name (only set IF it's an `IdentifierExpression`). We do this because
@@ -456,13 +476,17 @@ end = struct
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
       | _ ->
-        let err = Error_handler.exposed_error ~source:(!working_file) ~loc:token.loc ~msg:declarator_err
-        in raise (ParsingError err) in
+        let err = Error_handler.exposed_error
+            ~source:(!working_file)
+            ~loc:token.loc
+            ~reason:declarator_err
+            ~msg:declarator_err in
+        raise (ParsingError err) in
     (* Check next token to see if we have more identifiers.
      * Pattern match the token body specifiecally here so we can return an Empty_token if need be *)
-    let next_token_body, token_list'' = match pop token_list' with
-      | Some (token, new_token_list) -> token.body, new_token_list
-      | None -> Empty_Token, token_list' in
+    let next_token, next_token_body, token_list'' = match pop token_list' with
+      | Some (token, new_token_list) -> token, token.body, new_token_list
+      | None -> empty_token, Empty_Token_Body, token_list' in
     match next_token_body with
     | Operator op ->
       begin
@@ -485,9 +509,10 @@ end = struct
         | _ ->
           let err = Error_handler.exposed_error
               ~source:(!working_file)
-              ~loc:token.loc
-              ~msg:declarator_op_err
-          in raise (ParsingError err)
+              ~loc:next_token.loc
+              ~reason:declarator_op_err
+              ~msg:"You're declaring variables, this should be an assignment or comma." in
+          raise (ParsingError err)
       end
     (* No assignment & done with declarators. Wrap it up *)
     | _ ->
