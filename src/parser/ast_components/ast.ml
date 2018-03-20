@@ -28,7 +28,7 @@
  * module. If it is a terminal module, then technically its __attribute__
  * field would just be its type.
  *
- *)
+*)
 
 
 (*** Supporting types ***)
@@ -39,7 +39,7 @@ module rec Arguments : sig
     | SpreadElement of SpreadElement.t
     | Expression of Expression.t
   type t = arguments list
-    [@@deriving show]
+  [@@deriving show]
 end = Arguments
 
 (* typedef *)
@@ -66,7 +66,7 @@ and VariableDeclarationKind : sig
     | Var
     | Let
     | Const
-    [@@deriving show]
+  [@@deriving show]
 end = VariableDeclarationKind
 
 (* typedef *)
@@ -84,7 +84,7 @@ and CompoundAssignmentOperator : sig
     | Or                  (*    |=    *)
     | XOr                 (*    ^=    *)
     | And                 (*    &=    *)
-    [@@deriving show]
+  [@@deriving show]
 end = CompoundAssignmentOperator
 
 (* typedef *)
@@ -115,7 +115,7 @@ and BinaryOperator : sig
     | Or                  (*    |     *)
     | Xor                 (*    ^     *)
     | And                 (*    &     *)
-    [@@deriving show]
+  [@@deriving show]
 end = BinaryOperator
 
 (* typedef *)
@@ -128,7 +128,7 @@ and UnaryOperator : sig
     | Typeof
     | Void
     | Delete
-    [@@deriving show]
+  [@@deriving show]
 end = UnaryOperator
 
 (* typedef *)
@@ -136,7 +136,7 @@ and UpdateOperator : sig
   type t =
     | Increment           (*    ++    *)
     | Decrement           (*    --    *)
-    [@@deriving show]
+  [@@deriving show]
 end = UpdateOperator
 
 (*! others implement this *)
@@ -195,7 +195,7 @@ and Node : sig
     | TemplateElement of TemplateElement.t
     | VariableDeclaration of VariableDeclaration.t
     | VariableDeclarator of VariableDeclarator.t
-    [@@deriving show]
+  [@@deriving show]
 end = Node
 
 and Program : sig
@@ -207,7 +207,7 @@ and Program : sig
   type t =
     | Script of Script.t
     | Module of Module.t
-    [@@deriving show]
+  [@@deriving show]
 end = Program
 
 and Statement : sig
@@ -236,7 +236,7 @@ and Statement : sig
     | WithStatement of WithStatement.t
     | FunctionDeclaration of FunctionDeclaration.t
     | EmptyStatement
-    [@@deriving show]
+  [@@deriving show]
 end = Statement
 
 and IterationStatement : sig
@@ -252,7 +252,7 @@ and IterationStatement : sig
     | ForOfStatement of ForOfStatement.t
     | ForStatement of ForStatement.t
     | WhileStatement of WhileStatement.t
-    [@@deriving show]
+  [@@deriving show]
 end = IterationStatement
 
 and Expression : sig
@@ -290,7 +290,7 @@ and Expression : sig
     | YieldExpression of YieldExpression.t
     | YieldGeneratorExpression of YieldGeneratorExpression.t
     | AwaitExpression of AwaitExpression.t
-    [@@deriving show]
+  [@@deriving show]
 end = Expression
 
 and MemberExpression : sig
@@ -306,7 +306,7 @@ and MemberExpression : sig
   type t =
     | ComputedMemberExpression of ComputedMemberExpression.t
     | StaticMemberExpression of StaticMemberExpression.t
-    [@@deriving show]
+  [@@deriving show]
 end = MemberExpression
 
 and PropertyName : sig
@@ -318,7 +318,7 @@ and PropertyName : sig
   type t =
     | ComputedPropertyName of ComputedPropertyName.t
     | StaticPropertyName of StaticPropertyName.t
-    [@@deriving show]
+  [@@deriving show]
 end = PropertyName
 
 and ObjectProperty : sig
@@ -330,7 +330,7 @@ and ObjectProperty : sig
   type t =
     | NamedObjectProperty of NamedObjectProperty.t
     | ShorthandProperty of ShorthandProperty.t
-    [@@deriving show]
+  [@@deriving show]
 end = ObjectProperty
 
 and NamedObjectProperty : sig
@@ -343,7 +343,7 @@ and NamedObjectProperty : sig
   type t =
     | MethodDefinition of MethodDefinition.t
     | DataProperty of DataProperty.t
-    [@@deriving show]
+  [@@deriving show]
 end = NamedObjectProperty
 
 and MethodDefinition : sig
@@ -358,7 +358,7 @@ and MethodDefinition : sig
     | Method of Method.t
     | Getter of Getter.t
     | Setter of Setter.t
-    [@@deriving show]
+  [@@deriving show]
 end = MethodDefinition
 
 and ImportDeclaration : sig
@@ -371,7 +371,7 @@ and ImportDeclaration : sig
   type t =
     | Import of Import.t
     | ImportNamespace of ImportNamespace.t
-    [@@deriving show]
+  [@@deriving show]
 end = ImportDeclaration
 
 and ExportDeclaration : sig
@@ -386,7 +386,7 @@ and ExportDeclaration : sig
     | ExportLocals of ExportLocals.t
     | Export of Export.t
     | ExportDefault of ExportDefault.t
-    [@@deriving show]
+  [@@deriving show]
 end = ExportDeclaration
 
 and VariableReference : sig
@@ -399,7 +399,7 @@ and VariableReference : sig
   type t =
     | BindingIdentifier of BindingIdentifier.t
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
-    [@@deriving show]
+  [@@deriving show]
 end = VariableReference
 
 
@@ -410,7 +410,7 @@ and BindingPattern : sig
   type t =
     | ObjectBinding of ObjectBinding.t
     | ArrayBinding of ArrayBinding.t
-    [@@deriving show]
+  [@@deriving show]
 end = BindingPattern
 
 (* typedef *)
@@ -418,7 +418,7 @@ and Binding : sig
   type t =
     | BindingPattern of BindingPattern.t
     | BindingIdentifier of BindingIdentifier.t
-    [@@deriving show]
+  [@@deriving show]
 end = Binding
 
 (* typedef *)
@@ -426,7 +426,7 @@ and SimpleAssignmentTarget : sig
   type t =
     | AssignmentTargetIdentifier of AssignmentTargetIdentifier.t
     | MemberAssignmentTarget of MemberAssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
 end = SimpleAssignmentTarget
 
 (* typedef *)
@@ -434,7 +434,7 @@ and AssignmentTargetPattern : sig
   type t =
     | ObjectAssignmentTarget of ObjectAssignmentTarget.t
     | ArrayAssignmentTarget of ArrayAssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
 end = AssignmentTargetPattern
 
 (* typedef *)
@@ -442,7 +442,7 @@ and AssignmentTarget : sig
   type t =
     | AssignmentTargetPattern of AssignmentTargetPattern.t
     | SimpleAssignmentTarget of SimpleAssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
 end = AssignmentTarget
 
 (* typedef *)
@@ -450,7 +450,7 @@ and Parameter : sig
   type t =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
-    [@@deriving show]
+  [@@deriving show]
 end = Parameter
 
 and BindingWithDefault : sig
@@ -491,14 +491,14 @@ and MemberAssignmentTarget : sig
   type t =
     | ComputedMemberAssignmentTarget of ComputedMemberAssignmentTarget.t
     | StaticMemberAssignmentTarget of StaticMemberAssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
 end = MemberAssignmentTarget
 
 and ComputedMemberAssignmentTarget : sig
   type objects =
     | Expression of Expression.t
     | Super of Super.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     _object: objects;
@@ -511,7 +511,7 @@ and StaticMemberAssignmentTarget : sig
   type objects =
     | Expression of Expression.t
     | Super of Super.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     _object: objects;
@@ -524,7 +524,7 @@ and ArrayBinding : sig
   type element =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     elements: element list option;
@@ -556,7 +556,7 @@ and BindingProperty : sig
   type t =
     | BindingPropertyIdentifier of BindingPropertyIdentifier.t
     | BindingPropertyProperty of BindingPropertyProperty.t
-    [@@deriving show]
+  [@@deriving show]
 end = BindingProperty
 
 and BindingPropertyIdentifier : sig
@@ -572,7 +572,7 @@ and BindingPropertyProperty : sig
   type binding =
     | Binding of Binding.t
     | BindingWithDefault of BindingWithDefault.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     name: PropertyName.t;
@@ -595,7 +595,7 @@ and ArrayAssignmentTarget : sig
   type element =
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     elements: element list option;
@@ -621,7 +621,7 @@ and AssignmentTargetProperty : sig
   type t =
     | AssignmentTargetPropertyIdentifier of AssignmentTargetPropertyIdentifier.t
     | AssignmentTargetPropertyProperty of AssignmentTargetPropertyProperty.t
-    [@@deriving show]
+  [@@deriving show]
 end = AssignmentTargetProperty
 
 and AssignmentTargetPropertyIdentifier : sig
@@ -637,7 +637,7 @@ and AssignmentTargetPropertyProperty : sig
   type binding =
     | AssignmentTarget of AssignmentTarget.t
     | AssignmentTargetWithDefault of AssignmentTargetWithDefault.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     name: PropertyName.t;
@@ -698,7 +698,7 @@ and Module : sig
     | ImportDeclaration of ImportDeclaration.t
     | ExportDeclaration of ExportDeclaration.t
     | Statement of Statement.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     directives: Directive.t list;
@@ -769,7 +769,7 @@ and Export : sig
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | VariableDeclaration of VariableDeclaration.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     declaration: declaration;
@@ -782,7 +782,7 @@ and ExportDefault : sig
     | FunctionDeclaration of FunctionDeclaration.t
     | ClassDeclaration of ClassDeclaration.t
     | Expression of Expression.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     body: body;
@@ -1096,7 +1096,7 @@ and StaticMemberExpression : sig
   type _object_types =
     | Expression of Expression.t
     | Super of Super.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     _object: _object_types;
@@ -1110,7 +1110,7 @@ and TemplateExpression : sig
   type element =
     | Expression of Expression.t
     | TemplateElement of TemplateElement.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     (* The second `MemberExpression` or `CallExpression`, if present *)
@@ -1226,7 +1226,7 @@ and ForInStatement : sig
   type declaration =
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     body: Statement.t;
@@ -1257,7 +1257,7 @@ and ForStatement : sig
   type declaration =
     | VariableDeclaration of VariableDeclaration.t
     | AssignmentTarget of AssignmentTarget.t
-    [@@deriving show]
+  [@@deriving show]
   type t = {
     _type: string;
     body: Statement.t;

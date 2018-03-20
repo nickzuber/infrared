@@ -10,4 +10,3 @@ let create ~name ~doc ~flags = {
   doc = doc;
   flags = flags;
 }
-

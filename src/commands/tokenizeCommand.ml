@@ -10,14 +10,14 @@ let generate_token_list ~args ~flags =
         match maybe_ast with
         | Some ast -> acc @ [ast]
         | None -> acc)
-    [] files
-  else 
-    (Error_handler.report 
-      ~msg:("No files found with given path") ~level:(Level.Low); [])
+      [] files
+  else
+    (Error_handler.report
+       ~msg:("No files found with given path") ~level:(Level.Low); [])
 
 let spec = CommandSpec.create
-  ~name:"tokenize"
-  ~doc:"Tokenizes the targeted files and returns a list of the token lists produced."
-  ~flags:[]
+    ~name:"tokenize"
+    ~doc:"Tokenizes the targeted files and returns a list of the token lists produced."
+    ~flags:[]
 
 let exec = generate_token_list;

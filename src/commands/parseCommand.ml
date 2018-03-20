@@ -11,14 +11,14 @@ let generate_ast_list ~args ~flags =
         match maybe_ast with
         | Some ast -> acc @ [ast]
         | None -> acc)
-    [] files
+      [] files
   else
     (Error_handler.report
-      ~msg:("No files found with given path") ~level:(Level.Low); [])
+       ~msg:("No files found with given path") ~level:(Level.Low); [])
 
 let spec = CommandSpec.create
-  ~name:"parse"
-  ~doc:"Parses the targeted files and returns a list of the ASTs produced."
-  ~flags:[]
+    ~name:"parse"
+    ~doc:"Parses the targeted files and returns a list of the ASTs produced."
+    ~flags:[]
 
 let exec = generate_ast_list;

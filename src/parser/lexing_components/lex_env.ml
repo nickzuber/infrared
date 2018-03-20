@@ -19,7 +19,7 @@ type t = {
   error: (string * Level.t) option;  (* we might not use this *)
 }
 
-and state_t = 
+and state_t =
   | S_Default
   | S_Array
   | S_Block
@@ -43,10 +43,10 @@ let new_env = {
   error = None;
 }
 
-let update_state state env = 
+let update_state state env =
   { env with state = state :: env.state }
 
-let set_error msg env = 
+let set_error msg env =
   let err = (msg, Level.SyntaxError) in
   { env with error = Some err }
 
@@ -54,7 +54,7 @@ let set_error msg env =
   * incorrect sometimes, due to _when_ we dress these tokens.
   * Tokens that are definitely have wrong positions:
   *  - Syntax_Error <- we don't know that we have a syntax error until we're well past it in some cases
-  *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc 
+  *  - Comments <- I bet this happens with strings too. We need to start storing the beinginng lexbuf loc
   *
   * Takes an optional location parameter to use if a token happens to start in a different location. This can
   * happen when we're parsing closures, comments, syntax errors, etc. *)
@@ -62,17 +62,17 @@ let dress ?(loc=None) ?(length=1) body lxb =
   let open Lexing in
   let calculated_length = ref length in
   let pos = match loc with
-    | Some pos -> 
+    | Some pos ->
       let ending_column = lxb.lex_start_p.pos_cnum - lxb.lex_start_p.pos_bol + 1 in
       let starting_column = pos.pos_cnum - pos.pos_bol + 1 in
       calculated_length := ending_column - starting_column + 1;
       pos
     | None -> lxb.lex_start_p in
   let loc = { Loc.
-    line = pos.pos_lnum;
-    column = pos.pos_cnum - pos.pos_bol + 1;
-    length = !calculated_length;
-  } in { loc; body }
+              line = pos.pos_lnum;
+              column = pos.pos_cnum - pos.pos_bol + 1;
+              length = !calculated_length;
+            } in { loc; body }
 
 let push ?(length=1) ~tok env ~lxb =
   let tok = dress tok lxb ~length:length in
@@ -99,7 +99,7 @@ let buf_push lxb env =
   * If the current expression is empty, we combine *)
 let buf_pop lxb env =
   let state = List.tl env.state in
-  let naked_closure_token = 
+  let naked_closure_token =
     match List.hd env.state with
     | S_Array -> Array (List.rev env.expr)
     | S_Block -> Block (List.rev env.expr)
@@ -116,13 +116,13 @@ let buf_pop lxb env =
       locations = new_locations;
       expr = [] }
   else
-    match List.hd state with 
+    match List.hd state with
     (* There are no more closures left to resolve *)
     | S_Default -> { env with
-      state = List.tl env.state;
-      token_list = dressed_closure_token :: env.token_list;
-      locations = new_locations;
-      expr = [] }
+                     state = List.tl env.state;
+                     token_list = dressed_closure_token :: env.token_list;
+                     locations = new_locations;
+                     expr = [] }
     | _ ->
       (* We still have closures left to resolve
         * Take the most recent expression buffer *)
@@ -131,37 +131,36 @@ let buf_pop lxb env =
       (* If there was an expression buffer [if empty closure there won't be]
         * then add our closure token to the front an put that back in the working buffer
         * If not, then we just return the closure token as a list *)
-      let combined_expr = 
+      let combined_expr =
         match top_expr with
         | Some expr -> dressed_closure_token :: expr
         | None -> [dressed_closure_token]
-      in { env with 
-        state;
-        expr_buffers = stack;
-        locations = new_locations;
-        expr = combined_expr }
+      in { env with
+           state;
+           expr_buffers = stack;
+           locations = new_locations;
+           expr = combined_expr }
 
 let resolve_errors tok env =
   match tok with
   | Syntax_Error msg -> set_error msg env
   | _ -> env
 
-let debug env = 
+let debug env =
   Printf.sprintf "\n{\n\
-    \tsource = \"\x1b[35m%s\x1b[39m\";\n\
-    \tstate = \x1b[35m%s\x1b[39m;\n\
-    \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
-    \texpr_buffers = Utils.Stack.create [ %d ];\n\
-    \ttoken_list = [\x1b[35m%s\x1b[39m\n\t];\n\
-    \terror = None;\n\
-  }\n" 
-  env.source 
-  (List.fold_left 
-    (fun acc state -> acc ^ "\n" ^ (state_to_string state)) "" env.state)
-  (List.fold_left 
-    (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.expr)
-  (Utils.Stack.size env.expr_buffers)
-  (List.fold_left 
-    (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.token_list)
+                  \tsource = \"\x1b[35m%s\x1b[39m\";\n\
+                  \tstate = \x1b[35m%s\x1b[39m;\n\
+                  \texpr = [\x1b[35m%s\x1b[39m\n\t];\n\
+                  \texpr_buffers = Utils.Stack.create [ %d ];\n\
+                  \ttoken_list = [\x1b[35m%s\x1b[39m\n\t];\n\
+                  \terror = None;\n\
+                  }\n"
+    env.source
+    (List.fold_left
+       (fun acc state -> acc ^ "\n" ^ (state_to_string state)) "" env.state)
+    (List.fold_left
+       (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.expr)
+    (Utils.Stack.size env.expr_buffers)
+    (List.fold_left
+       (fun acc tok -> acc ^ "\n" ^ (full_token_to_string tok)) "" env.token_list)
   |> print_endline
-

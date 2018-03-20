@@ -7,17 +7,17 @@ let use_inline_error_marking = false
 let report ~msg ~level =
   match level with
   | Level.High ->
-    print_endline("❌ \x1b[31m Fatal error \x1b[39m" ^ msg)
+    print_endline("\n❌\x1b[31m Fatal error \x1b[39m" ^ msg)
   | Level.Med ->
-    print_endline("❌ \x1b[31m Error \x1b[39m" ^ msg)
+    print_endline("\n❌\x1b[31m Error \x1b[39m" ^ msg)
   | Level.Low ->
-    print_endline("🚧 \x1b[33m Warning \x1b[39m" ^ msg)
+    print_endline("\n🚧\x1b[33m Warning \x1b[39m" ^ msg)
   | Level.SyntaxError ->
-    print_endline("🚧 \x1b[33m Syntax error \x1b[39m" ^ msg)
+    print_endline("\n🚧\x1b[33m Syntax error \x1b[39m" ^ msg)
   | Level.ParseError ->
-    print_endline("❌ \x1b[31m Parsing error \x1b[39m" ^ msg)
+    print_endline("\n❌\x1b[31m Parsing error \x1b[39m" ^ msg)
   | Level.UnknownError ->
-    print_endline("🚧 \x1b[33m Unknown error \x1b[39m" ^ msg)
+    print_endline("\n🚧\x1b[33m Unknown error \x1b[39m" ^ msg)
 
 (* Locates the offending area in the given source file, converts to a string and returns it.
  * This string is generally thrown somewhere else. *)
@@ -52,8 +52,8 @@ and expose_error_fallback ~source ~loc ~msg =
       cur_line + 1
     ) 1 lines
   in Printf.sprintf "\
-    %s\n\
-    \x1b[39m   \x1b[39m%s\n\n\
+    %s\n\n\
+    \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d | %s\n\
     \x1b[39m%4d | %s\n\
    \x1b[90m     |\x1b[1;31m%s\x1b[0;39m\n\

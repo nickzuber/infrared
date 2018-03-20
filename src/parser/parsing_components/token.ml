@@ -10,12 +10,12 @@ type t = {
   * association, and separated by their specifications. Keep that in mind when
   * looking for particular keywords to add or change.
   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar *)
-and t' = 
+and t' =
   (* Custom *)
   (* Like Expression but with curly brackets *)
-  | Block of t list 
+  | Block of t list
   (* Like Block but with parethesis *)
-  | Expression of t list 
+  | Expression of t list
   (* Like Block/Expression but with square brackets *)
   | Array of t list
   (* Words like the names of functions or variables, not to be confused with Strings *)
@@ -40,10 +40,10 @@ and t' =
   | Extends
   | Finally
   | For
-  (* Bind function names in env while parsing 
+  (* Bind function names in env while parsing
     * Ex:
       * Function Identifier "Foo", Expression ( ... ), Block ( ... ) ....
-      * or 
+      * or
       * Function Expression ( ... ) Block ( ... ) ....
     * *)
   | Function
@@ -136,7 +136,7 @@ and ops =
   | Ternary                (*    ?     *)
   | Assignment             (*    =     *)
 
-and var_t = 
+and var_t =
   (* Standard *)
   | Var
   (* ES6 *)
@@ -148,41 +148,41 @@ let rec token_to_string tok i =
   let step = 4 in
   match tok with
   | Block content -> (
-    if List.length content = 0 
+      if List.length content = 0
       then indentation ^ "Block {}"
       else Printf.sprintf "%sBlock {\n%s%s}"
-        indentation
-        (List.fold_left 
-          (fun acc e -> 
-            Printf.sprintf "%s%s\n"
-            acc
-            (full_token_to_string ~indent:(i + step) e))
-        "" content)
-        indentation)
+          indentation
+          (List.fold_left
+             (fun acc e ->
+                Printf.sprintf "%s%s\n"
+                  acc
+                  (full_token_to_string ~indent:(i + step) e))
+             "" content)
+          indentation)
   | Expression content -> (
-    if List.length content = 0 
+      if List.length content = 0
       then indentation ^ "Expression ()"
       else Printf.sprintf "%sExpression (\n%s%s)"
-        indentation
-        (List.fold_left 
-          (fun acc e -> 
-            Printf.sprintf "%s%s\n"
-            acc
-            (full_token_to_string ~indent:(i + step) e))
-        "" content)
-        indentation)
+          indentation
+          (List.fold_left
+             (fun acc e ->
+                Printf.sprintf "%s%s\n"
+                  acc
+                  (full_token_to_string ~indent:(i + step) e))
+             "" content)
+          indentation)
   | Array content -> (
-    if List.length content = 0 
+      if List.length content = 0
       then indentation ^ "Array []"
       else Printf.sprintf "%sArray [\n%s%s]"
-        indentation
-        (List.fold_left 
-          (fun acc e -> 
-            Printf.sprintf "%s%s\n"
-            acc
-            (full_token_to_string ~indent:(i + step) e))
-        "" content)
-        indentation)
+          indentation
+          (List.fold_left
+             (fun acc e ->
+                Printf.sprintf "%s%s\n"
+                  acc
+                  (full_token_to_string ~indent:(i + step) e))
+             "" content)
+          indentation)
   | Variable t -> indentation ^ "Variable " ^ (var_to_string t)
   | Number n -> indentation ^ "Number " ^ (string_of_float n)
   | Bool -> indentation ^ "Bool"
@@ -221,25 +221,25 @@ let rec token_to_string tok i =
   | Implements -> indentation ^ "Implements"
   | Spread -> indentation ^ "Spread"
   | TemplateString (str, tok_lists) -> (
-    if List.length tok_lists = 0 
+      if List.length tok_lists = 0
       then Printf.sprintf "%sTemplateString `%s` {}" indentation str
       else Printf.sprintf "%sTemplateString `%s` {\n%s%s}"
-        indentation
-        str
-        (List.fold_left 
-          (fun acc toks -> 
-            Printf.sprintf "%s%s(\n%s%s)\n"
-            acc
-            (String.make (i + step / 2) ' ')
-            (List.fold_left 
-              (fun acc e -> 
-                Printf.sprintf "%s%s\n"
-                acc
-                (full_token_to_string ~indent:(i + step) e))
-            "" toks)
-            (String.make (i + step / 2) ' '))
-        "" tok_lists)
-        indentation)
+          indentation
+          str
+          (List.fold_left
+             (fun acc toks ->
+                Printf.sprintf "%s%s(\n%s%s)\n"
+                  acc
+                  (String.make (i + step / 2) ' ')
+                  (List.fold_left
+                     (fun acc e ->
+                        Printf.sprintf "%s%s\n"
+                          acc
+                          (full_token_to_string ~indent:(i + step) e))
+                     "" toks)
+                  (String.make (i + step / 2) ' '))
+             "" tok_lists)
+          indentation)
   | Async -> indentation ^ "Async"
   | Await -> indentation ^ "Await"
   | Enum -> indentation ^ "Enum"
@@ -326,73 +326,73 @@ and lazy_token_to_string tok =
   * hashtable trick. We need to explicitly check each complex operator
   * manually in `token` *)
 let operators = Hashtbl.create 53
-let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok) 
-  [
-    '+', Plus;
-    '-', Minus;
-    '*', Mult;
-    '/', Div;
-    '%', Mod;
-    '<', LessThan;
-    '>', GreaterThan;
-    ',', Comma;
-    '|', Or;
-    '^', Xor;
-    '&', And;
-    '!', Bang;
-    '~', Not;
-    '.', Dot;
-    ':', Colon;
-    '?', Ternary;
-    '=', Assignment;
-  ]
+let _ = List.iter (fun (sym, tok) -> Hashtbl.add operators sym tok)
+    [
+      '+', Plus;
+      '-', Minus;
+      '*', Mult;
+      '/', Div;
+      '%', Mod;
+      '<', LessThan;
+      '>', GreaterThan;
+      ',', Comma;
+      '|', Or;
+      '^', Xor;
+      '&', And;
+      '!', Bang;
+      '~', Not;
+      '.', Dot;
+      ':', Colon;
+      '?', Ternary;
+      '=', Assignment;
+    ]
 
 (* List of faux keywords that need to be checked separately:
   *  - Spread (Rest)
   *  - TemplateString
-  *)
+*)
 let keywords = Hashtbl.create 53
-let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keywords kwd tok) 
-  [ "break", Break;
-    "case", Case;
-    "catch", Catch;
-    "continue", Continue;
-    "debugger", Debugger;
-    "default", Default;
-    "delete", Delete;
-    "do", Do;
-    "else", Else;
-    "export", Export;
-    "extends", Extends;
-    "finally", Finally;
-    "for", For;
-    "function", Function;
-    "if", If;
-    "new", New;
-    "null", Null;
-    "return", Return;
-    "super", Super;
-    "switch", Switch;
-    "this", This;
-    "throw", Throw;
-    "try", Try;
-    "typeof", Typeof;
-    "void", Void;
-    "while", While;
-    "with", With;
-    (* "yield", Yield; *)
-    "class", Class;
-    (* "implements", Implements; *)
-    "import", Import;
-    (* "async", Async; *)
-    (* "await", Await; *)
-    "enum", Enum;
-    (* "interface", Interface; *)
-    (* "package", Package; *)
-    (* "private", Private; *)
-    (* "protected", Protected; *)
-    (* "public", Public; *)
-    (* "static", Static; *)
-    "var", (Variable Var);
-    "let", (Variable Let);
-    "const", (Variable Const);  ]
+let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keywords kwd tok)
+    [ "break", Break;
+      "case", Case;
+      "catch", Catch;
+      "continue", Continue;
+      "debugger", Debugger;
+      "default", Default;
+      "delete", Delete;
+      "do", Do;
+      "else", Else;
+      "export", Export;
+      "extends", Extends;
+      "finally", Finally;
+      "for", For;
+      "function", Function;
+      "if", If;
+      "new", New;
+      "null", Null;
+      "return", Return;
+      "super", Super;
+      "switch", Switch;
+      "this", This;
+      "throw", Throw;
+      "try", Try;
+      "typeof", Typeof;
+      "void", Void;
+      "while", While;
+      "with", With;
+      (* "yield", Yield; *)
+      "class", Class;
+      (* "implements", Implements; *)
+      "import", Import;
+      (* "async", Async; *)
+      (* "await", Await; *)
+      "enum", Enum;
+      (* "interface", Interface; *)
+      (* "package", Package; *)
+      (* "private", Private; *)
+      (* "protected", Protected; *)
+      (* "public", Public; *)
+      (* "static", Static; *)
+      "var", (Variable Var);
+      "let", (Variable Let);
+      "const", (Variable Const);  ]

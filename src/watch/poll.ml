@@ -17,9 +17,8 @@ let rec watch_all_files cache =
   check_all_files cache;
   Unix.sleep 5 (* Wait time between polling checks. *)
 
-(* Creates a new thread that begins to watch all the files in 
-* the given cache. Someone else is responsible for filling the 
-* cache. *)
+(* Creates a new thread that begins to watch all the files in
+ * the given cache. Someone else is responsible for filling the
+ * cache. *)
 let create_watcher cache =
   Thread.create watch_all_files cache
-
