@@ -1,1 +1,1 @@
-var a = 1, a = b
+var a = 1, true = b
