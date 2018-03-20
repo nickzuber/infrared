@@ -122,10 +122,11 @@ end = struct
         | Operator op when op = Token.Assignment ->
           (* Eat the assignment token *)
           let token_list_without_assignment_token = eat token_list' in
-          let node, token_list'', bailed_early_for_comma = Expression_parser.create_assignment_expression ~name:name token_list_without_assignment_token in
+          let node, token_list'', bailed_early_for_comma = Expression_parser.create_assignment_expression
+              ~name:name token_list_without_assignment_token in
           let node' = Ast.Expression.AssignmentExpression node in
           (* Create a binary expression with this comma, assignment expression on the left
-             foo = 1 , 2
+              foo = 1 , 2
              (       ) ( )
              [binary expr]
           *)
@@ -146,11 +147,12 @@ end = struct
           in wrapped_node, token_list''
         | _ ->
           let reason = "Encountered an unexpected operator, did you mean to do this?" in
+          let msg = "Encountered an unexpected operator, did you mean to do this?" in
           let err = Error_handler.exposed_error
               ~source:(!working_file)
               ~loc:next_token.loc
               ~reason:reason
-              ~msg:reason in
+              ~msg:msg in
           raise (ParsingError err)
       end
     (* Haven't hit the end of the file, more tokens to parse. We could either continue onto the next
@@ -362,22 +364,31 @@ end = struct
             (* See if we want to bail out of this method early.
              * NOTE: Early bailing currently does NOT eat the bailed token. *)
             match early_bail_token with
-            | Some bail_token when bail_token = token.body -> last_node, token_list
+            | Some bail_token when bail_token = token.body ->
+              last_node, token_list
             | _ ->
               begin
                 match token.body with
-                | Operator op when op = Assignment ->
-                  (*  *)
+                | Operator op when op = Assignment && last_node_name <> "" ->
                   (* `last_node` assignment binding, notice the assignment token has been eaten by the pattern match statement *)
                   let node, token_list'', bailed_early_for_comma = create_assignment_expression ~name:last_node_name token_list' in
                   let node' = Ast.Expression.AssignmentExpression node in
-                  let ast_node, token_list''' = if bailed_early_for_comma then
+                  let ast_node, token_list''' = if bailed_early_for_comma
+                    then
                       let node, token_list''' = create_binary_expression node' token_list'' in
                       let wrapped_node = Expression.BinaryExpression node
                       in wrapped_node, token_list'''
                     else
                       node', token_list''
                   in ast_node, token_list'''
+                | Operator op when op = Assignment && last_node_name = "" ->
+                  (* This happens when you try to assign something thats not an identifier, like `1 = 2` *)
+                  let err = Error_handler.exposed_error
+                      ~source:(!working_file)
+                      ~loc:token.loc
+                      ~reason:"Tried to create an assignment using a non identifier."
+                      ~msg:"You can't assign an expression to something that isn't a variable name." in
+                  raise (ParsingError err)
                 | Operator op when is_binop op ->
                   (* Pass in initial token_list to preserve the binop *)
                   let expr, token_list'' = (create_binary_expression last_node ~early_bail_token:early_bail_token token_list) in
