@@ -1,7 +1,7 @@
 
 let is_file file =
   try
-    let stat = Unix.stat file in
+    let _stat = Unix.stat file in
     true (* We don't care about the stats, just the fact it found some *)
   with
     Unix.Unix_error (Unix.ENOENT, "stat", _) ->
@@ -21,9 +21,9 @@ let create_cache ?size:(size=50) =
  * This function is intended to be used in the context of the
  * `Hashtbl.iter` method, therefore are parameters will be the
  * `key` and `value` which is our file name and m_time. *)
-let has_diff file cached_mtime =
+let has_diff cache file cached_mtime =
   let current_mtime = get_mtime file in
   if cached_mtime <> current_mtime then
-    (Hashtbl.replace cache file file_mtime; true)
+    (Hashtbl.replace cache file current_mtime; true)
   else
     false

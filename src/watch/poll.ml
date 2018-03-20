@@ -1,8 +1,8 @@
 
 (* Similar to `Diff.has_diff`, this is used in conjunction
  * with `Hashtbl.iter` so the parameters are to be assumed. *)
-let handle_diff file cached_mtime =
-  let is_stale = Diff.has_diff file cached_mtime in
+let handle_diff cache file cached_mtime =
+  let is_stale = Diff.has_diff cache file cached_mtime in
   if is_stale then
     ignore ("this file needs to be parsed and checked again")
   else
@@ -10,7 +10,7 @@ let handle_diff file cached_mtime =
 
 (* Checks every file in cache for diffs and handles as needed. *)
 let check_all_files cache =
-  Hashtbl.iter handle_diff cache
+  Hashtbl.iter (fun k v -> handle_diff cache k v) cache
 
 (* This function polls file watching. *)
 let rec watch_all_files cache =
