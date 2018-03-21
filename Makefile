@@ -31,6 +31,9 @@ test:
 generate-tests:
 	python tests/generate_tests.py
 
+proofs:
+	coqc -verbose -opt proofs/*.v
+
 try:
 	./infrared.native parse tests/_experimental/test.js
 
@@ -48,5 +51,8 @@ view:
 
 clean:
 	$(OCB) -clean
+	rm -f ./proofs/*.glob
+	rm -f ./proofs/*.aux
+	rm -f ./proofs/*.vo
 
-.PHONY: all run build version test generate-tests try try-save try-pretty view clean
+.PHONY: all run build version test generate-tests try try-save try-pretty view clean proofs
