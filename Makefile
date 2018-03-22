@@ -32,7 +32,7 @@ generate-tests:
 	python tests/generate_tests.py
 
 proofs:
-	coqc -verbose -opt proofs/*.v
+	coqc -verbose -opt -color yes proofs/*.v
 
 try:
 	./infrared.native parse tests/_experimental/test.js
