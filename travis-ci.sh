@@ -155,3 +155,4 @@ make
 make version
 # Tests currently produce different output on Travis so they always fail right now
 # make test
+make proofs
