@@ -149,10 +149,14 @@ opam --version
 # install packages from opam
 opam install -q -y ${OPAM_PACKAGES}
 
+# install coq
+brew install coq
 
 # make infrared and run tests
 make
 make version
 # Tests currently produce different output on Travis so they always fail right now
 # make test
+
+# make and run coq proofs
 make proofs
