@@ -22,6 +22,7 @@ exit_with_failure = False
 for job in jobs:
     total = 0
     successes = 0
+    incompletes = 0
     print(Colour.BOLD + "\nRUNNING TESTS: " + Colour.END + job[0])
     try:
         # We don't want to check any dotfiles in these directories
@@ -65,11 +66,12 @@ for job in jobs:
             print(Colour.RED + u'\u2715' + " failure    " + Colour.END + path + ": " +
                   Colour.LIGHT_GRAY + str(obj["actual"]) + ", " + str(obj["expected"]) + Colour.END)
         except IncompleteTest as _:
+            incompletes = incompletes + 1
             print(Colour.LIGHT_GRAY + u'\u25CC' + " incomplete " + Colour.END + path + "    ")
         except:
             exit_with_failure = True
             print(Colour.RED + u'\u2715' + " error      " + Colour.END + path + "    ")
-    ending_art = Colour.GREEN + u'\u2713' if successes == total else Colour.RED + u'\u2715'
+    ending_art = Colour.GREEN + u'\u2713' if (successes + incompletes) == total else Colour.RED + u'\u2715'
     print("\n" + ending_art + Colour.END + " Successfully completed {}/{} tests\n".format(successes, total))
 
 # Exit non zero error code so ci fails
