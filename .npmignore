@@ -1,0 +1,10 @@
+# Node
+./node_modules
+
+# OCaml
+./infrared-core
+
+# Other
+.DS_Store
+.github
+.vscode

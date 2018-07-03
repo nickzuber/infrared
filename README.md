@@ -2,7 +2,15 @@
 
 > Fast light weight inferred static type checker in real time for JavaScript
 
-Infrared is a non-intrusive [top-down](https://en.wikipedia.org/wiki/Top-down_parsing) predictive [LL(1) parser](https://en.wikipedia.org/wiki/LL_parser) that statically analyzes [ES2017 JavaScript](https://medium.com/komenco/what-to-expect-from-javascript-es2017-the-async-edition-618e28819711). We construct an abstract syntax tree that's heavily influenced by the [Shift specifications](http://shift-ast.org/), and then infer a simple and strict type system.
+Infrared is a non-intrusive [top-down](https://en.wikipedia.org/wiki/Top-down_parsing) predictive [LL(1) parser](https://en.wikipedia.org/wiki/LL_parser) that statically analyzes [ES2016 JavaScript](https://dmitripavlutin.com/must-know-details-about-es2016-features/). We construct an abstract syntax tree that's heavily influenced by the [Shift specifications](http://shift-ast.org/), infer a simple and strict type system onto your program, and then notifies you of any type errors or type inconsistencies.
+
+In human words, we expose potential type errors or inconsistencies within JavaScript program for you to check out.
+
+## NOTE
+
+We're currently undergoing a core structure redesign, so expect changes to this readme/things being out of date.
+
+---
 
 ## Now hold on just a minute there Jack...
 

@@ -1,0 +1,30 @@
+{
+  "name": "infrared-core",
+  "version": "0.0.1",
+  "description": "Fast light weight inferred static type checker in real time for JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickzuber/infrared.git"
+  },
+  "keywords": [
+    "infrared",
+    "static",
+    "type",
+    "system",
+    "type",
+    "system",
+    "typecheck",
+    "type",
+    "check"
+  ],
+  "author": "Nick Zuber <zuber.nicholas@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickzuber/infrared/issues"
+  },
+  "homepage": "https://github.com/nickzuber/infrared#readme"
+}
