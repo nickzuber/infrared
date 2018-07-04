@@ -2,10 +2,10 @@
 'use strict';
 
 const fs = require('fs');
-const { parseScriptWithLocation, parseModuleWithLocation } = require("shift-parser");
+const { parseScriptWithLocation, parseModuleWithLocation } = require('shift-parser');
 
 function loadFile(file) {
-  const _ = fs.readFile(file, 'utf8', (loadingError, data) => {
+  const _ = fs.readFile(file, 'utf8', (loadingError, fileString) => {
     if (loadingError) {
       console.log(loadingError);
       process.exit(1);
@@ -16,7 +16,7 @@ function loadFile(file) {
         tree: ast,
         locations,
         comments
-      } = parseModuleWithLocation(data);
+      } = parseModuleWithLocation(fileString);
 
       console.log(JSON.stringify(ast, null, 4));
       console.log(locations.get(ast.items[0]));
