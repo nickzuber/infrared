@@ -1,0 +1,83 @@
+FILE:	/Users/nick/projects/infrared/infrared-core/tests/lexer/template_string/template_strings.js
+TOKENS:
+  TemplateString `` {} [90m(1:2)[39m
+  TemplateString `single` {} [90m(2:8)[39m
+  TemplateString `multi word string` {} [90m(3:19)[39m
+  TemplateString `string with 'single inner' quotes` {} [90m(4:35)[39m
+  TemplateString `string with "single inner" quotes` {} [90m(5:35)[39m
+  TemplateString `string with 'single inner quotes'` {} [90m(6:35)[39m
+  TemplateString `string with "single inner quotes"` {} [90m(7:35)[39m
+  TemplateString `'string with 'single inner quotes` {} [90m(8:35)[39m
+  TemplateString `"string with "single inner quotes` {} [90m(9:35)[39m
+  TemplateString `'string with single inner quotes'` {} [90m(10:35)[39m
+  TemplateString `"string with single inner quotes"` {} [90m(11:35)[39m
+  TemplateString `this one has !@#$%^&*()-=_+0987654321\`~[]]{}\\|` {} [90m(12:50)[39m
+  TemplateString `!@#$%^&*()-=_+0987654321\`~[]]{}\\| this one has` {} [90m(13:50)[39m
+  TemplateString `` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+  } [90m(15:6)[39m
+  TemplateString `single` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+  } [90m(16:12)[39m
+  TemplateString `single` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+  } [90m(17:12)[39m
+  TemplateString `single   test` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+    (
+      Number 1. [90m(1:1)[39m
+      Operator: Plus [90m(1:2)[39m
+      Number 1. [90m(1:3)[39m
+    )
+  } [90m(18:25)[39m
+  TemplateString `single  test ` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+    (
+      Number 1. [90m(1:1)[39m
+      Operator: Plus [90m(1:2)[39m
+      Number 1. [90m(1:3)[39m
+    )
+  } [90m(19:25)[39m
+  TemplateString `single  test` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+    (
+      Number 1. [90m(1:1)[39m
+      Operator: Plus [90m(1:2)[39m
+      Number 1. [90m(1:3)[39m
+    )
+  } [90m(20:24)[39m
+  TemplateString `single test ` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+    (
+      Number 1. [90m(1:1)[39m
+      Operator: Plus [90m(1:2)[39m
+      Number 1. [90m(1:3)[39m
+    )
+  } [90m(21:24)[39m
+  TemplateString `single test ` {
+    (
+      Identifier: a [90m(1:1)[39m
+    )
+    (
+      Identifier: o [90m(1:1)[39m
+    )
+    (
+      Number 1. [90m(1:1)[39m
+      Operator: Plus [90m(1:2)[39m
+      Number 1. [90m(1:3)[39m
+    )
+  } [90m(22:28)[39m

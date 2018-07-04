@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/nickzuber/infrared#readme",
   "dependencies": {
-    "shift-parser": "^5.2.4"
+    "chalk": "^2.4.1",
+    "shift-parser": "^5.2.4",
+    "tmp": "0.0.33"
   }
 }

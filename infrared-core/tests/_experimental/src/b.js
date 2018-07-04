@@ -1,1 +1,1 @@
-var validJavascript = true + 1;
+var validJavascript = true + 1+++;

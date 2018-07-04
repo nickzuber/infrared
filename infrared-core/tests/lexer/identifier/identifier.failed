@@ -1,0 +1,26 @@
+FILE:	/Users/nick/projects/infrared/infrared-core/tests/lexer/identifier/identifier.js
+TOKENS:
+  Identifier: foo [90m(1:1)[39m
+  Identifier: bar [90m(2:1)[39m
+  Identifier: baz [90m(3:1)[39m
+  Identifier: nick [90m(5:1)[39m
+  Operator: Plus [90m(5:6)[39m
+  Identifier: test [90m(5:8)[39m
+  Variable Var [90m(7:1)[39m
+  Identifier: a [90m(7:5)[39m
+  Operator: Assignment [90m(7:7)[39m
+  Number 1. [90m(7:9)[39m
+  Variable Var [90m(9:1)[39m
+  Variable Const [90m(9:5)[39m
+  Variable Var [90m(11:1)[39m
+  Identifier: test [90m(11:5)[39m
+  Variable Var [90m(13:1)[39m
+  Identifier: Object [90m(13:5)[39m
+  Identifier: CamelCase [90m(15:1)[39m
+  Identifier: ALLCAPS_WITH_UNDERSCORES [90m(17:1)[39m
+  Comment [90m(19:57)[39m
+  Identifier: name [90m(20:1)[39m
+  Operator: Minus [90m(20:5)[39m
+  With [90m(20:6)[39m
+  Operator: Minus [90m(20:10)[39m
+  Identifier: dash [90m(20:11)[39m
