@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/nickzuber/infrared/issues"
   },
-  "homepage": "https://github.com/nickzuber/infrared#readme"
+  "homepage": "https://github.com/nickzuber/infrared#readme",
+  "dependencies": {
+    "shift-parser": "^5.2.4"
+  }
 }
