@@ -1,15 +1,13 @@
 
-(* Default file extensions we want to look at. *)
-let whitelist = [".js"]
-
-let extract_whitelisted_files files =
+let extract_whitelisted_files files ext =
   List.fold_left (fun acc file ->
-    let len = String.length file in
-    if len > 3 && String.sub file (len - 3) 3 = ".js" then
-      file :: acc
-    else
-      acc
-  ) [] files
+      let len = String.length file in
+      let ext_len = String.length ext in
+      if len > ext_len && String.sub file (len - ext_len) ext_len = ext then
+        file :: acc
+      else
+        acc
+    ) [] files
 
 (* Find every file given the name of a file or directory. *)
 let extract_files name =
@@ -19,20 +17,20 @@ let extract_files name =
     let rec crawl filename =
       if Sys.file_exists filename = false then
         (Error_handler.report
-          ~msg:(Printf.sprintf "Unable to resolve the file: %s" filename)
-          ~level:(Level.Low);
-        [])
+           ~msg:(Printf.sprintf "Unable to resolve the file: %s" filename)
+           ~level:(Level.Low);
+         [])
       else
-        if Sys.is_directory filename = true then
-          let paths = Sys.readdir filename in
-          let paths' = Array.to_list paths in
-          List.fold_left (fun acc f ->
+      if Sys.is_directory filename = true then
+        let paths = Sys.readdir filename in
+        let paths' = Array.to_list paths in
+        List.fold_left (fun acc f ->
             (* Path joining could be different for windows? *)
             let absolute_path = Printf.sprintf "%s/%s" filename f in
             (crawl absolute_path) @ acc
           ) [] paths'
-        else
-          [filename]
+      else
+        [filename]
     in Some (crawl name)
 
 (* Check the first character to determine is flag or not. *)

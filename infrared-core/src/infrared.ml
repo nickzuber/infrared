@@ -11,6 +11,7 @@ end = struct
     HelpCommand.spec;
     TokenizeCommand.spec;
     ParseCommand.spec;
+    CheckCachedCommand.spec;
     TypeCheckCommand.spec;
     VersionCommand.spec;
   ]
@@ -67,6 +68,16 @@ end = struct
              Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags';
              Printf.printf "\nParsing files found: \n";
              Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args'))
+        | cmd when CheckCachedCommand.spec.name = cmd ->
+          (match args' with
+           | [] -> reportCommandError "no arguments given for parsing. \
+                                       Did you forget to include a file name?"
+           | arg :: [] ->
+             CheckCachedCommand.exec ~flags:flags' ~args:[arg]
+           | _ ->
+             (* temp *)
+             (* Core.Std.List.iter ~f:(fun file -> Printf.printf "%s\n" file) flags'; *)
+             CheckCachedCommand.exec ~flags:flags' ~args:args')
         | cmd when TypeCheckCommand.spec.name = cmd ->
           (match args' with
            | [] -> reportCommandError "no arguments given for parsing. \

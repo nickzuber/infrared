@@ -3,7 +3,7 @@ open CommandSpec
 
 (* Since only programs without any parsing errors will be captured here, our
    list of ASTs will only include valid ASTs. This won't matter much once we implement
-   typecheck, since we won't be calling Parse.parse anymore. *)
+   typecheck, since we won't be calling Parser.parse anymore. *)
 let check_files ~args ~flags =
   (* let _ = List.exists (fun x -> x = "--flag-we-care-about") flags in *)
   let files = FileParser.get_files_from_args args in
