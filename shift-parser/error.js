@@ -3,14 +3,13 @@
 const chalk = require('chalk');
 
 function errorReporter (title = "", path = "", message) {
-  console.log([
+  return [
     '',
     chalk`{red ✕ ${title}} {gray ${path}}`,
     '',
     chalk`  {red ●} ${message}`,
     '',
-  ].join('\n'));
-  process.exit(1);
+  ].join('\n');
 }
 
 module.exports.errorReporter = errorReporter;

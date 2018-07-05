@@ -1,6 +1,7 @@
 'use strict';
 
 const chalk = require('chalk');
+const moment = require('moment');
 
 function formatParsingError (fileString, line, column) {
   const lines = fileString.split('\n');
@@ -29,6 +30,11 @@ function replaceRange (str, start, end, sub) {
   return str.substring(0, start) + sub + str.substring(end);
 }
 
+function timestamp () {
+  return `[${moment().format('YYYY-MM-DD')} ${moment().format('HH:MM:SS')}]`
+}
+
 module.exports.formatParsingError = formatParsingError;
 module.exports.formatLine = formatLine;
 module.exports.replaceRange = replaceRange;
+module.exports.timestamp = timestamp;
