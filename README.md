@@ -16,9 +16,7 @@ While there are a good amount of reasons to use Infrared, there's no reason to _
 
 It can provide a lot of benefits with almost no effort whatsoever, so why not? :stuck_out_tongue:
 
-<div align="center">
-	<img width="400" src="assets/parser-hover.png" />
-</div>
+<img width="450" src="assets/parser-hover.png" />
 
 ## How Does It Work?
 
