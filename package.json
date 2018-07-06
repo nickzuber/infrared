@@ -4,7 +4,7 @@
   "description": "Fast light weight inferred static type checker in real time for JavaScript.",
   "main": "index.js",
   "scripts": {
-    "debug": "DEBUG=true node ./index.js"
+    "debug": "DEBUG=true node ./index.js || true"
   },
   "repository": {
     "type": "git",

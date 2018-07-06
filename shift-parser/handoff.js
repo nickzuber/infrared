@@ -20,6 +20,7 @@ function execInfraredCore (files) {
     if (execError) {
       errorReporter('Infared Handoff Error', files, execError.message);
     }
+    console.log('\n`infrared-core` output:\n');
     console.log(stdout);
     if (process.env.DEBUG) {
       console.log(`${timestamp()} Done`);

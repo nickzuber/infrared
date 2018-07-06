@@ -15,26 +15,27 @@ polyfill.load();
 
 /**
  * TODO
- * @param {string} fileName Absolute path to a file.
+ * @param {string} absoluteFileName Absolute path to a file.
+ * @param {string} fileName Relative path to a file.
  */
-function processFile(fileName) {
+function processFile(absoluteFileName, fileName) {
   return new Promise((resolve, reject) => {
-    fs.readFile(fileName, 'utf8')
+    fs.readFile(absoluteFileName, 'utf8')
       .then(fileString => {
         if (process.env.DEBUG) {
           console.log(`${timestamp()} Parsing ${fileName}`);
         }
         try {
           const parsetree = parseModuleWithLocation(fileString);
-          createTmpFile(fileName, parsetree).then(tmpFile => resolve(tmpFile));
+          createTmpFile(absoluteFileName, parsetree).then(tmpFile => resolve(tmpFile));
         } catch (parsingError) {
-            reject(errorReporter('Parsing Error', fileName, [
+            reject(errorReporter('Parsing error', fileName, [
               chalk`{bold ${parsingError.description}} found at ${parsingError.line}:${parsingError.column}`,
               formatParsingError(fileString, parsingError.line, parsingError.column)
             ].join('\n')));
           }
         })
-      .catch(loadingError => reject(errorReporter('File Reading Error', loadingError.path, loadingError.message)));
+      .catch(loadingError => reject(errorReporter('File Reading error', loadingError.path, loadingError.message)));
   });
 }
 
@@ -46,7 +47,7 @@ function createTmpFile (fileName, parsetree) {
     }
     fs.outputJson(tmpFile, parsetree)
       .then(() => resolve(tmpFile))
-      .catch(e => reject(errorReporter('Temp File Creation Error', tmpFile, e.message)));
+      .catch(e => reject(errorReporter('Temp File Creation error', tmpFile, e.message)));
   });
 }
 

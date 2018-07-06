@@ -1,84 +1,76 @@
 # Infrared <a href="#"><img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
 
-> Fast light weight inferred static type checker in real time for JavaScript
+> Blazing fast, light-weight, zero configuration inferred static analyzer for JavaScript.
 
-Infrared is a non-intrusive [top-down](https://en.wikipedia.org/wiki/Top-down_parsing) predictive [LL(1) parser](https://en.wikipedia.org/wiki/LL_parser) that statically analyzes [ES2016 JavaScript](https://dmitripavlutin.com/must-know-details-about-es2016-features/). We construct an abstract syntax tree that's heavily influenced by the [Shift specifications](http://shift-ast.org/), infer a simple and strict type system onto your program, and then notifies you of any type errors or type inconsistencies.
+Infrared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that exposes useful things about your JavaScript programs. We tell you about things like [type inconsistencies](#), [implicit coercions](#), ['undefined is not a function'](#), [infinite loops](#), [unreachable code](#), [potential optimizations](#), and much more, before they happen.
 
-In human words, we expose potential type errors or inconsistencies within JavaScript program for you to check out.
-
-## NOTE
-
-We're currently undergoing a core structure redesign, so expect changes to this readme/things being out of date.
-
----
-
-## Now hold on just a minute there Jack...
-
-Now don't get too excited yet young homie, Infrared is still under development. However, this means there's tons of room to [help out and contribute](https://github.com/nickzuber/infrared/pulls) if that's your jam.
-
-As development continues I'll try my best to update the current state of the project here so it's easy to see where everything's at.
-
-```
-┌──────────────────────┬─────────────────────────────┐
-│ Components           │ Approx. % Completed         │
-├──────────────────────┼──────────────────────┬──────┤
-│ Tokenizer            │ ████████████████████ │ 100% │
-│ Parser               │ ████████             │  40% │
-│ Type Inference       │                      │   0% │
-│ JSON Transformer     │ ████████             │  40% │
-│ AST Viewer           │ ████████████████████ │ 100% │
-│ File Watching System │ ███████████████      │  70% │
-│ Testing Framework    │ ██████████████████   │  90% │
-└──────────────────────┴──────────────────────┴──────┘
-```
+All this **without touching your source code**, **without creating another configuration file**, and **with blazing fast speed**.
 
 ## Why Would I Use This?
 
-> Infrared can do a bunch of cool things for you.
+> What does this do for you.
 
-<!-- ### Goals -->
+Infrared is like your JavaScript assistant. It takes a look at your program and tells you everything you need to know as a developer. This can be anything from avoiding errors, potential optimization opportunities, or just general things that you should watch out for.
 
-## How and Why It Works — LR(k) Parsing vs LL(k) Parsing
+While there are a good amount of reasons to use Infrared, there's no reason to _not_ use it. There's no configuration, no annotating or editing your existing files, and basically no set up or change to your existing workflow required to start using Infrared (besides installing it, of course).
 
-> Some neat implementation details and all that good stuff.
+It can provide a lot of benefits with almost no effort whatsoever, so why not? :stuck_out_tongue:
 
-Since Infrared only cares about inferring and checking data types of your program, we're able to make some assumptions about certain things which help make us extra fast.
+<div align="center">
+	<img width="400" src="assets/parser-hover.png" />
+</div>
 
-One interesting design choice is that we've constructed an leftmost derivation parser instead of something arguably more standard like a rightmost derivation parser. In making this decision, I had three main priorities to consider which ultimately lead me to choosing the leftmost approach:
+## How Does It Work?
 
- 1. **Efficiency** — Will one implementation be more efficient than the other? Will we require more lookaheads with one approach? Which is faster practically?
- 2. **Maintainability** — Is one approach easier and more straightforward to maintain? Will new developers be able to onboard relatively easily and understand what's going on?
- 3. **Error Reporting** — How can we capture syntax and type errors with each approach? Which one has better error reporting?
+> What's happening under the hood.
 
-### 1.) Efficiency and Compatibility
+In order to understand your program and interpret as much context as possible, Infrared makes a few opinionated design choices. Overall, there are two core steps that happen:
 
-It really doesn't make much of a difference _in general_ when it comes to the efficiency of an LL parser and an LR parser. The LL approach has opportunities to be less performant (due to backtracking, mainly), however the [speed of both approaches are comparable](http://www.garshol.priv.no/download/text/bnf.html#id4.3.).
+#### 1. Infer a "Static" Type System
 
-Now we also need to worry about compatibility with JavaScript itself. Most JS compilers are written with a LR approach; even the AST specification we use here [implemented with a rightmost derivation approach](#). If we were to _evaluate_ JS, this would _absolutely_ make a difference. With precedence optimizations aside, imagine a simple expression of `1 - 2 + 3`. If we were to take a leftmost derivation approach, this would be evaluated as `(1 - (2 + 3)) = -4`, _however_, using a rightmost approach we'd get `((1 - 2) + 3) = 2`.
+This means we assign types to your variables based on how they're first used. We don't hold this against you, JavaScript is a dynamic language and it should stay that way. We just track how you're using the variables, how often you're coercing its type, and if you're implicitly coercing its type in a spot that might be unintended or potentially problematic.
 
-So we know this choice matters when evaluating JS, but does it matter when inferring a type system? To be honest, I thought about this question quite a bit and had come to the conclusion that **it does not**! To put my own mind at rest, as well as any skeptics out there, I [wrote a short paper proving that this proposition holds true](proofs/binary_expression_commutativity.pdf). There might be some mistakes in there; feel free to call me out on it! The basic idea is that no matter the ordering of binary nodes in an AST, the inferred types will always propagate to the top all the same.
+This is just a step to help us better understand the context of your program. Just wanna reiterate that nobody is trying to make you program without mutation — this just helps us see if you might want to avoid mutation in some contexts. :smile:
 
-### 1.1) Backtracking and Recursive Decent
+#### 2. Analyze &
 
-Backtracking sucks when it comes to performance. We want to be super fast, so if we can avoid backtracking altogether — and luckily we can! Using [predictive parsing](http://lambda.uta.edu/cse5317/notes/node13.html), we can elimiate the need for backtracking since we can determine which path to travel down in our [recursive descent](https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm). So with this in mind, we can rest assured that the type of parser we implement won't really affect the efficiency of our program.
-
-### 2.) Maintainability and Simplicity
-
-Writing a leftmost derivation parser is hands down the [simplest and most straightforward approach](http://www.garshol.priv.no/download/text/bnf.html#id4.3) here. It's definitely way easier to read and understand a parser that uses a recursive and leftmost approach than it is to consider and parse through LR tables.
-
-### 3.) Error Reporting and Understanding Context
-
-Once again, the leftmost derivation approach wins again! Especially with a predictive strategy, it's trivial for the program to understand what it _should_ see and tell the user why something might have thrown an error. It's also pretty straightforward to [recover from an error and continue parsing](https://softwareengineering.stackexchange.com/a/19637/217663) the rest of the input if we wish, which might be helpful and is definitely a positive feature to have.
-
-One of my main goals with this project is to produce meaningful messages. This is mainly focused with the type inference system, but this holds true for the parsing system as well. Having an error message that can provide insight to the _why_ and perhaps be able to suggest possible fixes is invaluable in my opinion; Error messages can be friends too!
+TODO
 
 ## Installation
 
-> Getting you up and running with Infrared in no time.
+> Getting you up and running in no time.
+
+The best way to get started with Infrared is to install the binary wrapper globally — this will handle everything for you.
+
+```
+npm i infrared-bin -g
+```
+
+Then you should be able to use `infrared` anywhere.
 
 ## Usage
 
-> Now let's figure out how to actually use this thing.
+> How do I use this shit.
+
+Infrared's public API is very simple.
+
+For single files, simply pass the file path to the command.
+```bash
+infrared file.js
+```
+
+For specific multiple files, you can pass them all at once.
+```bash
+infrared file1.js file2.js file3.js
+```
+
+For entire projects or directories, just pass the source path.
+```bash
+infrared ./src
+```
+
+All the files will be processed and analyzed — it's that easy!
+
 
 ## Contributing
 
@@ -86,32 +78,14 @@ One of my main goals with this project is to produce meaningful messages. This i
 
 We have a few tools that help with the development process.
 
-### AST Viewer
+Infrared is broken down into a few main parts:
 
-<img src=".github/viewer.png" alt="AST Viewer example" />
-
-```
-$ make view
-./infrared.native parse tests/_experimental/test.js | python -m json.tool > viewer/public/test.json
-node viewer/ast_to_treedata.js > viewer/public/treeData.json && \
-	node viewer/app.js
-Ready on port 8080...
-```
-
-will parse the code in the experimental testing file into an AST and generate a visual representation for you.
-
-### Development Debugging Mode
-
-Navigate over to `./src/utils.dev.ml` and turn on the development flag.
-
-```ocaml
-let __DEV__ = true
-```
-
-and now when you parse a file, a trace of the token list, current token, and subroutine will be printed to the console.
-
-<img src=".github/debug.png" alt="Debugging output example" />
+ - [`infrared-bin`](#) — The binary wrapper, basically just a little CLI tool that reads a bunch of file names and hands it off.
+ - [`shift-parser`](#) — Processes all those files, generates Shift parsetrees, creates a temp cache, calls `infrared-core`'s check-cache routine with the parsetree JSON files.
+ - [`infrared-core`](#) - Encodes Shift parsetree JSON into Yojson OCaml AST, encodes into Infrared OCaml AST, resolves dependency graph (basic topological sort + Infrared AST optimized import/export representation), infers static type system, continue with rest of code analysis.
 
 ## License
+
+> Just do your thing, I'm not gonna sue you.
 
 This software is free to use under the MIT License. See [this reference](https://opensource.org/licenses/MIT) for license text and copyright information.
