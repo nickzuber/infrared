@@ -25,7 +25,7 @@
  * inheritence.
  *
  * A module will only have an __attributes__ field if it is not a terminal
- * module. If it is a terminal module, then technically its __attribute__
+ *  If it is a terminal module, then technically its __attribute__
  * field would just be its type.
  *
 *)

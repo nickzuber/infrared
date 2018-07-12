@@ -2,30 +2,34 @@
 
 const path = require('path');
 const chalk = require('chalk');
-const {timestamp, clearConsole} = require('./shift-parser/utils');
-const processFile = require('./shift-parser');
-const execInfraredCore = require('./shift-parser/handoff');
+const execInfraredCore = require('./shift-parser/handoff')
+const {
+  getTimestamp,
+  clearConsole,
+  clearDebugFile,
+  writeToDebugFile,
+} = require('./shift-parser/utils');
+const processFiles = require('./file-processor');
 
 // @TEST
 // Mock run
 clearConsole();
+clearDebugFile();
 
-if (process.env.DEBUG) {
-  process.env.INFRARED_TIMER = +Date.now();
-  console.log(`${timestamp()} Starting file processing`)
-}
+const files = [];
+files.push('./tests/experimental/a.js');
+files.push('./tests/experimental/b.js');
 
-let promises = [];
-promises.push(processFile(path.join(__dirname, './tests/experimental/index.js'), './tests/experimental/index.js'));
-promises.push(processFile(path.join(__dirname, './tests/experimental/a.js'), './tests/experimental/a.js'));
-
-Promise.all(promises).then(files => {
-  if (process.env.DEBUG) {
-    console.log(`${timestamp()} Finished file processing`);
-  }
-  execInfraredCore(files);
-}).catch(error => {
-  process.stdout.write(error);
-  process.stdout.write(chalk.bold('\n Process stopped.\n\n'));
-  process.exit(1);
-});
+processFiles(files, __dirname)
+  .then(files => {
+    if (process.env.DEBUG) {
+      writeToDebugFile(`${getTimestamp()} Finished file processing`);
+    }
+    execInfraredCore(files);
+  })
+  .catch(error => {
+    clearConsole();
+    process.stdout.write(error);
+    process.stdout.write(chalk.bold('\n Process stopped.\n\n'));
+    process.exit(1);
+  });

@@ -25,7 +25,7 @@ function removeCustom(key, list){
   // If node was found, delete at that index
   if(nodeFound){
     list.removeNth(indexToDelete);
-    return+;
+    return;
   }else{
     throw new Error("Unable to find a non null entry within the internal linked list. Please report this to https://github.com/nickzuber/needle/issues");
   }

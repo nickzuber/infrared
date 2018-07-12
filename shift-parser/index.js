@@ -6,10 +6,13 @@ const chalk = require('chalk');
 const polyfill = require('./polyfill');
 const {parseScriptWithLocation, parseModuleWithLocation} = require('shift-parser');
 const {errorReporter} = require('./error');
-const {formatParsingError, timestamp} = require('./utils');
-
-const TEMP_DIR = require('os').tmpdir();
-const INFRARED_TMP_DIR = 'infrared-cache';
+const {
+  formatParsingError,
+  getTimestamp,
+  TMP_DIR,
+  INFRARED_TMP_DIR,
+  writeToDebugFile
+} = require('./utils');
 
 polyfill.load();
 
@@ -23,7 +26,7 @@ function processFile(absoluteFileName, fileName) {
     fs.readFile(absoluteFileName, 'utf8')
       .then(fileString => {
         if (process.env.DEBUG) {
-          console.log(`${timestamp()} Parsing ${fileName}`);
+          writeToDebugFile(`${getTimestamp()} Parsing ${fileName}`);
         }
         try {
           const parsetree = parseModuleWithLocation(fileString);
@@ -35,19 +38,19 @@ function processFile(absoluteFileName, fileName) {
             ].join('\n')));
           }
         })
-      .catch(loadingError => reject(errorReporter('File Reading error', loadingError.path, loadingError.message)));
+      .catch(loadingError => reject(errorReporter('File reading error', absoluteFileName, loadingError.message)));
   });
 }
 
 function createTmpFile (fileName, parsetree) {
   return new Promise((resolve, reject) => {
-    const tmpFile = path.join(TEMP_DIR, INFRARED_TMP_DIR, fileName.replace('.js', '.json'))
+    const tmpFile = path.join(TMP_DIR, INFRARED_TMP_DIR, fileName.replace('.js', '.json'))
     if (process.env.DEBUG) {
-      console.log(`${timestamp()} Created ${tmpFile}`);
+      writeToDebugFile(`${getTimestamp()} Created ${tmpFile}`);
     }
     fs.outputJson(tmpFile, parsetree)
       .then(() => resolve(tmpFile))
-      .catch(e => reject(errorReporter('Temp File Creation error', tmpFile, e.message)));
+      .catch(e => reject(errorReporter('Temp file creation error', tmpFile, e.message)));
   });
 }
 
