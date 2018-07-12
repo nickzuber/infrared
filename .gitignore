@@ -2,6 +2,7 @@
 _build
 *.native
 *.pyc
+*.failed
 
 # Others
 .DS_Store
