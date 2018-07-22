@@ -2,7 +2,7 @@
 
 > Blazing fast, light-weight, inferred static type checker for JavaScript.
 
-Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [Fluid Type System](#) onto your program and any potential type errors that can occur, before they happen.
+Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [Fluid Type System](#) onto your program, and identifying any potential type errors that can occur, before they happen.
 
 <!--
 
