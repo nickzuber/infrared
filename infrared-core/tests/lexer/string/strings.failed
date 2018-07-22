@@ -1,0 +1,12 @@
+FILE:	/Users/nick/projects/infrared/infrared-core/tests/lexer/string/strings.js
+TOKENS:
+  String  [90m(1:2)[39m
+  String single [90m(2:8)[39m
+  String multi word string [90m(3:19)[39m
+  String string with 'inner' quotes [90m(4:28)[39m
+  String this one has !@#$%^&*()-=_+0987654321`~[]]{}\\| [90m(5:49)[39m
+  String  [90m(7:2)[39m
+  String single [90m(8:8)[39m
+  String multi word string [90m(9:19)[39m
+  String string with "inner" quotes [90m(10:28)[39m
+  String this one has !@#$%^&*()-=_+0987654321`~[]]{}\\| [90m(11:49)[39m

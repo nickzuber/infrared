@@ -2,12 +2,12 @@
 _build
 *.native
 *.pyc
+*.failed
 
 # Others
 .DS_Store
 .!*
 node_modules
-.vscode
 
 # Coq
 *.glob

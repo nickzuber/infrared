@@ -1,0 +1,7 @@
+S src/**
+S utils/**
+S core/**
+
+B _build/**
+
+PKG core batteries ppx_deriving.show yojson
