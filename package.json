@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "debug": "DEBUG=true node ./index.js || true",
-    "symlink": "ln -siv /var/folders/4f/gjs6r6bj2xqcx4dmh91_njl00000gn/T/infrared-cache /tmp",
+    "symlink": "ln -siv /var/folders/4f/gjs6r6bj2xqcx4dmh91_njl00000gn/T/infrared-cache /tmp"
   },
   "repository": {
     "type": "git",

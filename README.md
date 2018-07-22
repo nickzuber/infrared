@@ -1,6 +1,10 @@
 # Infrared <a href="#"><img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
 
-> Blazing fast, light-weight, zero configuration inferred static analyzer for JavaScript.
+> Blazing fast, light-weight, inferred static type checker for JavaScript.
+
+Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [Fluid Type System](#) onto your program and any potential type errors that can occur, before they happen.
+
+<!--
 
 Infrared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that exposes useful things about your JavaScript programs. We tell you about things like [type inconsistencies](#), [implicit coercions](#), ['undefined is not a function'](#), [infinite loops](#), [unreachable code](#), [potential optimizations](#), and much more, before they happen.
 
@@ -81,6 +85,8 @@ Infrared is broken down into a few main parts:
  - [`infrared-bin`](#) — The binary wrapper, basically just a little CLI tool that reads a bunch of file names and hands it off.
  - [`shift-parser`](#) — Processes all those files, generates Shift parsetrees, creates a temp cache, calls `infrared-core`'s check-cache routine with the parsetree JSON files.
  - [`infrared-core`](#) - Encodes Shift parsetree JSON into Yojson OCaml AST, encodes into Infrared OCaml AST, resolves dependency graph (basic topological sort + Infrared AST optimized import/export representation), infers static type system, continue with rest of code analysis.
+
+-->
 
 ## License
 

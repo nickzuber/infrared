@@ -30,6 +30,9 @@ function processFile(absoluteFileName, fileName) {
         }
         try {
           const parsetree = parseModuleWithLocation(fileString);
+          // we don't want to do this.
+          // we want to persist the typed file, not the parsed file.
+          // keeping this here for now, though
           createTmpFile(absoluteFileName, parsetree).then(tmpFile => resolve(tmpFile));
         } catch (parsingError) {
             reject(errorReporter('Parsing error', fileName, [
