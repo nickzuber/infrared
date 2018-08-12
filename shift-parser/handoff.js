@@ -30,7 +30,6 @@ function execInfraredCore (files) {
       errorReporter('Infared Handoff Error', files, execError.message);
     }
     clearConsole();
-    console.log('\n`infrared-core` output:\n');
     console.log(stdout);
     console.log(chalk`{green ✨ ${rand(wordsOfEncouragment)}}\n`);
     if (process.env.DEBUG) {

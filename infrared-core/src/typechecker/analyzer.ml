@@ -1,11 +1,24 @@
 open Encoder
 
 let check file =
-  Printf.printf "checking.. %s" file;
+  Printf.printf "checking.. %s\n" file;
   let parsetree = NativeEncoder.parse file in
   (* let open NativeEncoder in *)
   let open NativeEncoder.Util in
   let ast = parsetree |> member "tree" in
-  let directives = ast |> member "directives" |> to_list in
-  let t = List.hd directives |> member "type" |> to_string in
-  print_endline ("\n--> " ^ t)
+  let items = ast |> member "items" in
+  try
+    let _infrared_ast = InfraredEncoder.parse_items items in
+    ()
+  with
+  | Unhandled_statement_type reason ->
+    let message = Printf.sprintf
+        "Tried to parse a statement we haven't prepared for: `%s`\n" reason in
+    Error_handler.(report message Level.High)
+  | Malformed_json_ast reason ->
+    let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
+    Error_handler.(report message Level.High)
+
+(* let directives = ast |> member "directives" |> to_list in
+   let t = List.hd directives |> member "type" |> to_string in
+   print_endline ("\n--> " ^ t) *)
