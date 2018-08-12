@@ -40,6 +40,7 @@ and statement =
 and identifier =
   | Identifer of string
   | Member of identifier * identifier
+  (* this is weird *)
   | Assignment of identifier * expression
 
 type program = {
