@@ -36,10 +36,10 @@ end = struct
       let variable_declarators = S.parse_declaration node in
       List.map variable_declarators ~f:(fun assignment ->
           (* this is weird because assignment is under identifier *)
-          I.Declaration assignment)
+          assignment)
     | "FunctionDeclaration" ->
       let function_expression = S.parse_function node in
-      [I.Expression function_expression]
+      [function_expression]
     | _ as unhandled_type -> raise (Unhandled_statement_type unhandled_type)
 
   (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
@@ -55,13 +55,14 @@ end = struct
 end
 
 and StatementParser : sig
-  val parse_function : NativeEncoder.json -> InfraredAst.expression
-  val parse_declaration : NativeEncoder.json -> InfraredAst.expression list
+  val parse_function : NativeEncoder.json -> InfraredAst.statement
+  val parse_declaration : NativeEncoder.json -> InfraredAst.statement list
 end = struct
-  let parse_function (node : NativeEncoder.json) : InfraredAst.expression =
-    InfraredAst.Primitive InfraredAst.P_string
+  let parse_function (node : NativeEncoder.json) : InfraredAst.statement =
+    let module I = InfraredAst in
+    I.Skip
 
-  let parse_declaration (node : NativeEncoder.json) : InfraredAst.expression list =
+  let parse_declaration (node : NativeEncoder.json) : InfraredAst.statement list =
     let module U = NativeEncoder.Util in
     let module I = InfraredAst in
     let declarators = node
@@ -72,5 +73,5 @@ end = struct
     let name = List.hd_exn declarators
                |> U.member "binding"
                |> U.member "name" in
-    [I.Assignment ("name", I.Primitive I.P_number)]
+    [I.Declaration (I.Identifer "name", I.Primitive I.P_number)]
 end

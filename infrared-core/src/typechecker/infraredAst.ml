@@ -28,6 +28,7 @@ and expression =
   | Or of expression * expression
   | And of expression * expression
   | Call of expression * expression
+  | Assignment of identifier * expression
 
 and statement =
   | Skip
@@ -40,8 +41,6 @@ and statement =
 and identifier =
   | Identifer of string
   | Member of identifier * identifier
-  (* this is weird *)
-  | Assignment of identifier * expression
 
 type program = {
   (* Includes all import mappings from identifiers to location.
