@@ -32,19 +32,17 @@ and InfraredEncoder : sig
   val parse_items : NativeEncoder.json -> InfraredAst.statement list
 end = struct
   let parse_statement (node : NativeEncoder.json) : InfraredAst.statement list =
-    let module S = StatementParser in
+    let module SP = StatementParser in
     let module I = InfraredAst in
     let module N = NativeEncoder in
     let t = N.to_string_exn "type" node in
     match t with
     | "EmptyStatement" -> [I.Skip]
     | "VariableDeclarationStatement" ->
-      let variable_declarators = S.parse_declaration node in
-      List.map variable_declarators ~f:(fun assignment ->
-          (* this is weird because assignment is under identifier *)
-          assignment)
+      let variable_declarations = SP.parse_declaration node in
+      variable_declarations
     | "FunctionDeclaration" ->
-      let function_expression = S.parse_function node in
+      let function_expression = SP.parse_function node in
       [function_expression]
     | _ as unhandled_type -> raise (Unhandled_statement_type unhandled_type)
 
