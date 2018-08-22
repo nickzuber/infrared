@@ -8,6 +8,8 @@ type t =
   | T_NULLABLE
   | T_CALLABLE
 
+(* Valid primitives in javascript. These are generally used when
+ * referencing the Predicate check or some kind of native type refining. *)
 type primitive =
   | P_string
   | P_number
@@ -41,6 +43,10 @@ and statement =
 and identifier =
   | Identifer of string
   | Member of identifier * identifier
+
+type env = (identifier, t) Hashtbl.t
+
+type mutation = (identifier, t) Hashtbl.t
 
 type program = {
   (* Includes all import mappings from identifiers to location.
