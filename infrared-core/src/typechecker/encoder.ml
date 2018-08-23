@@ -2,7 +2,6 @@ open Core.Std
 open Yojson
 
 (* We don't have exhaustiveness in the NativeEncoder -> InfraredAst conversion. *)
-exception Unhandled_statement_type of string
 exception Malformed_json_ast of string
 
 (* Exhaustiveness with defer *)
@@ -44,7 +43,7 @@ end = struct
     | "FunctionDeclaration" ->
       let function_expression = SP.parse_function node in
       [function_expression]
-    | _ as unhandled_type -> raise (Unhandled_statement_type unhandled_type)
+    | _ as unhandled_type -> raise (Unimplemented unhandled_type)
 
   (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
   let rec parse_items (node : NativeEncoder.json) : InfraredAst.statement list =

@@ -11,9 +11,9 @@ let check file =
     let _infrared_ast = InfraredEncoder.parse_items items in
     ()
   with
-  | Unhandled_statement_type reason ->
+  | Unimplemented reason ->
     let message = Printf.sprintf
-        "Tried to parse a statement we haven't prepared for: `%s`\n" reason in
+        "Tried to parse something we haven't implemented yet: `%s`\n" reason in
     Error_handler.(report message Level.High)
   | Malformed_json_ast reason ->
     let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
