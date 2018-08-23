@@ -18,7 +18,3 @@ let check file =
   | Malformed_json_ast reason ->
     let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
     Error_handler.(report message Level.High)
-
-(* let directives = ast |> member "directives" |> to_list in
-   let t = List.hd directives |> member "type" |> to_string in
-   print_endline ("\n--> " ^ t) *)
