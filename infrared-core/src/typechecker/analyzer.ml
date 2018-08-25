@@ -2,10 +2,8 @@ open Encoder
 
 let check file =
   Printf.printf "checking.. %s\n" file;
-  let parsetree = NativeEncoder.parse file in
-  (* let open NativeEncoder in *)
+  let ast = NativeEncoder.parse file in
   let open NativeEncoder.Util in
-  let ast = parsetree |> member "tree" in
   let items = ast |> member "items" in
   try
     let _infrared_ast = InfraredEncoder.parse_items items in
