@@ -83,7 +83,7 @@ end = struct
       | _ ->
         let tok = lazy_token_to_string token in
         let reason = "We haven't implemented a way to parse this token yet in Module items:\n>> " ^ tok in
-        let err = Error_handler.exposed_error
+        let err = Error_handler.exposed_error_loc
             ~source:(!working_file)
             ~loc:token.loc
             ~msg:reason
@@ -148,7 +148,7 @@ end = struct
         | _ ->
           let reason = "Encountered an unexpected operator, did you mean to do this?" in
           let msg = "Encountered an unexpected operator, did you mean to do this?" in
-          let err = Error_handler.exposed_error
+          let err = Error_handler.exposed_error_loc
               ~source:(!working_file)
               ~loc:next_token.loc
               ~reason:reason
@@ -201,7 +201,7 @@ end = struct
       in ast_node, token_list''
     | _ ->
       let reason = "While parsing a statement, we ran into a token we didn't know what to do with." in
-      let err = Error_handler.exposed_error
+      let err = Error_handler.exposed_error_loc
           ~source:(!working_file)
           ~loc:token.loc
           ~reason:reason
@@ -283,7 +283,7 @@ end = struct
       | Operator And -> And
       | _ ->
         let reason = "Attempted to create a binary operator with an incompatible token" in
-        let err = Error_handler.exposed_error
+        let err = Error_handler.exposed_error_loc
             ~source:(!working_file)
             ~loc:op_token.loc
             ~reason:reason
@@ -338,7 +338,7 @@ end = struct
       | _ ->
         let reason = "While parsing an expression, we ran into a token we didn't know what to do with.\n   \
                       This doesn't necessarily mean this token is valid." in
-        let err = Error_handler.exposed_error
+        let err = Error_handler.exposed_error_loc
             ~source:(!working_file)
             ~loc:token.loc
             ~reason:reason
@@ -383,7 +383,7 @@ end = struct
                   in ast_node, token_list'''
                 | Operator op when op = Assignment && last_node_name = "" ->
                   (* This happens when you try to assign something thats not an identifier, like `1 = 2` *)
-                  let err = Error_handler.exposed_error
+                  let err = Error_handler.exposed_error_loc
                       ~source:(!working_file)
                       ~loc:token.loc
                       ~reason:"Tried to create an assignment using a non identifier."
@@ -487,7 +487,7 @@ end = struct
     let binding = match token.body with
       | Identifier name -> (create_binding_identifier name)
       | _ ->
-        let err = Error_handler.exposed_error
+        let err = Error_handler.exposed_error_loc
             ~source:(!working_file)
             ~loc:token.loc
             ~reason:declarator_err
@@ -518,7 +518,7 @@ end = struct
             in parse_declarators updated_declarators token_list''
           end
         | _ ->
-          let err = Error_handler.exposed_error
+          let err = Error_handler.exposed_error_loc
               ~source:(!working_file)
               ~loc:next_token.loc
               ~reason:declarator_op_err

@@ -4,10 +4,12 @@ open Yojson
 (* We don't have exhaustiveness in the NativeEncoder -> InfraredAst conversion. *)
 exception Malformed_json_ast of string
 
-(* Exhaustiveness with defer *)
+(* Exhaustiveness with deferring *)
 exception Unimplemented of string
 
 exception Illegal_argument_type_error of string
+
+let working_file = ref "undefined"
 
 module rec NativeEncoder : sig
   include module type of Yojson.Basic
@@ -27,8 +29,8 @@ end = struct
 end
 
 and InfraredEncoder : sig
+  val parse_items : fileName:string -> NativeEncoder.json -> InfraredAst.statement list
   val parse_statement : NativeEncoder.json -> InfraredAst.statement list
-  val parse_items : NativeEncoder.json -> InfraredAst.statement list
 end = struct
   let parse_statement (node : NativeEncoder.json) : InfraredAst.statement list =
     let module SP = StatementParser in
@@ -46,7 +48,8 @@ end = struct
     | _ as unhandled_type -> raise (Unimplemented unhandled_type)
 
   (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
-  let rec parse_items (node : NativeEncoder.json) : InfraredAst.statement list =
+  let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : InfraredAst.statement list =
+    working_file := fileName;
     match node with
     | `List nodes ->
       let _ = Printf.printf "list %d\n" (List.length nodes) in
@@ -102,7 +105,17 @@ end = struct
     | "LiteralNumericExpression" ->
       let _value = node |> U.member "value" in
       I.Primitive I.P_number
-    | _ -> raise (Unimplemented "Expression")
+    | _ ->
+      let reason = Printf.sprintf "Expression: %s" t in
+      let (line, column, length) = Utils.destructure node in
+      let err = Error_handler.exposed_error
+          ~source:(!working_file)
+          ~loc_line:line
+          ~loc_column:column
+          ~loc_length:length
+          ~msg:reason
+          ~reason:reason in
+      raise (Unimplemented err)
 end
 
 and IdentifierParser : sig
@@ -128,10 +141,24 @@ end = struct
         match properties_t with
         | "BindingPropertyIdentifier" -> raise (Unimplemented "BindingPropertyIdentifier")
         | "BindingPropertyProperty" -> raise (Unimplemented "BindingPropertyProperty")
-        | _ -> raise (Unimplemented "Expression")
+        | _ -> raise (Unimplemented "Properties")
       end
     | "ArrayBinding" -> raise (Unimplemented "ArrayBinding")
     | _ -> raise (Unimplemented "Expression")
+end
+
+and Utils : sig
+  val destructure : NativeEncoder.json -> int * int * int
+end = struct
+  let destructure (node : NativeEncoder.json) =
+    let module U = NativeEncoder.Util in
+    let location = node |> U.member "location" in
+    let line = location |> U.member "start" |> U.member "line" |> U.to_int in
+    let column_start = location |> U.member "start" |> U.member "column" |> U.to_int in
+    let column_end = location |> U.member "end" |> U.member "column" |> U.to_int in
+    let length = column_end - column_start in
+    (line, column_start + 1, length)
+
 end
 
 (*

@@ -19,19 +19,32 @@ let report ~msg ~level =
   | Level.UnknownError ->
     print_endline("\n🚧\x1b[33m Unknown error \x1b[39m" ^ msg)
 
+(* Returns a tuple of line, column, and length from a loc object. *)
+let loc_to_pos loc = (loc.line, loc.column, loc.length)
+
+(* Locates the offending area in the given source file, converts to a string and returns it.
+ * This string is generally thrown somewhere else.
+ * Consumes a location object. *)
+let rec exposed_error_loc ~source ~loc ~reason ~msg =
+  let (loc_line, loc_column, loc_length) = loc_to_pos loc in
+  if use_inline_error_marking <> true then
+    expose_error_fallback ~source:source ~loc_line:loc_line ~loc_column:loc_column ~loc_length:loc_length ~reason:msg
+  else
+    exposed_error_with_markings ~source:source ~loc_line:loc_line ~loc_column:loc_column ~loc_length:loc_length ~reason:reason
+
 (* Locates the offending area in the given source file, converts to a string and returns it.
  * This string is generally thrown somewhere else. *)
-let rec exposed_error ~source ~loc ~reason ~msg =
+and exposed_error ~source ~loc_line:loc_line ~loc_column:loc_column ~loc_length:loc_length  ~reason ~msg =
   if use_inline_error_marking <> true then
-    expose_error_fallback ~source:source ~loc:loc ~reason:msg
+    expose_error_fallback ~source:source ~loc_line:loc_line ~loc_column:loc_column ~loc_length:loc_length ~reason:msg
   else
-    exposed_error_with_markings ~source:source ~loc:loc ~reason:reason
+    exposed_error_with_markings ~source:source ~loc_line:loc_line ~loc_column:loc_column ~loc_length:loc_length ~reason:reason
 
 (* Error message with physical markings to indicate an error.
  * const foo = var
  *             ^^^
 *)
-and expose_error_fallback ~source ~loc ~reason =
+and expose_error_fallback ~source ~loc_line ~loc_column ~loc_length ~reason =
   (* let source_path, source_file = Utils.depath source in *)
   let source_file = "\x1b[90m" ^ source ^ "\x1b[39m" in
   let most_upper_line = ref "" in
@@ -39,16 +52,16 @@ and expose_error_fallback ~source ~loc ~reason =
   let offending_line = ref "" in
   let lower_line = ref "" in
   let most_lower_line = ref "" in
-  let spacing = String.make (loc.column) ' ' in
-  let arrow = String.make (loc.length) '^' in
+  let spacing = String.make (loc_column) ' ' in
+  let arrow = String.make (loc_length) '^' in
   let lines = Batteries.File.lines_of source in
   let _ = Batteries.Enum.fold
       (fun cur_line line ->
-         if cur_line = (loc.line - 2) then most_upper_line := line else ();
-         if cur_line = (loc.line - 1) then upper_line := line else ();
-         if cur_line = loc.line then offending_line := line else ();
-         if cur_line = (loc.line + 1) then lower_line := line else ();
-         if cur_line = (loc.line + 2) then most_lower_line := line else ();
+         if cur_line = (loc_line - 2) then most_upper_line := line else ();
+         if cur_line = (loc_line - 1) then upper_line := line else ();
+         if cur_line = loc_line then offending_line := line else ();
+         if cur_line = (loc_line + 1) then lower_line := line else ();
+         if cur_line = (loc_line + 2) then most_lower_line := line else ();
          cur_line + 1
       ) 1 lines
   in Printf.sprintf "\
@@ -60,12 +73,12 @@ and expose_error_fallback ~source ~loc ~reason =
     \x1b[90m%4d | %s \x1b[39m\n"
     source_file
     reason
-    (loc.line - 1)
+    (loc_line - 1)
     !upper_line
-    loc.line
+    loc_line
     !offending_line
     (spacing ^ arrow)
-    (loc.line + 1)
+    (loc_line + 1)
     !lower_line
 
 (* Error message with colored markings to indicate an error.
@@ -73,7 +86,7 @@ and expose_error_fallback ~source ~loc ~reason =
  *              │
  *              └── `var` is red here
 *)
-and exposed_error_with_markings ~source ~loc ~reason =
+and exposed_error_with_markings ~source ~loc_line ~loc_column ~loc_length ~reason =
   let source_path, source_file = Utils.depath source in
   let most_upper_line = ref "" in
   let upper_line = ref "" in
@@ -83,11 +96,11 @@ and exposed_error_with_markings ~source ~loc ~reason =
   let lines = Batteries.File.lines_of source in
   let _ = Batteries.Enum.fold
       (fun cur_line line ->
-         if cur_line = (loc.line - 2) then most_upper_line := line else ();
-         if cur_line = (loc.line - 1) then upper_line := line else ();
-         if cur_line = loc.line then offending_line := line else ();
-         if cur_line = (loc.line + 1) then lower_line := line else ();
-         if cur_line = (loc.line + 2) then most_lower_line := line else ();
+         if cur_line = (loc_line - 2) then most_upper_line := line else ();
+         if cur_line = (loc_line - 1) then upper_line := line else ();
+         if cur_line = loc_line then offending_line := line else ();
+         if cur_line = (loc_line + 1) then lower_line := line else ();
+         if cur_line = (loc_line + 2) then most_lower_line := line else ();
          cur_line + 1
       ) 1 lines
   in Printf.sprintf "\
@@ -100,18 +113,18 @@ and exposed_error_with_markings ~source ~loc ~reason =
     \x1b[90m%4d | %s \x1b[39m\n"
     source_file
     source_path
-    loc.line
-    loc.column
+    loc_line
+    loc_column
     reason
-    (loc.line - 2)
+    (loc_line - 2)
     !most_upper_line
-    (loc.line - 1)
+    (loc_line - 1)
     !upper_line
-    loc.line
-    (String.sub !offending_line 0 (loc.column - 1))
-    (String.sub !offending_line (loc.column - 1) loc.length)
-    (String.sub !offending_line (loc.column - 1 + loc.length) ((String.length !offending_line) - (loc.column + loc.length) + 1))
-    (loc.line + 1)
+    loc_line
+    (String.sub !offending_line 0 (loc_column - 1))
+    (String.sub !offending_line (loc_column - 1) loc_length)
+    (String.sub !offending_line (loc_column - 1 + loc_length) ((String.length !offending_line) - (loc_column + loc_length) + 1))
+    (loc_line + 1)
     !lower_line
-    (loc.line + 2)
+    (loc_line + 2)
     !most_lower_line

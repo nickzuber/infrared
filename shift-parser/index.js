@@ -68,6 +68,8 @@ function processFile(absoluteFileName, fileName) {
 
           const treeWithLocations = addLocations(tree, locationWeakMap);
 
+          treeWithLocations['fileName'] = absoluteFileName;
+
           // Parse and cache the files so infrared-core can pick it up
           // That is the only purpose of this right now.
           createTmpFile(absoluteFileName, treeWithLocations).then(tmpFile => resolve(tmpFile));
