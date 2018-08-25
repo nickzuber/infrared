@@ -105,6 +105,9 @@ end = struct
     | "LiteralNumericExpression" ->
       let _value = node |> U.member "value" in
       I.Primitive I.P_number
+    | "LiteralStringExpression" ->
+      let _value = node |> U.member "value" in
+      I.Primitive I.P_string
     | _ ->
       let reason = Printf.sprintf "Expression: %s" t in
       let (line, column, length) = Utils.destructure node in
