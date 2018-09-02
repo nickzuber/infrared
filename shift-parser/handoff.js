@@ -3,6 +3,7 @@
 const path = require('path');
 const chalk = require('chalk');
 const {getTimestamp, clearConsole, writeToDebugFile} = require('./utils');
+const {errorReporter} = require('./error');
 const {exec} = require('child_process');
 
 const INFRARED_CORE_DIR = 'infrared-core';
@@ -16,6 +17,7 @@ const wordsOfEncouragment = [
   'Beautiful, I\'m proud of you.',
   'Wonderful!',
 ];
+
 const rand = arr => arr[Math.floor(Math.random() * arr.length)]
 
 function execInfraredCore (files) {
@@ -25,9 +27,13 @@ function execInfraredCore (files) {
     writeToDebugFile(`${getTimestamp()} Running ${path.join(INFRARED_CORE_DIR, INFRARED_SHELL)} ${INFRARED_COMMAND} ${files_as_args}`);
   }
 
-  exec(`${path.join(INFRARED_CORE_DIR, INFRARED_SHELL)} ${INFRARED_COMMAND} ${files_as_args}`, (execError, stdout, stderr) => {
+  const PATH_TO_CORE =  path.resolve(__dirname, '..', INFRARED_CORE_DIR, INFRARED_SHELL);
+
+  exec(`${PATH_TO_CORE} ${INFRARED_COMMAND} ${files_as_args}`, (execError, stdout, stderr) => {
     if (execError) {
-      errorReporter('Infared Handoff Error', files, execError.message);
+      console.log('smething went wrong')
+      const message = errorReporter('Infared Handoff Error', files.join(''), execError.message);
+      throw new Error(message);
     }
     clearConsole();
     console.log(stdout);
