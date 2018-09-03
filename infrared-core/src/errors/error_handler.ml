@@ -6,18 +6,12 @@ let use_inline_error_marking = false
 (* Reports a simple and general error *)
 let report ~msg ~level =
   match level with
-  | Level.High ->
-    print_endline("\n❌\x1b[31m Fatal error \x1b[39m" ^ msg)
-  | Level.Med ->
-    print_endline("\n❌\x1b[31m Error \x1b[39m" ^ msg)
-  | Level.Low ->
-    print_endline("\n🚧\x1b[33m Warning \x1b[39m" ^ msg)
-  | Level.SyntaxError ->
-    print_endline("\n🚧\x1b[33m Syntax error \x1b[39m" ^ msg)
-  | Level.ParseError ->
-    print_endline("\n❌\x1b[31m Parsing error \x1b[39m" ^ msg)
-  | Level.UnknownError ->
-    print_endline("\n🚧\x1b[33m Unknown error \x1b[39m" ^ msg)
+  | Level.High -> Printf.eprintf "\n\x1b[31mFatal error.\x1b[39m\n\n%s" msg
+  | Level.Med -> Printf.eprintf "\n\x1b[31mError.\x1b[39m\n\n%s" msg
+  | Level.Low -> Printf.eprintf "\n\x1b[33mWarning.\x1b[39m\n\n%s" msg
+  | Level.SyntaxError -> Printf.eprintf "\n\x1b[33mSyntax error.\x1b[39m\n\n%s" msg
+  | Level.ParseError -> Printf.eprintf "\n\x1b[31mParsing error.\x1b[39m\n\n%s" msg
+  | Level.UnknownError -> Printf.eprintf "\n\x1b[33mUnknown error.\x1b[39m\n\n%s" msg
 
 (* Returns a tuple of line, column, and length from a loc object. *)
 let loc_to_pos loc = (loc.line, loc.column, loc.length)

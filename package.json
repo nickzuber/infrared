@@ -4,7 +4,7 @@
   "description": "Fast light weight inferred static type checker in real time for JavaScript.",
   "main": "index.js",
   "scripts": {
-    "debug": "DEBUG=true node ./index.js || true",
+    "debug": "DEBUG=true node infrared-core/tests/encoder/runner.js || true",
     "symlink": "ln -siv /var/folders/4f/gjs6r6bj2xqcx4dmh91_njl00000gn/T/infrared-cache /tmp"
   },
   "repository": {

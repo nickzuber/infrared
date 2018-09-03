@@ -31,10 +31,16 @@ function execInfraredCore (files) {
 
   exec(`${PATH_TO_CORE} ${INFRARED_COMMAND} ${files_as_args}`, (execError, stdout, stderr) => {
     if (execError) {
-      console.log('smething went wrong')
       const message = errorReporter('Infared Handoff Error', files.join(''), execError.message);
       throw new Error(message);
     }
+
+    if (stderr) {
+      clearConsole();
+      console.log(stderr);
+      return;
+    }
+
     clearConsole();
     console.log(stdout);
     console.log(chalk`{green ✨ ${rand(wordsOfEncouragment)}}\n`);

@@ -30,7 +30,7 @@ function formatParsingError (fileString, line, column) {
   const aboveIndex = line - 2;
   const currentIndex = line - 1;
   const belowIndex = line;
-  const bottomIndex = line - 1;
+  const bottomIndex = line + 1;
   const numberWidth = (belowIndex + 1).toString().length;
 
   return [

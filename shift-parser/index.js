@@ -4,8 +4,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const polyfill = require('./polyfill');
-const {parseModuleWithLocation} = require('shift-parser');
-const {errorReporter} = require('./error');
+const { parseModuleWithLocation } = require('shift-parser');
+const { errorReporter } = require('./error');
 const {
   formatParsingError,
   getTimestamp,
@@ -23,8 +23,8 @@ polyfill.load();
  * @param {JSON} node Current json node.
  * @param {WeakMap} locationWeakMap Map of node to location.
  */
-function addLocations (node, locationWeakMap) {
-  if (typeof node !== 'object') {
+function addLocations(node, locationWeakMap) {
+  if (typeof node !== 'object' || !node) {
     return node;
   }
 
@@ -74,18 +74,23 @@ function processFile(absoluteFileName, fileName) {
           // That is the only purpose of this right now.
           createTmpFile(absoluteFileName, treeWithLocations).then(tmpFile => resolve(tmpFile));
         } catch (parsingError) {
-            console.log(parsingError)
+          // If its actually a parsing related error.
+          if (parsingError.description && parsingError.line) {
             reject(errorReporter('Parsing error', fileName, [
               chalk`{bold ${parsingError.description}} found at ${parsingError.line}:${parsingError.column}`,
               formatParsingError(fileString, parsingError.line, parsingError.column)
             ].join('\n')));
+          } else {
+            // If its a different error.
+            reject(parsingError)
           }
-        })
+        }
+      })
       .catch(loadingError => reject(errorReporter('File reading error', absoluteFileName, loadingError.message)));
   });
 }
 
-function createTmpFile (fileName, tree) {
+function createTmpFile(fileName, tree) {
   return new Promise((resolve, reject) => {
     const tmpFile = path.join(TMP_DIR, INFRARED_TMP_DIR, fileName.replace('.js', '.json'))
     if (process.env.DEBUG) {

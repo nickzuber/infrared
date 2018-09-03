@@ -12,7 +12,8 @@ let check file =
   with
   | Unimplemented reason ->
     let message = Printf.sprintf
-        "Tried to parse something we haven't implemented yet\n\n %s" reason in
+        "Tried to parse something we haven't implemented yet\n\n\
+         \x1b[31m  ● \x1b[39m\x1b[1m%s\x1b[0m" reason in
     Error_handler.(report message Level.High)
   | Malformed_json_ast reason ->
     let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in

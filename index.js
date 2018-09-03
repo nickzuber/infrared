@@ -11,14 +11,13 @@ const {
 } = require('./shift-parser/utils');
 const processFiles = require('./file-processor');
 
-clearConsole();
-clearDebugFile();
-
 const files = [];
 // files.push(path.resolve(__dirname, './tests/experimental/a.js'));
 // files.push(path.resolve(__dirname, './tests/experimental/b.js'));
 
 function typecheckFiles (files) {
+  clearConsole();
+  clearDebugFile();
   processFiles(files)
     .then(files => {
       if (process.env.DEBUG) {
