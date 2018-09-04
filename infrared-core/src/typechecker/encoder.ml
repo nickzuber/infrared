@@ -45,7 +45,23 @@ end = struct
     | "FunctionDeclaration" ->
       let function_expression = SP.parse_function node in
       [function_expression]
-    | _ as unhandled_type -> raise (Unimplemented unhandled_type)
+    | "Import" -> [I.Skip]
+    | "ClassDeclaration" -> [I.Skip]
+    | "Export" -> [I.Skip]
+    | "ExportDefault" -> [I.Skip]
+    | "ExportLocals" -> [I.Skip]
+    | "ExportFrom" -> [I.Skip]
+    | _ as unhandled_type ->
+      let reason = Printf.sprintf "%s" unhandled_type in
+      let (line, column, length) = Utils.destructure node in
+      let err = Error_handler.exposed_error
+          ~source:(!working_file)
+          ~loc_line:line
+          ~loc_column:column
+          ~loc_length:length
+          ~msg:reason
+          ~reason:reason in
+      raise (Unimplemented err)
 
   (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
   let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : InfraredAst.statement list =
@@ -57,7 +73,7 @@ end = struct
           let nodes = parse_statement node in
           acc @ nodes)
     | `Assoc _ | `Bool _  | `String _  | `Float _  | `Int _  | `Null
-      -> raise (Malformed_json_ast "Should have been a list")
+      -> raise (Malformed_json_ast "Should have been a List")
 end
 
 and StatementParser : sig
@@ -66,7 +82,7 @@ and StatementParser : sig
 end = struct
   let parse_function (node : NativeEncoder.json) : InfraredAst.statement =
     let module I = InfraredAst in
-    I.Skip
+    I.Skip  (* @TODO *)
 
   let parse_declaration (node : NativeEncoder.json) : InfraredAst.statement list =
     let module U = NativeEncoder.Util in
@@ -108,8 +124,13 @@ end = struct
     | "LiteralStringExpression" ->
       let _value = node |> U.member "value" in
       I.Primitive I.P_string
+    | "LiteralNullExpression" ->
+      I.Primitive I.P_null
+    | "ObjectExpression" ->
+      let properties = node |> U.member "properties" |> U.to_list in
+      I.Primitive I.P_object
     | _ ->
-      let reason = Printf.sprintf "Expression: %s" t in
+      let reason = Printf.sprintf "ExpressionParser.parse_expression: %s" t in
       let (line, column, length) = Utils.destructure node in
       let err = Error_handler.exposed_error
           ~source:(!working_file)

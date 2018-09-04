@@ -62,11 +62,15 @@ and expose_error_fallback ~source ~loc_line ~loc_column ~loc_length ~reason =
     %s\n\n\
     \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d | %s\n\
+    \x1b[90m%4d | %s\n\
     \x1b[39m%4d | %s\n\
    \x1b[90m     |\x1b[1;31m%s\x1b[0;39m\n\
+    \x1b[90m%4d | %s\n\
     \x1b[90m%4d | %s \x1b[39m\n"
     source_file
     reason
+    (loc_line - 2)
+    !most_upper_line
     (loc_line - 1)
     !upper_line
     loc_line
@@ -74,6 +78,8 @@ and expose_error_fallback ~source ~loc_line ~loc_column ~loc_length ~reason =
     (spacing ^ arrow)
     (loc_line + 1)
     !lower_line
+    (loc_line + 2)
+    !most_lower_line
 
 (* Error message with colored markings to indicate an error.
  * const foo = var

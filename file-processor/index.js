@@ -16,7 +16,7 @@ function processFiles (files) {
     const promises = files.map(file => parseAndPersist(file, file));
 
     clearConsole();
-    console.log(chalk`{bold \n Starting file processing...\n}`);
+    console.log(chalk`{bold \nStarting file processing...\n}`);
 
     Promise.all(promises).then(files => {
       resolve(files)

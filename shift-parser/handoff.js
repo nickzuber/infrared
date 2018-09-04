@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const chalk = require('chalk');
 const {getTimestamp, clearConsole, writeToDebugFile} = require('./utils');
 const {errorReporter} = require('./error');
 const {exec} = require('child_process');
@@ -43,7 +42,7 @@ function execInfraredCore (files) {
 
     clearConsole();
     console.log(stdout);
-    console.log(chalk`{green ✨ ${rand(wordsOfEncouragment)}}\n`);
+    console.log(`\u001b[32m✨ ${rand(wordsOfEncouragment)}\n`);
     if (process.env.DEBUG) {
       writeToDebugFile(`${getTimestamp()} Done`);
       writeToDebugFile(`${getTimestamp()} Took ${(+Date.now() - process.env.INFRARED_TIMER) / 1000} seconds to run`);

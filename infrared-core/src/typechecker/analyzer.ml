@@ -7,13 +7,19 @@ let check file =
   let items = ast |> member "items" in
   let fileName = ast |> member "fileName" |> to_string in
   try
-    let _infrared_ast = InfraredEncoder.parse_items items ~fileName:fileName in
-    ()
+    let stmts = InfraredEncoder.parse_items items ~fileName:fileName in
+    let ast =
+      { InfraredAst.
+        imports = []
+      ; exports = []
+      ; statements = stmts }
+    in
+    print_endline (InfraredAst.string_of_ast ast)
   with
   | Unimplemented reason ->
     let message = Printf.sprintf
         "Tried to parse something we haven't implemented yet\n\n\
-         \x1b[31m  ● \x1b[39m\x1b[1m%s\x1b[0m" reason in
+         %s" reason in
     Error_handler.(report message Level.High)
   | Malformed_json_ast reason ->
     let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
