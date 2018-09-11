@@ -42,7 +42,7 @@ function execInfraredCore (files) {
 
     clearConsole();
     console.log(stdout);
-    console.log(`\u001b[32m✨ ${rand(wordsOfEncouragment)}\n`);
+    console.log(`\u001b[32m✓ ${rand(wordsOfEncouragment)}\n`);
     if (process.env.DEBUG) {
       writeToDebugFile(`${getTimestamp()} Done`);
       writeToDebugFile(`${getTimestamp()} Took ${(+Date.now() - process.env.INFRARED_TIMER) / 1000} seconds to run`);

@@ -4,14 +4,15 @@ open Loc
 let use_inline_error_marking = false
 
 (* Reports a simple and general error *)
-let report ~msg ~level =
+let report ~source ~msg ~level =
+  let source' = Printf.sprintf "\x1b[90m%s\x1b[39m" source in
   match level with
-  | Level.High -> Printf.eprintf "\n\x1b[31mFatal error.\x1b[39m\n\n%s" msg
-  | Level.Med -> Printf.eprintf "\n\x1b[31mError.\x1b[39m\n\n%s" msg
-  | Level.Low -> Printf.eprintf "\n\x1b[33mWarning.\x1b[39m\n\n%s" msg
-  | Level.SyntaxError -> Printf.eprintf "\n\x1b[33mSyntax error.\x1b[39m\n\n%s" msg
-  | Level.ParseError -> Printf.eprintf "\n\x1b[31mParsing error.\x1b[39m\n\n%s" msg
-  | Level.UnknownError -> Printf.eprintf "\n\x1b[33mUnknown error.\x1b[39m\n\n%s" msg
+  | Level.High -> Printf.eprintf "\n\x1b[41;1m FATAL \x1b[49;0m %s\n%s" source' msg
+  | Level.Med -> Printf.eprintf "\n\x1b[41;1m FAIL \x1b[49;0m %s\n%s" source' msg
+  | Level.Low -> Printf.eprintf "\n\x1b[43;30;1m WARN \x1b[49;39;0m %s\n%s" source' msg
+  | Level.SyntaxError -> Printf.eprintf "\n\x1b[41;1m SYNTAX ERROR \x1b[49;0m %s\n%s" source' msg
+  | Level.ParseError -> Printf.eprintf "\n\x1b[41;1m PARSE ERROR \x1b[49;0m %s\n%s" source' msg
+  | Level.UnknownError -> Printf.eprintf "\n\x1b[41;1m UNKNOWN ERROR \x1b[49;0m %s\n%s" source' msg
 
 (* Returns a tuple of line, column, and length from a loc object. *)
 let loc_to_pos loc = (loc.line, loc.column, loc.length)
@@ -59,7 +60,6 @@ and expose_error_fallback ~source ~loc_line ~loc_column ~loc_length ~reason =
          cur_line + 1
       ) 1 lines
   in Printf.sprintf "\
-    %s\n\n\
     \x1b[31m  ● \x1b[39m%s\n\n\
     \x1b[90m%4d | %s\n\
     \x1b[90m%4d | %s\n\
@@ -67,7 +67,6 @@ and expose_error_fallback ~source ~loc_line ~loc_column ~loc_length ~reason =
    \x1b[90m     |\x1b[1;31m%s\x1b[0;39m\n\
     \x1b[90m%4d | %s\n\
     \x1b[90m%4d | %s \x1b[39m\n"
-    source_file
     reason
     (loc_line - 2)
     !most_upper_line

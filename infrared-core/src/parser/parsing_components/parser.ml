@@ -15,14 +15,14 @@ let tokenize file =
     let source = "\x1b[90m" ^ file ^ "\x1b[39m" in
     let msg = "\n   We've found some unbalanced brackets or parenthesis.\n" in
     let lvl = Level.SyntaxError in
-    (Error_handler.report ~msg:(source ^ " " ^ msg) ~level:(lvl));
+    (Error_handler.report ~source:file ~msg:(source ^ " " ^ msg) ~level:(lvl));
     None
   end else begin
     match final_env.error with
     (* might be unused *)
     | Some (msg, lvl) ->
       let msg = "\n   " ^ msg ^ "\n" in
-      (Error_handler.report ~msg:(msg) ~level:(lvl));
+      (Error_handler.report~source:file  ~msg:(msg) ~level:(lvl));
       None
     | None -> Some final_env
   end
@@ -64,5 +64,5 @@ let parse file = Token_parser.(
     try
       parse_may_throw file
     with
-    | Unimplemented e -> Error_handler.(report e Level.UnknownError); None
-    | ParsingError e -> Error_handler.(report e Level.ParseError); None)
+    | Unimplemented e -> (Error_handler.report ~source:file ~msg:e ~level:Level.UnknownError); None
+    | ParsingError e -> (Error_handler.report ~source:file ~msg:e ~level:Level.ParseError); None)

@@ -110,9 +110,48 @@ end = struct
 end
 
 and ExpressionParser : sig
+  val parse_data_properties : NativeEncoder.json list -> (string * InfraredAst.expression) list
+  val parse_property_name : NativeEncoder.json -> string
   val parse_expression : NativeEncoder.json -> InfraredAst.expression
 end = struct
-  let parse_expression (node : NativeEncoder.json) : InfraredAst.expression =
+  let rec parse_data_properties (nodes : NativeEncoder.json list) : (string * InfraredAst.expression) list =
+    let module U = NativeEncoder.Util in
+    let module N = NativeEncoder in
+    let module I = InfraredAst in
+    List.fold_left nodes ~init:[] ~f:(fun acc node ->
+        let name = node |> U.member "name" in
+        let expression = node |> U.member "expression" in
+        let property_name = parse_property_name name in
+        let property_expression = parse_expression expression in
+        let member = (property_name, property_expression) in
+        member :: acc)
+
+  and parse_property_name (node : NativeEncoder.json) : string =
+    let module U = NativeEncoder.Util in
+    let module N = NativeEncoder in
+    let module I = InfraredAst in
+    let t = N.to_string_exn "type" node in
+    match t with
+    | "StaticPropertyName" ->
+      let value = node |> U.member "value" |> U.to_string in
+      value
+    | "ComputedPropertyName" ->
+      let expr_node = node |> U.member "expression" in
+      let expr = parse_expression expr_node in
+      "ComputedPropertyName, PARSED EXPR (need a way to get this into a string)"
+    | _ ->
+      let reason = Printf.sprintf "ExpressionParser.parse_property_name: %s" t in
+      let (line, column, length) = Utils.destructure node in
+      let err = Error_handler.exposed_error
+          ~source:(!working_file)
+          ~loc_line:line
+          ~loc_column:column
+          ~loc_length:length
+          ~msg:reason
+          ~reason:reason in
+      raise (Unimplemented err)
+
+  and parse_expression (node : NativeEncoder.json) : InfraredAst.expression =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
     let module I = InfraredAst in
@@ -128,7 +167,8 @@ end = struct
       I.Primitive I.P_null
     | "ObjectExpression" ->
       let properties = node |> U.member "properties" |> U.to_list in
-      I.Primitive I.P_object
+      let data_properties = parse_data_properties properties in
+      I.Primitive (I.P_object data_properties)
     | _ ->
       let reason = Printf.sprintf "ExpressionParser.parse_expression: %s" t in
       let (line, column, length) = Utils.destructure node in

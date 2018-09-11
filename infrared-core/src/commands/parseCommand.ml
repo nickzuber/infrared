@@ -14,7 +14,7 @@ let generate_ast_list ~args ~flags =
       [] files
   else
     (Error_handler.report
-       ~msg:("No files found with given path") ~level:(Level.Low); [])
+       ~source:"" ~msg:("No files found with given path") ~level:(Level.Low); [])
 
 let spec = CommandSpec.create
     ~name:"parse"

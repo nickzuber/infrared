@@ -8,6 +8,7 @@ let check file =
   let fileName = ast |> member "fileName" |> to_string in
   try
     let stmts = InfraredEncoder.parse_items items ~fileName:fileName in
+    (** @TODO extract imports/exports *)
     let ast =
       { InfraredAst.
         imports = []
@@ -18,9 +19,9 @@ let check file =
   with
   | Unimplemented reason ->
     let message = Printf.sprintf
-        "Tried to parse something we haven't implemented yet\n\n\
+        "\tTried to parse something we haven't implemented yet\n\n\
          %s" reason in
-    Error_handler.(report message Level.High)
+    (Error_handler.report ~source:fileName ~msg:message ~level:Level.Med)
   | Malformed_json_ast reason ->
     let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
-    Error_handler.(report message Level.High)
+    (Error_handler.report ~source:fileName ~msg:message ~level:Level.High)

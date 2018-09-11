@@ -17,6 +17,7 @@ let extract_files name =
     let rec crawl filename =
       if Sys.file_exists filename = false then
         (Error_handler.report
+           ~source:filename
            ~msg:(Printf.sprintf "Unable to resolve the file: %s" filename)
            ~level:(Level.Low);
          [])

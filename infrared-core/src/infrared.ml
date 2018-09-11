@@ -101,4 +101,4 @@ let _ = Token_parser.(
     | _ as e ->
       let string_of_error = Printexc.to_string e in
       let message = Printf.sprintf "Uncaught error was thrown: \n\n\t%s\n" string_of_error in
-      Error_handler.(report message Level.High))
+      (Error_handler.report ~source:"" ~msg:message ~level:Level.High))

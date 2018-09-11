@@ -1,10 +1,16 @@
 
 var foo = 100;
 var foo = "";
-var foo = null;
+var foo = foo;
 var foo = {};
 var foo = {
   foo: ''
+};
+var foo = {
+  foo: '',
+  bar: {
+    baz: 123
+  },
 };
 
 // /**

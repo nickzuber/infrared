@@ -10,7 +10,9 @@ type t =
   | T_CALLABLE
 
 (* Valid primitives in javascript. These are generally used when
- * referencing the Predicate check or some kind of native type refining. *)
+ * referencing the Predicate check or some kind of native type refining.
+ * These are not types, but rather describe structures of expressions that
+ * will eventually be typed. *)
 type primitive =
   | P_string
   | P_number
@@ -127,7 +129,14 @@ and string_of_primative (primitive : primitive) : string =
   | P_boolean -> "BOOLEAN"
   | P_null -> "NULL"
   | P_undefined -> "UNDEFINED"
-  | P_object -> "OBJECT"
+  | P_object members ->
+    Printf.sprintf "OBJECT {%s }"
+      (List.fold_left members ~init:"" ~f:(fun acc member ->
+           let (key, expr) = member in
+           let field = Printf.sprintf "%s: %s"
+               key (string_of_expression expr)
+           in
+           acc ^ " " ^ field ^ ","))
 
 let string_of_imports (imports : (identifier * string) list) : string =
   ""
@@ -144,7 +153,7 @@ let string_of_ast (ast : program) : string =
       ; exports = e
       ; statements = s } = ast in
   Printf.sprintf "\x1b[1mImports\x1b[0m\n%s\
-                  \x1b[1mExportss\x1b[0m\n%s\
+                  \x1b[1mExports\x1b[0m\n%s\
                   \x1b[1mStatements\x1b[0m\n%s"
     (string_of_imports i)
     (string_of_exports e)
