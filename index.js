@@ -1,8 +1,8 @@
 'use strict';
 
-const path = require('path');
 const chalk = require('chalk');
-const execInfraredCore = require('./shift-parser/handoff')
+const execInfraredCore = require('./shift-parser/handoff');
+const { errorReporter } = require('./shift-parser/error');
 const {
   getTimestamp,
   clearConsole,
@@ -10,10 +10,6 @@ const {
   writeToDebugFile,
 } = require('./shift-parser/utils');
 const processFiles = require('./file-processor');
-
-const files = [];
-// files.push(path.resolve(__dirname, './tests/experimental/a.js'));
-// files.push(path.resolve(__dirname, './tests/experimental/b.js'));
 
 function typecheckFiles (files) {
   clearConsole();
@@ -33,6 +29,6 @@ function typecheckFiles (files) {
     });
 }
 
-// typecheckFiles(files);
-
 module.exports.typecheckFiles = typecheckFiles;
+module.exports.errorReporter = errorReporter;
+module.exports.clearConsole = clearConsole;

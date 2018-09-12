@@ -17,7 +17,7 @@ end = struct
   ]
 
   let reportCommandError msg =
-    Printf.printf "\n😬  Well this is awkward, %s\n" msg
+    Printf.eprintf "\x1b[31mFailed to process.\x1b[39m\n\n%s\nExiting program.\n" msg
 
   let greeting () =
     Printf.printf "%s%s%s\n\n" "✨  🚀  Infrared v"
@@ -58,7 +58,7 @@ end = struct
         | cmd when VersionCommand.spec.name = cmd -> VersionCommand.exec ()
         | cmd when ParseCommand.spec.name = cmd ->
           (match args' with
-           | [] -> reportCommandError "no arguments given for parsing. \
+           | [] -> reportCommandError "no arguments given for parsing.\
                                        Did you forget to include a file name?"
            | arg :: [] ->
              Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:[arg])
@@ -70,8 +70,8 @@ end = struct
              Parser.print_ast (ParseCommand.exec ~flags:flags' ~args:args'))
         | cmd when CheckCachedCommand.spec.name = cmd ->
           (match args' with
-           | [] -> reportCommandError "no arguments given for parsing. \
-                                       Did you forget to include a file name?"
+           | [] -> reportCommandError "No arguments were given.\n\
+                                       Maybe the path you provided has no JavaScript files in it?"
            | arg :: [] ->
              CheckCachedCommand.exec ~flags:flags' ~args:[arg]
            | _ ->
@@ -80,8 +80,8 @@ end = struct
              CheckCachedCommand.exec ~flags:flags' ~args:args')
         | cmd when TypeCheckCommand.spec.name = cmd ->
           (match args' with
-           | [] -> reportCommandError "no arguments given for parsing. \
-                                       Did you forget to include a file name?"
+           | [] -> reportCommandError "No arguments were given.\n \
+                                       Maybe the path you provided has no JavaScript files in it?"
            | arg :: [] ->
              TypeCheckCommand.exec ~flags:flags' ~args:[arg]
            | _ ->
