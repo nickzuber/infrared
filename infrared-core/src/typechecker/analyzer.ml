@@ -1,7 +1,11 @@
 open Encoder
 
+let pass (source : string) : unit =
+  let source' = Printf.sprintf "\x1b[90m%s\x1b[39m" source in
+  Printf.printf "\n\x1b[42;1m PASS \x1b[49;39;0m %s" source'
+
 let check file =
-  Printf.printf "checking.. %s\n" file;
+  (* Printf.printf "[DEGUB] Checking  %s\n" file; *)
   let ast = NativeEncoder.parse file in
   let open NativeEncoder.Util in
   let items = ast |> member "items" in
@@ -15,7 +19,8 @@ let check file =
       ; exports = []
       ; statements = stmts }
     in
-    print_endline (InfraredAst.string_of_ast ast)
+    (* print_endline (InfraredAst.string_of_ast ast); *)
+    pass fileName
   with
   | Unimplemented reason ->
     let message = Printf.sprintf

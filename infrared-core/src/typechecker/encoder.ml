@@ -68,7 +68,6 @@ end = struct
     working_file := fileName;
     match node with
     | `List nodes ->
-      let _ = Printf.printf "list %d\n" (List.length nodes) in
       List.fold_left nodes ~init:[] ~f:(fun acc node ->
           let nodes = parse_statement node in
           acc @ nodes)

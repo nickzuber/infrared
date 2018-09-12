@@ -28,7 +28,7 @@ function typecheckFiles (files) {
     .catch(error => {
       clearConsole();
       process.stdout.write(error);
-      process.stdout.write(chalk.bold('\n Process stopped.\n\n'));
+      process.stdout.write(chalk.bold('\nProcess stopped.\n\n'));
       process.exit(1);
     });
 }

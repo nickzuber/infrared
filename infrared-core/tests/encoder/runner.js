@@ -1,5 +1,11 @@
 const {exec} = require('child_process');
 
-exec(('infrared check ./infrared-core/tests/encoder/random.test.js'), (err, stdout, stderr) => {
+const files = [
+  './infrared-core/tests/encoder/random.test.js ',
+  './tests/experimental/a.js ',
+  './tests/experimental/b.js',
+];
+
+exec((`infrared check ${files.join(' ')}`), (err, stdout, stderr) => {
   console.log(stdout, stderr)
 });

@@ -1,3 +1,3 @@
 'use strict';
 
-var a = "test"
+var a = 2

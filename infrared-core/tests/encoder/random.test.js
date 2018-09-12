@@ -1,7 +1,7 @@
 
 var foo = 100;
 var foo = "";
-var foo = foo;
+var foo = null;
 var foo = {};
 var foo = {
   foo: ''

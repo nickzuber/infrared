@@ -15,11 +15,11 @@ function errorReporter (title = "", path = "", message) {
   return [
     '',
     // chalk` {bgRed {bold  ${title.toUpperCase()} }} {gray ${path}}`,
-    chalk` {red Failed to process.}`,
+    chalk`{red Failed to process.}`,
     '',
-    chalk` ${title}: {gray ${highlightedPath}}`,
+    chalk`{bgRed {bold  ${title.toUpperCase()} }} {gray ${highlightedPath}}`,
     '',
-    chalk`   {red ●} ${message}`,
+    chalk`  {red ●} ${message}`,
     '',
   ].join('\n');
 }
