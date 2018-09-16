@@ -152,7 +152,7 @@ let string_of_ast (ast : program) : string =
   let { imports = i
       ; exports = e
       ; statements = s } = ast in
-  Printf.sprintf "\x1b[1mImports\x1b[0m\n%s\
+  Printf.sprintf "\n\n\x1b[1mImports\x1b[0m\n%s\
                   \x1b[1mExports\x1b[0m\n%s\
                   \x1b[1mStatements\x1b[0m\n%s"
     (string_of_imports i)

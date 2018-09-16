@@ -19,7 +19,7 @@ let check file =
       ; exports = []
       ; statements = stmts }
     in
-    print_endline (InfraredAst.string_of_ast ast);
+    print_endline ("\n\n" ^ (InfraredAst.string_of_ast ast));
     pass fileName
   with
   | Unimplemented reason ->
