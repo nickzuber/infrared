@@ -11,6 +11,7 @@ const {
 } = require('./shift-parser/utils');
 const processFiles = require('./file-processor');
 
+// string Set -> unit
 function typecheckFiles (files) {
   clearConsole();
   clearDebugFile();
