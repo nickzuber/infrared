@@ -1,7 +1,8 @@
 open Core.Std
 open Yojson
+module StandardInfraredAst = InfraredAst.StandardInfraredAst
 
-(* We don't have exhaustiveness in the NativeEncoder -> InfraredAst conversion. *)
+(* We don't have exhaustiveness in the NativeEncoder -> StandardInfraredAst conversion. *)
 exception Malformed_json_ast of string
 
 (* Exhaustiveness with deferring *)
@@ -29,12 +30,12 @@ end = struct
 end
 
 and InfraredEncoder : sig
-  val parse_items : fileName:string -> NativeEncoder.json -> InfraredAst.statement list
-  val parse_statement : NativeEncoder.json -> InfraredAst.statement list
+  val parse_items : fileName:string -> NativeEncoder.json -> StandardInfraredAst.statement list
+  val parse_statement : NativeEncoder.json -> StandardInfraredAst.statement list
 end = struct
-  let parse_statement (node : NativeEncoder.json) : InfraredAst.statement list =
+  let parse_statement (node : NativeEncoder.json) : StandardInfraredAst.statement list =
     let module SP = StatementParser in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     let module N = NativeEncoder in
     let t = N.to_string_exn "type" node in
     match t with
@@ -63,8 +64,8 @@ end = struct
           ~reason:reason in
       raise (Unimplemented err)
 
-  (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
-  let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : InfraredAst.statement list =
+  (* Derive an StandardInfraredAst from a Yojson encoded Shift AST. *)
+  let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : StandardInfraredAst.statement list =
     working_file := fileName;
     match node with
     | `List nodes ->
@@ -76,18 +77,18 @@ end = struct
 end
 
 and StatementParser : sig
-  val parse_function : NativeEncoder.json -> InfraredAst.statement
-  val parse_declaration : NativeEncoder.json -> InfraredAst.statement list
+  val parse_function : NativeEncoder.json -> StandardInfraredAst.statement
+  val parse_declaration : NativeEncoder.json -> StandardInfraredAst.statement list
 end = struct
-  let parse_function (node : NativeEncoder.json) : InfraredAst.statement =
-    let module I = InfraredAst in
+  let parse_function (node : NativeEncoder.json) : StandardInfraredAst.statement =
+    let module I = StandardInfraredAst in
     I.Skip  (* @TODO *)
 
-  let parse_declaration (node : NativeEncoder.json) : InfraredAst.statement list =
+  let parse_declaration (node : NativeEncoder.json) : StandardInfraredAst.statement list =
     let module U = NativeEncoder.Util in
     let module EP = ExpressionParser in
     let module IP = IdentifierParser in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     let declarators = node
                       |> U.member "declaration"
                       |> U.member "declarators"
@@ -98,8 +99,8 @@ end = struct
         declarators
         ~init:[]
         ~f:(fun acc declarator ->
-            let binding : InfraredAst.identifier = declarator |> U.member "binding" |> IP.parse_binding in
-            let init : InfraredAst.expression = declarator |> U.member "init" |> EP.parse_expression in
+            let binding : StandardInfraredAst.identifier = declarator |> U.member "binding" |> IP.parse_binding in
+            let init : StandardInfraredAst.expression = declarator |> U.member "init" |> EP.parse_expression in
             let declaration = I.Declaration (binding, init) in
             declaration :: acc)
     in
@@ -109,14 +110,14 @@ end = struct
 end
 
 and ExpressionParser : sig
-  val parse_data_properties : NativeEncoder.json list -> (string * InfraredAst.expression) list
+  val parse_data_properties : NativeEncoder.json list -> (string * StandardInfraredAst.expression) list
   val parse_property_name : NativeEncoder.json -> string
-  val parse_expression : NativeEncoder.json -> InfraredAst.expression
+  val parse_expression : NativeEncoder.json -> StandardInfraredAst.expression
 end = struct
-  let rec parse_data_properties (nodes : NativeEncoder.json list) : (string * InfraredAst.expression) list =
+  let rec parse_data_properties (nodes : NativeEncoder.json list) : (string * StandardInfraredAst.expression) list =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     List.fold_left nodes ~init:[] ~f:(fun acc node ->
         let name = node |> U.member "name" in
         let expression = node |> U.member "expression" in
@@ -128,7 +129,7 @@ end = struct
   and parse_property_name (node : NativeEncoder.json) : string =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     let t = N.to_string_exn "type" node in
     match t with
     | "StaticPropertyName" ->
@@ -150,10 +151,10 @@ end = struct
           ~reason:reason in
       raise (Unimplemented err)
 
-  and parse_expression (node : NativeEncoder.json) : InfraredAst.expression =
+  and parse_expression (node : NativeEncoder.json) : StandardInfraredAst.expression =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     let t = N.to_string_exn "type" node in
     match t with
     | "LiteralNumericExpression" ->
@@ -182,21 +183,22 @@ end = struct
 end
 
 and IdentifierParser : sig
-  val parse_binding : NativeEncoder.json -> InfraredAst.identifier
+  val parse_binding : NativeEncoder.json -> StandardInfraredAst.identifier
 end = struct
   (* We always want to spit out a string identifier from this routine. Even in
      the more complex types of assignments (think nested destructuring), at the
      end of the day we just want a single identifer. The init will always
      drive the type. *)
-  let parse_binding (node : NativeEncoder.json) : InfraredAst.identifier =
+  let parse_binding (node : NativeEncoder.json) : StandardInfraredAst.identifier =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = InfraredAst in
+    let module I = StandardInfraredAst in
     let t = N.to_string_exn "type" node in
     match t with
     | "BindingIdentifier" ->
       let name = node |> U.member "name" |> U.to_string in
-      I.Identifer name
+      let identifier = InfraredAst.StandardIdentifier.Identifier name in
+      I.(identifier)
     | "ObjectBinding" ->
       begin
         let properties = node |> U.member "properties" in
@@ -245,3 +247,30 @@ ArrayBinding
   ...
 
 *)
+
+
+
+(*
+
+module type BaseThing = sig
+  type t
+  val to_string : t -> string
+end
+
+module Make_foo (B : BaseThing) = struct
+  type thing = B.t
+end
+
+module MyThing = struct
+  type t =
+    | A of string
+    | B of int
+  let to_string thing =
+    match thing with
+    | A str -> str
+    | B n -> string_of_int n
+end
+
+module FooThing = Make_foo(MyThing)
+
+FooThing.A "test" *)

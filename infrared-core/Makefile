@@ -8,6 +8,7 @@ MODULES = src/commands \
           src/parser/parsing_components \
           src/parser/ast_components \
           src/typechecker \
+          src/typechecker/ast \
           src/errors \
           core \
           utils

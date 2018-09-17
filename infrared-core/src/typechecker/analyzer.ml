@@ -1,4 +1,5 @@
 open Encoder
+module StandardInfraredAst = InfraredAst.StandardInfraredAst
 
 let pass (source : string) : unit =
   let source' = Printf.sprintf "\x1b[90m%s\x1b[39m" source in
@@ -14,12 +15,12 @@ let check file =
     let stmts = InfraredEncoder.parse_items items ~fileName:fileName in
     (** @TODO extract imports/exports *)
     let ast =
-      { InfraredAst.
+      { StandardInfraredAst.
         imports = []
       ; exports = []
       ; statements = stmts }
     in
-    print_endline ("\n\n" ^ (InfraredAst.string_of_ast ast));
+    print_endline ("\n\n" ^ (StandardInfraredAst.string_of_ast ast));
     pass fileName
   with
   | Unimplemented reason ->
