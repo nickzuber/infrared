@@ -1,6 +1,6 @@
 
 var foo = 100;
-var foo = "";
+var foo = "asdasd";
 var foo = null;
 var foo = {};
 var foo = {
@@ -12,6 +12,10 @@ var foo = {
     baz: 123
   },
 };
+
+let a, b, c, d = 1
+
+const {bar, baz} = 123
 
 // /**
 //  * Copyright 2016 Shape Security, Inc.

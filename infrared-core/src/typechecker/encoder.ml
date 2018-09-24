@@ -1,8 +1,7 @@
 open Core.Std
 open Yojson
-module StandardInfraredAst = InfraredAst.StandardInfraredAst
 
-(* We don't have exhaustiveness in the NativeEncoder -> StandardInfraredAst conversion. *)
+(* We don't have exhaustiveness in the NativeEncoder -> InfraredAst conversion. *)
 exception Malformed_json_ast of string
 
 (* Exhaustiveness with deferring *)
@@ -16,26 +15,35 @@ module rec NativeEncoder : sig
   include module type of Yojson.Basic
   val parse : string -> Yojson.Basic.json
   val to_string_exn : string -> Yojson.Basic.json -> string
+  val to_node_option : Yojson.Basic.json -> Yojson.Basic.json option
 end = struct
   include Yojson.Basic
   let parse file = Basic.from_file file
+
+  let to_node_option node =
+    let open Yojson.Basic in
+    match node with
+    | `Null -> None
+    | _ -> Some node
 
   let to_string_exn key node =
     try
       node |> Basic.Util.member key |> Basic.Util.to_string
     with
-    | _ -> raise
-             (Illegal_argument_type_error
-                "`to_string_exn` expects the json node to be a string.")
+    | _ ->
+      raise
+        (Illegal_argument_type_error
+           ("`to_string_exn` expects the json node to be a string. \
+             Key was '" ^ key ^ "'"))
 end
 
 and InfraredEncoder : sig
-  val parse_items : fileName:string -> NativeEncoder.json -> StandardInfraredAst.statement list
-  val parse_statement : NativeEncoder.json -> StandardInfraredAst.statement list
+  val parse_items : fileName:string -> NativeEncoder.json -> InfraredAst.statement list
+  val parse_statement : NativeEncoder.json -> InfraredAst.statement list
 end = struct
-  let parse_statement (node : NativeEncoder.json) : StandardInfraredAst.statement list =
+  let parse_statement (node : NativeEncoder.json) : InfraredAst.statement list =
     let module SP = StatementParser in
-    let module I = StandardInfraredAst in
+    let module I = InfraredAst in
     let module N = NativeEncoder in
     let t = N.to_string_exn "type" node in
     match t with
@@ -64,8 +72,8 @@ end = struct
           ~reason:reason in
       raise (Unimplemented err)
 
-  (* Derive an StandardInfraredAst from a Yojson encoded Shift AST. *)
-  let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : StandardInfraredAst.statement list =
+  (* Derive an InfraredAst from a Yojson encoded Shift AST. *)
+  let rec parse_items ~(fileName : string) (node : NativeEncoder.json) : InfraredAst.statement list =
     working_file := fileName;
     match node with
     | `List nodes ->
@@ -77,47 +85,66 @@ end = struct
 end
 
 and StatementParser : sig
-  val parse_function : NativeEncoder.json -> StandardInfraredAst.statement
-  val parse_declaration : NativeEncoder.json -> StandardInfraredAst.statement list
+  val parse_function : NativeEncoder.json -> InfraredAst.statement
+  val parse_declaration : NativeEncoder.json -> InfraredAst.statement list
 end = struct
-  let parse_function (node : NativeEncoder.json) : StandardInfraredAst.statement =
-    let module I = StandardInfraredAst in
+  let parse_function (node : NativeEncoder.json) : InfraredAst.statement =
+    let module I = InfraredAst in
     I.Skip  (* @TODO *)
 
-  let parse_declaration (node : NativeEncoder.json) : StandardInfraredAst.statement list =
+  let parse_declaration (node : NativeEncoder.json) : InfraredAst.statement list =
     let module U = NativeEncoder.Util in
     let module EP = ExpressionParser in
     let module IP = IdentifierParser in
-    let module I = StandardInfraredAst in
-    let declarators = node
-                      |> U.member "declaration"
-                      |> U.member "declarators"
-                      |> U.to_list
+    let module I = InfraredAst in
+    let kind_str : string =
+      node
+      |> U.member "declaration"
+      |> U.member "kind"
+      |> U.to_string
+    in
+    let declarators : NativeEncoder.json list =
+      node
+      |> U.member "declaration"
+      |> U.member "declarators"
+      |> U.to_list
     in
     (* For each delcarator, create a variable declaration statement. *)
-    let declarations = List.fold_left
-        declarators
-        ~init:[]
-        ~f:(fun acc declarator ->
-            let binding : StandardInfraredAst.identifier = declarator |> U.member "binding" |> IP.parse_binding in
-            let init : StandardInfraredAst.expression = declarator |> U.member "init" |> EP.parse_expression in
-            let declaration = I.Declaration (binding, init) in
-            declaration :: acc)
+    let all_declarations = List.fold_left declarators ~init:[] ~f:(fun acc declarator ->
+        let bindingType = declarator
+                          |> U.member "binding"
+                          |> U.member "type"
+                          |> U.to_string in
+        let declarations = match bindingType with
+          | "ObjectBinding" -> (* produces many declarations *)
+            let binding = declarator |> U.member "binding" in
+            IP.parse_object_binding kind_str binding
+          | "ArrayBinding" -> (* produces many declarations *)
+            []
+          | "BindingIdentifier" -> (* produces a single declaration *)
+            begin
+              let binding : InfraredAst.identifier = declarator |> U.member "binding" |> IP.parse_binding_identifier in
+              let init : InfraredAst.expression = declarator |> U.member "init" |> EP.parse_expression in
+              let kind : InfraredAst.kind = InfraredAst.to_kind kind_str in
+              let declaration = I.Declaration (kind, binding, init) in
+              [declaration]
+            end
+          | _ -> []
+        in
+        declarations @ acc)
     in
-    (* This should be reversed here to counter the backwards appending to the
-       list. This probably doesn't matter, but we can remove later. *)
-    List.rev declarations
+    all_declarations
 end
 
 and ExpressionParser : sig
-  val parse_data_properties : NativeEncoder.json list -> (string * StandardInfraredAst.expression) list
+  val parse_data_properties : NativeEncoder.json list -> (string * InfraredAst.expression) list
   val parse_property_name : NativeEncoder.json -> string
-  val parse_expression : NativeEncoder.json -> StandardInfraredAst.expression
+  val parse_expression : NativeEncoder.json -> InfraredAst.expression
 end = struct
-  let rec parse_data_properties (nodes : NativeEncoder.json list) : (string * StandardInfraredAst.expression) list =
+  let rec parse_data_properties (nodes : NativeEncoder.json list) : (string * InfraredAst.expression) list =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = StandardInfraredAst in
+    let module I = InfraredAst in
     List.fold_left nodes ~init:[] ~f:(fun acc node ->
         let name = node |> U.member "name" in
         let expression = node |> U.member "expression" in
@@ -129,7 +156,7 @@ end = struct
   and parse_property_name (node : NativeEncoder.json) : string =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = StandardInfraredAst in
+    let module I = InfraredAst in
     let t = N.to_string_exn "type" node in
     match t with
     | "StaticPropertyName" ->
@@ -151,65 +178,112 @@ end = struct
           ~reason:reason in
       raise (Unimplemented err)
 
-  and parse_expression (node : NativeEncoder.json) : StandardInfraredAst.expression =
+  and parse_expression (node : NativeEncoder.json) : InfraredAst.expression =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = StandardInfraredAst in
-    let t = N.to_string_exn "type" node in
-    match t with
-    | "LiteralNumericExpression" ->
-      let _value = node |> U.member "value" in
-      I.Primitive I.P_number
-    | "LiteralStringExpression" ->
-      let _value = node |> U.member "value" in
-      I.Primitive I.P_string
-    | "LiteralNullExpression" ->
-      I.Primitive I.P_null
-    | "ObjectExpression" ->
-      let properties = node |> U.member "properties" |> U.to_list in
-      let data_properties = parse_data_properties properties in
-      I.Primitive (I.P_object data_properties)
-    | _ ->
-      let reason = Printf.sprintf "ExpressionParser.parse_expression: %s" t in
-      let (line, column, length) = Utils.destructure node in
-      let err = Error_handler.exposed_error
-          ~source:(!working_file)
-          ~loc_line:line
-          ~loc_column:column
-          ~loc_length:length
-          ~msg:reason
-          ~reason:reason in
-      raise (Unimplemented err)
+    let module I = InfraredAst in
+    let node_opt = node |> N.to_node_option in
+    match node_opt with
+    | None ->
+      (* An expression that's ever `null` in our raw ast should imply the Null expression. *)
+      I.Null
+    | Some node ->
+      begin
+        let t = N.to_string_exn "type" node in
+        match t with
+        | "LiteralNumericExpression" ->
+          let value = node |> U.member "value" |> U.to_int in
+          I.Number value
+        | "LiteralStringExpression" ->
+          let value = node |> U.member "value" |> U.to_string in
+          I.String value
+        | "LiteralNullExpression" ->
+          I.Null
+        | "ObjectExpression" ->
+          let properties = node |> U.member "properties" |> U.to_list in
+          let data_properties = parse_data_properties properties in
+          (I.Object data_properties)
+        | _ ->
+          let reason = Printf.sprintf "ExpressionParser.parse_expression: %s" t in
+          let (line, column, length) = Utils.destructure node in
+          Printf.printf "%d %d %d" line column length;
+          let err = Error_handler.exposed_error
+              ~source:(!working_file)
+              ~loc_line:line
+              ~loc_column:column
+              ~loc_length:length
+              ~msg:reason
+              ~reason:reason in
+          raise (Unimplemented err)
+      end
 end
 
 and IdentifierParser : sig
-  val parse_binding : NativeEncoder.json -> StandardInfraredAst.identifier
+  val parse_object_binding : string -> NativeEncoder.json -> InfraredAst.statement list
+  val parse_binding_identifier : NativeEncoder.json -> InfraredAst.identifier
 end = struct
-  (* We always want to spit out a string identifier from this routine. Even in
-     the more complex types of assignments (think nested destructuring), at the
-     end of the day we just want a single identifer. The init will always
-     drive the type. *)
-  let parse_binding (node : NativeEncoder.json) : StandardInfraredAst.identifier =
+  let parse_binding_identifier (node : NativeEncoder.json) : InfraredAst.identifier =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
-    let module I = StandardInfraredAst in
-    let t = N.to_string_exn "type" node in
-    match t with
-    | "BindingIdentifier" ->
-      let name = node |> U.member "name" |> U.to_string in
-      let identifier = InfraredAst.StandardIdentifier.Identifier name in
-      I.(identifier)
-    | "ObjectBinding" ->
-      begin
-        let properties = node |> U.member "properties" in
-        let properties_t = properties |> N.to_string_exn "type" in
-        match properties_t with
-        | "BindingPropertyIdentifier" -> raise (Unimplemented "BindingPropertyIdentifier")
-        | "BindingPropertyProperty" -> raise (Unimplemented "BindingPropertyProperty")
-        | _ -> raise (Unimplemented "Properties")
-      end
-    | "ArrayBinding" -> raise (Unimplemented "ArrayBinding")
-    | _ -> raise (Unimplemented "Expression")
+    let module I = InfraredAst in
+    let name = node |> U.member "name" |> U.to_string in
+    I.(name)
+
+  let parse_object_binding (kind : string) (node : NativeEncoder.json) : InfraredAst.statement list =
+    let module U = NativeEncoder.Util in
+    let module N = NativeEncoder in
+    let module EP = ExpressionParser in
+    let module I = InfraredAst in
+    (* These kinds of declarations are super interesting for us. The way we
+     * basically want to handle this is kind of rewriting what's really going
+     * on behind the syntactic sugar.
+     *
+     * <KIND> {foo, bar = <E2>} = <E>
+     *
+     *      ↓      ↓      ↓
+     *
+     * <KIND> foo = <E>.foo
+     * <KIND> bar = <E>.bar || <E2>
+     *
+     *
+     *
+     * <KIND> {foo: bar} = <E>
+     * <KIND> {foo} = <E>
+     *
+     *  ↓      ↓      ↓
+     *
+     * <KIND> bar = <E>.foo
+     * <KIND> foo = <E>.foo
+     *
+     * For reference,
+     * <KIND> foo = <E>.foo
+     *         ^         ^
+     *   identifier     property
+     *
+    *)
+    let kind_t = I.to_kind kind in
+    let properties = node |> U.member "properties" |> U.to_list in
+    let declarations = List.fold_left properties ~init:[] ~f:(fun acc property ->
+        let propertyType = N.to_string_exn "type" property in
+        let (identifier_str, property_str) = match propertyType with
+          | "BindingPropertyIdentifier" ->
+            let identifier_str = property
+                                 |> U.member "binding"
+                                 |> U.member "name"
+                                 |> U.to_string
+            in
+            let property_str = identifier_str in
+            (identifier_str, property_str)
+          | _ -> raise (Malformed_json_ast "IdentifierParser.parse_object_binding declarations")
+        in
+        acc)
+    (* let properties_t = properties |> N.to_string_exn "type" in
+       match properties_t with
+       | "BindingPropertyIdentifier" -> raise (Unimplemented "BindingPropertyIdentifier")
+       | "BindingPropertyProperty" -> raise (Unimplemented "BindingPropertyProperty")
+       | _ -> raise (Unimplemented "Properties") *)
+    in
+    []
 end
 
 and Utils : sig
@@ -221,7 +295,9 @@ end = struct
     let line = location |> U.member "start" |> U.member "line" |> U.to_int in
     let column_start = location |> U.member "start" |> U.member "column" |> U.to_int in
     let column_end = location |> U.member "end" |> U.member "column" |> U.to_int in
-    let length = column_end - column_start in
+    (* Lowest length we'll allow is 1. There are cases where length can be negative
+     * here when the expression is multiple lines long. *)
+    let length = max (column_end - column_start) 1 in
     (line, column_start + 1, length)
 
 end
@@ -272,5 +348,8 @@ module MyThing = struct
 end
 
 module FooThing = Make_foo(MyThing)
+
+    let _ = MyFoo.A "";;
+    # Error: Unbound constructor MyFoo.A
 
 FooThing.A "test" *)

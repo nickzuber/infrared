@@ -1,5 +1,4 @@
 open Encoder
-module StandardInfraredAst = InfraredAst.StandardInfraredAst
 
 let pass (source : string) : unit =
   let source' = Printf.sprintf "\x1b[90m%s\x1b[39m" source in
@@ -15,12 +14,12 @@ let check file =
     let stmts = InfraredEncoder.parse_items items ~fileName:fileName in
     (** @TODO extract imports/exports *)
     let ast =
-      { StandardInfraredAst.
+      { InfraredAst.
         imports = []
       ; exports = []
       ; statements = stmts }
     in
-    print_endline ("\n\n" ^ (StandardInfraredAst.string_of_ast ast));
+    print_endline ("\n\n" ^ (InfraredAst.string_of_ast ast));
     pass fileName
   with
   | Unimplemented reason ->
@@ -29,5 +28,8 @@ let check file =
          %s" reason in
     (Error_handler.report ~source:fileName ~msg:message ~level:Level.Med)
   | Malformed_json_ast reason ->
-    let message = Printf.sprintf "Bad JSON ast: `%s`\n" reason in
+    let message = Printf.sprintf "Bad JSON ast: %s\n" reason in
+    (Error_handler.report ~source:fileName ~msg:message ~level:Level.High)
+  | Illegal_argument_type_error reason ->
+    let message = Printf.sprintf "Unexpected JSON Argument: %s\n" reason in
     (Error_handler.report ~source:fileName ~msg:message ~level:Level.High)
