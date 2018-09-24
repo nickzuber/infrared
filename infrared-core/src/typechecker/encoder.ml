@@ -118,7 +118,8 @@ end = struct
         let declarations = match bindingType with
           | "ObjectBinding" -> (* produces many declarations *)
             let binding = declarator |> U.member "binding" in
-            IP.parse_object_binding kind_str binding
+            let init = declarator |> U.member "init" |> EP.parse_expression in
+            IP.parse_object_binding kind_str binding init
           | "ArrayBinding" -> (* produces many declarations *)
             []
           | "BindingIdentifier" -> (* produces a single declaration *)
@@ -219,7 +220,7 @@ end = struct
 end
 
 and IdentifierParser : sig
-  val parse_object_binding : string -> NativeEncoder.json -> InfraredAst.statement list
+  val parse_object_binding : string -> NativeEncoder.json -> InfraredAst.expression -> InfraredAst.statement list
   val parse_binding_identifier : NativeEncoder.json -> InfraredAst.identifier
 end = struct
   let parse_binding_identifier (node : NativeEncoder.json) : InfraredAst.identifier =
@@ -229,7 +230,7 @@ end = struct
     let name = node |> U.member "name" |> U.to_string in
     I.(name)
 
-  let parse_object_binding (kind : string) (node : NativeEncoder.json) : InfraredAst.statement list =
+  let parse_object_binding (kind_str : string) (node : NativeEncoder.json) (init : InfraredAst.expression) : InfraredAst.statement list =
     let module U = NativeEncoder.Util in
     let module N = NativeEncoder in
     let module EP = ExpressionParser in
@@ -261,29 +262,47 @@ end = struct
      *   identifier     property
      *
     *)
-    let kind_t = I.to_kind kind in
+    let kind = I.to_kind kind_str in
     let properties = node |> U.member "properties" |> U.to_list in
     let declarations = List.fold_left properties ~init:[] ~f:(fun acc property ->
         let propertyType = N.to_string_exn "type" property in
-        let (identifier_str, property_str) = match propertyType with
-          | "BindingPropertyIdentifier" ->
-            let identifier_str = property
-                                 |> U.member "binding"
-                                 |> U.member "name"
-                                 |> U.to_string
+        let declaration =
+          match propertyType with
+          | "BindingPropertyIdentifier" -> (* var { a } = 100 *)
+            (* NOTE: this currently assumes that the binding is a BindingIdentifier. *)
+            let identifier_str =
+              property
+              |> U.member "binding"
+              |> U.member "name"
+              |> U.to_string
             in
-            let property_str = identifier_str in
-            (identifier_str, property_str)
+            let identifier = I.(identifier_str) in
+            let init' = I.Access (init, identifier) in
+            I.Declaration (kind, identifier, init')
+          | "BindingPropertyProperty" -> (* var { a: b } = 100 *)
+            (* NOTE: this currently assumes that the binding is a BindingIdentifier. *)
+            let property_str =
+              property
+              |> U.member "binding"
+              |> U.member "name"
+              |> U.to_string
+            in
+            (* NOTE: this currently assumes that the name is a StaticPropertyName. *)
+            let identifier_str =
+              property
+              |> U.member "name"
+              |> U.member "value"
+              |> U.to_string
+            in
+            let property = I.(property_str) in
+            let identifier = I.(identifier_str) in
+            let init' = I.Access (init, property) in
+            I.Declaration (kind, identifier, init')
           | _ -> raise (Malformed_json_ast "IdentifierParser.parse_object_binding declarations")
         in
-        acc)
-    (* let properties_t = properties |> N.to_string_exn "type" in
-       match properties_t with
-       | "BindingPropertyIdentifier" -> raise (Unimplemented "BindingPropertyIdentifier")
-       | "BindingPropertyProperty" -> raise (Unimplemented "BindingPropertyProperty")
-       | _ -> raise (Unimplemented "Properties") *)
+        declaration :: acc)
     in
-    []
+    declarations
 end
 
 and Utils : sig

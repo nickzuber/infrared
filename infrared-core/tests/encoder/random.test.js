@@ -13,9 +13,29 @@ var foo = {
   },
 };
 
-let a, b, c, d = 1
+let a, b, c = 1
 
-const {bar, baz} = 123
+const {bar, baz} = {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // /**
 //  * Copyright 2016 Shape Security, Inc.

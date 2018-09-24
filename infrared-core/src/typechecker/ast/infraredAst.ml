@@ -45,25 +45,18 @@ and expression =
   | Call of expression * expression
   | Assignment of identifier * expression
   | Identifier of identifier
-  | Access of identifier * expression
+  | Access of expression * identifier
 
 (*
 
 var x = obj.foo.bar.baz[0]
-        |-| |---------|
-        id  |-| |-----|
-            id  |-| |-|
-                id  id
+        |-------------||-|
+        |---------| |-|
+        |-----| |-|
+        |-| |-|
+
 
 id := string
-
-Access (
-  "obj",
-  Access (
-    "foo",
-    Access (
-      "bar",
-      Identifier "baz")))
 
 *)
 
@@ -107,38 +100,41 @@ let rec string_of_statement (statement : statement) : string =
 and string_of_expression (expression : expression) : string =
   match expression with
   | Identifier i ->
-    Printf.sprintf "Identifier %s"
+    Printf.sprintf "Identifier(%s)"
       (string_of_identifier i)
   | Predicate e ->
-    Printf.sprintf "Predicate %s"
+    Printf.sprintf "Predicate(%s)"
       (string_of_predicate e)
   | Not e ->
-    Printf.sprintf "Not %s"
+    Printf.sprintf "!%s"
       (string_of_expression e)
   | Or (e1, e2) ->
-    Printf.sprintf "Or %s, %s"
+    Printf.sprintf "%s || %s"
       (string_of_expression e1)
       (string_of_expression e2)
   | And (e1, e2) ->
-    Printf.sprintf "And %s, %s"
+    Printf.sprintf "%s && %s"
       (string_of_expression e1)
       (string_of_expression e2)
   | Call (e1, e2) ->
-    Printf.sprintf "Call %s, %s"
+    Printf.sprintf "Call(%s, %s)"
       (string_of_expression e1)
       (string_of_expression e2)
   | Assignment (i, e) ->
-    Printf.sprintf "Assignment %s, %s"
+    Printf.sprintf "Assignment(%s, %s)"
       (string_of_identifier i)
       (string_of_expression e)
   | Function (i_lst, e_lst) -> "@TODO(func)"
-  | Access (e, i) -> "@TODO(access)"
+  | Access (e, i) ->
+    Printf.sprintf "Access(%s, %s)"
+      (string_of_expression e)
+      (string_of_identifier i)
   | String s ->
-    Printf.sprintf "String \"%s\"" s
+    Printf.sprintf "String(\"%s\")" s
   | Number n ->
-    Printf.sprintf "Number \"%n\"" n
+    Printf.sprintf "Number(%n)" n
   | Boolean b ->
-    Printf.sprintf "Boolean \"%s\""
+    Printf.sprintf "Boolean(%s)"
       (string_of_bool b)
   | Null -> "Null"
   | Undefined -> "Undefined"
