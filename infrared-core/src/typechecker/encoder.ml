@@ -198,6 +198,9 @@ end = struct
         | "LiteralStringExpression" ->
           let value = node |> U.member "value" |> U.to_string in
           I.String value
+        | "IdentifierExpression" ->
+          let name = node |> U.member "name" |> U.to_string in
+          I.Identifier name
         | "LiteralNullExpression" ->
           I.Null
         | "ObjectExpression" ->

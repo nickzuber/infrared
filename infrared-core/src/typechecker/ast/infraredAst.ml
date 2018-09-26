@@ -7,21 +7,14 @@ type t =
   | T_STRING
   | T_NUMBER
   | T_BOOL
-  | T_OBJECTABLE of (string * t) list
   | T_NULLABLE
+  | T_UNDEFINED
   | T_CALLABLE
-
-(* Valid primitives in javascript. These are generally used when
- * referencing the Predicate check or some kind of native type refining.
- * These are not types, but rather describe structures of expressions that
- * will eventually be typed. VariableDeclaration*)
-type primitive =
-  | P_string
-  | P_number
-  | P_boolean
-  | P_null
-  | P_undefined
-  | P_object of (string * expression) list
+  | T_OBJECTABLE of (string * t) list
+  (* Named arguments, useful for E_GET type expressions. *)
+  | T_FUNCTION of (string * t) list * t
+  (* Evaluate expression for type. This qualifies as a type defered to callsite. *)
+  | E_GET of expression
 
 and identifier = string
 

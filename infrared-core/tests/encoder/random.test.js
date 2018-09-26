@@ -15,7 +15,7 @@ var foo = {
 
 let a, b, c = 1
 
-const {bar, baz} = {}
+const {bar, baz} = props
 
 
 
