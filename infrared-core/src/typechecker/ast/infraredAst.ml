@@ -2,8 +2,19 @@ open Core.Std
 
 exception Illegal_kind of string
 
-(* Type constraints. *)
-type t =
+type env = (identifier, t) Hashtbl.t
+
+(* @TODO think of a better suited data structure for nodes. *)
+and delta_node = identifier * t
+
+(* @TODO might be best implemented as its own module, or this at
+ *       least needs a good set of utility functions. *)
+and delta_graph = (delta_node, delta_node) Hashtbl.t
+
+and mutation = (identifier, t) Hashtbl.t
+
+(* Types *)
+and t =
   | T_STRING
   | T_NUMBER
   | T_BOOL
@@ -13,7 +24,8 @@ type t =
   | T_OBJECTABLE of (string * t) list
   (* Named arguments, useful for E_GET type expressions. *)
   | T_FUNCTION of (string * t) list * t
-  (* Evaluate expression for type. This qualifies as a type defered to callsite. *)
+  (* Evaluate expression for type. This qualifies as a type defered to callsite.
+   * Expressions that require this wrapper are known to have a `reliant type`. *)
   | E_GET of expression
 
 and identifier = string
@@ -62,10 +74,6 @@ and statement =
   | If of expression * expression * expression
   | While of expression * expression * expression
   | For of expression * expression * expression
-
-type env = (identifier, t) Hashtbl.t
-
-type mutation = (identifier, t) Hashtbl.t
 
 type program = {
   (* Includes all import mappings from identifiers to location.
