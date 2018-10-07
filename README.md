@@ -4,6 +4,13 @@
 
 Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [fluid type system](#) onto your program, and identifying any potential type errors that can occur, before they happen.
 
+
+## FAQ
+
+**Q** – Can I use this?
+
+**A** – Not yet. This project is still under development, but expect an alpha release soon(_ish_)!
+
 <!--
 
 Infrared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that exposes useful things about your JavaScript programs. We tell you about things like [type inconsistencies](#), [implicit coercions](#), ['undefined is not a function'](#), [infinite loops](#), [unreachable code](#), [potential optimizations](#), and much more, before they happen.
