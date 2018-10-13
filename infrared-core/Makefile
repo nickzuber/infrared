@@ -1,4 +1,4 @@
-OCB_FLAGS = -use-ocamlfind -pkg core,batteries,ppx_deriving.show,yojson -tags thread
+OCB_FLAGS = -use-ocamlfind -pkg core,batteries,ounit,ppx_deriving.show,yojson -tags thread
 OCB =       ocamlbuild $(OCB_FLAGS)
 
 MODULES = src/commands \

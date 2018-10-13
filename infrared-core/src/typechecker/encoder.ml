@@ -340,38 +340,20 @@ ObjectBinding
           expression: Expression
         StaticPropertyName
           value: string
-
 ArrayBinding
   ...
 
+
+
+var x = true ? 1 : 2
+
+ ------
+
+var x;
+if (true) {
+  x = 1
+} else {
+  x = 2
+}
+
 *)
-
-
-
-(*
-
-module type BaseThing = sig
-  type t
-  val to_string : t -> string
-end
-
-module Make_foo (B : BaseThing) = struct
-  type thing = B.t
-end
-
-module MyThing = struct
-  type t =
-    | A of string
-    | B of int
-  let to_string thing =
-    match thing with
-    | A str -> str
-    | B n -> string_of_int n
-end
-
-module FooThing = Make_foo(MyThing)
-
-    let _ = MyFoo.A "";;
-    # Error: Unbound constructor MyFoo.A
-
-FooThing.A "test" *)
