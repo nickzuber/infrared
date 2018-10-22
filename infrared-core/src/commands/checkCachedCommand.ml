@@ -9,7 +9,7 @@ let check_files ~args ~flags =
   let files = List.sort (fun a b -> String.compare a b) files in
   if List.length files > 0 then
     List.iter (fun path ->
-        let _ = Analyzer.check path in
+        let _ = Compiler.check path in
         ())
       files
   else
