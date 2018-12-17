@@ -1,15 +1,10 @@
 
 open CommandSpec
-open Ast
 
 let generate_token_list ~args ~flags =
   let files = FileParser.get_files_from_args args in
   if List.length files > 0 then
-    List.fold_left (fun acc path ->
-        let maybe_ast = Parser.tokenize path in
-        match maybe_ast with
-        | Some ast -> acc @ [ast]
-        | None -> acc)
+    List.fold_left (fun acc path -> acc)
       [] files
   else
     (Error_handler.report

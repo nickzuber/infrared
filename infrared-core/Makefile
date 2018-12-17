@@ -1,15 +1,12 @@
-OCB_FLAGS = -use-ocamlfind -pkg core,batteries,ounit,ppx_deriving.show,yojson -tags thread
+OCB_FLAGS = -use-ocamlfind -pkg core,batteries,Flow_parser,ounit,ppx_deriving.show,yojson -tags thread
 OCB =       ocamlbuild $(OCB_FLAGS)
 
 MODULES = src/commands \
           src/watch \
           src/parser \
-          src/parser/lexing_components \
-          src/parser/parsing_components \
-          src/parser/ast_components \
+          src/error \
           src/typechecker \
           src/typechecker/ast \
-          src/errors \
           core \
           utils
 

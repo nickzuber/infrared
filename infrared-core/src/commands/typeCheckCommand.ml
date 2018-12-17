@@ -9,11 +9,7 @@ let check_files ~args ~flags =
   let files = FileParser.get_files_from_args args in
   let files = List.sort (fun a b -> String.compare a b) files in
   if List.length files > 0 then
-    List.iter (fun path ->
-        let maybe_ast = Parser.parse path in  (* We won't "parse" here, but rather "typecheck". this method will call parse *)
-        match maybe_ast with
-        | Some ast -> Parser.print_typecheck (ast, path)
-        | None -> ())
+    List.iter (fun path -> ())
       files
   else
     (Error_handler.report
