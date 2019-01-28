@@ -68,6 +68,7 @@ S /Users/nick/.opam/4.03.0/lib/typerep
 S /Users/nick/.opam/4.03.0/lib/variantslib
 S /Users/nick/.opam/4.03.0/lib/wtf8
 S .
+S commands
 S ../InfraredParser
 S ../InfraredParser/flow_parser/lib
 FLG -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs

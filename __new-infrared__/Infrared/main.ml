@@ -1,6 +1,4 @@
-open Core
-open InfraredParser
+open Cli
 
 let () =
-  let _ = Printf.printf "%d\n" Parser.x in
-  ()
+  InfraredShell.exec ()
