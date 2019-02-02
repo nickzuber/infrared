@@ -54,7 +54,7 @@ end = struct
       match command with
       | Valid vcmd -> begin
         match vcmd with
-        | Version v -> Printf.printf "Infrared \x1b[1mv%s\x1b[0m\n" (v.exec ())
+        | Version v -> Printf.printf "Infrared \x1b[1mv%s\x1b[0m\n\n" (v.exec ())
         | Help h ->
           let name_and_docs : (string * string) list =
             List.fold_left
