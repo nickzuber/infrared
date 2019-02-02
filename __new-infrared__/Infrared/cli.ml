@@ -12,7 +12,15 @@ let help_command = Help Help_command.command
 
 let any_command_of_string name : any_command =
   match name with
+  | "-v"
+  | "-version"
+  | "--v"
+  | "--version"
   | "version" -> Valid version_command
+  | "-h"
+  | "-help"
+  | "--h"
+  | "--help"
   | "help" -> Valid help_command
   | _ -> Invalid name
 
@@ -37,7 +45,7 @@ end = struct
   ]
 
   let report_command_error msg =
-    Printf.printf "Error: %s" msg
+    Printf.printf "Error: %s\nFor a list of valid commands try `infrared help`\n\n" msg
 
   let greeting () =
     Printf.printf "%s%s%s\n\n" "Infrared \x1b[1mv"
