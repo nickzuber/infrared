@@ -1,0 +1,35 @@
+{
+  "name": "@fastpack/flow_parser",
+  "version": "0.70.0",
+  "description": "Fastpack-specific package for flow_parser",
+  "license": "MIT",
+  "esy": {
+    "build": [
+      [
+        "dune",
+        "build",
+        "-p",
+        "flow_parser"
+      ]
+    ],
+    "install": [
+      "esy-installer"
+    ],
+    "buildsInSource": "_build"
+  },
+  "dependencies": {
+    "@opam/sedlex": "*",
+    "@opam/wtf8": "*",
+    "@esy-ocaml/esy-installer": "^0.0.0",
+    "@opam/dune": "*",
+    "@opam/ocaml-migrate-parsetree": "*",
+    "@opam/ppx_tools_versioned": "5.2"
+  },
+  "peerDependencies": {
+    "ocaml": ">= 4.3.0"
+  },
+  "devDependencies": {
+    "@esy-ocaml/merlin": "*",
+    "ocaml": "~4.6.0"
+  }
+}

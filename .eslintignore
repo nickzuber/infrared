@@ -1,7 +1,0 @@
-_build
-node_modules
-*.json
-*.md
-*.ml
-*.mli
-LICENSE

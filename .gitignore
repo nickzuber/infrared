@@ -1,6 +1,7 @@
 # Builds & Scripts
 _build
 *.native
+*.exe
 *.pyc
 *.failed
 

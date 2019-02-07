@@ -1,0 +1,6 @@
+
+(executable
+ (name test_flow_parser)
+  (public_name test_flow_parser.exe)
+  (libraries flow_parser))
+

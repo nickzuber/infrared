@@ -48,7 +48,8 @@ module InfraredShell : sig
 end = struct
   let commands = [
     version_command;
-    help_command
+    help_command;
+    check_command;
   ]
 
   let report_command_error msg =
@@ -99,8 +100,8 @@ end = struct
           in
           let all_tuples = name_and_docs @ aliases_and_docs in
           Printf.printf "%s\n" (h.exec all_tuples)
+        | Check c -> c.exec ()
       end
-      | Check c -> c.exec ()
       | Invalid name ->
         report_command_error
           (Printf.sprintf "Unknown command \"%s\"" name)
