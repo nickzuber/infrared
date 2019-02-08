@@ -56,21 +56,23 @@ end = struct
     Printf.printf "Error: %s\nFor a list of valid commands try `infrared help`\n\n" msg
 
   let greeting () =
-    Printf.printf "%s%s%s\n\n" "Infrared \x1b[1mv"
+    Printf.printf "%s%s%s\n\n"
+      "Running \x1b[1minfrared\x1b[0m v"
       (Version_command.exec ())
-      "\x1b[0m — Inferred static type checker for JavaScript."
+      " — Inferred static type checker for JavaScript."
 
   let exec () =
     let argv = Array.to_list Sys.argv in
     match argv with
     | [] -> report_command_error ""
     | _prgm :: [] -> greeting ()
-    | _prgm :: cmd :: _args ->
+    | _prgm :: cmd :: args ->
       let command = any_command_of_string cmd in
       match command with
       | Valid vcmd -> begin
         match vcmd with
-        | Version v -> Printf.printf "Infrared \x1b[1mv%s\x1b[0m\n\n" (v.exec ())
+        | Check c -> c.exec args
+        | Version v -> Printf.printf "Running \x1b[1minfrared\x1b[0m v%s\n\n" (v.exec ())
         | Help h ->
           let name_and_docs : (string * string) list =
             List.fold_left
@@ -100,7 +102,6 @@ end = struct
           in
           let all_tuples = name_and_docs @ aliases_and_docs in
           Printf.printf "%s\n" (h.exec all_tuples)
-        | Check c -> c.exec ()
       end
       | Invalid name ->
         report_command_error

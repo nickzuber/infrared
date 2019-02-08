@@ -1,0 +1,5 @@
+B /Users/nick/.opam/4.04.0/lib/ocaml
+B ../_build/default/InfraredUtils/.InfraredUtils.objs
+S /Users/nick/.opam/4.04.0/lib/ocaml
+S .
+FLG -open InfraredUtils -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs
