@@ -15,19 +15,24 @@ let is_blacklisted path =
 let is_whitelisted file =
   Array.exists (fun wht -> wht = Filename.extension file) whitelist
 
+let is_directory_opt path : bool option =
+  try Some (Sys.is_directory path)
+  with Sys_error _ -> None
+
 let rec files_from_path (path : string) : string list =
-  let is_dir = Sys.is_directory path in
-  let should_halt = is_blacklisted path in
-  match (should_halt, is_dir) with
+  let is_dir_opt = is_directory_opt path in
+  let is_invalid_file = is_blacklisted path in
+  match (is_invalid_file, is_dir_opt) with
   | (true, _) -> []
-  | (false, true) ->
+  | (false, None) -> []
+  | (false, Some true) ->
     let inner_paths : string array = Sys.readdir path in
     Array.fold_left
       (fun files inner_path ->
         let absolute_path = Filename.concat path inner_path in
         files @ (files_from_path absolute_path))
       [] inner_paths
-  | (false, false) ->
+  | (false, Some false) ->
     let should_include = is_whitelisted path in
     if should_include then
       [path]
