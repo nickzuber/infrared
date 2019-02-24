@@ -7,7 +7,8 @@ let type_check args =
     let _ = List.map (fun arg -> Printf.printf "%s\n" arg) paths
     in ()
   | args ->
-    let paths = args
+    let paths =
+      args
       |> List.map InfraredUtils.Fs.files_from_path
       |> List.flatten
     in
@@ -15,11 +16,14 @@ let type_check args =
     let _ = List.map (fun arg -> Printf.printf "%s\n" arg) paths
     in ()
 
+let check_files (files : string list) : string list =
+  files
+
 let spec = Command.create
-  ~name:"check"
-  ~aliases:["ch"]
-  ~doc:"Type check the given JavaScript files"
-  ~flags:[]
+    ~name:"check"
+    ~aliases:["ch"]
+    ~doc:"Type check the given JavaScript files"
+    ~flags:[]
 
 let exec = type_check
 

@@ -70,39 +70,39 @@ end = struct
       let command = any_command_of_string cmd in
       match command with
       | Valid vcmd -> begin
-        match vcmd with
-        | Check c -> c.exec args
-        | Version v -> Printf.printf "Running \x1b[1minfrared\x1b[0m v%s\n\n" (v.exec ())
-        | Help h ->
-          let name_and_docs : (string * string) list =
-            List.fold_left
-              (fun tuples command ->
-                ( name_of_valid_command command
-                , doc_of_valid_command command
-                ) :: tuples)
-              []
-              commands
-          in
-          let aliases_and_docs : (string * string) list =
-            List.fold_left
-              (fun tuples command ->
-                let command_name = name_of_valid_command command in
-                let aliases = aliases_of_valid_command command in
-                let aliases_and_docs = List.fold_left
-                  (fun tuples' alias ->
-                    ( alias
-                    , "Alias for " ^ command_name
-                  ) :: tuples')
-                  []
-                  aliases
-                in
-                aliases_and_docs @ tuples)
-              []
-              commands
-          in
-          let all_tuples = name_and_docs @ aliases_and_docs in
-          Printf.printf "%s\n" (h.exec all_tuples)
-      end
+          match vcmd with
+          | Check c -> c.exec args
+          | Version v -> Printf.printf "v%s\n\n" (v.exec ())
+          | Help h ->
+            let name_and_docs : (string * string) list =
+              List.fold_left
+                (fun tuples command ->
+                   ( name_of_valid_command command
+                   , doc_of_valid_command command
+                   ) :: tuples)
+                []
+                commands
+            in
+            let aliases_and_docs : (string * string) list =
+              List.fold_left
+                (fun tuples command ->
+                   let command_name = name_of_valid_command command in
+                   let aliases = aliases_of_valid_command command in
+                   let aliases_and_docs = List.fold_left
+                       (fun tuples' alias ->
+                          ( alias
+                          , "Alias for " ^ command_name
+                          ) :: tuples')
+                       []
+                       aliases
+                   in
+                   aliases_and_docs @ tuples)
+                []
+                commands
+            in
+            let all_tuples = name_and_docs @ aliases_and_docs in
+            Printf.printf "%s\n" (h.exec all_tuples)
+        end
       | Invalid name ->
         report_command_error
           (Printf.sprintf "Unknown command \"%s\"" name)
