@@ -3,7 +3,7 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *)
+*)
 
 type position = {
   line: int;
@@ -42,8 +42,8 @@ let char_before loc =
   let start =
     let { line; column; offset } = loc.start in
     let column, offset = if column > 0
-    then column - 1, offset - 1
-    else column, offset in
+      then column - 1, offset - 1
+      else column, offset in
     { line; column; offset }
   in
   let _end = loc.start in
@@ -63,7 +63,7 @@ let pos_cmp a b =
  * If `a` spans (completely contains) `b`, then returns 0.
  * If `b` starts before `a` (even if it ends inside), returns < 0.
  * If `b` ends after `a` (even if it starts inside), returns > 0.
- *)
+*)
 let span_compare a b =
   let k = File_key.compare_opt a.source b.source in
   if k = 0 then
@@ -97,21 +97,21 @@ let equal loc1 loc2 = compare loc1 loc2 = 0
 (**
  * This is mostly useful for debugging purposes.
  * Please don't dead-code delete this!
- *)
+*)
 let to_string ?(include_source=false) loc =
   let source =
     if include_source
     then Printf.sprintf "%S: " (
-      match loc.source with
-      | Some src -> File_key.to_string src
-      | None -> "<NONE>"
-    ) else ""
+        match loc.source with
+        | Some src -> File_key.to_string src
+        | None -> "<NONE>"
+      ) else ""
   in
   let pos = Printf.sprintf "(%d, %d) to (%d, %d)"
-    loc.start.line
-    loc.start.column
-    loc._end.line
-    loc._end.column
+      loc.start.line
+      loc.start.column
+      loc._end.line
+      loc._end.column
   in
   source ^ pos
 

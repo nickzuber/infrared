@@ -1,23 +1,28 @@
+open InfraredUtils
+
+let check_file (file : string) : unit =
+  let source = Fs.read_file file in
+  let ast = InfraredParser.Parser.parse_source source in
+  Printf.printf "FILE %s\n"
+    (InfraredParser.Printer.string_of_ast ast)
+
+let check_files (files : string list) : unit =
+  let _ = List.map (fun file -> check_file file) files
+  in ()
+
 let type_check args =
   match args with
   | [] -> ()
   | arg :: [] ->
-    let paths = InfraredUtils.Fs.files_from_path arg in
-    (* @TODO *)
-    let _ = List.map (fun arg -> Printf.printf "%s\n" arg) paths
-    in ()
+    let paths = Fs.files_from_path arg in
+    check_files paths
   | args ->
     let paths =
       args
-      |> List.map InfraredUtils.Fs.files_from_path
+      |> List.map Fs.files_from_path
       |> List.flatten
     in
-    (* @TODO *)
-    let _ = List.map (fun arg -> Printf.printf "%s\n" arg) paths
-    in ()
-
-let check_files (files : string list) : string list =
-  files
+    check_files paths
 
 let spec = Command.create
     ~name:"check"

@@ -3,7 +3,7 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *)
+*)
 
 (*
  * An Ocaml implementation of the SpiderMonkey Parser API
@@ -91,8 +91,8 @@ and Type : sig
   module Generic : sig
     module Identifier : sig
       type 'M t =
-      | Unqualified of 'M Identifier.t
-      | Qualified of 'M qualified
+        | Unqualified of 'M Identifier.t
+        | Qualified of 'M qualified
       and 'M qualified = 'M * 'M qualified'
       and 'M qualified' = {
         qualification: 'M t;
@@ -835,8 +835,8 @@ and JSX : sig
       expression: 'M expression;
     }
     and 'M expression =
-    | Expression of 'M Expression.t
-    | EmptyExpression of 'M
+      | Expression of 'M Expression.t
+      | EmptyExpression of 'M
   end
 
   module Text : sig
@@ -849,11 +849,11 @@ and JSX : sig
   module Attribute : sig
     type 'M t = 'M * 'M t'
     and 'M name =
-    | Identifier of 'M Identifier.t
-    | NamespacedName of 'M NamespacedName.t
+      | Identifier of 'M Identifier.t
+      | NamespacedName of 'M NamespacedName.t
     and 'M value =
-    | Literal of 'M * Literal.t
-    | ExpressionContainer of 'M * 'M ExpressionContainer.t
+      | Literal of 'M * Literal.t
+      | ExpressionContainer of 'M * 'M ExpressionContainer.t
     and 'M t' = {
       name: 'M name;
       value: 'M value option;
@@ -870,8 +870,8 @@ and JSX : sig
   module MemberExpression : sig
     type 'M t = 'M * 'M t'
     and 'M _object =
-    | Identifier of 'M Identifier.t
-    | MemberExpression of 'M t
+      | Identifier of 'M Identifier.t
+      | MemberExpression of 'M t
     and 'M t' = {
       _object: 'M _object;
       property: 'M Identifier.t;

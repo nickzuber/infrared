@@ -29,8 +29,8 @@ let rec files_from_path (path : string) : string list =
     let inner_paths : string array = Sys.readdir path in
     Array.fold_left
       (fun files inner_path ->
-        let absolute_path = Filename.concat path inner_path in
-        files @ (files_from_path absolute_path))
+         let absolute_path = Filename.concat path inner_path in
+         files @ (files_from_path absolute_path))
       [] inner_paths
   | (false, Some false) ->
     let should_include = is_whitelisted path in
@@ -38,3 +38,11 @@ let rec files_from_path (path : string) : string list =
       [path]
     else
       []
+
+let read_file (file : string) : string =
+  let ic = open_in file in
+  let len = in_channel_length ic in
+  let str = Bytes.create len in
+  really_input ic str 0 len;
+  close_in ic;
+  str
