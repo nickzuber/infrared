@@ -1,1 +1,0 @@
-{"Module": { "type": "Module", "directives": [], "items": [{"ExpressionStatement": { "type": "ExpressionStatement", "expression": {"IdentifierExpression": { "type": "IdentifierExpression", "name": "foo" }} }},{"ExpressionStatement": { "type": "ExpressionStatement", "expression": {"IdentifierExpression": { "type": "IdentifierExpression", "name": "bar" }} }}] }}

@@ -1,0 +1,4 @@
+(library
+ (name        InfraredParser)
+ (public_name InfraredParser)
+ (libraries   core flow_parser))

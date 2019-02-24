@@ -1,0 +1,9 @@
+S Infrared/**
+S InfraredCompiler/**
+S InfraredParser/**
+S InfraredServer/**
+S InfraredUtils/**
+
+B _build/**
+
+PKG core batteries flow_parser ppx_deriving.show yojson

@@ -1,7 +1,0 @@
-{
-    "python.linting.pylintEnabled": false,
-    "editor.formatOnSave": true,
-    "[javascript]": {
-        "editor.formatOnSave": false,
-    }
-}

@@ -1,0 +1,13 @@
+B /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__gen-0.5.1-7d027135/lib/gen
+B /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__ocamlfind-1.8.0-348fa71d/lib/bytes
+B /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__sedlex-1.99.4-a0e003a2/lib/sedlex
+B /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__wtf8-1.0.1-29ae6569/lib/wtf8
+B ../_build/default/bin/.test_flow_parser.eobjs
+B ../_build/default/lib/.Flow_parser.objs
+S /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__gen-0.5.1-7d027135/lib/gen
+S /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__ocamlfind-1.8.0-348fa71d/lib/bytes
+S /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__sedlex-1.99.4-a0e003a2/lib/sedlex
+S /Users/zindel/.esy/3__________________________________________________________________/i/opam__slash__wtf8-1.0.1-29ae6569/lib/wtf8
+S .
+S ../lib
+FLG -w -40

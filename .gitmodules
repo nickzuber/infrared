@@ -1,0 +1,6 @@
+[submodule "__new-infrared__/__new-infrared__/InfraredParser/flow_parser"]
+	path = __new-infrared__/__new-infrared__/InfraredParser/flow_parser
+	url = https://github.com/nickzuber/flow_parser
+[submodule "__new-infrared__/InfraredParser/flow_parser"]
+	path = __new-infrared__/InfraredParser/flow_parser
+	url = https://github.com/nickzuber/flow_parser
