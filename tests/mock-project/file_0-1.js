@@ -1,6 +1,6 @@
 const foo = 'bar';
-const bar = 1, baz = 2;
-const obj = {
+let bar = 1, baz = 2;
+var obj = {
   a: 1,
   b: 'bar'
 };
