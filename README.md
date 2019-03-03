@@ -97,6 +97,4 @@ Infrared is broken down into a few main parts:
 
 ## License
 
-> Just do your thing, I'm not gonna sue you.
-
 This software is free to use under the MIT License. See [this reference](https://opensource.org/licenses/MIT) for license text and copyright information.
