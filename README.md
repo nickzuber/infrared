@@ -1,8 +1,8 @@
 <div align="center">
-  <img width="100" src="assets/logo-light.png" />
+  <img width="80" src="assets/logo-round-dark.png" />
 </div>
 
-# Infrared <a href="#"><img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
+# <img width="40" src="assets/logo-light.png" /> Infrared <a href="#"><img src="https://travis-ci.org/nickzuber/infrared.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
 
 > Blazing fast, light-weight, inferred static type checker for JavaScript.
 
