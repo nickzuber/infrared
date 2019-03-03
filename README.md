@@ -4,96 +4,23 @@
 
 Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [fluid type system](#) onto your program, and identifying any potential type errors that can occur, before they happen.
 
+## Planning, Roadmap, and What Lies Ahead
+
+Infrared is a really big project, so naturally it's a pretty good idea to make sure we plan things out carefully to avoid a janky-mess.
+
+I'm using Figma to organize the different sections and responsibilities of each part of Infrared (parser, compiler, server, etc.). Feel free to follow along and check out [what I have mapped out so far](https://www.figma.com/file/VLacrQPUdTH19kJSiGy5zCzu/workflow?node-id=0%3A1).
+
+Unfortunately, Figma only reflects the finalized parts of the development _roadmap_. This means there's a lot of cool work – like typing rules, reduction strategies, discrete proofs, etc – that aren't in this document.
+
+Since those bits are written in a physical notebook, it's hard for me to share publically online. The good news is that I plan on writing a white paper once this project is finished, and all of the cool stuff will be included in there.
+
+Until then, I'm more than happy to chat with anybody who's interested to learn more – feel free to reach out on [Twitter](https://twitter.com/nick_zuber/).
 
 ## FAQ
 
 **Q** – Can I use this?
 
 **A** – Not yet. This project is still under development, but expect an alpha release soon(_ish_)!
-
-<!--
-
-Infrared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that exposes useful things about your JavaScript programs. We tell you about things like [type inconsistencies](#), [implicit coercions](#), ['undefined is not a function'](#), [infinite loops](#), [unreachable code](#), [potential optimizations](#), and much more, before they happen.
-
-All this **without touching your source code**, **without creating another configuration file**, and **with blazing fast speed**.
-
-## Why Would I Use This?
-
-> What does this do for you.
-
-Infrared is like your JavaScript assistant. It takes a look at your program and tells you everything you need to know as a developer. This can be anything from avoiding errors, potential optimization opportunities, or just general things that you should watch out for.
-
-While there are a good amount of reasons to use Infrared, there's no reason to _not_ use it. There's no configuration, no annotating or editing your existing files, and basically no set up or change to your existing workflow required to start using Infrared (besides installing it, of course).
-
-It can provide a lot of benefits with almost no effort whatsoever, so why not? :stuck_out_tongue:
-
-<img width="450" src="assets/parser-hover.png" />
-
-## How Does It Work?
-
-> What's happening under the hood.
-
-In order to understand your program and interpret as much context as possible, Infrared makes a few opinionated design choices. Overall, there are two core steps that happen:
-
-#### 1. Infer a "Static" Type System
-
-This means we assign types to your variables based on how they're first used. We don't hold this against you, JavaScript is a dynamic language and it should stay that way. We just track how you're using the variables, how often you're coercing its type, and if you're implicitly coercing its type in a spot that might be unintended or potentially problematic.
-
-This is just a step to help us better understand the context of your program. Just wanna reiterate that nobody is trying to make you program without mutation — this just helps us see if you might want to avoid mutation in some contexts. :smile:
-
-#### 2. Analyze &
-
-TODO
-
-## Installation
-
-> Getting you up and running in no time.
-
-The best way to get started with Infrared is to install the binary wrapper globally — this will handle everything for you.
-
-```
-npm i infrared-bin -g
-```
-
-Then you should be able to use `infrared` anywhere.
-
-## Usage
-
-> How do I use this shit.
-
-Infrared's public API is very simple.
-
-For single files, simply pass the file path to the command.
-```bash
-infrared file.js
-```
-
-For specific multiple files, you can pass them all at once.
-```bash
-infrared file1.js file2.js file3.js
-```
-
-For entire projects or directories, just pass the source path.
-```bash
-infrared ./src
-```
-
-All the files will be processed and analyzed — it's that easy!
-
-
-## Contributing
-
-> Getting into the swing of things.
-
-We have a few tools that help with the development process.
-
-Infrared is broken down into a few main parts:
-
- - [`infrared-bin`](#) — The binary wrapper, basically just a little CLI tool that reads a bunch of file names and hands it off.
- - [`shift-parser`](#) — Processes all those files, generates Shift parsetrees, creates a temp cache, calls `infrared-core`'s check-cache routine with the parsetree JSON files.
- - [`infrared-core`](#) - Encodes Shift parsetree JSON into Yojson OCaml AST, encodes into Infrared OCaml AST, resolves dependency graph (basic topological sort + Infrared AST optimized import/export representation), infers static type system, continue with rest of code analysis.
-
--->
 
 ## License
 
