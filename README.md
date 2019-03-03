@@ -4,6 +4,20 @@
 
 Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [fluid type system](#) onto your program, and identifying any potential type errors that can occur, before they happen.
 
+Infrared is an configurable & efficient static type checker for JavaScript. This is done by statically inferring a [fluid type system](#what-is-a-fluid-type-system) onto your entire program – tracking the types of your variables as they change – and raising type errors before they happen at runtime.
+
+## What is a Fluid Type System?
+
+A fluid type system is no foreign idea – its a forgiving set of typing rules that _change_ as your program changes. This means no variables are ever committed to a single type – if that variable changes its type somewhere in the program, Infrared keeps track of it.
+
+JavaScript is a dynamic language, and Infrared doesn't want to change that. While other type systems out there want you to change the way you program (and change your JavaScript into something else), Infrared does the opposite.
+
+To understand the way Infrared fits into the typing ecosystem, consider the following:
+
+ - If you're looking for a superset type system that tries to promote soundness, you should use [Flow](https://flow.org/).
+ - If you're looking for a superset type system that encourages unsoundness, you should use [TypeScript](https://www.typescriptlang.org/).
+ - If you don't want to change anything in your project, but still want to know the types of things in your program + have some type safety at compile time, you should use Infrared.
+
 ## Planning, Roadmap, and What Lies Ahead
 
 Infrared is a really big project, so naturally it's a pretty good idea to make sure we plan things out carefully to avoid a janky-mess.
