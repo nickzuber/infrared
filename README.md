@@ -2,8 +2,6 @@
 
 > Blazing fast, light-weight, inferred static type checker for JavaScript.
 
-Infared is a [static analysis tool](https://stackoverflow.com/questions/49716/what-is-static-code-analysis) that eliminates 99% of [runtime type errors](https://techterms.com/definition/runtime_error). This is done by statically inferring a [fluid type system](#) onto your program, and identifying any potential type errors that can occur, before they happen.
-
 Infrared is an configurable & efficient static type checker for JavaScript. This is done by statically inferring a [fluid type system](#what-is-a-fluid-type-system) onto your entire program – tracking the types of your variables as they change – and raising type errors before they happen at runtime.
 
 ## What is a Fluid Type System?
