@@ -782,6 +782,8 @@ and Expression : sig
   end
 
   type 'M t = 'M * 'M t'
+
+  (* `Expression.t` definition *)
   and 'M t' =
     | Array of 'M Array.t
     | ArrowFunction of 'M Function.t
@@ -975,6 +977,7 @@ and Pattern : sig
       right: 'M Expression.t;
     }
   end
+  (* Expression/Pattern `Identifier` definition *)
   module Identifier : sig
     type 'M t = {
       name: 'M Identifier.t;

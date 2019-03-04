@@ -33,6 +33,7 @@ B /Users/nick/.opam/4.04.0/lib/variantslib
 B /Users/nick/.opam/4.04.0/lib/wtf8
 B ../_build/default/InfraredParser/.InfraredParser.objs
 B ../_build/default/InfraredParser/flow_parser/lib/.Flow_parser.objs
+B ../_build/default/InfraredUtils/.InfraredUtils.objs
 S /Users/nick/.opam/4.04.0/lib/base
 S /Users/nick/.opam/4.04.0/lib/base/caml
 S /Users/nick/.opam/4.04.0/lib/base/shadow_stdlib
@@ -68,4 +69,5 @@ S /Users/nick/.opam/4.04.0/lib/variantslib
 S /Users/nick/.opam/4.04.0/lib/wtf8
 S .
 S flow_parser/lib
+S ../InfraredUtils
 FLG -open InfraredParser -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs
