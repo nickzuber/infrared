@@ -33,6 +33,7 @@ let format_sexp (sexp : string) : string =
   in
   String.concat "" formatted_chars_as_strings
 
+(** Formats a Flow_ast into a formatted S-Expression. *)
 let rec string_of_ast (ast : Loc.t Ast.program * (Loc.t * Err.t) list) : string =
   let ((_loc, stmts, _comments), _err) = ast in
   let stmts' = List.map (fun stmt -> string_of_statement stmt) stmts in
