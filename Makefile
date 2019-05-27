@@ -15,7 +15,7 @@ build:
 
 test:
 	$(call pprintf,Running tests for project)
-	$(call p_dot_red,Failed.)
+	$(call p_dot_red,Not implemented.)
 
 clean:
 	$(call pprintf,Cleaning project)
