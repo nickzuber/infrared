@@ -71,9 +71,10 @@ and string_of_statement stmt : string =
   | FunctionDeclaration _ -> "FunctionDeclaration"
   | If _ -> "If"
   | ImportDeclaration obj ->
-    Printf.sprintf "(ImportDeclaration %s <- %s)"
+    Printf.sprintf "(ImportDeclaration %s, %s <- %s)"
       (string_of_specifier obj.specifiers)
-      "test"
+      (string_of_identifier_maybe obj.default)
+      (string_of_stringliteral obj.source)
   | InterfaceDeclaration _ -> "InterfaceDeclaration"
   | Labeled _ -> "Labeled"
   | Return _ -> "Return"
@@ -147,7 +148,7 @@ and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
   | Some (ImportNamedSpecifiers _) -> "ImportNamedSpecifiers"
   | Some (ImportNamespaceSpecifier _) -> "ImportNamespaceSpecifier"
-  | None -> "NONE"
+  | None -> ""
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -169,6 +170,10 @@ and string_of_expression_or_spread expr_or_spread : string =
     let (_loc, obj) = spread in
     "..." ^ (string_of_expression obj.argument)
 
+and string_of_stringliteral str : string =
+  let (_loc, name) = str in
+  name.value
+
 and string_of_literal value : string =
   match value with
   | String str -> Printf.sprintf "\"%s\"" str
@@ -177,6 +182,11 @@ and string_of_literal value : string =
   | Null -> "(NULL)"
   | Number n -> string_of_float n
   | RegExp obj -> Printf.sprintf "/%s/" obj.pattern
+
+and string_of_identifier_maybe identifier_maybe : string =
+  match identifier_maybe with
+  | Some i -> string_of_identifier i
+  | None -> ""
 
 and string_of_identifier identifier : string =
   let (_loc, name) = identifier in
