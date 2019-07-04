@@ -70,7 +70,10 @@ and string_of_statement stmt : string =
   | ForOf _ -> "ForOf"
   | FunctionDeclaration _ -> "FunctionDeclaration"
   | If _ -> "If"
-  | ImportDeclaration _ -> "ImportDeclaration"
+  | ImportDeclaration obj ->
+    Printf.sprintf "(ImportDeclaration %s <- %s)"
+      (string_of_specifier obj.specifiers)
+      "test"
   | InterfaceDeclaration _ -> "InterfaceDeclaration"
   | Labeled _ -> "Labeled"
   | Return _ -> "Return"
@@ -139,6 +142,12 @@ and string_of_expression expr : string =
       (string_of_expression obj.argument)
   | Update _ -> "Update"
   | Yield _ -> "Yield"
+
+and string_of_specifier specifier_maybe : string =
+  match specifier_maybe with
+  | Some (ImportNamedSpecifiers _) -> "ImportNamedSpecifiers"
+  | Some (ImportNamespaceSpecifier _) -> "ImportNamespaceSpecifier"
+  | None -> "NONE"
 
 and string_of_unary_op op : string =
   let open E.Unary in
