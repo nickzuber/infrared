@@ -71,7 +71,7 @@ and string_of_statement stmt : string =
   | FunctionDeclaration _ -> "FunctionDeclaration"
   | If _ -> "If"
   | ImportDeclaration obj ->
-    Printf.sprintf "(ImportDeclaration %s, %s <- %s)"
+    Printf.sprintf "(ImportDeclaration %s, (default: %s), (source: \"%s\"))"
       (string_of_specifier obj.specifiers)
       (string_of_identifier_maybe obj.default)
       (string_of_stringliteral obj.source)
@@ -146,9 +146,16 @@ and string_of_expression expr : string =
 
 and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
-  | Some (ImportNamedSpecifiers _) -> "ImportNamedSpecifiers"
-  | Some (ImportNamespaceSpecifier _) -> "ImportNamespaceSpecifier"
-  | None -> ""
+  | Some (ImportNamedSpecifiers obj_list) ->
+    (List.map (fun obj ->
+         let open S.ImportDeclaration in
+         Printf.sprintf "(local: %s), (remote: %s)"
+           (string_of_identifier_maybe obj.local)
+           (string_of_identifier obj.remote)
+       ) obj_list)
+    |> String.concat ", "
+  | Some (ImportNamespaceSpecifier _) -> "(@TODO)"
+  | None -> "(∅)"
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -186,7 +193,7 @@ and string_of_literal value : string =
 and string_of_identifier_maybe identifier_maybe : string =
   match identifier_maybe with
   | Some i -> string_of_identifier i
-  | None -> ""
+  | None -> "∅"
 
 and string_of_identifier identifier : string =
   let (_loc, name) = identifier in
