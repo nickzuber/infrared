@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Utils} from './utils'
-import * as Utils from './utils'
-import Utils, {Other} from './utils'
+import {Remote} from './source'
+import * as Specifier from './source'
+import Default, {Remote} from './source'
 
 class MyComponent extends React.Component {
   static propTypes = {

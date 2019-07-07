@@ -154,7 +154,9 @@ and string_of_specifier specifier_maybe : string =
            (string_of_identifier obj.remote)
        ) obj_list)
     |> String.concat ", "
-  | Some (ImportNamespaceSpecifier _) -> "(@TODO)"
+  | Some (ImportNamespaceSpecifier (_loc, identifier)) ->
+    Printf.sprintf "(specifier: %s)"
+      (string_of_identifier identifier)
   | None -> "(∅)"
 
 and string_of_unary_op op : string =
