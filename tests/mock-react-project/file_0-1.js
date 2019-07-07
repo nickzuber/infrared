@@ -18,4 +18,21 @@ class MyComponent extends React.Component {
   }
 }
 
+export function FunctionComponent (props) {
+  const fnWillStillCauseRerender = () => {}
+  return (
+    <>
+      <div onPress={fnWillStillCauseRerender} />
+      <LocalFunctionComponent />
+    </>
+  );
+}
+
+const fnWillNotCauseRerender = () => {}
+function LocalFunctionComponent (props) {
+  return (
+    <div onPress={fnWillNotCauseRerender} />
+  );
+}
+
 export default MyComponent;

@@ -157,7 +157,7 @@ and string_of_specifier specifier_maybe : string =
   | Some (ImportNamespaceSpecifier (_loc, identifier)) ->
     Printf.sprintf "(specifier: %s)"
       (string_of_identifier identifier)
-  | None -> "(∅)"
+  | None -> "(specifier: ∅)"
 
 and string_of_unary_op op : string =
   let open E.Unary in
