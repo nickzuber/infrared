@@ -74,4 +74,4 @@ fi
 echo "\033[97;1mTests:      \033[39m\033[32;1m $pass passed\033[0;0m, $total total"
 echo "\033[97;1mCoverage:   \033[0m $percentage% / 100%"
 echo "\033[90mRan all covereage functions matching \033[0m/$rgxFindFn/i"
-echo "\033[32;1minfrared-coverage-reporter >> Report generaged (@TODO) \033[0;0m"
+echo "\033[32minfrared-coverage-reporter >> Report generaged (@TODO) \033[0;0m"
