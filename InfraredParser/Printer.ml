@@ -46,7 +46,11 @@ and string_of_statement stmt : string =
   match statement with
   | Block _ -> "Block"
   | Break _ -> "Break"
-  | ClassDeclaration _ -> "ClassDeclaration"
+  | ClassDeclaration obj ->
+    Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (implements: %s))"
+      (string_of_identifier_maybe obj.id)
+      (string_of_expressions obj.classDecorators)
+      (string_of_implements obj.implements)
   | Continue _ -> "Continue"
   | Debugger -> "Debugger"
   | DeclareClass _ -> "DeclareClass"
@@ -144,6 +148,18 @@ and string_of_expression expr : string =
   | Update _ -> "Update"
   | Yield _ -> "Yield"
 
+and string_of_expressions exprs : string =
+  if List.length exprs = 0
+  then "[]"
+  else
+    let items = List.fold_left
+        (fun acc expr ->
+           let str = string_of_expression expr in
+           acc ^ " " ^ str)
+        ""
+        exprs in
+    "[" ^ items ^ "]"
+
 and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
   | Some (ImportNamedSpecifiers obj_list) ->
@@ -192,11 +208,32 @@ and string_of_literal value : string =
   | Number n -> string_of_float n
   | RegExp obj -> Printf.sprintf "/%s/" obj.pattern
 
+and string_of_expression_maybe expression_maybe : string =
+  match expression_maybe with
+  | Some expr -> string_of_expression expr
+  | None -> "∅"
+
 and string_of_identifier_maybe identifier_maybe : string =
   match identifier_maybe with
   | Some i -> string_of_identifier i
   | None -> "∅"
 
 and string_of_identifier identifier : string =
+  let (_loc, name) = identifier in
+  name
+
+and string_of_implements implements : string =
+  if List.length implements = 0
+  then "[]"
+  else
+    let items = List.fold_left
+        (fun acc expr ->
+           let str = string_of_implement expr in
+           acc ^ " " ^ str)
+        ""
+        implements in
+    "[" ^ items ^ "]"
+
+and string_of_implement implement : string =
   let (_loc, name) = identifier in
   name
