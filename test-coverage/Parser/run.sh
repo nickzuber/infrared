@@ -72,6 +72,6 @@ else
   echo "\033[97;1mTest suites:\033[39m\033[32;1m $((suites-suites_failed)) passed\033[0;0m, $suites total"
 fi
 echo "\033[97;1mTests:      \033[39m\033[32;1m $pass passed\033[0;0m, $total total"
-echo "\033[97;1mCoverage:   \033[0m $percentage% / 100%"
+echo "\033[97;1mCoverage:   \033[0m $percentage% \033[39m\033[32;1m▁▂▃\033[0m"
 echo "\033[90mRan all covereage functions matching \033[0m/$rgxFindFn/i"
 echo "\033[32minfrared-coverage-reporter >> Report generaged (@TODO) \033[0;0m"

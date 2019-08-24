@@ -4,6 +4,7 @@ _build
 *.exe
 *.pyc
 *.failed
+__reports__
 
 # Others
 .DS_Store
