@@ -47,10 +47,10 @@ and string_of_statement stmt : string =
   | Block _ -> "Block"
   | Break _ -> "Break"
   | ClassDeclaration obj ->
-    Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (implements: %s))"
+    Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
       (string_of_identifier_maybe obj.id)
       (string_of_expressions obj.classDecorators)
-      (string_of_implements obj.implements)
+      (string_of_body obj.body)
   | Continue _ -> "Continue"
   | Debugger -> "Debugger"
   | DeclareClass _ -> "DeclareClass"
@@ -222,18 +222,27 @@ and string_of_identifier identifier : string =
   let (_loc, name) = identifier in
   name
 
-and string_of_implements implements : string =
-  if List.length implements = 0
+and string_of_body obj : string =
+  let (_loc, body) = obj in
+  string_of_bodies body.body
+
+and string_of_bodies body_elements : string =
+  if List.length body_elements = 0
   then "[]"
   else
     let items = List.fold_left
-        (fun acc expr ->
-           let str = string_of_implement expr in
+        (fun acc elem ->
+           let str = string_of_body_element elem in
            acc ^ " " ^ str)
         ""
-        implements in
+        body_elements in
     "[" ^ items ^ "]"
 
-and string_of_implement implement : string =
-  let (_loc, name) = identifier in
-  name
+and string_of_body_element elem : string =
+  let open C in
+  match elem with
+  | Body.Method mthd ->
+    let (_loc, obj) = mthd in
+    "(method)"
+  | Body.Property _ -> "(property)"
+  | Body.PrivateField _ -> "(private field)"
