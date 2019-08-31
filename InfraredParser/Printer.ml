@@ -129,7 +129,7 @@ and string_of_expression expr : string =
   | JSXFragment _ -> "JSXFragment"
   | Literal obj ->
     Printf.sprintf "(Literal %s)"
-      (string_of_literal obj.value)
+      (string_of_literal obj)
   | Logical _ -> "Logical"
   | Member _ -> "Member"
   | MetaProperty _ -> "MetaProperty"
@@ -199,8 +199,8 @@ and string_of_stringliteral str : string =
   let (_loc, name) = str in
   name.value
 
-and string_of_literal value : string =
-  match value with
+and string_of_literal obj : string =
+  match obj.value with
   | String str -> Printf.sprintf "\"%s\"" str
   | Boolean true -> "(TRUE)"
   | Boolean false -> "(FALSE)"
@@ -243,6 +243,31 @@ and string_of_body_element elem : string =
   match elem with
   | Body.Method mthd ->
     let (_loc, obj) = mthd in
-    "(method)"
+    let static =
+      Printf.sprintf "(static: %s)"
+        (string_of_bool obj.static)
+    in
+    let kind = string_of_method_kind obj.kind in
+    let key = string_of_object_key obj.key in
+    Printf.sprintf "(Method %s, %s, %s)"
+      static kind key
   | Body.Property _ -> "(property)"
   | Body.PrivateField _ -> "(private field)"
+
+and string_of_method_kind kind : string =
+  let open C.Method in
+  match kind with
+  | Constructor -> "(kind: CONSTRUCTOR)"
+  | Method -> "(kind: METHOD)"
+  | Get -> "(kind: GET)"
+  | Set -> "(kind: SET)"
+
+and string_of_object_key key : string =
+  let open E.Object.Property in
+  let value = match key with
+    | Literal (_loc, lit) -> string_of_literal lit
+    | Identifier id -> string_of_identifier id
+    | PrivateName _ -> "PrivateName"
+    | Computed _ -> "Computed"
+  in
+  Printf.sprintf "(key: %s)" value

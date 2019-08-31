@@ -9,6 +9,8 @@ class MyComponent extends React.Component {
     children: PropTypes.node.isRequired
   };
 
+  some_literal = 42
+
   render () {
     return (
       <div>
