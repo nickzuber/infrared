@@ -34,7 +34,7 @@ let format_sexp (sexp : string) : string =
   String.concat "" formatted_chars_as_strings
 
 (** Assumes that the first element of the tuple is location data. *)
-let strip_loc e =
+let strip_location e =
   let (_loc, e') = e in
   e'
 
@@ -179,7 +179,7 @@ and string_of_specifier specifier_maybe : string =
     |> String.concat ", "
   | Some (ImportNamespaceSpecifier identifier) ->
     let identifier_string = identifier
-                            |> strip_loc
+                            |> strip_location
                             |> string_of_identifier
     in
     Printf.sprintf "(specifier: %s)"
@@ -203,11 +203,11 @@ and string_of_expression_or_spread expr_or_spread : string =
   match expr_or_spread with
   | Expression expr -> string_of_expression expr
   | Spread spread ->
-    let obj = strip_loc spread in
+    let obj = strip_location spread in
     "..." ^ (string_of_expression obj.argument)
 
 and string_of_stringliteral str : string =
-  let name = strip_loc str in
+  let name = strip_location str in
   name.value
 
 and string_of_literal obj : string =
@@ -230,11 +230,11 @@ and string_of_identifier_maybe identifier_maybe : string =
   | None -> "∅"
 
 and string_of_identifier identifier : string =
-  let name = strip_loc identifier in
+  let name = strip_location identifier in
   name
 
 and string_of_body obj : string =
-  let body = strip_loc obj in
+  let body = strip_location obj in
   string_of_bodies body.body
 
 and string_of_bodies body_elements : string =
@@ -253,7 +253,7 @@ and string_of_body_element elem : string =
   let open C in
   match elem with
   | Body.Method mthd ->
-    let obj = strip_loc mthd in
+    let obj = strip_location mthd in
     let static =
       Printf.sprintf "(static: %s)"
         (string_of_bool obj.static)
@@ -261,7 +261,7 @@ and string_of_body_element elem : string =
     let kind = string_of_method_kind obj.kind in
     let key = string_of_object_key obj.key in
     let value = obj.value
-                |> strip_loc
+                |> strip_location
                 |> string_of_function
     in
     Printf.sprintf "(Method %s, %s, %s, %s)"
@@ -281,7 +281,7 @@ and string_of_object_key key : string =
   let open E.Object.Property in
   let value = match key with
     | Literal lit -> lit
-                     |> strip_loc
+                     |> strip_location
                      |> string_of_literal
     | Identifier id -> string_of_identifier id
     | PrivateName _ -> "PrivateName"
