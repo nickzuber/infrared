@@ -177,9 +177,13 @@ and string_of_specifier specifier_maybe : string =
            (string_of_identifier obj.remote)
        ) obj_list)
     |> String.concat ", "
-  | Some (ImportNamespaceSpecifier (_loc, identifier)) ->
+  | Some (ImportNamespaceSpecifier identifier) ->
+    let identifier_string = identifier
+                            |> strip_loc
+                            |> string_of_identifier
+    in
     Printf.sprintf "(specifier: %s)"
-      (string_of_identifier identifier)
+      identifier_string
   | None -> "(specifier: ∅)"
 
 and string_of_unary_op op : string =
@@ -199,11 +203,11 @@ and string_of_expression_or_spread expr_or_spread : string =
   match expr_or_spread with
   | Expression expr -> string_of_expression expr
   | Spread spread ->
-    let (_loc, obj) = spread in
+    let obj = strip_loc spread in
     "..." ^ (string_of_expression obj.argument)
 
 and string_of_stringliteral str : string =
-  let (_loc, name) = str in
+  let name = strip_loc str in
   name.value
 
 and string_of_literal obj : string =
@@ -226,11 +230,11 @@ and string_of_identifier_maybe identifier_maybe : string =
   | None -> "∅"
 
 and string_of_identifier identifier : string =
-  let (_loc, name) = identifier in
+  let name = strip_loc identifier in
   name
 
 and string_of_body obj : string =
-  let (_loc, body) = obj in
+  let body = strip_loc obj in
   string_of_bodies body.body
 
 and string_of_bodies body_elements : string =
@@ -249,7 +253,7 @@ and string_of_body_element elem : string =
   let open C in
   match elem with
   | Body.Method mthd ->
-    let (_loc, obj) = mthd in
+    let obj = strip_loc mthd in
     let static =
       Printf.sprintf "(static: %s)"
         (string_of_bool obj.static)
@@ -276,7 +280,9 @@ and string_of_method_kind kind : string =
 and string_of_object_key key : string =
   let open E.Object.Property in
   let value = match key with
-    | Literal (_loc, lit) -> string_of_literal lit
+    | Literal lit -> lit
+                     |> strip_loc
+                     |> string_of_literal
     | Identifier id -> string_of_identifier id
     | PrivateName _ -> "PrivateName"
     | Computed _ -> "Computed"
