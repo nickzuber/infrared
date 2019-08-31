@@ -33,6 +33,11 @@ let format_sexp (sexp : string) : string =
   in
   String.concat "" formatted_chars_as_strings
 
+(** Assumes that the first element of the tuple is location data. *)
+let strip_loc e =
+  let (_loc, e') = e in
+  e'
+
 (** Formats a Flow_ast into a formatted S-Expression. *)
 let rec string_of_ast (ast : Loc.t Ast.program * (Loc.t * Err.t) list) : string =
   let ((_loc, stmts, _comments), _err) = ast in
@@ -72,7 +77,9 @@ and string_of_statement stmt : string =
   | For _ -> "For"
   | ForIn _ -> "ForIn"
   | ForOf _ -> "ForOf"
-  | FunctionDeclaration _ -> "FunctionDeclaration"
+  | FunctionDeclaration fn ->
+    Printf.sprintf "(FunctionDeclaration %s)"
+      (string_of_function fn)
   | If _ -> "If"
   | ImportDeclaration obj ->
     Printf.sprintf "(ImportDeclaration %s, (default: %s), (source: \"%s\"))"
@@ -249,8 +256,12 @@ and string_of_body_element elem : string =
     in
     let kind = string_of_method_kind obj.kind in
     let key = string_of_object_key obj.key in
-    Printf.sprintf "(Method %s, %s, %s)"
-      static kind key
+    let value = obj.value
+                |> strip_loc
+                |> string_of_function
+    in
+    Printf.sprintf "(Method %s, %s, %s, %s)"
+      static kind key value
   | Body.Property _ -> "(property)"
   | Body.PrivateField _ -> "(private field)"
 
@@ -271,3 +282,8 @@ and string_of_object_key key : string =
     | Computed _ -> "Computed"
   in
   Printf.sprintf "(key: %s)" value
+
+and string_of_function fn : string =
+  let id = string_of_identifier_maybe fn.id in
+  Printf.sprintf "(function %s)"
+    (Printf.sprintf "(id: %s)" id)
