@@ -31,7 +31,12 @@ export function FunctionComponent (props) {
 }
 
 const fnWillNotCauseRerender = () => {}
+
+function add (a, b) { return a + b; }
+
 function LocalFunctionComponent (props) {
+  var a = 1;
+  var b = 2;
   return (
     <div onPress={fnWillNotCauseRerender} />
   );

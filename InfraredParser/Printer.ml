@@ -38,6 +38,15 @@ let strip_location e =
   let (_loc, e') = e in
   e'
 
+(** Creates a version of a stringify function that accepts a list of its items. *)
+let listify fn items : string =
+  if List.length items = 0
+  then "[]"
+  else
+    let items' = List.map (fun item -> fn item) items in
+    let items'' = String.concat " " items' in
+    Printf.sprintf "[%s]" items''
+
 (** Formats a Flow_ast into a formatted S-Expression. *)
 let rec string_of_ast (ast : Loc.t Ast.program * (Loc.t * Err.t) list) : string =
   let ((_loc, stmts, _comments), _err) = ast in
@@ -52,6 +61,7 @@ and string_of_statement stmt : string =
   | Block _ -> "Block"
   | Break _ -> "Break"
   | ClassDeclaration obj ->
+    let string_of_expressions = listify string_of_expression in
     Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
       (string_of_identifier_maybe obj.id)
       (string_of_expressions obj.classDecorators)
@@ -155,18 +165,6 @@ and string_of_expression expr : string =
   | Update _ -> "Update"
   | Yield _ -> "Yield"
 
-and string_of_expressions exprs : string =
-  if List.length exprs = 0
-  then "[]"
-  else
-    let items = List.fold_left
-        (fun acc expr ->
-           let str = string_of_expression expr in
-           acc ^ " " ^ str)
-        ""
-        exprs in
-    "[" ^ items ^ "]"
-
 and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
   | Some (ImportNamedSpecifiers obj_list) ->
@@ -178,12 +176,12 @@ and string_of_specifier specifier_maybe : string =
        ) obj_list)
     |> String.concat ", "
   | Some (ImportNamespaceSpecifier identifier) ->
-    let identifier_string = identifier
-                            |> strip_location
-                            |> string_of_identifier
+    let identifier' = identifier
+                      |> strip_location
+                      |> string_of_identifier
     in
     Printf.sprintf "(specifier: %s)"
-      identifier_string
+      identifier'
   | None -> "(specifier: ∅)"
 
 and string_of_unary_op op : string =
@@ -235,19 +233,8 @@ and string_of_identifier identifier : string =
 
 and string_of_body obj : string =
   let body = strip_location obj in
+  let string_of_bodies = listify string_of_body_element in
   string_of_bodies body.body
-
-and string_of_bodies body_elements : string =
-  if List.length body_elements = 0
-  then "[]"
-  else
-    let items = List.fold_left
-        (fun acc elem ->
-           let str = string_of_body_element elem in
-           acc ^ " " ^ str)
-        ""
-        body_elements in
-    "[" ^ items ^ "]"
 
 and string_of_body_element elem : string =
   let open C in
@@ -271,11 +258,13 @@ and string_of_body_element elem : string =
 
 and string_of_method_kind kind : string =
   let open C.Method in
-  match kind with
-  | Constructor -> "(kind: CONSTRUCTOR)"
-  | Method -> "(kind: METHOD)"
-  | Get -> "(kind: GET)"
-  | Set -> "(kind: SET)"
+  let kind' = match kind with
+    | Constructor -> "CONSTRUCTOR"
+    | Method -> "METHOD"
+    | Get -> "GET"
+    | Set -> "SET"
+  in
+  Printf.sprintf "(kind: %s)" kind'
 
 and string_of_object_key key : string =
   let open E.Object.Property in
@@ -291,5 +280,21 @@ and string_of_object_key key : string =
 
 and string_of_function fn : string =
   let id = string_of_identifier_maybe fn.id in
-  Printf.sprintf "(function %s)"
+  let body = string_of_function_body fn.body in
+  Printf.sprintf "(function %s, %s)"
     (Printf.sprintf "(id: %s)" id)
+    (Printf.sprintf "(body: %s)" body)
+
+and string_of_function_body body : string =
+  match body with
+  | BodyExpression expr ->
+    Printf.sprintf "(BodyExpression %s)"
+      (string_of_expression expr)
+  | BodyBlock block ->
+    let (_loc, block) = block in
+    Printf.sprintf "(BodyBlock %s)"
+      (string_of_block block)
+
+and string_of_block block : string =
+  let string_of_statements = listify string_of_statement in
+  string_of_statements block.body
