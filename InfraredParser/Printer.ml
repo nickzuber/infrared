@@ -58,57 +58,59 @@ and string_of_statement stmt : string =
   let open S in
   let (_loc, statement) = stmt in
   match statement with
-  | Block _ -> "Block"
-  | Break _ -> "Break"
+  | Block _ -> "(@TODO Block)"
+  | Break _ -> "(@TODO Break)"
   | ClassDeclaration obj ->
     let string_of_expressions = listify string_of_expression in
     Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
       (string_of_identifier_maybe obj.id)
       (string_of_expressions obj.classDecorators)
       (string_of_body obj.body)
-  | Continue _ -> "Continue"
-  | Debugger -> "Debugger"
-  | DeclareClass _ -> "DeclareClass"
-  | DeclareExportDeclaration _ -> "DeclareExportDeclaration"
-  | DeclareFunction _ -> "DeclareFunction"
-  | DeclareInterface _ -> "DeclareInterface"
-  | DeclareModule _ -> "DeclareModule"
-  | DeclareModuleExports _ -> "DeclareModuleExports"
-  | DeclareTypeAlias _ -> "DeclareTypeAlias"
-  | DeclareOpaqueType _ -> "DeclareOpaqueType"
-  | DeclareVariable _ -> "DeclareVariable"
-  | DoWhile _ -> "DoWhile"
-  | Empty -> "Empty"
-  | ExportDefaultDeclaration _ -> "ExportDefaultDeclaration"
-  | ExportNamedDeclaration _ -> "ExportNamedDeclaration"
+  | Continue _ -> "(@TODO Continue)"
+  | Debugger -> "(@TODO Debugger)"
+  | DeclareClass _ -> "(@TODO DeclareClass)"
+  | DeclareExportDeclaration _ -> "(@TODO DeclareExportDeclaration)"
+  | DeclareFunction _ -> "(@TODO DeclareFunction)"
+  | DeclareInterface _ -> "(@TODO DeclareInterface)"
+  | DeclareModule _ -> "(@TODO DeclareModule)"
+  | DeclareModuleExports _ -> "(@TODO DeclareModuleExports)"
+  | DeclareTypeAlias _ -> "(@TODO DeclareTypeAlias)"
+  | DeclareOpaqueType _ -> "(@TODO DeclareOpaqueType)"
+  | DeclareVariable _ -> "(@TODO DeclareVariable)"
+  | DoWhile _ -> "(@TODO DoWhile)"
+  | Empty -> "(@TODO Empty)"
+  | ExportDefaultDeclaration _ -> "(@TODO ExportDefaultDeclaration)"
+  | ExportNamedDeclaration _ -> "(@TODO ExportNamedDeclaration)"
   | Expression obj ->
     Printf.sprintf "(Expression %s)"
       (string_of_expression obj.expression)
-  | For _ -> "For"
-  | ForIn _ -> "ForIn"
-  | ForOf _ -> "ForOf"
+  | For _ -> "(@TODO For)"
+  | ForIn _ -> "(@TODO ForIn)"
+  | ForOf _ -> "(@TODO ForOf)"
   | FunctionDeclaration fn ->
     Printf.sprintf "(FunctionDeclaration %s)"
       (string_of_function fn)
-  | If _ -> "If"
+  | If _ -> "(@TODO If)"
   | ImportDeclaration obj ->
     Printf.sprintf "(ImportDeclaration %s, (default: %s), (source: \"%s\"))"
       (string_of_specifier obj.specifiers)
       (string_of_identifier_maybe obj.default)
       (string_of_stringliteral obj.source)
-  | InterfaceDeclaration _ -> "InterfaceDeclaration"
-  | Labeled _ -> "Labeled"
-  | Return _ -> "Return"
-  | Switch _ -> "Switch"
-  | Throw _ -> "Throw"
-  | Try _ -> "Try"
-  | TypeAlias _ -> "TypeAlias"
-  | OpaqueType _ -> "OpaqueType"
+  | InterfaceDeclaration _ -> "(@TODO InterfaceDeclaration)"
+  | Labeled _ -> "(@TODO Labeled)"
+  | Return _ -> "(@TODO Return)"
+  | Switch _ -> "(@TODO Switch)"
+  | Throw _ -> "(@TODO Throw)"
+  | Try _ -> "(@TODO Try)"
+  | TypeAlias _ -> "(@TODO TypeAlias)"
+  | OpaqueType _ -> "(@TODO OpaqueType)"
   | VariableDeclaration obj ->
-    Printf.sprintf "(VariableDeclaration %s)"
+    let string_of_declarations = listify string_of_declaration in
+    Printf.sprintf "(VariableDeclaration %s, %s)"
       (string_of_kind obj.kind)
-  | While _ -> "While"
-  | With _ -> "With"
+      (string_of_declarations obj.declarations)
+  | While _ -> "(@TODO While)"
+  | With _ -> "(@TODO With)"
 
 and string_of_kind kind : string =
   let open S.VariableDeclaration in
@@ -121,10 +123,10 @@ and string_of_expression expr : string =
   let open E in
   let (_loc, expression) = expr in
   match expression with
-  | Array _ -> "Array"
-  | ArrowFunction _ -> "ArrowFunction"
-  | Assignment _ -> "Assignment"
-  | Binary _ -> "Binary"
+  | Array _ -> "(@TODO Array)"
+  | ArrowFunction _ -> "(@TODO ArrowFunction)"
+  | Assignment _ -> "(@TODO Assignment)"
+  | Binary _ -> "(@TODO Binary)"
   | Call obj ->
     let arguments_list = List.map
         (string_of_expression_or_spread)
@@ -133,37 +135,37 @@ and string_of_expression expr : string =
     Printf.sprintf "(Call %s, %s)"
       (string_of_expression obj.callee)
       arguments
-  | Class _ -> "Class"
-  | Comprehension _ -> "Comprehension"
-  | Conditional _ -> "Conditional"
-  | Function _ -> "Function"
-  | Generator _ -> "Generator"
+  | Class _ -> "(@TODO Class)"
+  | Comprehension _ -> "(@TODO Comprehension)"
+  | Conditional _ -> "(@TODO Conditional)"
+  | Function _ -> "(@TODO Function)"
+  | Generator _ -> "(@TODO Generator)"
   | Identifier obj ->
     Printf.sprintf "(Identifier %s)"
       (string_of_identifier obj)
-  | Import _ -> "Import"
-  | JSXElement _ -> "JSXElement"
-  | JSXFragment _ -> "JSXFragment"
+  | Import _ -> "(@TODO Import)"
+  | JSXElement _ -> "(@TODO JSXElement)"
+  | JSXFragment _ -> "(@TODO JSXFragment)"
   | Literal obj ->
     Printf.sprintf "(Literal %s)"
       (string_of_literal obj)
-  | Logical _ -> "Logical"
-  | Member _ -> "Member"
-  | MetaProperty _ -> "MetaProperty"
-  | New _ -> "New"
-  | Object _ -> "Object"
-  | Sequence _ -> "Sequence"
-  | Super -> "Super"
-  | TaggedTemplate _ -> "TaggedTemplate"
-  | TemplateLiteral _ -> "TemplateLiteral"
-  | This -> "This"
-  | TypeCast _ -> "TypeCast"
+  | Logical _ -> "(@TODO Logical)"
+  | Member _ -> "(@TODO Member)"
+  | MetaProperty _ -> "(@TODO MetaProperty)"
+  | New _ -> "(@TODO New)"
+  | Object _ -> "(@TODO Object)"
+  | Sequence _ -> "(@TODO Sequence)"
+  | Super -> "(@TODO Super)"
+  | TaggedTemplate _ -> "(@TODO TaggedTemplate)"
+  | TemplateLiteral _ -> "(@TODO TemplateLiteral)"
+  | This -> "(@TODO This)"
+  | TypeCast _ -> "(@TODO TypeCast)"
   | Unary obj ->
     Printf.sprintf "(Unary %s, %s)"
       (string_of_unary_op obj.operator)
       (string_of_expression obj.argument)
-  | Update _ -> "Update"
-  | Yield _ -> "Yield"
+  | Update _ -> "(@TODO Update)"
+  | Yield _ -> "(@TODO Yield)"
 
 and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
@@ -183,6 +185,26 @@ and string_of_specifier specifier_maybe : string =
     Printf.sprintf "(specifier: %s)"
       identifier'
   | None -> "(specifier: ∅)"
+
+and string_of_declaration obj : string =
+  let open S.VariableDeclaration.Declarator in
+  let obj' = strip_location obj in
+  Printf.sprintf "(Declarator %s, %s)"
+    (Printf.sprintf "(id: %s)"
+       (obj'.id
+        |> strip_location
+        |> string_of_pattern
+       ))
+    (Printf.sprintf "(init: %s)" (string_of_expression_maybe obj'.init))
+
+and string_of_pattern pattern : string =
+  let open P in
+  match pattern with
+  | Object _ -> "Object"
+  | Array _ -> "Array"
+  | Assignment _ -> "Assignment"
+  | Identifier id -> string_of_identifier id.name
+  | Expression _ -> "Expression"
 
 and string_of_unary_op op : string =
   let open E.Unary in
