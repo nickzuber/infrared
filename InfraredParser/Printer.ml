@@ -98,7 +98,9 @@ and string_of_statement stmt : string =
       (string_of_stringliteral obj.source)
   | InterfaceDeclaration _ -> "(@TODO InterfaceDeclaration)"
   | Labeled _ -> "(@TODO Labeled)"
-  | Return _ -> "(@TODO Return)"
+  | Return obj ->
+    Printf.sprintf "(Return %s)"
+      (string_of_expression_maybe obj.argument)
   | Switch _ -> "(@TODO Switch)"
   | Throw _ -> "(@TODO Throw)"
   | Try _ -> "(@TODO Try)"
@@ -126,7 +128,13 @@ and string_of_expression expr : string =
   | Array _ -> "(@TODO Array)"
   | ArrowFunction _ -> "(@TODO ArrowFunction)"
   | Assignment _ -> "(@TODO Assignment)"
-  | Binary _ -> "(@TODO Binary)"
+  | Binary obj ->
+    let open E.Binary in
+    let left = string_of_expression obj.left in
+    let right = string_of_expression obj.right in
+    let operator = string_of_binary_op obj.operator in
+    Printf.sprintf "(Binary %s, %s, %s)"
+      operator left right
   | Call obj ->
     let arguments_list = List.map
         (string_of_expression_or_spread)
@@ -200,11 +208,11 @@ and string_of_declaration obj : string =
 and string_of_pattern pattern : string =
   let open P in
   match pattern with
-  | Object _ -> "Object"
-  | Array _ -> "Array"
-  | Assignment _ -> "Assignment"
+  | Object _ -> "(@TODO Object)"
+  | Array _ -> "(@TODO Array)"
+  | Assignment _ -> "(@TODO Assignment)"
   | Identifier id -> string_of_identifier id.name
-  | Expression _ -> "Expression"
+  | Expression _ -> "(@TODO Expression)"
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -217,6 +225,32 @@ and string_of_unary_op op : string =
   | Void -> "(VOID)"
   | Delete -> "(DELETE)"
   | Await -> "(AWAIT)"
+
+and string_of_binary_op op : string =
+  let open E.Binary in
+  match op with
+  | Equal -> "EQUAL"
+  | NotEqual -> "NOTEQUAL"
+  | StrictEqual -> "STRICTEQUAL"
+  | StrictNotEqual -> "STRICTNOTEQUAL"
+  | LessThan -> "LESSTHAN"
+  | LessThanEqual -> "LESSTHANEQUAL"
+  | GreaterThan -> "GREATERTHAN"
+  | GreaterThanEqual -> "GREATERTHANEQUAL"
+  | LShift -> "LSHIFT"
+  | RShift -> "RSHIFT"
+  | RShift3 -> "RSHIFT3"
+  | Plus -> "PLUS"
+  | Minus -> "MINUS"
+  | Mult -> "MULT"
+  | Exp -> "EXP"
+  | Div -> "DIV"
+  | Mod -> "MOD"
+  | BitOr -> "BITOR"
+  | Xor -> "XOR"
+  | BitAnd -> "BITAND"
+  | In -> "IN"
+  | Instanceof -> "INSTANCEOF"
 
 and string_of_expression_or_spread expr_or_spread : string =
   let open E in
@@ -275,8 +309,8 @@ and string_of_body_element elem : string =
     in
     Printf.sprintf "(Method %s, %s, %s, %s)"
       static kind key value
-  | Body.Property _ -> "(property)"
-  | Body.PrivateField _ -> "(private field)"
+  | Body.Property _ -> "(@TODO property)"
+  | Body.PrivateField _ -> "(@TODO private field)"
 
 and string_of_method_kind kind : string =
   let open C.Method in
@@ -295,8 +329,8 @@ and string_of_object_key key : string =
                      |> strip_location
                      |> string_of_literal
     | Identifier id -> string_of_identifier id
-    | PrivateName _ -> "PrivateName"
-    | Computed _ -> "Computed"
+    | PrivateName _ -> "(@TODO PrivateName)"
+    | Computed _ -> "(@TODO Computed)"
   in
   Printf.sprintf "(key: %s)" value
 
