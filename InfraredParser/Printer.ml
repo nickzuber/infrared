@@ -130,7 +130,7 @@ and string_of_expression expr : string =
     let left = string_of_pattern obj.left in
     let right = string_of_expression obj.right in
     let operator = string_of_assignment_op obj.operator in
-    Printf.sprintf "(Binary %s, %s, %s)"
+    Printf.sprintf "(Assignment %s, %s, %s)"
       operator left right
   | Binary obj ->
     let open E.Binary in
@@ -154,9 +154,7 @@ and string_of_expression expr : string =
     Printf.sprintf "(Function %s)"
       (string_of_function fn)
   | Generator _ -> (todo "Generator")
-  | Identifier obj ->
-    Printf.sprintf "(Identifier %s)"
-      (string_of_identifier obj)
+  | Identifier obj -> string_of_identifier obj
   | Import _ -> (todo "Import")
   | JSXElement _ -> (todo "JSXElement")
   | JSXFragment _ -> (todo "JSXFragment")
@@ -164,7 +162,9 @@ and string_of_expression expr : string =
     Printf.sprintf "(Literal %s)"
       (string_of_literal obj)
   | Logical _ -> (todo "Logical")
-  | Member _ -> (todo "Member")
+  | Member obj ->
+    Printf.sprintf "(Member %s)"
+      (string_of_member_property obj.property)
   | MetaProperty _ -> (todo "MetaProperty")
   | New _ -> (todo "New")
   | Object _ -> (todo "Object")
@@ -217,12 +217,26 @@ and string_of_declaration obj : string =
 and string_of_pattern pattern : string =
   let (_loc, pattern) = pattern in
   let open P in
-  match pattern with
-  | Object _ -> (todo "Pattern->Object")
-  | Array _ -> (todo "Pattern->Array")
-  | Assignment _ -> (todo "Pattern->Assignment")
-  | Identifier id -> string_of_identifier id.name
-  | Expression _ -> (todo "Pattern->Expression")
+  let pattern' = match pattern with
+    | Object _ -> (todo "Pattern->Object")
+    | Array _ -> (todo "Pattern->Array")
+    | Assignment obj -> string_of_pattern_assignment obj
+    (* Expression.Identifier is a subset of Pattern.Identifier,
+     * and since we only case about the common data we can actually
+     * get away with just reusing that function here since OCaml
+     * is structurally typed. *)
+    | Identifier id -> string_of_identifier id.name
+    (* Same as Expression so we can get away with reusing this. *)
+    | Expression expr -> string_of_expression expr
+  in
+  Printf.sprintf "(Pattern %s)" pattern'
+
+and string_of_pattern_assignment obj : string =
+  let open P.Assignment in
+  let left = string_of_pattern obj.left in
+  let right = string_of_expression obj.right in
+  Printf.sprintf "(Assignment %s, %s)"
+    left right
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -239,45 +253,45 @@ and string_of_unary_op op : string =
 and string_of_binary_op op : string =
   let open E.Binary in
   match op with
-  | Equal -> "EQUAL"
-  | NotEqual -> "NOTEQUAL"
-  | StrictEqual -> "STRICTEQUAL"
-  | StrictNotEqual -> "STRICTNOTEQUAL"
-  | LessThan -> "LESSTHAN"
-  | LessThanEqual -> "LESSTHANEQUAL"
-  | GreaterThan -> "GREATERTHAN"
-  | GreaterThanEqual -> "GREATERTHANEQUAL"
-  | LShift -> "LSHIFT"
-  | RShift -> "RSHIFT"
-  | RShift3 -> "RSHIFT3"
-  | Plus -> "PLUS"
-  | Minus -> "MINUS"
-  | Mult -> "MULT"
-  | Exp -> "EXP"
-  | Div -> "DIV"
-  | Mod -> "MOD"
-  | BitOr -> "BITOR"
-  | Xor -> "XOR"
-  | BitAnd -> "BITAND"
-  | In -> "IN"
-  | Instanceof -> "INSTANCEOF"
+  | Equal -> "(EQUAL)"
+  | NotEqual -> "(NOTEQUAL)"
+  | StrictEqual -> "(STRICTEQUAL)"
+  | StrictNotEqual -> "(STRICTNOTEQUAL)"
+  | LessThan -> "(LESSTHAN)"
+  | LessThanEqual -> "(LESSTHANEQUAL)"
+  | GreaterThan -> "(GREATERTHAN)"
+  | GreaterThanEqual -> "(GREATERTHANEQUAL)"
+  | LShift -> "(LSHIFT)"
+  | RShift -> "(RSHIFT)"
+  | RShift3 -> "(RSHIFT3)"
+  | Plus -> "(PLUS)"
+  | Minus -> "(MINUS)"
+  | Mult -> "(MULT)"
+  | Exp -> "(EXP)"
+  | Div -> "(DIV)"
+  | Mod -> "(MOD)"
+  | BitOr -> "(BITOR)"
+  | Xor -> "(XOR)"
+  | BitAnd -> "(BITAND)"
+  | In -> "(IN)"
+  | Instanceof -> "(INSTANCEOF)"
 
 and string_of_assignment_op op : string =
   let open E.Assignment in
   match op with
-  | Assign -> "ASSIGN"
-  | PlusAssign -> "PLUSASSIGN"
-  | MinusAssign -> "MINUSASSIGN"
-  | MultAssign -> "MULTASSIGN"
-  | ExpAssign -> "EXPASSIGN"
-  | DivAssign -> "DIVASSIGN"
-  | ModAssign -> "MODASSIGN"
-  | LShiftAssign -> "LSHIFTASSIGN"
-  | RShiftAssign -> "RSHIFTASSIGN"
-  | RShift3Assign -> "RSHIFT3ASSIGN"
-  | BitOrAssign -> "BITORASSIGN"
-  | BitXorAssign -> "BITXORASSIGN"
-  | BitAndAssign -> "BITANDASSIGN"
+  | Assign -> "(ASSIGN)"
+  | PlusAssign -> "(PLUSASSIGN)"
+  | MinusAssign -> "(MINUSASSIGN)"
+  | MultAssign -> "(MULTASSIGN)"
+  | ExpAssign -> "(EXPASSIGN)"
+  | DivAssign -> "(DIVASSIGN)"
+  | ModAssign -> "(MODASSIGN)"
+  | LShiftAssign -> "(LSHIFTASSIGN)"
+  | RShiftAssign -> "(RSHIFTASSIGN)"
+  | RShift3Assign -> "(RSHIFT3ASSIGN)"
+  | BitOrAssign -> "(BITORASSIGN)"
+  | BitXorAssign -> "(BITXORASSIGN)"
+  | BitAndAssign -> "(BITANDASSIGN)"
 
 and string_of_expression_or_spread expr_or_spread : string =
   let open E in
@@ -290,6 +304,13 @@ and string_of_expression_or_spread expr_or_spread : string =
 and string_of_stringliteral str : string =
   let name = strip_location str in
   name.value
+
+and string_of_member_property prop : string =
+  let open E.Member in
+  match prop with
+  | PropertyIdentifier id -> string_of_identifier id
+  | PropertyPrivateName _name -> (todo "PropertyPrivateName")
+  | PropertyExpression expr -> string_of_expression expr
 
 and string_of_literal obj : string =
   match obj.value with
@@ -312,7 +333,7 @@ and string_of_identifier_maybe identifier_maybe : string =
 
 and string_of_identifier identifier : string =
   let name = strip_location identifier in
-  name
+  Printf.sprintf "(Identifier \"%s\")" name
 
 and string_of_body obj : string =
   let body = strip_location obj in
@@ -342,10 +363,10 @@ and string_of_body_element elem : string =
 and string_of_method_kind kind : string =
   let open C.Method in
   let kind' = match kind with
-    | Constructor -> "CONSTRUCTOR"
-    | Method -> "METHOD"
-    | Get -> "GET"
-    | Set -> "SET"
+    | Constructor -> "(CONSTRUCTOR)"
+    | Method -> "(METHOD)"
+    | Get -> "(GET)"
+    | Set -> "(SET)"
   in
   Printf.sprintf "(kind: %s)" kind'
 

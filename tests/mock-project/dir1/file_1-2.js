@@ -20,7 +20,7 @@ const Node = require('../Nodes/unidirectional_node.js');
  * @return {void}
  */
 const Queue = function(data){
-  this.front;
+  this.front = 0;
   this.back;
   this.size;
   if(typeof data !== 'undefined'){
