@@ -114,20 +114,21 @@ and string_of_statement stmt : string =
   | While _ -> "(@TODO While)"
   | With _ -> "(@TODO With)"
 
-and string_of_kind kind : string =
-  let open S.VariableDeclaration in
-  match kind with
-  | Var -> "Var"
-  | Let -> "Let"
-  | Const -> "Const"
-
 and string_of_expression expr : string =
   let open E in
   let (_loc, expression) = expr in
   match expression with
   | Array _ -> "(@TODO Array)"
-  | ArrowFunction _ -> "(@TODO ArrowFunction)"
-  | Assignment _ -> "(@TODO Assignment)"
+  | ArrowFunction fn ->
+    Printf.sprintf "(ArrowFunction %s)"
+      (string_of_function fn)
+  | Assignment obj ->
+    let open E.Assignment in
+    let left = string_of_pattern obj.left in
+    let right = string_of_expression obj.right in
+    let operator = string_of_assignment_op obj.operator in
+    Printf.sprintf "(Binary %s, %s, %s)"
+      operator left right
   | Binary obj ->
     let open E.Binary in
     let left = string_of_expression obj.left in
@@ -146,7 +147,9 @@ and string_of_expression expr : string =
   | Class _ -> "(@TODO Class)"
   | Comprehension _ -> "(@TODO Comprehension)"
   | Conditional _ -> "(@TODO Conditional)"
-  | Function _ -> "(@TODO Function)"
+  | Function fn ->
+    Printf.sprintf "(Function %s)"
+      (string_of_function fn)
   | Generator _ -> "(@TODO Generator)"
   | Identifier obj ->
     Printf.sprintf "(Identifier %s)"
@@ -175,6 +178,13 @@ and string_of_expression expr : string =
   | Update _ -> "(@TODO Update)"
   | Yield _ -> "(@TODO Yield)"
 
+and string_of_kind kind : string =
+  let open S.VariableDeclaration in
+  match kind with
+  | Var -> "Var"
+  | Let -> "Let"
+  | Const -> "Const"
+
 and string_of_specifier specifier_maybe : string =
   match specifier_maybe with
   | Some (ImportNamedSpecifiers obj_list) ->
@@ -198,21 +208,18 @@ and string_of_declaration obj : string =
   let open S.VariableDeclaration.Declarator in
   let obj' = strip_location obj in
   Printf.sprintf "(Declarator %s, %s)"
-    (Printf.sprintf "(id: %s)"
-       (obj'.id
-        |> strip_location
-        |> string_of_pattern
-       ))
+    (Printf.sprintf "(id: %s)" (string_of_pattern obj'.id))
     (Printf.sprintf "(init: %s)" (string_of_expression_maybe obj'.init))
 
 and string_of_pattern pattern : string =
+  let (_loc, pattern) = pattern in
   let open P in
   match pattern with
-  | Object _ -> "(@TODO Object)"
-  | Array _ -> "(@TODO Array)"
-  | Assignment _ -> "(@TODO Assignment)"
+  | Object _ -> "(@TODO Pattern->Object)"
+  | Array _ -> "(@TODO Pattern->Array)"
+  | Assignment _ -> "(@TODO Pattern->Assignment)"
   | Identifier id -> string_of_identifier id.name
-  | Expression _ -> "(@TODO Expression)"
+  | Expression _ -> "(@TODO Pattern->Expression)"
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -251,6 +258,23 @@ and string_of_binary_op op : string =
   | BitAnd -> "BITAND"
   | In -> "IN"
   | Instanceof -> "INSTANCEOF"
+
+and string_of_assignment_op op : string =
+  let open E.Assignment in
+  match op with
+  | Assign -> "ASSIGN"
+  | PlusAssign -> "PLUSASSIGN"
+  | MinusAssign -> "MINUSASSIGN"
+  | MultAssign -> "MULTASSIGN"
+  | ExpAssign -> "EXPASSIGN"
+  | DivAssign -> "DIVASSIGN"
+  | ModAssign -> "MODASSIGN"
+  | LShiftAssign -> "LSHIFTASSIGN"
+  | RShiftAssign -> "RSHIFTASSIGN"
+  | RShift3Assign -> "RSHIFT3ASSIGN"
+  | BitOrAssign -> "BITORASSIGN"
+  | BitXorAssign -> "BITXORASSIGN"
+  | BitAndAssign -> "BITANDASSIGN"
 
 and string_of_expression_or_spread expr_or_spread : string =
   let open E in

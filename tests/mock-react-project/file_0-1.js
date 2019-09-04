@@ -32,7 +32,9 @@ export function FunctionComponent (props) {
 
 const fnWillNotCauseRerender = () => {}
 
-function add (a, b) { return a + b; }
+function add (a, b) { return a + b + "str"; }
+
+var fn = function () {}
 
 function LocalFunctionComponent (props) {
   var a = 1;
