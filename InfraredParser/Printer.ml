@@ -13,6 +13,9 @@ module C = Ast.Class
 module F = Ast.Function
 module J = Ast.JSX
 
+let todo (str : string) : string =
+  Printf.sprintf "\x1b[33m(@TODO %s)\x1b[39m" str
+
 let format_sexp (sexp : string) : string =
   let offset = 2 in
   let depth = ref 0 in
@@ -58,67 +61,67 @@ and string_of_statement stmt : string =
   let open S in
   let (_loc, statement) = stmt in
   match statement with
-  | Block _ -> "(@TODO Block)"
-  | Break _ -> "(@TODO Break)"
+  | Block _ -> (todo "Block")
+  | Break _ -> (todo "Break")
   | ClassDeclaration obj ->
     let string_of_expressions = listify string_of_expression in
     Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
       (string_of_identifier_maybe obj.id)
       (string_of_expressions obj.classDecorators)
       (string_of_body obj.body)
-  | Continue _ -> "(@TODO Continue)"
-  | Debugger -> "(@TODO Debugger)"
-  | DeclareClass _ -> "(@TODO DeclareClass)"
-  | DeclareExportDeclaration _ -> "(@TODO DeclareExportDeclaration)"
-  | DeclareFunction _ -> "(@TODO DeclareFunction)"
-  | DeclareInterface _ -> "(@TODO DeclareInterface)"
-  | DeclareModule _ -> "(@TODO DeclareModule)"
-  | DeclareModuleExports _ -> "(@TODO DeclareModuleExports)"
-  | DeclareTypeAlias _ -> "(@TODO DeclareTypeAlias)"
-  | DeclareOpaqueType _ -> "(@TODO DeclareOpaqueType)"
-  | DeclareVariable _ -> "(@TODO DeclareVariable)"
-  | DoWhile _ -> "(@TODO DoWhile)"
-  | Empty -> "(@TODO Empty)"
-  | ExportDefaultDeclaration _ -> "(@TODO ExportDefaultDeclaration)"
-  | ExportNamedDeclaration _ -> "(@TODO ExportNamedDeclaration)"
+  | Continue _ -> (todo "Continue")
+  | Debugger -> (todo "Debugger")
+  | DeclareClass _ -> (todo "DeclareClass")
+  | DeclareExportDeclaration _ -> (todo "DeclareExportDeclaration")
+  | DeclareFunction _ -> (todo "DeclareFunction")
+  | DeclareInterface _ -> (todo "DeclareInterface")
+  | DeclareModule _ -> (todo "DeclareModule")
+  | DeclareModuleExports _ -> (todo "DeclareModuleExports")
+  | DeclareTypeAlias _ -> (todo "DeclareTypeAlias")
+  | DeclareOpaqueType _ -> (todo "DeclareOpaqueType")
+  | DeclareVariable _ -> (todo "DeclareVariable")
+  | DoWhile _ -> (todo "DoWhile")
+  | Empty -> (todo "Empty")
+  | ExportDefaultDeclaration _ -> (todo "ExportDefaultDeclaration")
+  | ExportNamedDeclaration _ -> (todo "ExportNamedDeclaration")
   | Expression obj ->
     Printf.sprintf "(Expression %s)"
       (string_of_expression obj.expression)
-  | For _ -> "(@TODO For)"
-  | ForIn _ -> "(@TODO ForIn)"
-  | ForOf _ -> "(@TODO ForOf)"
+  | For _ -> (todo "For")
+  | ForIn _ -> (todo "ForIn")
+  | ForOf _ -> (todo "ForOf")
   | FunctionDeclaration fn ->
     Printf.sprintf "(FunctionDeclaration %s)"
       (string_of_function fn)
-  | If _ -> "(@TODO If)"
+  | If _ -> (todo "If")
   | ImportDeclaration obj ->
     Printf.sprintf "(ImportDeclaration %s, (default: %s), (source: \"%s\"))"
       (string_of_specifier obj.specifiers)
       (string_of_identifier_maybe obj.default)
       (string_of_stringliteral obj.source)
-  | InterfaceDeclaration _ -> "(@TODO InterfaceDeclaration)"
-  | Labeled _ -> "(@TODO Labeled)"
+  | InterfaceDeclaration _ -> (todo "InterfaceDeclaration")
+  | Labeled _ -> (todo "Labeled")
   | Return obj ->
     Printf.sprintf "(Return %s)"
       (string_of_expression_maybe obj.argument)
-  | Switch _ -> "(@TODO Switch)"
-  | Throw _ -> "(@TODO Throw)"
-  | Try _ -> "(@TODO Try)"
-  | TypeAlias _ -> "(@TODO TypeAlias)"
-  | OpaqueType _ -> "(@TODO OpaqueType)"
+  | Switch _ -> (todo "Switch")
+  | Throw _ -> (todo "Throw")
+  | Try _ -> (todo "Try")
+  | TypeAlias _ -> (todo "TypeAlias")
+  | OpaqueType _ -> (todo "OpaqueType")
   | VariableDeclaration obj ->
     let string_of_declarations = listify string_of_declaration in
     Printf.sprintf "(VariableDeclaration %s, %s)"
       (string_of_kind obj.kind)
       (string_of_declarations obj.declarations)
-  | While _ -> "(@TODO While)"
-  | With _ -> "(@TODO With)"
+  | While _ -> (todo "While")
+  | With _ -> (todo "With")
 
 and string_of_expression expr : string =
   let open E in
   let (_loc, expression) = expr in
   match expression with
-  | Array _ -> "(@TODO Array)"
+  | Array _ -> (todo "Array")
   | ArrowFunction fn ->
     Printf.sprintf "(ArrowFunction %s)"
       (string_of_function fn)
@@ -144,39 +147,39 @@ and string_of_expression expr : string =
     Printf.sprintf "(Call %s, %s)"
       (string_of_expression obj.callee)
       arguments
-  | Class _ -> "(@TODO Class)"
-  | Comprehension _ -> "(@TODO Comprehension)"
-  | Conditional _ -> "(@TODO Conditional)"
+  | Class _ -> (todo "Class")
+  | Comprehension _ -> (todo "Comprehension")
+  | Conditional _ -> (todo "Conditional")
   | Function fn ->
     Printf.sprintf "(Function %s)"
       (string_of_function fn)
-  | Generator _ -> "(@TODO Generator)"
+  | Generator _ -> (todo "Generator")
   | Identifier obj ->
     Printf.sprintf "(Identifier %s)"
       (string_of_identifier obj)
-  | Import _ -> "(@TODO Import)"
-  | JSXElement _ -> "(@TODO JSXElement)"
-  | JSXFragment _ -> "(@TODO JSXFragment)"
+  | Import _ -> (todo "Import")
+  | JSXElement _ -> (todo "JSXElement")
+  | JSXFragment _ -> (todo "JSXFragment")
   | Literal obj ->
     Printf.sprintf "(Literal %s)"
       (string_of_literal obj)
-  | Logical _ -> "(@TODO Logical)"
-  | Member _ -> "(@TODO Member)"
-  | MetaProperty _ -> "(@TODO MetaProperty)"
-  | New _ -> "(@TODO New)"
-  | Object _ -> "(@TODO Object)"
-  | Sequence _ -> "(@TODO Sequence)"
-  | Super -> "(@TODO Super)"
-  | TaggedTemplate _ -> "(@TODO TaggedTemplate)"
-  | TemplateLiteral _ -> "(@TODO TemplateLiteral)"
-  | This -> "(@TODO This)"
-  | TypeCast _ -> "(@TODO TypeCast)"
+  | Logical _ -> (todo "Logical")
+  | Member _ -> (todo "Member")
+  | MetaProperty _ -> (todo "MetaProperty")
+  | New _ -> (todo "New")
+  | Object _ -> (todo "Object")
+  | Sequence _ -> (todo "Sequence")
+  | Super -> (todo "Super")
+  | TaggedTemplate _ -> (todo "TaggedTemplate")
+  | TemplateLiteral _ -> (todo "TemplateLiteral")
+  | This -> (todo "This")
+  | TypeCast _ -> (todo "TypeCast")
   | Unary obj ->
     Printf.sprintf "(Unary %s, %s)"
       (string_of_unary_op obj.operator)
       (string_of_expression obj.argument)
-  | Update _ -> "(@TODO Update)"
-  | Yield _ -> "(@TODO Yield)"
+  | Update _ -> (todo "Update")
+  | Yield _ -> (todo "Yield")
 
 and string_of_kind kind : string =
   let open S.VariableDeclaration in
@@ -215,11 +218,11 @@ and string_of_pattern pattern : string =
   let (_loc, pattern) = pattern in
   let open P in
   match pattern with
-  | Object _ -> "(@TODO Pattern->Object)"
-  | Array _ -> "(@TODO Pattern->Array)"
-  | Assignment _ -> "(@TODO Pattern->Assignment)"
+  | Object _ -> (todo "Pattern->Object")
+  | Array _ -> (todo "Pattern->Array")
+  | Assignment _ -> (todo "Pattern->Assignment")
   | Identifier id -> string_of_identifier id.name
-  | Expression _ -> "(@TODO Pattern->Expression)"
+  | Expression _ -> (todo "Pattern->Expression")
 
 and string_of_unary_op op : string =
   let open E.Unary in
@@ -333,8 +336,8 @@ and string_of_body_element elem : string =
     in
     Printf.sprintf "(Method %s, %s, %s, %s)"
       static kind key value
-  | Body.Property _ -> "(@TODO property)"
-  | Body.PrivateField _ -> "(@TODO private field)"
+  | Body.Property _ -> (todo "property")
+  | Body.PrivateField _ -> (todo "private field")
 
 and string_of_method_kind kind : string =
   let open C.Method in
@@ -353,8 +356,8 @@ and string_of_object_key key : string =
                      |> strip_location
                      |> string_of_literal
     | Identifier id -> string_of_identifier id
-    | PrivateName _ -> "(@TODO PrivateName)"
-    | Computed _ -> "(@TODO Computed)"
+    | PrivateName _ -> (todo "PrivateName")
+    | Computed _ -> (todo "Computed")
   in
   Printf.sprintf "(key: %s)" value
 
