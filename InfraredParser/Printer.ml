@@ -167,7 +167,10 @@ and string_of_expression expr : string =
       (string_of_member_property obj.property)
   | MetaProperty _ -> (todo "MetaProperty")
   | New _ -> (todo "New")
-  | Object _ -> (todo "Object")
+  | Object obj ->
+    let string_of_object_properties = listify string_of_object_property in
+    Printf.sprintf "(Object: %s)"
+      (string_of_object_properties obj.properties)
   | Sequence _ -> (todo "Sequence")
   | Super -> (todo "Super")
   | TaggedTemplate _ -> (todo "TaggedTemplate")
@@ -241,57 +244,57 @@ and string_of_pattern_assignment obj : string =
 and string_of_unary_op op : string =
   let open E.Unary in
   match op with
-  | Minus -> "(MINUS)"
-  | Plus -> "(PLUS)"
-  | Not -> "(NOT)"
-  | BitNot -> "(BITNOT)"
-  | Typeof -> "(TYPEOF)"
-  | Void -> "(VOID)"
-  | Delete -> "(DELETE)"
-  | Await -> "(AWAIT)"
+  | Minus -> "MINUS"
+  | Plus -> "PLUS"
+  | Not -> "NOT"
+  | BitNot -> "BITNOT"
+  | Typeof -> "TYPEOF"
+  | Void -> "VOID"
+  | Delete -> "DELETE"
+  | Await -> "AWAIT"
 
 and string_of_binary_op op : string =
   let open E.Binary in
   match op with
-  | Equal -> "(EQUAL)"
-  | NotEqual -> "(NOTEQUAL)"
-  | StrictEqual -> "(STRICTEQUAL)"
-  | StrictNotEqual -> "(STRICTNOTEQUAL)"
-  | LessThan -> "(LESSTHAN)"
-  | LessThanEqual -> "(LESSTHANEQUAL)"
-  | GreaterThan -> "(GREATERTHAN)"
-  | GreaterThanEqual -> "(GREATERTHANEQUAL)"
-  | LShift -> "(LSHIFT)"
-  | RShift -> "(RSHIFT)"
-  | RShift3 -> "(RSHIFT3)"
-  | Plus -> "(PLUS)"
-  | Minus -> "(MINUS)"
-  | Mult -> "(MULT)"
-  | Exp -> "(EXP)"
-  | Div -> "(DIV)"
-  | Mod -> "(MOD)"
-  | BitOr -> "(BITOR)"
-  | Xor -> "(XOR)"
-  | BitAnd -> "(BITAND)"
-  | In -> "(IN)"
-  | Instanceof -> "(INSTANCEOF)"
+  | Equal -> "EQUAL"
+  | NotEqual -> "NOTEQUAL"
+  | StrictEqual -> "STRICTEQUAL"
+  | StrictNotEqual -> "STRICTNOTEQUAL"
+  | LessThan -> "LESSTHAN"
+  | LessThanEqual -> "LESSTHANEQUAL"
+  | GreaterThan -> "GREATERTHAN"
+  | GreaterThanEqual -> "GREATERTHANEQUAL"
+  | LShift -> "LSHIFT"
+  | RShift -> "RSHIFT"
+  | RShift3 -> "RSHIFT3"
+  | Plus -> "PLUS"
+  | Minus -> "MINUS"
+  | Mult -> "MULT"
+  | Exp -> "EXP"
+  | Div -> "DIV"
+  | Mod -> "MOD"
+  | BitOr -> "BITOR"
+  | Xor -> "XOR"
+  | BitAnd -> "BITAND"
+  | In -> "IN"
+  | Instanceof -> "INSTANCEOF"
 
 and string_of_assignment_op op : string =
   let open E.Assignment in
   match op with
-  | Assign -> "(ASSIGN)"
-  | PlusAssign -> "(PLUSASSIGN)"
-  | MinusAssign -> "(MINUSASSIGN)"
-  | MultAssign -> "(MULTASSIGN)"
-  | ExpAssign -> "(EXPASSIGN)"
-  | DivAssign -> "(DIVASSIGN)"
-  | ModAssign -> "(MODASSIGN)"
-  | LShiftAssign -> "(LSHIFTASSIGN)"
-  | RShiftAssign -> "(RSHIFTASSIGN)"
-  | RShift3Assign -> "(RSHIFT3ASSIGN)"
-  | BitOrAssign -> "(BITORASSIGN)"
-  | BitXorAssign -> "(BITXORASSIGN)"
-  | BitAndAssign -> "(BITANDASSIGN)"
+  | Assign -> "ASSIGN"
+  | PlusAssign -> "PLUSASSIGN"
+  | MinusAssign -> "MINUSASSIGN"
+  | MultAssign -> "MULTASSIGN"
+  | ExpAssign -> "EXPASSIGN"
+  | DivAssign -> "DIVASSIGN"
+  | ModAssign -> "MODASSIGN"
+  | LShiftAssign -> "LSHIFTASSIGN"
+  | RShiftAssign -> "RSHIFTASSIGN"
+  | RShift3Assign -> "RSHIFT3ASSIGN"
+  | BitOrAssign -> "BITORASSIGN"
+  | BitXorAssign -> "BITXORASSIGN"
+  | BitAndAssign -> "BITANDASSIGN"
 
 and string_of_expression_or_spread expr_or_spread : string =
   let open E in
@@ -315,9 +318,9 @@ and string_of_member_property prop : string =
 and string_of_literal obj : string =
   match obj.value with
   | String str -> Printf.sprintf "\"%s\"" str
-  | Boolean true -> "(TRUE)"
-  | Boolean false -> "(FALSE)"
-  | Null -> "(NULL)"
+  | Boolean true -> "TRUE"
+  | Boolean false -> "FALSE"
+  | Null -> "NULL"
   | Number n -> string_of_float n
   | RegExp obj -> Printf.sprintf "/%s/" obj.pattern
 
@@ -356,31 +359,39 @@ and string_of_body_element elem : string =
                 |> string_of_function
     in
     Printf.sprintf "(Method %s, %s, %s, %s)"
-      static kind key value
-  | Body.Property _ -> (todo "property")
+      static
+      kind
+      (Printf.sprintf "(key: %s)" key)
+      value
+  | Body.Property obj ->
+    let obj = strip_location obj in
+    let key = string_of_object_key obj.key in
+    let value = string_of_expression_maybe obj.value in
+    Printf.sprintf "(Property %s, %s, %s)"
+      (Printf.sprintf "(static: %s)" (string_of_bool obj.static))
+      (Printf.sprintf "(key: %s)" key)
+      (Printf.sprintf "(value: %s)" value)
   | Body.PrivateField _ -> (todo "private field")
 
 and string_of_method_kind kind : string =
   let open C.Method in
   let kind' = match kind with
-    | Constructor -> "(CONSTRUCTOR)"
-    | Method -> "(METHOD)"
-    | Get -> "(GET)"
-    | Set -> "(SET)"
+    | Constructor -> "CONSTRUCTOR"
+    | Method -> "METHOD"
+    | Get -> "GET"
+    | Set -> "SET"
   in
   Printf.sprintf "(kind: %s)" kind'
 
 and string_of_object_key key : string =
   let open E.Object.Property in
-  let value = match key with
-    | Literal lit -> lit
-                     |> strip_location
-                     |> string_of_literal
-    | Identifier id -> string_of_identifier id
-    | PrivateName _ -> (todo "PrivateName")
-    | Computed _ -> (todo "Computed")
-  in
-  Printf.sprintf "(key: %s)" value
+  match key with
+  | Literal lit -> lit
+                   |> strip_location
+                   |> string_of_literal
+  | Identifier id -> string_of_identifier id
+  | PrivateName _ -> (todo "PrivateName")
+  | Computed _ -> (todo "Computed")
 
 and string_of_function fn : string =
   let id = string_of_identifier_maybe fn.id in
@@ -402,3 +413,9 @@ and string_of_function_body body : string =
 and string_of_block block : string =
   let string_of_statements = listify string_of_statement in
   string_of_statements block.body
+
+and string_of_object_property prop : string =
+  let open E.Object in
+  match prop with
+  | Property _ -> (todo "Expression->Object->Property")
+  | SpreadProperty _ -> (todo "Expression->Object->SpreadProperty")
