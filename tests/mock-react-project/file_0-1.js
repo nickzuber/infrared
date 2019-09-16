@@ -6,6 +6,9 @@ import Default, {Remote} from './source'
 
 class MyComponent extends React.Component {
   static propTypes = {
+    id,
+    'lit': 2,
+    [2 + 2]: 4,
     children: PropTypes.node.isRequired
   };
 

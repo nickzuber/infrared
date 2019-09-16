@@ -119,8 +119,8 @@ and string_of_statement stmt : string =
 
 and string_of_expression expr : string =
   let open E in
-  let (_loc, expression) = expr in
-  match expression with
+  let expr = strip_location expr in
+  match expr with
   | Array _ -> (todo "Array")
   | ArrowFunction fn ->
     Printf.sprintf "(ArrowFunction %s)"
@@ -417,5 +417,28 @@ and string_of_block block : string =
 and string_of_object_property prop : string =
   let open E.Object in
   match prop with
-  | Property _ -> (todo "Expression->Object->Property")
+  | Property prop -> string_of_property prop
   | SpreadProperty _ -> (todo "Expression->Object->SpreadProperty")
+
+and string_of_property prop : string =
+  let open E.Object.Property in
+  let prop = strip_location prop in
+  let string_of_key key : string =
+    match key with
+    | Literal l -> l
+                   |> strip_location
+                   |>  string_of_literal
+    | Identifier id -> string_of_identifier id
+    | PrivateName _ -> (todo "PrivateName")
+    | Computed expr -> string_of_expression expr
+  in
+  match prop with
+  | Init obj ->
+    let key = string_of_key obj.key in
+    let value = string_of_expression obj.value in
+    Printf.sprintf "(Init: %s, %s)"
+      (Printf.sprintf "(key: %s)" key)
+      (Printf.sprintf "(value: %s)" value)
+  | Method _ -> (todo "Method")
+  | Get _ -> (todo "Get")
+  | Set _ -> (todo "Set")
