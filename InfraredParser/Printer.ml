@@ -221,7 +221,10 @@ and string_of_pattern pattern : string =
   let (_loc, pattern) = pattern in
   let open P in
   let pattern' = match pattern with
-    | Object _ -> (todo "Pattern->Object")
+    | Object obj ->
+      let string_of_pattern_object_properties = listify string_of_pattern_object_property in
+      Printf.sprintf "(Object %s)"
+        (string_of_pattern_object_properties obj.properties)
     | Array _ -> (todo "Pattern->Array")
     | Assignment obj -> string_of_pattern_assignment obj
     (* Expression.Identifier is a subset of Pattern.Identifier,
@@ -233,6 +236,30 @@ and string_of_pattern pattern : string =
     | Expression expr -> string_of_expression expr
   in
   Printf.sprintf "(Pattern %s)" pattern'
+
+and string_of_pattern_object_property prop : string =
+  match prop with
+  | Property prop -> string_of_pattern_property prop
+  | RestProperty (_loc, obj) ->
+    let open P.Object.RestProperty in
+    Printf.sprintf "(RestProperty %s)"
+      (Printf.sprintf "(argument: %s)" (string_of_pattern obj.argument))
+
+and string_of_pattern_property obj : string =
+  let open P.Object.Property in
+  let obj = strip_location obj in
+  let key =
+    match obj.key with
+    | Literal (_loc, lit) -> string_of_literal lit
+    | Identifier id -> string_of_identifier id
+    | Computed _ -> (todo "Computed")
+  in
+  let pattern = string_of_pattern obj.pattern in
+  let shorthand = string_of_bool obj.shorthand in
+  Printf.sprintf "(Property %s, %s, %s)"
+    (Printf.sprintf "(key: %s)" key)
+    (Printf.sprintf "(pattern: %s)" pattern)
+    (Printf.sprintf "(shorthand: %s)" shorthand)
 
 and string_of_pattern_assignment obj : string =
   let open P.Assignment in

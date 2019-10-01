@@ -955,7 +955,7 @@ and Pattern : sig
       properties: 'M property list;
       typeAnnotation: 'M Type.annotation option;
     }
-  end
+  end (* Object END *)
   module Array : sig
     module RestElement : sig
       type 'M t = 'M * 'M t'
