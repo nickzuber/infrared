@@ -61,39 +61,87 @@ and string_of_statement stmt : string =
   let open S in
   let (_loc, statement) = stmt in
   match statement with
-  | Block _ -> (todo "Block")
-  | Break _ -> (todo "Break")
+  | Block obj ->
+    Printf.sprintf "(Block %s)"
+      (string_of_block obj)
+  | Break obj ->
+    Printf.sprintf "(Break %s)"
+      (string_of_identifier_maybe obj.label)
   | ClassDeclaration obj ->
     let string_of_expressions = listify string_of_expression in
     Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
       (string_of_identifier_maybe obj.id)
       (string_of_expressions obj.classDecorators)
       (string_of_body obj.body)
-  | Continue _ -> (todo "Continue")
-  | Debugger -> (todo "Debugger")
-  | DeclareClass _ -> (todo "DeclareClass")
-  | DeclareExportDeclaration _ -> (todo "DeclareExportDeclaration")
-  | DeclareFunction _ -> (todo "DeclareFunction")
-  | DeclareInterface _ -> (todo "DeclareInterface")
-  | DeclareModule _ -> (todo "DeclareModule")
-  | DeclareModuleExports _ -> (todo "DeclareModuleExports")
-  | DeclareTypeAlias _ -> (todo "DeclareTypeAlias")
-  | DeclareOpaqueType _ -> (todo "DeclareOpaqueType")
-  | DeclareVariable _ -> (todo "DeclareVariable")
-  | DoWhile _ -> (todo "DoWhile")
-  | Empty -> (todo "Empty")
-  | ExportDefaultDeclaration _ -> (todo "ExportDefaultDeclaration")
-  | ExportNamedDeclaration _ -> (todo "ExportNamedDeclaration")
+  | Continue obj ->
+    Printf.sprintf "(Continue %s)"
+      (string_of_identifier_maybe obj.label)
+  | Debugger ->
+    Printf.sprintf "Debugger"
+  | DeclareClass _obj ->
+    Printf.sprintf "Skipping `DeclareClass`"
+  | DeclareExportDeclaration _obj ->
+    Printf.sprintf "Skipping `DeclareExportDeclaration`"
+  | DeclareFunction _obj ->
+    Printf.sprintf "Skipping `DeclareFunction`"
+  | DeclareInterface _obj ->
+    Printf.sprintf "Skipping `DeclareInterface`"
+  | DeclareModule _obj ->
+    Printf.sprintf "Skipping `DeclareModule`"
+  | DeclareModuleExports _obj ->
+    Printf.sprintf "Skipping `DeclareModuleExports`"
+  | DeclareTypeAlias _obj ->
+    Printf.sprintf "Skipping `DeclareTypeAlias`"
+  | DeclareOpaqueType _obj ->
+    Printf.sprintf "Skipping `DeclareOpaqueType`"
+  | DeclareVariable _obj ->
+    Printf.sprintf "Skipping `DeclareVariable`"
+  | DoWhile obj ->
+    Printf.sprintf "DoWhile (test: %s) (body: %s)"
+      (string_of_expression obj.test)
+      (string_of_statement obj.body)
+  | Empty ->
+    Printf.sprintf "Empty"
+  | ExportDefaultDeclaration obj ->
+    Printf.sprintf "ExportDefaultDeclaration %s"
+      (string_of_export_declaration obj.declaration)
+  | ExportNamedDeclaration obj ->
+    Printf.sprintf "(ExportNamedDeclaration
+      (declaration: %s)
+      (specifiers: %s)
+      (source: %s)"
+      (string_of_statment_maybe obj.declaration)
+      (string_of_named_export_specifier_maybe obj.specifiers)
+      (string_of_stringliteral_maybe obj.source)
   | Expression obj ->
     Printf.sprintf "(Expression %s)"
       (string_of_expression obj.expression)
-  | For _ -> (todo "For")
-  | ForIn _ -> (todo "ForIn")
-  | ForOf _ -> (todo "ForOf")
+  | For obj ->
+    Printf.sprintf "(For (init: %s) (test: %s) (update: %s) (body: %s))"
+      (string_of_init_maybe obj.init)
+      (string_of_expression_maybe obj.test)
+      (string_of_expression_maybe obj.update)
+      (string_of_statement obj.body)
+  | ForIn obj ->
+    Printf.sprintf "(ForIn (left: %s) (right: %s) (body: %s) (each: %s))"
+      (string_of_forin_left obj.left)
+      (string_of_expression obj.right)
+      (string_of_statement obj.body)
+      (string_of_bool obj.each)
+  | ForOf obj ->
+    Printf.sprintf "(ForOf (left: %s) (right: %s) (body: %s) (each: %s))"
+      (string_of_forof_left obj.left)
+      (string_of_expression obj.right)
+      (string_of_statement obj.body)
+      (string_of_bool obj.async)
   | FunctionDeclaration fn ->
     Printf.sprintf "(FunctionDeclaration %s)"
       (string_of_function fn)
-  | If _ -> (todo "If")
+  | If obj ->
+    Printf.sprintf "(If (test: %s), (consequent: %s), (alternate: %s))"
+      (string_of_expression obj.test)
+      (string_of_statement obj.consequent)
+      (string_of_statment_maybe obj.alternate)
   | ImportDeclaration obj ->
     Printf.sprintf "(ImportDeclaration %s, (default: %s), (source: \"%s\"))"
       (string_of_specifier obj.specifiers)
@@ -114,8 +162,14 @@ and string_of_statement stmt : string =
     Printf.sprintf "(VariableDeclaration %s, %s)"
       (string_of_kind obj.kind)
       (string_of_declarations obj.declarations)
-  | While _ -> (todo "While")
-  | With _ -> (todo "With")
+  | While obj ->
+    Printf.sprintf "While (test: %s) (body: %s)"
+      (string_of_expression obj.test)
+      (string_of_statement obj.body)
+  | With obj ->
+    Printf.sprintf "With (_object: %s) (body: %s)"
+      (string_of_expression obj._object)
+      (string_of_statement obj.body)
 
 and string_of_expression expr : string =
   let open E in
@@ -331,6 +385,11 @@ and string_of_expression_or_spread expr_or_spread : string =
     let obj = strip_location spread in
     "..." ^ (string_of_expression obj.argument)
 
+and string_of_stringliteral_maybe str_maybe : string =
+  match str_maybe with
+  | Some str -> string_of_stringliteral str
+  | None -> "∅"
+
 and string_of_stringliteral str : string =
   let name = strip_location str in
   name.value
@@ -350,6 +409,11 @@ and string_of_literal obj : string =
   | Null -> "NULL"
   | Number n -> string_of_float n
   | RegExp obj -> Printf.sprintf "/%s/" obj.pattern
+
+and string_of_statment_maybe statement_maybe : string =
+  match statement_maybe with
+  | Some stmt -> string_of_statement stmt
+  | None -> "∅"
 
 and string_of_expression_maybe expression_maybe : string =
   match expression_maybe with
@@ -454,7 +518,7 @@ and string_of_property prop : string =
     match key with
     | Literal l -> l
                    |> strip_location
-                   |>  string_of_literal
+                   |> string_of_literal
     | Identifier id -> string_of_identifier id
     | PrivateName _ -> (todo "PrivateName")
     | Computed expr -> string_of_expression expr
@@ -469,3 +533,58 @@ and string_of_property prop : string =
   | Method _ -> (todo "Method")
   | Get _ -> (todo "Get")
   | Set _ -> (todo "Set")
+
+and string_of_init_maybe init_maybe : string =
+  match init_maybe with
+  | Some init -> string_of_init init
+  | None -> "∅"
+
+and string_of_init init : string =
+  let open S.For in
+  match init with
+  | InitDeclaration (_loc, obj) -> string_of_variable_declaration obj
+  | InitExpression expr -> string_of_expression expr
+
+(* @TODO:
+ * This one is a bit weird since we print out the name of the statement *)
+and string_of_variable_declaration obj : string =
+  let string_of_declarations = listify string_of_declaration in
+  Printf.sprintf "(VariableDeclaration %s, %s)"
+    (string_of_kind obj.kind)
+    (string_of_declarations obj.declarations)
+
+and string_of_forin_left left : string =
+  let open S.ForIn in
+  match left with
+  | LeftDeclaration (_loc, obj) -> string_of_variable_declaration obj
+  | LeftPattern pattern -> string_of_pattern pattern
+
+and string_of_forof_left left : string =
+  let open S.ForOf in
+  match left with
+  | LeftDeclaration (_loc, obj) -> string_of_variable_declaration obj
+  | LeftPattern pattern -> string_of_pattern pattern
+
+and string_of_export_declaration dec : string =
+  let open S.ExportDefaultDeclaration in
+  match dec with
+  | Declaration stmt -> string_of_statement stmt
+  | Expression expr -> string_of_expression expr
+
+and string_of_named_export_specifier_maybe specifier_maybe : string =
+  match specifier_maybe with
+  | Some specifier -> string_of_named_export_specifier specifier
+  | None -> "∅"
+
+and string_of_named_export_specifier specifier : string =
+  let string_of_export_specifiers = listify string_of_export_specifier in
+  match specifier with
+  | ExportSpecifiers obj -> string_of_export_specifiers obj
+  | ExportBatchSpecifier (_loc, id) -> string_of_identifier_maybe id
+
+and string_of_export_specifier obj : string =
+  let open S.ExportNamedDeclaration.ExportSpecifier in
+  let obj' = strip_location obj in
+  Printf.sprintf "ExportSpecifier (local: %s) (exported %s)"
+    (string_of_identifier obj'.local)
+    (string_of_identifier_maybe obj'.exported)
