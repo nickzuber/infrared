@@ -45,4 +45,4 @@ let read_file (file : string) : string =
   let str = Bytes.create len in
   really_input ic str 0 len;
   close_in ic;
-  str
+  Bytes.to_string str

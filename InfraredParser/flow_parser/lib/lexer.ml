@@ -3,7 +3,7 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *)
+*)
 
 
 open Token
@@ -26,57 +26,60 @@ let octnumber = [%sedlex.regexp? '0', ('O' | 'o'), Plus ('0'..'7')]
 let legacyoctnumber = [%sedlex.regexp? '0', Plus ('0'..'7')]
 let hexnumber = [%sedlex.regexp? '0', ('X' | 'x'), Plus hex_digit]
 let scinumber = [%sedlex.regexp?
-  ((decintlit, Opt ('.', Star digit)) | ('.', Plus digit)),
-  ('e' | 'E'), Opt ('-' | '+'), Plus digit
+    ((decintlit, Opt ('.', Star digit)) | ('.', Plus digit)),
+                               ('e' | 'E'), Opt ('-' | '+'), Plus digit
 ]
 let wholenumber = [%sedlex.regexp? Plus digit, Opt '.']
 let floatnumber = [%sedlex.regexp? Star digit, '.', Plus digit]
 
+let uchars_to_ints uchars =
+  Array.map (Uchar.to_int) uchars
+
 (* 2-8 alphanumeric characters. I could match them directly, but this leads to
  * ~5k more lines of generated lexer
-let htmlentity = "quot" | "amp" | "apos" | "lt" | "gt" | "nbsp" | "iexcl"
-  | "cent" | "pound" | "curren" | "yen" | "brvbar" | "sect" | "uml" | "copy"
-  | "ordf" | "laquo" | "not" | "shy" | "reg" | "macr" | "deg" | "plusmn"
-  | "sup2" | "sup3" | "acute" | "micro" | "para" | "middot" | "cedil" | "sup1"
-  | "ordm" | "raquo" | "frac14" | "frac12" | "frac34" | "iquest" | "Agrave"
-  | "Aacute" | "Acirc" | "Atilde" | "Auml" | "Aring" | "AElig" | "Ccedil"
-  | "Egrave" | "Eacute" | "Ecirc" | "Euml" | "Igrave" | "Iacute" | "Icirc"
-  | "Iuml" | "ETH" | "Ntilde" | "Ograve" | "Oacute" | "Ocirc" | "Otilde"
-  | "Ouml" | "times" | "Oslash" | "Ugrave" | "Uacute" | "Ucirc" | "Uuml"
-  | "Yacute" | "THORN" | "szlig" | "agrave" | "aacute" | "acirc" | "atilde"
-  | "auml" | "aring" | "aelig" | "ccedil" | "egrave" | "eacute" | "ecirc"
-  | "euml" | "igrave" | "iacute" | "icirc" | "iuml" | "eth" | "ntilde"
-  | "ograve" | "oacute" | "ocirc" | "otilde" | "ouml" | "divide" | "oslash"
-  | "ugrave" | "uacute" | "ucirc" | "uuml" | "yacute" | "thorn" | "yuml"
-  | "OElig" | "oelig" | "Scaron" | "scaron" | "Yuml" | "fnof" | "circ" | "tilde"
-  | "Alpha" | "Beta" | "Gamma" | "Delta" | "Epsilon" | "Zeta" | "Eta" | "Theta"
-  | "Iota" | "Kappa" | "Lambda" | "Mu" | "Nu" | "Xi" | "Omicron" | "Pi" | "Rho"
-  | "Sigma" | "Tau" | "Upsilon" | "Phi" | "Chi" | "Psi" | "Omega" | "alpha"
-  | "beta" | "gamma" | "delta" | "epsilon" | "zeta" | "eta" | "theta" | "iota"
-  | "kappa" | "lambda" | "mu" | "nu" | "xi" | "omicron" | "pi" | "rho"
-  | "sigmaf" | "sigma" | "tau" | "upsilon" | "phi" | "chi" | "psi" | "omega"
-  | "thetasym" | "upsih" | "piv" | "ensp" | "emsp" | "thinsp" | "zwnj" | "zwj"
-  | "lrm" | "rlm" | "ndash" | "mdash" | "lsquo" | "rsquo" | "sbquo" | "ldquo"
-  | "rdquo" | "bdquo" | "dagger" | "Dagger" | "bull" | "hellip" | "permil"
-  | "prime" | "Prime" | "lsaquo" | "rsaquo" | "oline" | "frasl" | "euro"
-  | "image" | "weierp" | "real" | "trade" | "alefsym" | "larr" | "uarr" | "rarr"
-  | "darr" | "harr" | "crarr" | "lArr" | "uArr" | "rArr" | "dArr" | "hArr"
-  | "forall" | "part" | "exist" | "empty" | "nabla" | "isin" | "notin" | "ni"
-  | "prod" | "sum" | "minus" | "lowast" | "radic" | "prop" | "infin" | "ang"
-  | "and" | "or" | "cap" | "cup" | "'int'" | "there4" | "sim" | "cong" | "asymp"
-  | "ne" | "equiv" | "le" | "ge" | "sub" | "sup" | "nsub" | "sube" | "supe"
-  | "oplus" | "otimes" | "perp" | "sdot" | "lceil" | "rceil" | "lfloor"
-  | "rfloor" | "lang" | "rang" | "loz" | "spades" | "clubs" | "hearts" | "diams"
+   let htmlentity = "quot" | "amp" | "apos" | "lt" | "gt" | "nbsp" | "iexcl"
+   | "cent" | "pound" | "curren" | "yen" | "brvbar" | "sect" | "uml" | "copy"
+   | "ordf" | "laquo" | "not" | "shy" | "reg" | "macr" | "deg" | "plusmn"
+   | "sup2" | "sup3" | "acute" | "micro" | "para" | "middot" | "cedil" | "sup1"
+   | "ordm" | "raquo" | "frac14" | "frac12" | "frac34" | "iquest" | "Agrave"
+   | "Aacute" | "Acirc" | "Atilde" | "Auml" | "Aring" | "AElig" | "Ccedil"
+   | "Egrave" | "Eacute" | "Ecirc" | "Euml" | "Igrave" | "Iacute" | "Icirc"
+   | "Iuml" | "ETH" | "Ntilde" | "Ograve" | "Oacute" | "Ocirc" | "Otilde"
+   | "Ouml" | "times" | "Oslash" | "Ugrave" | "Uacute" | "Ucirc" | "Uuml"
+   | "Yacute" | "THORN" | "szlig" | "agrave" | "aacute" | "acirc" | "atilde"
+   | "auml" | "aring" | "aelig" | "ccedil" | "egrave" | "eacute" | "ecirc"
+   | "euml" | "igrave" | "iacute" | "icirc" | "iuml" | "eth" | "ntilde"
+   | "ograve" | "oacute" | "ocirc" | "otilde" | "ouml" | "divide" | "oslash"
+   | "ugrave" | "uacute" | "ucirc" | "uuml" | "yacute" | "thorn" | "yuml"
+   | "OElig" | "oelig" | "Scaron" | "scaron" | "Yuml" | "fnof" | "circ" | "tilde"
+   | "Alpha" | "Beta" | "Gamma" | "Delta" | "Epsilon" | "Zeta" | "Eta" | "Theta"
+   | "Iota" | "Kappa" | "Lambda" | "Mu" | "Nu" | "Xi" | "Omicron" | "Pi" | "Rho"
+   | "Sigma" | "Tau" | "Upsilon" | "Phi" | "Chi" | "Psi" | "Omega" | "alpha"
+   | "beta" | "gamma" | "delta" | "epsilon" | "zeta" | "eta" | "theta" | "iota"
+   | "kappa" | "lambda" | "mu" | "nu" | "xi" | "omicron" | "pi" | "rho"
+   | "sigmaf" | "sigma" | "tau" | "upsilon" | "phi" | "chi" | "psi" | "omega"
+   | "thetasym" | "upsih" | "piv" | "ensp" | "emsp" | "thinsp" | "zwnj" | "zwj"
+   | "lrm" | "rlm" | "ndash" | "mdash" | "lsquo" | "rsquo" | "sbquo" | "ldquo"
+   | "rdquo" | "bdquo" | "dagger" | "Dagger" | "bull" | "hellip" | "permil"
+   | "prime" | "Prime" | "lsaquo" | "rsaquo" | "oline" | "frasl" | "euro"
+   | "image" | "weierp" | "real" | "trade" | "alefsym" | "larr" | "uarr" | "rarr"
+   | "darr" | "harr" | "crarr" | "lArr" | "uArr" | "rArr" | "dArr" | "hArr"
+   | "forall" | "part" | "exist" | "empty" | "nabla" | "isin" | "notin" | "ni"
+   | "prod" | "sum" | "minus" | "lowast" | "radic" | "prop" | "infin" | "ang"
+   | "and" | "or" | "cap" | "cup" | "'int'" | "there4" | "sim" | "cong" | "asymp"
+   | "ne" | "equiv" | "le" | "ge" | "sub" | "sup" | "nsub" | "sube" | "supe"
+   | "oplus" | "otimes" | "perp" | "sdot" | "lceil" | "rceil" | "lfloor"
+   | "rfloor" | "lang" | "rang" | "loz" | "spades" | "clubs" | "hearts" | "diams"
 *)
 let htmlentity = [%sedlex.regexp?
-  alphanumeric, alphanumeric, Opt alphanumeric, Opt alphanumeric,
-  Opt alphanumeric, Opt alphanumeric, Opt alphanumeric, Opt alphanumeric
+    alphanumeric, alphanumeric, Opt alphanumeric, Opt alphanumeric,
+                                Opt alphanumeric, Opt alphanumeric, Opt alphanumeric, Opt alphanumeric
 ]
 
 (* http://www.ecma-international.org/ecma-262/6.0/#table-32 *)
 let whitespace = [%sedlex.regexp?
-  0x0009 | 0x000B | 0x000C | 0x0020 | 0x00A0 | 0xfeff |
-  0x1680 | 0x180e | 0x2000 .. 0x200a | 0x202f | 0x205f | 0x3000
+    0x0009 | 0x000B | 0x000C | 0x0020 | 0x00A0 | 0xfeff |
+                                0x1680 | 0x180e | 0x2000 .. 0x200a | 0x202f | 0x205f | 0x3000
 ]
 
 (* minus sign in front of negative numbers
@@ -90,22 +93,22 @@ let unicode_escape = [%sedlex.regexp? "\\u", hex_quad]
 let codepoint_escape = [%sedlex.regexp? "\\u{", Plus hex_digit, '}']
 let js_id_start = [%sedlex.regexp? '$' | '_' | id_start | unicode_escape | codepoint_escape]
 let js_id_continue = [%sedlex.regexp?
-  '$' | '_' | 0x200C | 0x200D | id_continue | unicode_escape | codepoint_escape
+    '$' | '_' | 0x200C | 0x200D | id_continue | unicode_escape | codepoint_escape
 ]
 
 let loc_of_offsets env start_offset end_offset =
   { Loc.
     source = Lex_env.source env;
     start = { Loc.
-      line = Lex_env.line env;
-      column = start_offset - Lex_env.bol_offset env;
-      offset = start_offset;
-    };
+              line = Lex_env.line env;
+              column = start_offset - Lex_env.bol_offset env;
+              offset = start_offset;
+            };
     _end = { Loc.
-      line = Lex_env.line env;
-      column = end_offset - Lex_env.bol_offset env;
-      offset = end_offset;
-    }
+             line = Lex_env.line env;
+             column = end_offset - Lex_env.bol_offset env;
+             offset = end_offset;
+           }
   }
 
 let loc_of_lexbuf env (lexbuf: Sedlexing.lexbuf) =
@@ -120,11 +123,11 @@ let loc_of_curr env (lexbuf: Sedlexing.lexbuf) =
 let get_result_and_clear_state (env, lex_token) =
   let env, state = get_and_clear_state env in
   let lex_loc = match lex_token with
-  | T_STRING (loc, _, _, _) -> loc
-  | T_JSX_TEXT (loc, _, _) -> loc
-  | T_TEMPLATE_PART (loc, _, _) -> loc
-  | T_REGEXP (loc, _, _) -> loc
-  | _ -> loc_of_lexbuf env env.lex_lb
+    | T_STRING (loc, _, _, _) -> loc
+    | T_JSX_TEXT (loc, _, _) -> loc
+    | T_TEMPLATE_PART (loc, _, _) -> loc
+    | T_REGEXP (loc, _, _) -> loc
+    | _ -> loc_of_lexbuf env env.lex_lb
   in
   env, {
     Lex_result.lex_token;
@@ -193,8 +196,8 @@ end = struct
 
   let parse_exponent f =
     let todo_str = f.todo
-      |> List.map Char.escaped
-      |> String.concat "" in
+                   |> List.map Char.escaped
+                   |> String.concat "" in
     let exponent =
       try int_of_string todo_str
       with Failure _ -> raise No_good in
@@ -206,33 +209,33 @@ end = struct
     (* _ is just ignored *)
     | '_'::_ -> parse_body (eat f)
     | '.'::_ ->
-        if f.decimal_exponent = None
-        then parse_body { (eat f) with decimal_exponent = Some 0 }
-        else raise No_good
+      if f.decimal_exponent = None
+      then parse_body { (eat f) with decimal_exponent = Some 0 }
+      else raise No_good
     | ('p' | 'P')::_ ->
-        parse_exponent (eat f)
+      parse_exponent (eat f)
     | c::_ ->
-        let ref_char_code =
-          if c >= '0' && c <= '9'
-          then Char.code '0'
-          else if c >= 'A' && c <= 'F'
-          then Char.code 'A' - 10
-          else if c >= 'a' && c <= 'f'
-          then Char.code 'a' - 10
-          else raise No_good in
-        let value = (Char.code c) - ref_char_code in
-        let decimal_exponent = match f.decimal_exponent with
+      let ref_char_code =
+        if c >= '0' && c <= '9'
+        then Char.code '0'
+        else if c >= 'A' && c <= 'F'
+        then Char.code 'A' - 10
+        else if c >= 'a' && c <= 'f'
+        then Char.code 'a' - 10
+        else raise No_good in
+      let value = (Char.code c) - ref_char_code in
+      let decimal_exponent = match f.decimal_exponent with
         | None -> None
         | Some e -> Some (e - 4) in
-        let mantissa = (f.mantissa lsl 4) + value in
-        parse_body { (eat f) with decimal_exponent; mantissa; }
+      let mantissa = (f.mantissa lsl 4) + value in
+      parse_body { (eat f) with decimal_exponent; mantissa; }
 
   let float_of_t f =
     assert (f.todo = []);
     let ret = float_of_int f.mantissa in
     let exponent = match f.decimal_exponent with
-    | None -> f.exponent
-    | Some decimal_exponent -> f.exponent + decimal_exponent in
+      | None -> f.exponent
+      | Some decimal_exponent -> f.exponent + decimal_exponent in
     let ret =
       if exponent = 0
       then ret
@@ -242,23 +245,23 @@ end = struct
     else ret
 
   let float_of_string str =
-    try Pervasives.float_of_string str
+    try Stdlib.float_of_string str
     with e when Sys.win32 ->
-      try
-        start str
-          |> parse_sign
-          |> parse_hex_symbol
-          |> parse_body
-          |> float_of_t
-      with No_good -> raise e
+    try
+      start str
+      |> parse_sign
+      |> parse_hex_symbol
+      |> parse_body
+      |> float_of_t
+    with No_good -> raise e
 end
 
 let save_comment
-  (env: Lex_env.t)
-  (start: Loc.t) (_end: Loc.t)
-  (buf: Buffer.t)
-  (multiline: bool)
-: Lex_env.t =
+    (env: Lex_env.t)
+    (start: Loc.t) (_end: Loc.t)
+    (buf: Buffer.t)
+    (multiline: bool)
+  : Lex_env.t =
   let open Ast.Comment in
   let loc = Loc.btwn start _end in
   let s = Buffer.contents buf in
@@ -273,19 +276,19 @@ let mk_num_singleton number_type raw =
   in
   (* convert singleton number type into a float *)
   let value = match number_type with
-  | LEGACY_OCTAL ->
-    begin try Int64.to_float (Int64.of_string ("0o"^num))
-    with Failure _ -> failwith ("Invalid legacy octal "^num)
-    end
-  | BINARY
-  | OCTAL ->
-    begin try Int64.to_float (Int64.of_string num)
-    with Failure _ -> failwith ("Invalid binary/octal "^num)
-    end
-  | NORMAL ->
-    begin try FloatOfString.float_of_string num
-    with Failure _ -> failwith ("Invalid number "^num)
-    end
+    | LEGACY_OCTAL ->
+      begin try Int64.to_float (Int64.of_string ("0o"^num))
+        with Failure _ -> failwith ("Invalid legacy octal "^num)
+      end
+    | BINARY
+    | OCTAL ->
+      begin try Int64.to_float (Int64.of_string num)
+        with Failure _ -> failwith ("Invalid binary/octal "^num)
+      end
+    | NORMAL ->
+      begin try FloatOfString.float_of_string num
+        with Failure _ -> failwith ("Invalid number "^num)
+      end
   in
   let value = if neg then ~-.value else value in
   T_NUMBER_SINGLETON_TYPE { kind = number_type; value; raw }
@@ -397,10 +400,10 @@ let rec line_comment env buf lexbuf =
     let env = new_line env lexbuf in
     let len = Sedlexing.lexeme_length lexbuf in
     let _end = { Loc.
-      line;
-      column = column - len;
-      offset = offset - len;
-    } in
+                 line;
+                 column = column - len;
+                 offset = offset - len;
+               } in
     env, { Loc.source; start; _end; }
 
   | any ->
@@ -422,7 +425,7 @@ let string_escape env lexbuf =
   | 'x', hex_digit, hex_digit ->
     let str = lexeme lexbuf in
     let code = int_of_string ("0"^str) in (* 0xAB *)
-    env, str, [|code|], false
+    env, str, [|Uchar.of_int code|], false
 
   | '0'..'7', '0'..'7', '0'..'7' ->
     let str = lexeme lexbuf in
@@ -430,34 +433,34 @@ let string_escape env lexbuf =
     (* If the 3 character octal code is larger than 256
      * then it is parsed as a 2 character octal code *)
     if code < 256 then
-      env, str, [|code|], true
+      env, str, [|Uchar.of_int code|], true
     else
       let remainder = code land 7 in
       let code = code lsr 3 in
-      env, str, [|code; Char.code '0' + remainder|], true
+      env, str, [|Uchar.of_int code; Uchar.of_int (Char.code '0' + remainder)|], true
 
   | '0'..'7', '0'..'7' ->
     let str = lexeme lexbuf in
     let code = int_of_string ("0o"^str) in (* 0o01 *)
-    env, str, [|code|], true
+    env, str, [|Uchar.of_int code|], true
 
-  | '0' -> env, "0", [|0x0|], false
-  | 'b' -> env, "b", [|0x8|], false
-  | 'f' -> env, "f", [|0xC|], false
-  | 'n' -> env, "n", [|0xA|], false
-  | 'r' -> env, "r", [|0xD|], false
-  | 't' -> env, "t", [|0x9|], false
-  | 'v' -> env, "v", [|0xB|], false
+  | '0' -> env, "0", [|Uchar.of_int 0x0|], false
+  | 'b' -> env, "b", [|Uchar.of_int 0x8|], false
+  | 'f' -> env, "f", [|Uchar.of_int 0xC|], false
+  | 'n' -> env, "n", [|Uchar.of_int 0xA|], false
+  | 'r' -> env, "r", [|Uchar.of_int 0xD|], false
+  | 't' -> env, "t", [|Uchar.of_int 0x9|], false
+  | 'v' -> env, "v", [|Uchar.of_int 0xB|], false
   | '0'..'7' ->
     let str = lexeme lexbuf in
     let code = int_of_string ("0o"^str) in (* 0o1 *)
-    env, str, [|code|], true
+    env, str, [|Uchar.of_int code|], true
 
   | 'u', hex_quad ->
     let str = lexeme lexbuf in
     let hex = String.sub str 1 (String.length str - 1) in
     let code = int_of_string ("0x"^hex) in
-    env, str, [|code|], false
+    env, str, [|Uchar.of_int code|], false
 
   | "u{", Plus hex_digit, '}' ->
     let str = lexeme lexbuf in
@@ -468,7 +471,7 @@ let string_escape env lexbuf =
       then illegal env (loc_of_lexbuf env lexbuf)
       else env
     in
-    env, str, [|code|], false
+    env, str, [|Uchar.of_int code|], false
 
   | 'u' | 'x' | '0'..'7' ->
     let str = lexeme lexbuf in
@@ -508,7 +511,7 @@ let rec string_quote env q buf raw octal lexbuf =
     let env, str, codes, octal' = string_escape env lexbuf in
     let octal = octal' || octal in
     Buffer.add_string raw str;
-    Array.iter (Wtf8.add_wtf_8 buf) codes;
+    Array.iter (Wtf8.add_wtf_8 buf) (uchars_to_ints codes);
     string_quote env q buf raw octal lexbuf
 
   | '\n' | eof ->
@@ -547,7 +550,7 @@ let rec template_part env start cooked raw literal lexbuf =
     let env, str, codes, _ = string_escape env lexbuf in
     Buffer.add_string raw str;
     Buffer.add_string literal str;
-    Array.iter (Wtf8.add_wtf_8 cooked) codes;
+    Array.iter (Wtf8.add_wtf_8 cooked) (uchars_to_ints codes);
     template_part env start cooked raw literal lexbuf
 
   (* ECMAScript 6th Syntax, 11.8.6.1 Static Semantics: TV's and TRV's
@@ -671,22 +674,22 @@ let token (env: Lex_env.t) lexbuf : result =
     let env, loc, is_tail =
       template_part env start cooked raw literal lexbuf in
     Token (env, T_TEMPLATE_PART (
-      loc,
-      {
-        cooked = Buffer.contents cooked;
-        raw = Buffer.contents raw;
-        literal = Buffer.contents literal;
-      },
-      is_tail
-    ))
+        loc,
+        {
+          cooked = Buffer.contents cooked;
+          raw = Buffer.contents raw;
+          literal = Buffer.contents literal;
+        },
+        is_tail
+      ))
 
   | binnumber, (letter | '2'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | binnumber ->
-      Token (env, T_NUMBER { kind = BINARY; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | binnumber ->
+          Token (env, T_NUMBER { kind = BINARY; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | binnumber ->
     Token (env, T_NUMBER { kind = BINARY; raw = lexeme lexbuf })
@@ -694,9 +697,9 @@ let token (env: Lex_env.t) lexbuf : result =
   | octnumber, (letter | '8'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | octnumber -> Token (env, T_NUMBER { kind = OCTAL; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | octnumber -> Token (env, T_NUMBER { kind = OCTAL; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | octnumber ->
     Token (env, T_NUMBER { kind = OCTAL; raw = lexeme lexbuf })
@@ -704,9 +707,9 @@ let token (env: Lex_env.t) lexbuf : result =
   | legacyoctnumber, (letter | '8'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | legacyoctnumber -> Token (env, T_NUMBER { kind = LEGACY_OCTAL; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | legacyoctnumber -> Token (env, T_NUMBER { kind = LEGACY_OCTAL; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | legacyoctnumber ->
     Token (env, T_NUMBER { kind = LEGACY_OCTAL; raw = lexeme lexbuf })
@@ -714,9 +717,9 @@ let token (env: Lex_env.t) lexbuf : result =
   | hexnumber, non_hex_letter, Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | hexnumber -> Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | hexnumber -> Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | hexnumber ->
     Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
@@ -724,9 +727,9 @@ let token (env: Lex_env.t) lexbuf : result =
   | scinumber, word ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | scinumber -> Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | scinumber -> Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | scinumber ->
     Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
@@ -734,10 +737,10 @@ let token (env: Lex_env.t) lexbuf : result =
   | (wholenumber | floatnumber), word ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | wholenumber | floatnumber ->
-      Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
-    | _ -> failwith "unreachable"
-    )
+        | wholenumber | floatnumber ->
+          Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
+        | _ -> failwith "unreachable"
+      )
 
   | wholenumber | floatnumber ->
     Token (env, T_NUMBER { kind = NORMAL; raw = lexeme lexbuf })
@@ -825,8 +828,8 @@ let token (env: Lex_env.t) lexbuf : result =
   | "?.", digit ->
     Sedlexing.rollback lexbuf;
     begin match%sedlex lexbuf with
-    | "?" -> Token (env, T_PLING)
-    | _ -> failwith "expected ?"
+      | "?" -> Token (env, T_PLING)
+      | _ -> failwith "expected ?"
     end
 
   | "?." -> Token (env, T_PLING_PERIOD)
@@ -1006,15 +1009,15 @@ let rec jsx_text env mode buf raw lexbuf =
   | "'" | '"' | '<' | '{' ->
     let c = lexeme lexbuf in
     begin match mode, c with
-    | JSX_SINGLE_QUOTED_TEXT, "'"
-    | JSX_DOUBLE_QUOTED_TEXT, "\"" ->
+      | JSX_SINGLE_QUOTED_TEXT, "'"
+      | JSX_DOUBLE_QUOTED_TEXT, "\"" ->
         env, loc_of_lexbuf env lexbuf
-    | JSX_CHILD_TEXT, ("<" | "{") ->
+      | JSX_CHILD_TEXT, ("<" | "{") ->
         (* Don't actually want to consume these guys
          * yet...they're not part of the JSX text *)
         Sedlexing.rollback lexbuf;
         env, loc_of_lexbuf env lexbuf
-    | _ ->
+      | _ ->
         Buffer.add_string raw c;
         Buffer.add_string buf c;
         jsx_text env mode buf raw lexbuf
@@ -1052,263 +1055,263 @@ let rec jsx_text env mode buf raw lexbuf =
     let entity = String.sub s 1 (String.length s - 2) in
     Buffer.add_string raw s;
     let code = match entity with
-    | "quot" -> Some 0x0022
-    | "amp" -> Some 0x0026
-    | "apos" -> Some 0x0027
-    | "lt" -> Some 0x003C
-    | "gt" -> Some 0x003E
-    | "nbsp" -> Some 0x00A0
-    | "iexcl" -> Some 0x00A1
-    | "cent" -> Some 0x00A2
-    | "pound" -> Some 0x00A3
-    | "curren" -> Some 0x00A4
-    | "yen" -> Some 0x00A5
-    | "brvbar" -> Some 0x00A6
-    | "sect" -> Some 0x00A7
-    | "uml" -> Some 0x00A8
-    | "copy" -> Some 0x00A9
-    | "ordf" -> Some 0x00AA
-    | "laquo" -> Some 0x00AB
-    | "not" -> Some 0x00AC
-    | "shy" -> Some 0x00AD
-    | "reg" -> Some 0x00AE
-    | "macr" -> Some 0x00AF
-    | "deg" -> Some 0x00B0
-    | "plusmn" -> Some 0x00B1
-    | "sup2" -> Some 0x00B2
-    | "sup3" -> Some 0x00B3
-    | "acute" -> Some 0x00B4
-    | "micro" -> Some 0x00B5
-    | "para" -> Some 0x00B6
-    | "middot" -> Some 0x00B7
-    | "cedil" -> Some 0x00B8
-    | "sup1" -> Some 0x00B9
-    | "ordm" -> Some 0x00BA
-    | "raquo" -> Some 0x00BB
-    | "frac14" -> Some 0x00BC
-    | "frac12" -> Some 0x00BD
-    | "frac34" -> Some 0x00BE
-    | "iquest" -> Some 0x00BF
-    | "Agrave" -> Some 0x00C0
-    | "Aacute" -> Some 0x00C1
-    | "Acirc" -> Some 0x00C2
-    | "Atilde" -> Some 0x00C3
-    | "Auml" -> Some 0x00C4
-    | "Aring" -> Some 0x00C5
-    | "AElig" -> Some 0x00C6
-    | "Ccedil" -> Some 0x00C7
-    | "Egrave" -> Some 0x00C8
-    | "Eacute" -> Some 0x00C9
-    | "Ecirc" -> Some 0x00CA
-    | "Euml" -> Some 0x00CB
-    | "Igrave" -> Some 0x00CC
-    | "Iacute" -> Some 0x00CD
-    | "Icirc" -> Some 0x00CE
-    | "Iuml" -> Some 0x00CF
-    | "ETH" -> Some 0x00D0
-    | "Ntilde" -> Some 0x00D1
-    | "Ograve" -> Some 0x00D2
-    | "Oacute" -> Some 0x00D3
-    | "Ocirc" -> Some 0x00D4
-    | "Otilde" -> Some 0x00D5
-    | "Ouml" -> Some 0x00D6
-    | "times" -> Some 0x00D7
-    | "Oslash" -> Some 0x00D8
-    | "Ugrave" -> Some 0x00D9
-    | "Uacute" -> Some 0x00DA
-    | "Ucirc" -> Some 0x00DB
-    | "Uuml" -> Some 0x00DC
-    | "Yacute" -> Some 0x00DD
-    | "THORN" -> Some 0x00DE
-    | "szlig" -> Some 0x00DF
-    | "agrave" -> Some 0x00E0
-    | "aacute" -> Some 0x00E1
-    | "acirc" -> Some 0x00E2
-    | "atilde" -> Some 0x00E3
-    | "auml" -> Some 0x00E4
-    | "aring" -> Some 0x00E5
-    | "aelig" -> Some 0x00E6
-    | "ccedil" -> Some 0x00E7
-    | "egrave" -> Some 0x00E8
-    | "eacute" -> Some 0x00E9
-    | "ecirc" -> Some 0x00EA
-    | "euml" -> Some 0x00EB
-    | "igrave" -> Some 0x00EC
-    | "iacute" -> Some 0x00ED
-    | "icirc" -> Some 0x00EE
-    | "iuml" -> Some 0x00EF
-    | "eth" -> Some 0x00F0
-    | "ntilde" -> Some 0x00F1
-    | "ograve" -> Some 0x00F2
-    | "oacute" -> Some 0x00F3
-    | "ocirc" -> Some 0x00F4
-    | "otilde" -> Some 0x00F5
-    | "ouml" -> Some 0x00F6
-    | "divide" -> Some 0x00F7
-    | "oslash" -> Some 0x00F8
-    | "ugrave" -> Some 0x00F9
-    | "uacute" -> Some 0x00FA
-    | "ucirc" -> Some 0x00FB
-    | "uuml" -> Some 0x00FC
-    | "yacute" -> Some 0x00FD
-    | "thorn" -> Some 0x00FE
-    | "yuml" -> Some 0x00FF
-    | "OElig" -> Some 0x0152
-    | "oelig" -> Some 0x0153
-    | "Scaron" -> Some 0x0160
-    | "scaron" -> Some 0x0161
-    | "Yuml" -> Some 0x0178
-    | "fnof" -> Some 0x0192
-    | "circ" -> Some 0x02C6
-    | "tilde" -> Some 0x02DC
-    | "Alpha" -> Some 0x0391
-    | "Beta" -> Some 0x0392
-    | "Gamma" -> Some 0x0393
-    | "Delta" -> Some 0x0394
-    | "Epsilon" -> Some 0x0395
-    | "Zeta" -> Some 0x0396
-    | "Eta" -> Some 0x0397
-    | "Theta" -> Some 0x0398
-    | "Iota" -> Some 0x0399
-    | "Kappa" -> Some 0x039A
-    | "Lambda" -> Some 0x039B
-    | "Mu" -> Some 0x039C
-    | "Nu" -> Some 0x039D
-    | "Xi" -> Some 0x039E
-    | "Omicron" -> Some 0x039F
-    | "Pi" -> Some 0x03A0
-    | "Rho" -> Some 0x03A1
-    | "Sigma" -> Some 0x03A3
-    | "Tau" -> Some 0x03A4
-    | "Upsilon" -> Some 0x03A5
-    | "Phi" -> Some 0x03A6
-    | "Chi" -> Some 0x03A7
-    | "Psi" -> Some 0x03A8
-    | "Omega" -> Some 0x03A9
-    | "alpha" -> Some 0x03B1
-    | "beta" -> Some 0x03B2
-    | "gamma" -> Some 0x03B3
-    | "delta" -> Some 0x03B4
-    | "epsilon" -> Some 0x03B5
-    | "zeta" -> Some 0x03B6
-    | "eta" -> Some 0x03B7
-    | "theta" -> Some 0x03B8
-    | "iota" -> Some 0x03B9
-    | "kappa" -> Some 0x03BA
-    | "lambda" -> Some 0x03BB
-    | "mu" -> Some 0x03BC
-    | "nu" -> Some 0x03BD
-    | "xi" -> Some 0x03BE
-    | "omicron" -> Some 0x03BF
-    | "pi" -> Some 0x03C0
-    | "rho" -> Some 0x03C1
-    | "sigmaf" -> Some 0x03C2
-    | "sigma" -> Some 0x03C3
-    | "tau" -> Some 0x03C4
-    | "upsilon" -> Some 0x03C5
-    | "phi" -> Some 0x03C6
-    | "chi" -> Some 0x03C7
-    | "psi" -> Some 0x03C8
-    | "omega" -> Some 0x03C9
-    | "thetasym" -> Some 0x03D1
-    | "upsih" -> Some 0x03D2
-    | "piv" -> Some 0x03D6
-    | "ensp" -> Some 0x2002
-    | "emsp" -> Some 0x2003
-    | "thinsp" -> Some 0x2009
-    | "zwnj" -> Some 0x200C
-    | "zwj" -> Some 0x200D
-    | "lrm" -> Some 0x200E
-    | "rlm" -> Some 0x200F
-    | "ndash" -> Some 0x2013
-    | "mdash" -> Some 0x2014
-    | "lsquo" -> Some 0x2018
-    | "rsquo" -> Some 0x2019
-    | "sbquo" -> Some 0x201A
-    | "ldquo" -> Some 0x201C
-    | "rdquo" -> Some 0x201D
-    | "bdquo" -> Some 0x201E
-    | "dagger" -> Some 0x2020
-    | "Dagger" -> Some 0x2021
-    | "bull" -> Some 0x2022
-    | "hellip" -> Some 0x2026
-    | "permil" -> Some 0x2030
-    | "prime" -> Some 0x2032
-    | "Prime" -> Some 0x2033
-    | "lsaquo" -> Some 0x2039
-    | "rsaquo" -> Some 0x203A
-    | "oline" -> Some 0x203E
-    | "frasl" -> Some 0x2044
-    | "euro" -> Some 0x20AC
-    | "image" -> Some 0x2111
-    | "weierp" -> Some 0x2118
-    | "real" -> Some 0x211C
-    | "trade" -> Some 0x2122
-    | "alefsym" -> Some 0x2135
-    | "larr" -> Some 0x2190
-    | "uarr" -> Some 0x2191
-    | "rarr" -> Some 0x2192
-    | "darr" -> Some 0x2193
-    | "harr" -> Some 0x2194
-    | "crarr" -> Some 0x21B5
-    | "lArr" -> Some 0x21D0
-    | "uArr" -> Some 0x21D1
-    | "rArr" -> Some 0x21D2
-    | "dArr" -> Some 0x21D3
-    | "hArr" -> Some 0x21D4
-    | "forall" -> Some 0x2200
-    | "part" -> Some 0x2202
-    | "exist" -> Some 0x2203
-    | "empty" -> Some 0x2205
-    | "nabla" -> Some 0x2207
-    | "isin" -> Some 0x2208
-    | "notin" -> Some 0x2209
-    | "ni" -> Some 0x220B
-    | "prod" -> Some 0x220F
-    | "sum" -> Some 0x2211
-    | "minus" -> Some 0x2212
-    | "lowast" -> Some 0x2217
-    | "radic" -> Some 0x221A
-    | "prop" -> Some 0x221D
-    | "infin" -> Some 0x221E
-    | "ang" -> Some 0x2220
-    | "and" -> Some 0x2227
-    | "or" -> Some 0x2228
-    | "cap" -> Some 0x2229
-    | "cup" -> Some 0x222A
-    | "'int'" -> Some 0x222B
-    | "there4" -> Some 0x2234
-    | "sim" -> Some 0x223C
-    | "cong" -> Some 0x2245
-    | "asymp" -> Some 0x2248
-    | "ne" -> Some 0x2260
-    | "equiv" -> Some 0x2261
-    | "le" -> Some 0x2264
-    | "ge" -> Some 0x2265
-    | "sub" -> Some 0x2282
-    | "sup" -> Some 0x2283
-    | "nsub" -> Some 0x2284
-    | "sube" -> Some 0x2286
-    | "supe" -> Some 0x2287
-    | "oplus" -> Some 0x2295
-    | "otimes" -> Some 0x2297
-    | "perp" -> Some 0x22A5
-    | "sdot" -> Some 0x22C5
-    | "lceil" -> Some 0x2308
-    | "rceil" -> Some 0x2309
-    | "lfloor" -> Some 0x230A
-    | "rfloor" -> Some 0x230B
-    | "lang" -> Some 0x27E8 (* 0x2329 in HTML4 *)
-    | "rang" -> Some 0x27E9 (* 0x232A in HTML4 *)
-    | "loz" -> Some 0x25CA
-    | "spades" -> Some 0x2660
-    | "clubs" -> Some 0x2663
-    | "hearts" -> Some 0x2665
-    | "diams" -> Some 0x2666
-    | _ -> None in
+      | "quot" -> Some 0x0022
+      | "amp" -> Some 0x0026
+      | "apos" -> Some 0x0027
+      | "lt" -> Some 0x003C
+      | "gt" -> Some 0x003E
+      | "nbsp" -> Some 0x00A0
+      | "iexcl" -> Some 0x00A1
+      | "cent" -> Some 0x00A2
+      | "pound" -> Some 0x00A3
+      | "curren" -> Some 0x00A4
+      | "yen" -> Some 0x00A5
+      | "brvbar" -> Some 0x00A6
+      | "sect" -> Some 0x00A7
+      | "uml" -> Some 0x00A8
+      | "copy" -> Some 0x00A9
+      | "ordf" -> Some 0x00AA
+      | "laquo" -> Some 0x00AB
+      | "not" -> Some 0x00AC
+      | "shy" -> Some 0x00AD
+      | "reg" -> Some 0x00AE
+      | "macr" -> Some 0x00AF
+      | "deg" -> Some 0x00B0
+      | "plusmn" -> Some 0x00B1
+      | "sup2" -> Some 0x00B2
+      | "sup3" -> Some 0x00B3
+      | "acute" -> Some 0x00B4
+      | "micro" -> Some 0x00B5
+      | "para" -> Some 0x00B6
+      | "middot" -> Some 0x00B7
+      | "cedil" -> Some 0x00B8
+      | "sup1" -> Some 0x00B9
+      | "ordm" -> Some 0x00BA
+      | "raquo" -> Some 0x00BB
+      | "frac14" -> Some 0x00BC
+      | "frac12" -> Some 0x00BD
+      | "frac34" -> Some 0x00BE
+      | "iquest" -> Some 0x00BF
+      | "Agrave" -> Some 0x00C0
+      | "Aacute" -> Some 0x00C1
+      | "Acirc" -> Some 0x00C2
+      | "Atilde" -> Some 0x00C3
+      | "Auml" -> Some 0x00C4
+      | "Aring" -> Some 0x00C5
+      | "AElig" -> Some 0x00C6
+      | "Ccedil" -> Some 0x00C7
+      | "Egrave" -> Some 0x00C8
+      | "Eacute" -> Some 0x00C9
+      | "Ecirc" -> Some 0x00CA
+      | "Euml" -> Some 0x00CB
+      | "Igrave" -> Some 0x00CC
+      | "Iacute" -> Some 0x00CD
+      | "Icirc" -> Some 0x00CE
+      | "Iuml" -> Some 0x00CF
+      | "ETH" -> Some 0x00D0
+      | "Ntilde" -> Some 0x00D1
+      | "Ograve" -> Some 0x00D2
+      | "Oacute" -> Some 0x00D3
+      | "Ocirc" -> Some 0x00D4
+      | "Otilde" -> Some 0x00D5
+      | "Ouml" -> Some 0x00D6
+      | "times" -> Some 0x00D7
+      | "Oslash" -> Some 0x00D8
+      | "Ugrave" -> Some 0x00D9
+      | "Uacute" -> Some 0x00DA
+      | "Ucirc" -> Some 0x00DB
+      | "Uuml" -> Some 0x00DC
+      | "Yacute" -> Some 0x00DD
+      | "THORN" -> Some 0x00DE
+      | "szlig" -> Some 0x00DF
+      | "agrave" -> Some 0x00E0
+      | "aacute" -> Some 0x00E1
+      | "acirc" -> Some 0x00E2
+      | "atilde" -> Some 0x00E3
+      | "auml" -> Some 0x00E4
+      | "aring" -> Some 0x00E5
+      | "aelig" -> Some 0x00E6
+      | "ccedil" -> Some 0x00E7
+      | "egrave" -> Some 0x00E8
+      | "eacute" -> Some 0x00E9
+      | "ecirc" -> Some 0x00EA
+      | "euml" -> Some 0x00EB
+      | "igrave" -> Some 0x00EC
+      | "iacute" -> Some 0x00ED
+      | "icirc" -> Some 0x00EE
+      | "iuml" -> Some 0x00EF
+      | "eth" -> Some 0x00F0
+      | "ntilde" -> Some 0x00F1
+      | "ograve" -> Some 0x00F2
+      | "oacute" -> Some 0x00F3
+      | "ocirc" -> Some 0x00F4
+      | "otilde" -> Some 0x00F5
+      | "ouml" -> Some 0x00F6
+      | "divide" -> Some 0x00F7
+      | "oslash" -> Some 0x00F8
+      | "ugrave" -> Some 0x00F9
+      | "uacute" -> Some 0x00FA
+      | "ucirc" -> Some 0x00FB
+      | "uuml" -> Some 0x00FC
+      | "yacute" -> Some 0x00FD
+      | "thorn" -> Some 0x00FE
+      | "yuml" -> Some 0x00FF
+      | "OElig" -> Some 0x0152
+      | "oelig" -> Some 0x0153
+      | "Scaron" -> Some 0x0160
+      | "scaron" -> Some 0x0161
+      | "Yuml" -> Some 0x0178
+      | "fnof" -> Some 0x0192
+      | "circ" -> Some 0x02C6
+      | "tilde" -> Some 0x02DC
+      | "Alpha" -> Some 0x0391
+      | "Beta" -> Some 0x0392
+      | "Gamma" -> Some 0x0393
+      | "Delta" -> Some 0x0394
+      | "Epsilon" -> Some 0x0395
+      | "Zeta" -> Some 0x0396
+      | "Eta" -> Some 0x0397
+      | "Theta" -> Some 0x0398
+      | "Iota" -> Some 0x0399
+      | "Kappa" -> Some 0x039A
+      | "Lambda" -> Some 0x039B
+      | "Mu" -> Some 0x039C
+      | "Nu" -> Some 0x039D
+      | "Xi" -> Some 0x039E
+      | "Omicron" -> Some 0x039F
+      | "Pi" -> Some 0x03A0
+      | "Rho" -> Some 0x03A1
+      | "Sigma" -> Some 0x03A3
+      | "Tau" -> Some 0x03A4
+      | "Upsilon" -> Some 0x03A5
+      | "Phi" -> Some 0x03A6
+      | "Chi" -> Some 0x03A7
+      | "Psi" -> Some 0x03A8
+      | "Omega" -> Some 0x03A9
+      | "alpha" -> Some 0x03B1
+      | "beta" -> Some 0x03B2
+      | "gamma" -> Some 0x03B3
+      | "delta" -> Some 0x03B4
+      | "epsilon" -> Some 0x03B5
+      | "zeta" -> Some 0x03B6
+      | "eta" -> Some 0x03B7
+      | "theta" -> Some 0x03B8
+      | "iota" -> Some 0x03B9
+      | "kappa" -> Some 0x03BA
+      | "lambda" -> Some 0x03BB
+      | "mu" -> Some 0x03BC
+      | "nu" -> Some 0x03BD
+      | "xi" -> Some 0x03BE
+      | "omicron" -> Some 0x03BF
+      | "pi" -> Some 0x03C0
+      | "rho" -> Some 0x03C1
+      | "sigmaf" -> Some 0x03C2
+      | "sigma" -> Some 0x03C3
+      | "tau" -> Some 0x03C4
+      | "upsilon" -> Some 0x03C5
+      | "phi" -> Some 0x03C6
+      | "chi" -> Some 0x03C7
+      | "psi" -> Some 0x03C8
+      | "omega" -> Some 0x03C9
+      | "thetasym" -> Some 0x03D1
+      | "upsih" -> Some 0x03D2
+      | "piv" -> Some 0x03D6
+      | "ensp" -> Some 0x2002
+      | "emsp" -> Some 0x2003
+      | "thinsp" -> Some 0x2009
+      | "zwnj" -> Some 0x200C
+      | "zwj" -> Some 0x200D
+      | "lrm" -> Some 0x200E
+      | "rlm" -> Some 0x200F
+      | "ndash" -> Some 0x2013
+      | "mdash" -> Some 0x2014
+      | "lsquo" -> Some 0x2018
+      | "rsquo" -> Some 0x2019
+      | "sbquo" -> Some 0x201A
+      | "ldquo" -> Some 0x201C
+      | "rdquo" -> Some 0x201D
+      | "bdquo" -> Some 0x201E
+      | "dagger" -> Some 0x2020
+      | "Dagger" -> Some 0x2021
+      | "bull" -> Some 0x2022
+      | "hellip" -> Some 0x2026
+      | "permil" -> Some 0x2030
+      | "prime" -> Some 0x2032
+      | "Prime" -> Some 0x2033
+      | "lsaquo" -> Some 0x2039
+      | "rsaquo" -> Some 0x203A
+      | "oline" -> Some 0x203E
+      | "frasl" -> Some 0x2044
+      | "euro" -> Some 0x20AC
+      | "image" -> Some 0x2111
+      | "weierp" -> Some 0x2118
+      | "real" -> Some 0x211C
+      | "trade" -> Some 0x2122
+      | "alefsym" -> Some 0x2135
+      | "larr" -> Some 0x2190
+      | "uarr" -> Some 0x2191
+      | "rarr" -> Some 0x2192
+      | "darr" -> Some 0x2193
+      | "harr" -> Some 0x2194
+      | "crarr" -> Some 0x21B5
+      | "lArr" -> Some 0x21D0
+      | "uArr" -> Some 0x21D1
+      | "rArr" -> Some 0x21D2
+      | "dArr" -> Some 0x21D3
+      | "hArr" -> Some 0x21D4
+      | "forall" -> Some 0x2200
+      | "part" -> Some 0x2202
+      | "exist" -> Some 0x2203
+      | "empty" -> Some 0x2205
+      | "nabla" -> Some 0x2207
+      | "isin" -> Some 0x2208
+      | "notin" -> Some 0x2209
+      | "ni" -> Some 0x220B
+      | "prod" -> Some 0x220F
+      | "sum" -> Some 0x2211
+      | "minus" -> Some 0x2212
+      | "lowast" -> Some 0x2217
+      | "radic" -> Some 0x221A
+      | "prop" -> Some 0x221D
+      | "infin" -> Some 0x221E
+      | "ang" -> Some 0x2220
+      | "and" -> Some 0x2227
+      | "or" -> Some 0x2228
+      | "cap" -> Some 0x2229
+      | "cup" -> Some 0x222A
+      | "'int'" -> Some 0x222B
+      | "there4" -> Some 0x2234
+      | "sim" -> Some 0x223C
+      | "cong" -> Some 0x2245
+      | "asymp" -> Some 0x2248
+      | "ne" -> Some 0x2260
+      | "equiv" -> Some 0x2261
+      | "le" -> Some 0x2264
+      | "ge" -> Some 0x2265
+      | "sub" -> Some 0x2282
+      | "sup" -> Some 0x2283
+      | "nsub" -> Some 0x2284
+      | "sube" -> Some 0x2286
+      | "supe" -> Some 0x2287
+      | "oplus" -> Some 0x2295
+      | "otimes" -> Some 0x2297
+      | "perp" -> Some 0x22A5
+      | "sdot" -> Some 0x22C5
+      | "lceil" -> Some 0x2308
+      | "rceil" -> Some 0x2309
+      | "lfloor" -> Some 0x230A
+      | "rfloor" -> Some 0x230B
+      | "lang" -> Some 0x27E8 (* 0x2329 in HTML4 *)
+      | "rang" -> Some 0x27E9 (* 0x232A in HTML4 *)
+      | "loz" -> Some 0x25CA
+      | "spades" -> Some 0x2660
+      | "clubs" -> Some 0x2663
+      | "hearts" -> Some 0x2665
+      | "diams" -> Some 0x2666
+      | _ -> None in
     (match code with
-    | Some code -> Wtf8.add_wtf_8 buf code
-    | None -> Buffer.add_string buf ("&" ^ entity ^";"));
+     | Some code -> Wtf8.add_wtf_8 buf code
+     | None -> Buffer.add_string buf ("&" ^ entity ^";"));
     jsx_text env mode buf raw lexbuf
 
   | any ->
@@ -1439,18 +1442,18 @@ let rec template_tail env lexbuf =
     let env, loc, is_tail =
       template_part env start cooked raw literal lexbuf in
     env, (T_TEMPLATE_PART (loc, {
-      cooked = Buffer.contents cooked;
-      raw = Buffer.contents raw;
-      literal = Buffer.contents literal;
-    }, is_tail))
+        cooked = Buffer.contents cooked;
+        raw = Buffer.contents raw;
+        literal = Buffer.contents literal;
+      }, is_tail))
 
   | any ->
     let env = illegal env (loc_of_lexbuf env lexbuf) in
     env, (T_TEMPLATE_PART (
-      loc_of_lexbuf env lexbuf,
-      { cooked = ""; raw = ""; literal = ""; },
-      true
-    ))
+        loc_of_lexbuf env lexbuf,
+        { cooked = ""; raw = ""; literal = ""; },
+        true
+      ))
 
   | _ -> failwith "unreachable"
 
@@ -1458,7 +1461,7 @@ let rec template_tail env lexbuf =
 (* There are some tokens that never show up in a type and which can cause
  * ambiguity. For example, Foo<Bar<number>> ends with two angle brackets, not
  * with a right shift.
- *)
+*)
 let type_token env lexbuf =
   match%sedlex lexbuf with
   | line_terminator_sequence ->
@@ -1530,16 +1533,16 @@ let type_token env lexbuf =
 
   (**
    * Number literals
-   *)
+  *)
 
   | Opt neg, binnumber, (letter | '2'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, binnumber ->
-      let num = lexeme lexbuf in
-      Token (env, mk_num_singleton BINARY num)
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, binnumber ->
+          let num = lexeme lexbuf in
+          Token (env, mk_num_singleton BINARY num)
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, binnumber ->
     let num = lexeme lexbuf in
@@ -1548,11 +1551,11 @@ let type_token env lexbuf =
   | Opt neg, octnumber, (letter | '8'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, octnumber ->
-      let num = lexeme lexbuf in
-      Token (env, mk_num_singleton OCTAL num)
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, octnumber ->
+          let num = lexeme lexbuf in
+          Token (env, mk_num_singleton OCTAL num)
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, octnumber ->
     let num = lexeme lexbuf in
@@ -1561,11 +1564,11 @@ let type_token env lexbuf =
   | Opt neg, legacyoctnumber, (letter | '8'..'9'), Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, legacyoctnumber ->
-      let num = lexeme lexbuf in
-      Token (env, mk_num_singleton LEGACY_OCTAL num)
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, legacyoctnumber ->
+          let num = lexeme lexbuf in
+          Token (env, mk_num_singleton LEGACY_OCTAL num)
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, legacyoctnumber ->
     let num = lexeme lexbuf in
@@ -1574,34 +1577,34 @@ let type_token env lexbuf =
   | Opt neg, hexnumber, non_hex_letter, Star alphanumeric ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, hexnumber ->
-      let num = lexeme lexbuf in
-      begin try Token (env, mk_num_singleton NORMAL num)
-      with _ when Sys.win32 ->
-        let loc = loc_of_lexbuf env lexbuf in
-        let env = lex_error env loc Parse_error.WindowsFloatOfString in
-        Token (env, T_NUMBER_SINGLETON_TYPE { kind = NORMAL; value = 789.0; raw = "789" })
-      end
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, hexnumber ->
+          let num = lexeme lexbuf in
+          begin try Token (env, mk_num_singleton NORMAL num)
+            with _ when Sys.win32 ->
+              let loc = loc_of_lexbuf env lexbuf in
+              let env = lex_error env loc Parse_error.WindowsFloatOfString in
+              Token (env, T_NUMBER_SINGLETON_TYPE { kind = NORMAL; value = 789.0; raw = "789" })
+          end
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, hexnumber ->
     let num = lexeme lexbuf in
     begin try Token (env, mk_num_singleton NORMAL num)
-    with _ when Sys.win32 ->
-      let loc = loc_of_lexbuf env lexbuf in
-      let env = lex_error env loc Parse_error.WindowsFloatOfString in
-      Token (env, T_NUMBER_SINGLETON_TYPE { kind = NORMAL; value = 789.0; raw = "789" })
+      with _ when Sys.win32 ->
+        let loc = loc_of_lexbuf env lexbuf in
+        let env = lex_error env loc Parse_error.WindowsFloatOfString in
+        Token (env, T_NUMBER_SINGLETON_TYPE { kind = NORMAL; value = 789.0; raw = "789" })
     end
 
   | Opt neg, scinumber, word ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, scinumber ->
-      let num = lexeme lexbuf in
-      Token (env, mk_num_singleton NORMAL num)
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, scinumber ->
+          let num = lexeme lexbuf in
+          Token (env, mk_num_singleton NORMAL num)
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, scinumber ->
     let num = lexeme lexbuf in
@@ -1610,11 +1613,11 @@ let type_token env lexbuf =
   | Opt neg, (wholenumber | floatnumber), word ->
     (* Numbers cannot be immediately followed by words *)
     recover env lexbuf ~f:(fun env lexbuf -> match%sedlex lexbuf with
-    | Opt neg, wholenumber | floatnumber ->
-      let num = lexeme lexbuf in
-      Token (env, mk_num_singleton NORMAL num)
-    | _ -> failwith "unreachable"
-    )
+        | Opt neg, wholenumber | floatnumber ->
+          let num = lexeme lexbuf in
+          Token (env, mk_num_singleton NORMAL num)
+        | _ -> failwith "unreachable"
+      )
 
   | Opt neg, (wholenumber | floatnumber) ->
     let num = lexeme lexbuf in

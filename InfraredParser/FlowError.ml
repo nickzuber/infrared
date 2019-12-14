@@ -1,12 +1,12 @@
 module FlowError = struct
-  let interleave_error_within_file file err : string =
-    let open Batteries in
-    let _error_string = Flow_parser.Parse_error.PP.error err in
-    let filelines = File.lines_of file in
-    let _ = Enum.iter (fun line ->
+  let interleave_error_within_file _file _err : string =
+    (* let open Batteries in
+       let _error_string = Flow_parser.Parse_error.PP.error err in
+       let filelines = File.lines_of file in
+       let _ = Enum.iter (fun line ->
         print_endline line
-      ) filelines
-    in ""
+       ) filelines *)
+    ""
 
   let string_of_error file err : string =
     let (loc, err) = err in
