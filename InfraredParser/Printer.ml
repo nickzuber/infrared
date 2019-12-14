@@ -77,33 +77,33 @@ and string_of_statement stmt : string =
     Printf.sprintf "(Continue %s)"
       (string_of_identifier_maybe obj.label)
   | Debugger ->
-    Printf.sprintf "Debugger"
+    Printf.sprintf "(Debugger)"
   | DeclareClass _obj ->
-    Printf.sprintf "Skipping `DeclareClass`"
+    Printf.sprintf "(Skipped `DeclareClass`)"
   | DeclareExportDeclaration _obj ->
-    Printf.sprintf "Skipping `DeclareExportDeclaration`"
+    Printf.sprintf "(Skipped `DeclareExportDeclaration`)"
   | DeclareFunction _obj ->
-    Printf.sprintf "Skipping `DeclareFunction`"
+    Printf.sprintf "(Skipped `DeclareFunction`)"
   | DeclareInterface _obj ->
-    Printf.sprintf "Skipping `DeclareInterface`"
+    Printf.sprintf "(Skipped `DeclareInterface`)"
   | DeclareModule _obj ->
-    Printf.sprintf "Skipping `DeclareModule`"
+    Printf.sprintf "(Skipped `DeclareModule`)"
   | DeclareModuleExports _obj ->
-    Printf.sprintf "Skipping `DeclareModuleExports`"
+    Printf.sprintf "(Skipped `DeclareModuleExports`)"
   | DeclareTypeAlias _obj ->
-    Printf.sprintf "Skipping `DeclareTypeAlias`"
+    Printf.sprintf "(Skipped `DeclareTypeAlias`)"
   | DeclareOpaqueType _obj ->
-    Printf.sprintf "Skipping `DeclareOpaqueType`"
+    Printf.sprintf "(Skipped `DeclareOpaqueType`)"
   | DeclareVariable _obj ->
-    Printf.sprintf "Skipping `DeclareVariable`"
+    Printf.sprintf "(Skipped `DeclareVariable`)"
   | DoWhile obj ->
     Printf.sprintf "DoWhile (test: %s) (body: %s)"
       (string_of_expression obj.test)
       (string_of_statement obj.body)
   | Empty ->
-    Printf.sprintf "Empty"
+    Printf.sprintf "(Empty)"
   | ExportDefaultDeclaration obj ->
-    Printf.sprintf "ExportDefaultDeclaration %s"
+    Printf.sprintf "(ExportDefaultDeclaration %s)"
       (string_of_export_declaration obj.declaration)
   | ExportNamedDeclaration obj ->
     Printf.sprintf "(ExportNamedDeclaration
@@ -147,27 +147,39 @@ and string_of_statement stmt : string =
       (string_of_specifier obj.specifiers)
       (string_of_identifier_maybe obj.default)
       (string_of_stringliteral obj.source)
-  | InterfaceDeclaration _ -> (todo "InterfaceDeclaration")
-  | Labeled _ -> (todo "Labeled")
+  | InterfaceDeclaration _obj ->
+    Printf.sprintf "(Skipped `InterfaceDeclaration`)"
+  | Labeled obj ->
+    Printf.sprintf "(Labeled (label: %s) (body: %s))"
+      (string_of_identifier obj.label)
+      (string_of_statement obj.body)
   | Return obj ->
     Printf.sprintf "(Return %s)"
       (string_of_expression_maybe obj.argument)
-  | Switch _ -> (todo "Switch")
-  | Throw _ -> (todo "Throw")
+  | Switch obj ->
+    let string_of_switch_cases = listify string_of_switch_case in
+    Printf.sprintf "(Switch (discriminant: %s) (cases: %s))"
+      (string_of_expression obj.discriminant)
+      (string_of_switch_cases obj.cases)
+  | Throw obj ->
+    Printf.sprintf "(Throw %s)"
+      (string_of_expression obj.argument)
   | Try _ -> (todo "Try")
-  | TypeAlias _ -> (todo "TypeAlias")
-  | OpaqueType _ -> (todo "OpaqueType")
+  | TypeAlias _obj ->
+    Printf.sprintf "(Skipped `TypeAlias`)"
+  | OpaqueType _obj ->
+    Printf.sprintf "(Skipped `OpaqueType`)"
   | VariableDeclaration obj ->
     let string_of_declarations = listify string_of_declaration in
     Printf.sprintf "(VariableDeclaration %s, %s)"
       (string_of_kind obj.kind)
       (string_of_declarations obj.declarations)
   | While obj ->
-    Printf.sprintf "While (test: %s) (body: %s)"
+    Printf.sprintf "(While (test: %s) (body: %s))"
       (string_of_expression obj.test)
       (string_of_statement obj.body)
   | With obj ->
-    Printf.sprintf "With (_object: %s) (body: %s)"
+    Printf.sprintf "(With (_object: %s) (body: %s))"
       (string_of_expression obj._object)
       (string_of_statement obj.body)
 
@@ -588,3 +600,11 @@ and string_of_export_specifier obj : string =
   Printf.sprintf "ExportSpecifier (local: %s) (exported %s)"
     (string_of_identifier obj'.local)
     (string_of_identifier_maybe obj'.exported)
+
+and string_of_switch_case case : string =
+  let open S.Switch.Case in
+  let string_of_statements = listify string_of_statement in
+  let case' = strip_location case in
+  Printf.sprintf "(Case (test: %s) (consequent: %s))"
+    (string_of_expression_maybe case'.test)
+    (string_of_statements case'.consequent)

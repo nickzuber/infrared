@@ -1,6 +1,7 @@
 B /Users/nick/.opam/4.04.0/lib/base
 B /Users/nick/.opam/4.04.0/lib/base/caml
 B /Users/nick/.opam/4.04.0/lib/base/shadow_stdlib
+B /Users/nick/.opam/4.04.0/lib/batteries
 B /Users/nick/.opam/4.04.0/lib/bin_prot
 B /Users/nick/.opam/4.04.0/lib/bin_prot/shape
 B /Users/nick/.opam/4.04.0/lib/bytes
@@ -37,6 +38,7 @@ B ../_build/default/InfraredUtils/.InfraredUtils.objs
 S /Users/nick/.opam/4.04.0/lib/base
 S /Users/nick/.opam/4.04.0/lib/base/caml
 S /Users/nick/.opam/4.04.0/lib/base/shadow_stdlib
+S /Users/nick/.opam/4.04.0/lib/batteries
 S /Users/nick/.opam/4.04.0/lib/bin_prot
 S /Users/nick/.opam/4.04.0/lib/bin_prot/shape
 S /Users/nick/.opam/4.04.0/lib/bytes

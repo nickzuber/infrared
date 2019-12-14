@@ -1,4 +1,4 @@
 (library
  (name        InfraredParser)
  (public_name InfraredParser)
- (libraries   InfraredUtils core flow_parser))
+ (libraries   InfraredUtils core batteries flow_parser))

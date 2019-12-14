@@ -1,10 +1,11 @@
 open Cli
+open InfraredParser.Parser
 
 let () =
   try
     InfraredShell.exec ()
   with
-  | Flow_parser.Parse_error.Error _ ->
-    print_endline "Error while parsing."
+  | InfraredParsingError message ->
+    print_endline message
   | _ ->
-    print_endline "Unknown error occurred."
+    print_endline "Infrared: Uncaught error occurred."

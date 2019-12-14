@@ -2,7 +2,10 @@ open InfraredUtils
 
 let check_file (file : string) : unit =
   let source = Fs.read_file file in
-  let ast = InfraredParser.Parser.parse_source source in
+  let ast = InfraredParser.Parser.parse_source
+      file
+      source
+  in
   Printf.printf "\x1b[1;4m%s:\x1b[0;0m\n%s\n\n\n"
     file
     (InfraredParser.Printer.string_of_ast ast)
