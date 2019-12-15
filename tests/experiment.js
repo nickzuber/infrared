@@ -1,6 +1,11 @@
 switch (type) {
   case 'foo':
     return 2;
-  default:
-    return 3;
+    default:
+        return 2;
+    // noop
+}
+
+function f (x) {
+  return x * 2
 }

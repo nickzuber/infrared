@@ -18,7 +18,5 @@ let parse_source (file : string) (source : string) =
     Flow_parser.Parser_flow.program source ~parse_options
   with
   | Flow_parser.Parse_error.Error errs ->
-    let message = Printf.sprintf "\nError while parsing \x1b[1m%s\x1b[0m: \n%s"
-        file
-        (FlowError.string_of_errors file errs) in
+    let message = FlowError.string_of_errors_in_file file errs in
     raise (InfraredParsingError message)
