@@ -12,10 +12,11 @@ module FlowError = struct
     | _ when n < 1000 -> "   "
     | _ -> ""
 
-  let interleave_error_within_file file err : string =
+  let interleave_error_within_file ~padding file err : string =
     let open Flow_parser.Loc in
+    let padding = String.make padding ' ' in
     (* The amount of lines we show above and below the error lines. *)
-    let preview_length = 1 in
+    let preview_length = 0 in
     let (loc, err) = err in
     let error_string = Flow_parser.Parse_error.PP.error err in
     let source = Fs.read_file file in
@@ -30,12 +31,15 @@ module FlowError = struct
         | _ when i = loc.start.line ->
           let spacing = String.make (loc.start.column + 1) ' ' in
           let underline = String.make (loc._end.column - loc.start.column) '^' in
-          let line_string = Printf.sprintf "%s\n%s%s"
+          let line_string = Printf.sprintf "%s%s\n%s%s"
+              padding
               line
-              (Chalk.gray ((s i) ^ (pad i) ^ "|"))
-              (spacing ^ (underline |> Chalk.red |> Chalk.bold))
+              (Chalk.gray ((s i) ^ (pad i) ^ padding ^ "   "))
+              (spacing ^ padding ^ (underline |> Chalk.red |> Chalk.bold))
           in
-          let str = Printf.sprintf "%s%s| %s"
+          let str = Printf.sprintf "%s%s %s%s| %s"
+              padding
+              (">" |> Chalk.bold |> Chalk.red)
               (string_of_int i)
               (pad i)
               line_string
@@ -45,7 +49,8 @@ module FlowError = struct
         | _ when i >= line_start ->
           let line_string = line in
           let str =
-            Printf.sprintf "%s%s| %s"
+            Printf.sprintf "%s  %s%s| %s"
+              padding
               (string_of_int i)
               (pad i)
               line_string
@@ -54,21 +59,20 @@ module FlowError = struct
         | _ -> ()
       ) lines
     in
-    Printf.sprintf "\n%s %s\n%s:%s"
-      ("Error" |> Chalk.red |> Chalk.bold)
-      error_string
-      (Chalk.bold
-         (Printf.sprintf "File: \"%s\", line %d, characters %d-%d"
-            file loc.start.line loc.start.column loc._end.column))
+    Printf.sprintf "\n%s%s %s%s.%s"
+      padding
+      (Chalk.bold "Error")
+      (Chalk.white "(parsing): ")
+      (Chalk.white error_string)
       !preview_string
 
   let string_of_errors_in_file file errs : string =
     let errors_string =
       errs
-      |> List.map (fun err -> interleave_error_within_file file err)
-      |> String.concat ("\n")
+      |> List.map (fun err -> interleave_error_within_file ~padding:8 file err)
+      |> String.concat ("")
     in
-    errors_string
+    errors_string ^ "\n"
 
   let string_of_error err : string =
     let (loc, err) = err in

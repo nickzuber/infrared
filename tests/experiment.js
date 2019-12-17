@@ -7,5 +7,5 @@ switch (type) {
 }
 
 function f (x) {
-  return x * 2
+  return 1
 }

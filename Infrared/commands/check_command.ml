@@ -1,30 +1,96 @@
+open InfraredParser
 open InfraredUtils
 
-let check_file (file : string) : unit =
+type parser_result =
+  | Success of string *
+               Flow_parser.Loc.t Flow_parser.Ast.program *
+               (Flow_parser.Loc.t * Flow_parser.Parser_common.Error.t) list
+  | Fail of string * int * string (* file, InfraredParsingError *)
+  | Nil of string
+
+let parse_file (file : string) : parser_result =
+  let open InfraredParser.Parser in
   let source = Fs.read_file file in
-  let ast = InfraredParser.Parser.parse_source
-      file
-      source
-  in
-  Printf.printf "\x1b[1;4m%s:\x1b[0;0m\n%s\n\n\n"
-    file
-    (InfraredParser.Printer.string_of_ast ast)
+  try
+    let (ast, errs) = Parser.parse_source ~file ~source in
+    Success (file, ast, errs)
+  with
+  | InfraredParsingError (count, message) ->
+    Fail (file, count, message)
+  | _ ->
+    Nil file
+
+let check_file (file : string) : parser_result =
+  parse_file file
+
+let string_of_parser_result (res : parser_result) : string =
+  let open Chalk in
+  match res with
+  | Success (file, _ast, _errs) ->
+    Printf.sprintf "%s %s\n"
+      (" Pass " |> green |> bold)
+      (gray file)
+  | Fail (file, _count, message) ->
+    let failure = Printf.sprintf "%s %s\n"
+        (" Fail " |> red |> bold)
+        (gray file)
+    in
+    Printf.sprintf "%s%s\n" failure message
+  | Nil file ->
+    Printf.sprintf "%s %s\n"
+      (" Fatal " |> red |> bold)
+      (gray file)
 
 let check_files (files : string list) : unit =
-  let _ = List.map (fun file -> check_file file) files
-  in ()
+  let start_time = Unix.gettimeofday () in
+  let results = List.map (fun file -> check_file file) files in
+  let result_strings = List.map string_of_parser_result results in
+  let () = List.iter (fun str -> Printf.printf "%s" str) result_strings in
+  let (err_files, err_count) = List.fold_left (fun acc res ->
+      match res with
+      | Fail (_file, count, _message) ->
+        let (acc_f, acc_c) = acc in
+        (acc_f + 1, acc_c + count)
+      | Nil _file ->
+        let (acc_f, acc_c) = acc in
+        (acc_f + 1, acc_c)
+      | _ -> acc)
+      (0, 0) results
+  in
+  let end_time = Unix.gettimeofday () in
+  Printf.printf "\n%sChecked %s files in %ss"
+    (Chalk.green " ↗ ")
+    (files
+     |> List.length
+     |> string_of_int
+     |> Chalk.green)
+    (String.sub (string_of_float (end_time -. start_time)) 0 4);
+  Printf.printf "\n%sFailed to parse %s files with %s errors\n\n"
+    (Chalk.red " ↘ ")
+    (err_files
+     |> string_of_int
+     |> Chalk.red)
+    (err_count
+     |> string_of_int
+     |> Chalk.red)
 
-let type_check args =
+let type_check args : unit =
+  print_endline "";
   match args with
   | [] -> ()
   | arg :: [] ->
-    let paths = Fs.files_from_path arg in
+    let paths =
+      arg
+      |> Fs.files_from_path
+      |> List.rev
+    in
     check_files paths
   | args ->
     let paths =
       args
       |> List.map Fs.files_from_path
       |> List.flatten
+      |> List.rev
     in
     check_files paths
 

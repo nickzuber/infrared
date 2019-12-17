@@ -6,9 +6,10 @@ let () =
   try
     InfraredShell.exec ()
   with
-  | InfraredParsingError message ->
+  | InfraredParsingError (count, message) ->
+    let summary = Printf.sprintf "Failed w/ %n error(s) found" count in
     Printf.printf "\n%s\n%s\n\n"
-      ("Error: Found some basic errors while parsing" |> Chalk.bold |> Chalk.underline)
+      (summary |> Chalk.red |> Chalk.bold)
       message
   | _ ->
     print_endline "Infrared: Uncaught error occurred."

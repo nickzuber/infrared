@@ -2,6 +2,7 @@ let bold str = Printf.sprintf "\x1b[1m%s\x1b[0m" str
 let underline str = Printf.sprintf "\x1b[4m%s\x1b[0m" str
 let invert str = Printf.sprintf "\x1b[7m%s\x1b[0m" str
 
+let black str = Printf.sprintf "\x1b[38;5;16m%s\x1b[39m" str
 let red str = Printf.sprintf "\x1b[31m%s\x1b[39m" str
 let green str = Printf.sprintf "\x1b[32m%s\x1b[39m" str
 let yellow str = Printf.sprintf "\x1b[33m%s\x1b[39m" str

@@ -1,8 +1,8 @@
 open FlowError
 
-exception InfraredParsingError of string
+exception InfraredParsingError of int * string
 
-let parse_source (file : string) (source : string) =
+let parse_source ~(file : string) ~(source : string) =
   let parse_options = Some Flow_parser.Parser_env.({
       esproposal_optional_chaining = false;
       esproposal_class_instance_fields = true;
@@ -19,4 +19,5 @@ let parse_source (file : string) (source : string) =
   with
   | Flow_parser.Parse_error.Error errs ->
     let message = FlowError.string_of_errors_in_file file errs in
-    raise (InfraredParsingError message)
+    let count = List.length errs in
+    raise (InfraredParsingError (count, message))
