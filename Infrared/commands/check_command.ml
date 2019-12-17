@@ -1,6 +1,13 @@
 open InfraredParser
 open InfraredUtils
 
+(* @TODO: Once we start working on the checker, this type will become useful.
+   type checking_result =
+   | CheckingSuccess of ...
+   | CheckingFailure of ...
+   | ParsingError of parser_result
+*)
+
 type parser_result =
   | Success of string *
                Flow_parser.Loc.t Flow_parser.Ast.program *
@@ -21,7 +28,10 @@ let parse_file (file : string) : parser_result =
     Nil file
 
 let check_file (file : string) : parser_result =
-  parse_file file
+  let parsing_output = parse_file file in
+  (* @TODO: this should eventually return both parsing errors and
+   * type checking errors and results. *)
+  parsing_output
 
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
@@ -45,7 +55,11 @@ let check_files (files : string list) : unit =
   let start_time = Unix.gettimeofday () in
   let results = List.map (fun file -> check_file file) files in
   let result_strings = List.map string_of_parser_result results in
+  (* @TODO: This is printing the parsing results, we'd want to print the
+   * type checking results here isntead eventually. *)
   let () = List.iter (fun str -> Printf.printf "%s" str) result_strings in
+  (* @TODO: Count up all of the failed parsed files and errors. We'll want to do
+   * the same thing for type checking results too eventually. *)
   let (err_files, err_count) = List.fold_left (fun acc res ->
       match res with
       | Fail (_file, count, _message) ->
