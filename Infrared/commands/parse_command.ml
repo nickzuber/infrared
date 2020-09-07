@@ -1,12 +1,6 @@
 open InfraredParser
 open InfraredUtils
 
-(* @TODO: Once we start working on the checker, this type will become useful.
-   type checking_result =
-   | CheckingSuccess of ...
-   | CheckingFailure of ...
-   | ParsingError of parser_result
-*)
 
 type parser_result =
   | Success of string *
@@ -28,19 +22,14 @@ let parse_file (file : string) : parser_result =
   | _ ->
     Nil file
 
-let check_file (file : string) : parser_result =
-  let parsing_output = parse_file file in
-  (* @TODO: this should eventually return both parsing errors and
-   * type checking errors and results. *)
-  parsing_output
-
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
-  | Success (file, _ast, _errs) ->
-    Printf.sprintf "%s %s\n"
+  | Success (file, ast, errs) ->
+    Printf.sprintf "%s %s%s\n"
       (" Pass " |> green |> bold)
       (gray file)
+      (Printer.string_of_ast (ast, errs))
   | Fail (file, _count, message) ->
     let failure = Printf.sprintf "%s %s\n"
         (" Fail " |> red |> bold)
@@ -54,13 +43,9 @@ let string_of_parser_result (res : parser_result) : string =
 
 let check_files (files : string list) : unit =
   let start_time = Unix.gettimeofday () in
-  let results = List.map (fun file -> check_file file) files in
+  let results = List.map (fun file -> parse_file file) files in
   let result_strings = List.map string_of_parser_result results in
-  (* @TODO: This is printing the parsing results, we'd want to print the
-   * type checking results here isntead eventually. *)
   let () = List.iter (fun str -> Printf.printf "%s" str) result_strings in
-  (* @TODO: Count up all of the failed parsed files and errors. We'll want to do
-   * the same thing for type checking results too eventually. *)
   let (err_files, err_count) = List.fold_left (fun acc res ->
       match res with
       | Fail (_file, count, _message) ->
@@ -73,7 +58,7 @@ let check_files (files : string list) : unit =
       (0, 0) results
   in
   let end_time = Unix.gettimeofday () in
-  Printf.printf "\n%sChecked %s files in %ss"
+  Printf.printf "\n%sParsed %s files in %ss"
     (Chalk.green " ↗ ")
     (files
      |> List.length
@@ -89,7 +74,7 @@ let check_files (files : string list) : unit =
      |> string_of_int
      |> Chalk.red)
 
-let type_check args : unit =
+let parse_files args : unit =
   print_endline "";
   match args with
   | [] -> ()
@@ -110,12 +95,12 @@ let type_check args : unit =
     check_files paths
 
 let spec = Command.create
-    ~name:"check"
-    ~aliases:["ch"]
-    ~doc:"Type check the given JavaScript files"
+    ~name:"parse"
+    ~aliases:["pp"]
+    ~doc:"Parse and print the given JavaScript files"
     ~flags:[]
 
-let exec = type_check
+let exec = parse_files
 
 type t =
   { spec: Command.t

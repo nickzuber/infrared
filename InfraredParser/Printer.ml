@@ -18,7 +18,7 @@ let todo (str : string) : string =
 
 let format_sexp (sexp : string) : string =
   let offset = 2 in
-  let depth = ref 0 in
+  let depth = ref 1 in
   let chars = Utils.char_list_of_string sexp in
   let formatted_chars_as_strings = List.map
       (fun char ->
@@ -164,7 +164,10 @@ and string_of_statement stmt : string =
   | Throw obj ->
     Printf.sprintf "(Throw %s)"
       (string_of_expression obj.argument)
-  | Try _ -> (todo "Try")
+  | Try obj ->
+    Printf.sprintf "(Try (block: %s) (handler: %s))"
+      (obj.block |> strip_location |> string_of_block)
+      (string_of_catch_clause_maybe obj.handler)
   | TypeAlias _obj ->
     Printf.sprintf "(Skipped `TypeAlias`)"
   | OpaqueType _obj ->
@@ -427,6 +430,11 @@ and string_of_statment_maybe statement_maybe : string =
   | Some stmt -> string_of_statement stmt
   | None -> "∅"
 
+and string_of_catch_clause_maybe handler_maybe : string =
+    match handler_maybe with
+    | Some handler -> string_of_catch_clause handler
+    | None -> "∅"
+
 and string_of_expression_maybe expression_maybe : string =
   match expression_maybe with
   | Some expr -> string_of_expression expr
@@ -608,3 +616,10 @@ and string_of_switch_case case : string =
   Printf.sprintf "(Case (test: %s) (consequent: %s))"
     (string_of_expression_maybe case'.test)
     (string_of_statements case'.consequent)
+
+and string_of_catch_clause handler : string =
+  let open S.Try.CatchClause in
+  let handler' = strip_location handler in
+  Printf.sprintf "(CatchClause (param: %s) (body: %s))"
+    (handler'.param |> string_of_pattern)
+    (handler'.body |> strip_location |> string_of_block)

@@ -1,11 +1,7 @@
-switch (type) {
-  case 'foo':
-    return 2;
-    default:
-        return 2;
-    // noop
-}
+let x = 1;
 
-function f (x) {
-  return 1
+try {
+  x = 1;
+} catch (error) {
+  throw error;
 }
