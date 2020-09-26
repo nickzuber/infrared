@@ -1,2 +1,1 @@
-// Generator function
-function foo(a, b, ...c) {}
+tag`My name is ${name}!`

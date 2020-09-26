@@ -68,11 +68,8 @@ and string_of_statement stmt : string =
     Printf.sprintf "(Break %s)"
       (string_of_identifier_maybe obj.label)
   | ClassDeclaration obj ->
-    let string_of_expressions = listify string_of_expression in
-    Printf.sprintf "(ClassDeclaration (id: %s) (decorators: %s) (body: %s))"
-      (string_of_identifier_maybe obj.id)
-      (string_of_expressions obj.classDecorators)
-      (string_of_body obj.body)
+    Printf.sprintf "(ClassDeclaration %s)"
+      (string_of_class obj)
   | Continue obj ->
     Printf.sprintf "(Continue %s)"
       (string_of_identifier_maybe obj.label)
@@ -218,46 +215,89 @@ and string_of_expression expr : string =
     Printf.sprintf "(Call %s, %s)"
       (string_of_expression obj.callee)
       arguments
-  | Class _ -> (todo "Class")
-  | Comprehension _ ->
+  | Class obj ->
+    Printf.sprintf "(Class %s)"
+      (string_of_class obj)
+  | Comprehension _obj ->
     Printf.sprintf "(Skipped `Comprehension`)"
-  | Conditional _ -> (todo "Conditional")
+  | Conditional obj ->
+    Printf.sprintf "(Conditional (test: %s), (consequent: %s), (alternate: %s))"
+      (string_of_expression obj.test)
+      (string_of_expression obj.consequent)
+      (string_of_expression obj.alternate)
   | Function fn ->
     Printf.sprintf "(Function %s)"
       (string_of_function fn)
-  | Generator _ ->
+  | Generator _obj ->
+    (* This generate is skipped because it refers to some obscure generator
+     * expression pattern that is non-standard.
+     * https://developer.mozilla.org/en-US/docs/Archive/Web/JavaScript/Generator_comprehensions *)
     Printf.sprintf "(Skipped `Generator`)"
   | Identifier obj -> string_of_identifier obj
   | Import expr ->
     Printf.sprintf "(Import %s)"
       (string_of_expression expr)
-  | JSXElement _ -> (todo "JSXElement")
-  | JSXFragment _ -> (todo "JSXFragment")
+  | JSXElement _obj -> "(Skipped `JSXElement`)"
+  | JSXFragment _obj -> "(Skipped `JSXFragment`)"
   | Literal obj ->
     Printf.sprintf "(Literal %s)"
       (string_of_literal obj)
-  | Logical _ -> (todo "Logical")
+  | Logical obj ->
+    let open E.Logical in
+    let operator_string = match obj.operator with
+      | Or -> "LOGICAL_OR"
+      | And -> "LOGICAL_AND"
+    in
+    Printf.sprintf ("(Logical (left: %s) (operator: %s) (right: %s))")
+      (string_of_expression obj.left)
+      (operator_string)
+      (string_of_expression obj.right)
   | Member obj ->
     Printf.sprintf "(Member %s)"
       (string_of_member_property obj.property)
-  | MetaProperty _ -> (todo "MetaProperty")
-  | New _ -> (todo "New")
+  | MetaProperty _obj ->
+    (* Absolutely no earthly clue what this expression is. *)
+    Printf.sprintf "(Skipped `MetaProperty`)"
+  | New obj ->
+    let string_of_expressions_or_spreads = listify string_of_expression_or_spread in
+    Printf.sprintf "(New (callee: %s) (arguments: %s))"
+      (string_of_expression obj.callee)
+      (string_of_expressions_or_spreads obj.arguments)
   | Object obj ->
     let string_of_object_properties = listify string_of_object_property in
     Printf.sprintf "(Object: %s)"
       (string_of_object_properties obj.properties)
-  | Sequence _ -> (todo "Sequence")
-  | Super -> (todo "Super")
-  | TaggedTemplate _ -> (todo "TaggedTemplate")
-  | TemplateLiteral _ -> (todo "TemplateLiteral")
-  | This -> (todo "This")
-  | TypeCast _ -> (todo "TypeCast")
+  | Sequence obj ->
+    let string_of_expressions = listify string_of_expression in
+    Printf.sprintf "(Sequence %s)"
+      (string_of_expressions obj.expressions)
+  | Super -> "(Super)"
+  | TaggedTemplate obj ->
+    Printf.sprintf "(TaggedTemplate (tag: %s) (quasi: %s))"
+      (string_of_expression obj.tag)
+      (string_of_template_literal (strip_location obj.quasi))
+  | TemplateLiteral obj -> string_of_template_literal obj
+  | This -> "(This)"
+  | TypeCast _obj -> "(Skipped `TypeCast`)"
   | Unary obj ->
     Printf.sprintf "(Unary %s, %s)"
       (string_of_unary_op obj.operator)
       (string_of_expression obj.argument)
-  | Update _ -> (todo "Update")
-  | Yield _ -> (todo "Yield")
+  | Update obj ->
+    let open E.Update in
+    let operator_string = match obj.operator with
+      | Increment -> "Increment"
+      | Decrement -> "Decrement"
+    in
+    Printf.sprintf "(Update (operator: %s) (argument: %s) (prefix: %s))"
+      (operator_string)
+      (string_of_expression obj.argument)
+      (string_of_bool obj.prefix)
+  | Yield obj ->
+    let open E.Yield in
+    Printf.sprintf "(Yield (argument: %s) (delegate: %s))"
+      (string_of_expression_maybe obj.argument)
+      (string_of_bool obj.delegate)
 
 and string_of_kind kind : string =
   let open S.VariableDeclaration in
@@ -404,7 +444,8 @@ and string_of_expression_or_spread expr_or_spread : string =
   | Expression expr -> string_of_expression expr
   | Spread spread ->
     let obj = strip_location spread in
-    "..." ^ (string_of_expression obj.argument)
+    Printf.sprintf "(Spread %s)"
+      (string_of_expression obj.argument)
 
 and string_of_stringliteral_maybe str_maybe : string =
   match str_maybe with
@@ -456,6 +497,7 @@ and string_of_identifier identifier : string =
   Printf.sprintf "(Identifier \"%s\")" name
 
 and string_of_body obj : string =
+  let open C.Body in
   let body = strip_location obj in
   let string_of_bodies = listify string_of_body_element in
   string_of_bodies body.body
@@ -661,3 +703,27 @@ and string_of_array elements_or_spread : string =
   elements_or_spread
   in
   String.concat ", " elements_or_spread_as_string
+
+  and string_of_class obj : string =
+    let open C in
+    let string_of_expressions = listify string_of_expression in
+      Printf.sprintf "(id: %s) (decorators: %s) (body: %s)"
+        (string_of_identifier_maybe obj.id)
+        (string_of_expressions obj.classDecorators)
+        (string_of_body obj.body)
+
+and string_of_template_literal obj : string =
+  let open E.TemplateLiteral in
+  let string_of_expressions = listify string_of_expression in
+  let string_of_template_elements = listify string_of_template_element in
+  Printf.sprintf "(TemplateLiteral (quasis: %s) (expressions: %s))"
+    (string_of_template_elements obj.quasis)
+    (string_of_expressions obj.expressions)
+
+and string_of_template_element quasi : string =
+  let open E.TemplateLiteral.Element in
+  let quasi' = strip_location quasi in
+  Printf.sprintf "(Element (value: %s) (tail: %s))"
+    (Printf.sprintf "(Value (raw: \"%s\") (cooked: \"%s\"))"
+      quasi'.value.raw quasi'.value.cooked)
+    (string_of_bool quasi'.tail)
