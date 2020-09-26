@@ -190,7 +190,9 @@ and string_of_expression expr : string =
   let open E in
   let expr = strip_location expr in
   match expr with
-  | Array _ -> (todo "Array")
+  | Array obj ->
+    Printf.sprintf "(Array [%s])"
+      (string_of_array obj.elements)
   | ArrowFunction fn ->
     Printf.sprintf "(ArrowFunction %s)"
       (string_of_function fn)
@@ -623,3 +625,15 @@ and string_of_catch_clause handler : string =
   Printf.sprintf "(CatchClause (param: %s) (body: %s))"
     (handler'.param |> string_of_pattern)
     (handler'.body |> strip_location |> string_of_block)
+
+and string_of_array elements_or_spread : string =
+  let elements_or_spread_as_string = List.map
+  (fun elements_or_spread_maybe ->
+    match elements_or_spread_maybe with
+      | Some elements_or_spread ->
+        string_of_expression_or_spread elements_or_spread
+      | None -> ""
+  )
+  elements_or_spread
+  in
+  String.concat ", " elements_or_spread_as_string

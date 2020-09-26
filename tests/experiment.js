@@ -1,7 +1,1 @@
-let x = 1;
-
-try {
-  x = 1;
-} catch (error) {
-  throw error;
-}
+[1, 2, 3, ...rest]
