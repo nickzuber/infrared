@@ -219,14 +219,18 @@ and string_of_expression expr : string =
       (string_of_expression obj.callee)
       arguments
   | Class _ -> (todo "Class")
-  | Comprehension _ -> (todo "Comprehension")
+  | Comprehension _ ->
+    Printf.sprintf "(Skipped `Comprehension`)"
   | Conditional _ -> (todo "Conditional")
   | Function fn ->
     Printf.sprintf "(Function %s)"
       (string_of_function fn)
-  | Generator _ -> (todo "Generator")
+  | Generator _ ->
+    Printf.sprintf "(Skipped `Generator`)"
   | Identifier obj -> string_of_identifier obj
-  | Import _ -> (todo "Import")
+  | Import expr ->
+    Printf.sprintf "(Import %s)"
+      (string_of_expression expr)
   | JSXElement _ -> (todo "JSXElement")
   | JSXFragment _ -> (todo "JSXFragment")
   | Literal obj ->
@@ -508,10 +512,30 @@ and string_of_object_key key : string =
 
 and string_of_function fn : string =
   let id = string_of_identifier_maybe fn.id in
+  let params = string_of_params fn.params in
   let body = string_of_function_body fn.body in
-  Printf.sprintf "(function %s, %s)"
+  Printf.sprintf "(Function %s, %s, %s, %s, %s)"
     (Printf.sprintf "(id: %s)" id)
+    (Printf.sprintf "(params: %s)" params)
     (Printf.sprintf "(body: %s)" body)
+    (Printf.sprintf "(generator: %s)" (string_of_bool fn.generator))
+    (Printf.sprintf "(async: %s)" (string_of_bool fn.async))
+
+and string_of_params params : string =
+  let params' = strip_location params in
+  let string_of_patterns = listify string_of_pattern in
+  Printf.sprintf "(Params (params: %s) (rest: %s))"
+    (string_of_patterns params'.params)
+    (string_of_rest_element_maybe params'.rest)
+
+and string_of_rest_element_maybe rest : string =
+  let open F.RestElement in
+  match rest with
+  | Some rest ->
+    let rest' = strip_location rest in
+    Printf.sprintf "(RestElement %s)"
+      (string_of_pattern rest'.argument)
+  | None -> "∅"
 
 and string_of_function_body body : string =
   match body with

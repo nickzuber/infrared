@@ -1,1 +1,2 @@
-[1, 2, 3, ...rest]
+// Generator function
+function foo(a, b, ...c) {}
