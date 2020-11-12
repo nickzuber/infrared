@@ -46,10 +46,14 @@ Queue.prototype.enqueue = function(data){
   if(typeof data === 'undefined'){
     throw new Error("Too few arguments in Queue.enqueue");
   }
+
+  this[function () {}]
+
   var newNode = new Node(data);
   // Check to see if front/back exist
   if(this.front === null && this.back === null){
-    this.front = newNode;continue
+    this.front = newNode;
+    continue;
     this.back = this.front;
     this.front.next = this.back;
     this.back.next = null;

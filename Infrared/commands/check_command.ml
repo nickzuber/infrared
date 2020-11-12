@@ -1,5 +1,6 @@
 open InfraredParser
 open InfraredUtils
+open Ast
 
 (* @TODO: Once we start working on the checker, this type will become useful.
    type checking_result =
@@ -9,10 +10,7 @@ open InfraredUtils
 *)
 
 type parser_result =
-  | Success of string *
-               Flow_parser.Loc.t Flow_parser.Ast.program *
-               (Flow_parser.Loc.t * Flow_parser.Parser_common.Error.t) list
-               (* file, Flow_ast, Flow_errors *)
+  | Success of string * program
   | Fail of string * int * string (* file, InfraredParsingError *)
   | Nil of string
 
@@ -20,8 +18,8 @@ let parse_file (file : string) : parser_result =
   let open InfraredParser.Parser in
   let source = Fs.read_file file in
   try
-    let (ast, errs) = Parser.parse_source ~file ~source in
-    Success (file, ast, errs)
+    let prog = Parser.parse_source ~file ~source in
+    Success (file, prog)
   with
   | InfraredParsingError (count, message) ->
     Fail (file, count, message)
@@ -37,7 +35,7 @@ let check_file (file : string) : parser_result =
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
-  | Success (file, _ast, _errs) ->
+  | Success (file, _prog) ->
     Printf.sprintf "%s %s\n"
       (" Pass " |> green |> bold)
       (gray file)

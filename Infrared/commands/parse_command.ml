@@ -1,12 +1,9 @@
 open InfraredParser
 open InfraredUtils
-
+open Ast
 
 type parser_result =
-  | Success of string *
-               Flow_parser.Loc.t Flow_parser.Ast.program *
-               (Flow_parser.Loc.t * Flow_parser.Parser_common.Error.t) list
-               (* file, Flow_ast, Flow_errors *)
+  | Success of string * program
   | Fail of string * int * string (* file, InfraredParsingError *)
   | Nil of string
 
@@ -14,8 +11,8 @@ let parse_file (file : string) : parser_result =
   let open InfraredParser.Parser in
   let source = Fs.read_file file in
   try
-    let (ast, errs) = Parser.parse_source ~file ~source in
-    Success (file, ast, errs)
+    let prog = Parser.parse_source ~file ~source in
+    Success (file, prog)
   with
   | InfraredParsingError (count, message) ->
     Fail (file, count, message)
@@ -25,11 +22,11 @@ let parse_file (file : string) : parser_result =
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
-  | Success (file, ast, errs) ->
+  | Success (file, prog) ->
     Printf.sprintf "%s %s%s\n"
       (" Pass " |> green |> bold)
       (gray file)
-      (Printer.string_of_ast (ast, errs))
+      (Printer.string_of_program prog)
   | Fail (file, _count, message) ->
     let failure = Printf.sprintf "%s %s\n"
         (" Fail " |> red |> bold)
