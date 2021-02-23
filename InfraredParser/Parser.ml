@@ -3,5 +3,9 @@ open Ast
 exception InfraredParsingError of int * string
 
 let parse_source ~(file : string) ~(source : string) : program =
-  let (ast, errs) = FlowParser.parse_source ~file ~source in
-  FlowProgram (ast, errs)
+  try
+    let flow_program = FlowParser.parse ~file ~source in
+    flow_program
+  with
+  | FlowParser.FlowParsingError (count, message) ->
+    raise (InfraredParsingError (count, message))

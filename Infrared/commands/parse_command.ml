@@ -19,6 +19,26 @@ let parse_file (file : string) : parser_result =
   | _ ->
     Nil file
 
+let print_result_summary start_time files err_files err_count : unit =
+  let end_time = Unix.gettimeofday () in
+  Printf.printf "\n%sChecked %s files in %ss"
+    (Chalk.green " ↗ ")
+    (files
+     |> List.length
+     |> string_of_int
+     |> Chalk.green)
+    (String.sub (string_of_float (end_time -. start_time)) 0 4);
+  if err_files > 0 || err_count > 0 then
+    Printf.printf "\n%sFailed to parse %s files with %s errors"
+      (Chalk.red " ↘ ")
+      (err_files
+       |> string_of_int
+       |> Chalk.red)
+      (err_count
+       |> string_of_int
+       |> Chalk.red);
+  Printf.printf "\n\n"
+
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
@@ -54,22 +74,7 @@ let check_files (files : string list) : unit =
       | _ -> acc)
       (0, 0) results
   in
-  let end_time = Unix.gettimeofday () in
-  Printf.printf "\n%sParsed %s files in %ss"
-    (Chalk.green " ↗ ")
-    (files
-     |> List.length
-     |> string_of_int
-     |> Chalk.green)
-    (String.sub (string_of_float (end_time -. start_time)) 0 4);
-  Printf.printf "\n%sFailed to parse %s files with %s errors\n\n"
-    (Chalk.red " ↘ ")
-    (err_files
-     |> string_of_int
-     |> Chalk.red)
-    (err_count
-     |> string_of_int
-     |> Chalk.red)
+  print_result_summary start_time files err_files err_count
 
 let parse_files args : unit =
   print_endline "";

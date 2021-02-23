@@ -10,4 +10,4 @@ let string_of_ast (ast : Loc.t FlowAst.program * (Loc.t * Err.t) list) : string 
 let string_of_program (prog: program) : string =
   match prog with
   | FlowProgram (ast, errs) -> FlowPrinter.string_of_ast (ast, errs)
-  | _ -> "program"
+  | _ -> "#<unhandled program>"

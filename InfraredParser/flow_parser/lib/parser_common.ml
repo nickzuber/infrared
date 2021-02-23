@@ -3,7 +3,7 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *)
+*)
 
 open Parser_env
 open Ast
@@ -52,75 +52,75 @@ let identifier_name env =
   let open Token in
   let loc = Peek.loc env in
   let name = match Peek.token env with
-  (* obviously, Identifier is a valid IdentifierName *)
-  | T_IDENTIFIER { value; _ } -> value
-  (* keywords are also IdentifierNames *)
-  | T_AWAIT -> "await"
-  | T_BREAK -> "break"
-  | T_CASE -> "case"
-  | T_CATCH -> "catch"
-  | T_CLASS -> "class"
-  | T_CONST -> "const"
-  | T_CONTINUE -> "continue"
-  | T_DEBUGGER -> "debugger"
-  | T_DEFAULT -> "default"
-  | T_DELETE -> "delete"
-  | T_DO -> "do"
-  | T_ELSE -> "else"
-  | T_EXPORT -> "export"
-  | T_EXTENDS -> "extends"
-  | T_FINALLY -> "finally"
-  | T_FOR -> "for"
-  | T_FUNCTION -> "function"
-  | T_IF -> "if"
-  | T_IMPORT -> "import"
-  | T_IN -> "in"
-  | T_INSTANCEOF -> "instanceof"
-  | T_NEW -> "new"
-  | T_RETURN -> "return"
-  | T_SUPER -> "super"
-  | T_SWITCH -> "switch"
-  | T_THIS -> "this"
-  | T_THROW -> "throw"
-  | T_TRY -> "try"
-  | T_TYPEOF -> "typeof"
-  | T_VAR -> "var"
-  | T_VOID -> "void"
-  | T_WHILE -> "while"
-  | T_WITH -> "with"
-  | T_YIELD -> "yield"
-  (* FutureReservedWord *)
-  | T_ENUM -> "enum"
-  | T_LET -> "let"
-  | T_STATIC -> "static"
-  | T_INTERFACE -> "interface"
-  | T_IMPLEMENTS -> "implements"
-  | T_PACKAGE -> "package"
-  | T_PRIVATE -> "private"
-  | T_PROTECTED -> "protected"
-  | T_PUBLIC -> "public"
-  (* NullLiteral *)
-  | T_NULL -> "null"
-  (* BooleanLiteral *)
-  | T_TRUE -> "true"
-  | T_FALSE -> "false"
-  (* Flow-specific stuff *)
-  | T_DECLARE -> "declare"
-  | T_TYPE -> "type"
-  | T_OPAQUE -> "opaque"
-  | T_ANY_TYPE -> "any"
-  | T_MIXED_TYPE -> "mixed"
-  | T_EMPTY_TYPE -> "empty"
-  | T_BOOLEAN_TYPE BOOL -> "bool"
-  | T_BOOLEAN_TYPE BOOLEAN -> "boolean"
-  | T_NUMBER_TYPE -> "number"
-  | T_STRING_TYPE -> "string"
-  | T_VOID_TYPE -> "void"
-  (* Contextual stuff *)
-  | T_OF -> "of"
-  | T_ASYNC -> "async"
-  (* punctuators, types, literals, etc are not identifiers *)
-  | _ -> error_unexpected env; ""
+    (* obviously, Identifier is a valid IdentifierName *)
+    | T_IDENTIFIER { value; _ } -> value
+    (* keywords are also IdentifierNames *)
+    | T_AWAIT -> "await"
+    | T_BREAK -> "break"
+    | T_CASE -> "case"
+    | T_CATCH -> "catch"
+    | T_CLASS -> "class"
+    | T_CONST -> "const"
+    | T_CONTINUE -> "continue"
+    | T_DEBUGGER -> "debugger"
+    | T_DEFAULT -> "default"
+    | T_DELETE -> "delete"
+    | T_DO -> "do"
+    | T_ELSE -> "else"
+    | T_EXPORT -> "export"
+    | T_EXTENDS -> "extends"
+    | T_FINALLY -> "finally"
+    | T_FOR -> "for"
+    | T_FUNCTION -> "function"
+    | T_IF -> "if"
+    | T_IMPORT -> "import"
+    | T_IN -> "in"
+    | T_INSTANCEOF -> "instanceof"
+    | T_NEW -> "new"
+    | T_RETURN -> "return"
+    | T_SUPER -> "super"
+    | T_SWITCH -> "switch"
+    | T_THIS -> "this"
+    | T_THROW -> "throw"
+    | T_TRY -> "try"
+    | T_TYPEOF -> "typeof"
+    | T_VAR -> "var"
+    | T_VOID -> "void"
+    | T_WHILE -> "while"
+    | T_WITH -> "with"
+    | T_YIELD -> "yield"
+    (* FutureReservedWord *)
+    | T_ENUM -> "enum"
+    | T_LET -> "let"
+    | T_STATIC -> "static"
+    | T_INTERFACE -> "interface"
+    | T_IMPLEMENTS -> "implements"
+    | T_PACKAGE -> "package"
+    | T_PRIVATE -> "private"
+    | T_PROTECTED -> "protected"
+    | T_PUBLIC -> "public"
+    (* NullLiteral *)
+    | T_NULL -> "null"
+    (* BooleanLiteral *)
+    | T_TRUE -> "true"
+    | T_FALSE -> "false"
+    (* Flow-specific stuff *)
+    | T_DECLARE -> "declare"
+    | T_TYPE -> "type"
+    | T_OPAQUE -> "opaque"
+    | T_ANY_TYPE -> "any"
+    | T_MIXED_TYPE -> "mixed"
+    | T_EMPTY_TYPE -> "empty"
+    | T_BOOLEAN_TYPE BOOL -> "bool"
+    | T_BOOLEAN_TYPE BOOLEAN -> "boolean"
+    | T_NUMBER_TYPE -> "number"
+    | T_STRING_TYPE -> "string"
+    | T_VOID_TYPE -> "void"
+    (* Contextual stuff *)
+    | T_OF -> "of"
+    | T_ASYNC -> "async"
+    (* punctuators, types, literals, etc are not identifiers *)
+    | _ -> error_unexpected env; ""
   in
   Eat.token env;
   loc, name
@@ -132,24 +132,24 @@ let assert_identifier_name_is_type_identifier env (loc, name) =
  * The abstract operation IsLabelledFunction
  *
  * https://tc39.github.io/ecma262/#sec-islabelledfunction
- *)
+*)
 let rec is_labelled_function = function
   | _, Ast.Statement.Labeled { Ast.Statement.Labeled.body; _ } ->
     begin match body with
-    | _, Ast.Statement.FunctionDeclaration _ -> true
-    | _ -> is_labelled_function body
+      | _, Ast.Statement.FunctionDeclaration _ -> true
+      | _ -> is_labelled_function body
     end
   | _ ->
     false
 
 let with_loc ?start_loc fn env =
   let start_loc = match start_loc with
-  | Some x -> x
-  | None -> Peek.loc env
+    | Some x -> x
+    | None -> Peek.loc env
   in
   let result = fn env in
   let loc = match last_loc env with
-  | Some end_loc -> Loc.btwn start_loc end_loc
-  | None -> start_loc
+    | Some end_loc -> Loc.btwn start_loc end_loc
+    | None -> start_loc
   in
   loc, result
