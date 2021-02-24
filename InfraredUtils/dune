@@ -1,4 +1,4 @@
 (library
  (name        InfraredUtils)
  (public_name InfraredUtils)
- (libraries   Str))
+ (libraries   Str flow_parser))

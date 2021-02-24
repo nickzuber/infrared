@@ -35,7 +35,19 @@ module rec InfraredAst : sig
     | Expression of expression
 end = InfraredAst
 
+type data_type =
+  | Null
+  | Undefined
+  | String
+  | Boolean
+  | Number
+  | Object of (string * data_type) list (* PropertyName, Value *)
+  | Array of data_type
+  | Function of data_type list * data_type (* Arguments, ReturnType *)
+
+type environment = (string, data_type) Hashtbl.t
+
 type program =
   | FlowProgram of Flow_parser.Loc.t Flow_parser.Ast.program *
                    (Flow_parser.Loc.t * Flow_parser.Parser_common.Error.t) list
-  | InfraredProgram of InfraredAst.statement list
+  | InfraredProgram of InfraredAst.statement list * environment

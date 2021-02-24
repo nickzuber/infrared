@@ -88,3 +88,7 @@ Queue.prototype.dequeue = function () {
 };
 
 module.exports = Queue;
+
+function f(x) {
+  var arr = [x];
+}
