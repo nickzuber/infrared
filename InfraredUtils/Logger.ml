@@ -2,8 +2,13 @@ module FlowAst = Flow_parser.Ast
 module Loc = Flow_parser.Loc
 
 let warn (msg : string) (loc : Loc.t) : unit =
-  Printf.printf "\n%s %s ~(line: %d, column: %d)\n"
+  Printf.printf "%s %s %s\n"
     (" ⚠" |> Chalk.yellow |> Chalk.bold)
+    ((Printf.sprintf "(%d:%d)" loc.start.line loc._end.column) |> Chalk.gray)
     msg
-    loc.start.line
-    loc._end.column
+
+let error (msg : string) (loc : Loc.t) : unit =
+  Printf.printf "%s %s %s\n"
+    (" ⦻" |> Chalk.red |> Chalk.bold)
+    ((Printf.sprintf "(%d:%d)" loc.start.line loc._end.column) |> Chalk.gray)
+    msg;

@@ -2,17 +2,30 @@ module rec InfraredAst : sig
   type identifier = string
 
   type unop =
-    | Minus
+    | Negate
     | Not
 
   and binop =
     | Plus
+    | Minus
+    | Multiply
+    | Divide
+    | Exponent
+    | Modulo
+    | LeftShift
+    | RightShift
+    | BitOr
+    | BitXor
+    | BitAnd
     | And
     | Or
+    | In
+    | InstanceOf
     | Compare of cmp
 
   and cmp =
     | Equal
+    | NotEqual
     | GreaterThan
     | LessThan
 

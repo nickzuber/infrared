@@ -1,7 +1,8 @@
 open Ast
-open VariableDeclarationTransformer
 module FlowAst = Flow_parser.Ast
 module Loc = Flow_parser.Loc
+open VariableDeclarationTransformer
+open BinaryTransformer
 
 exception Illegal_parsing_step of string
 
@@ -32,4 +33,12 @@ and infrared_statement_of_flow_statement (flow_statement : Loc.t FlowAst.Stateme
   let (_loc, statement) = flow_statement in
   match statement with
   | VariableDeclaration obj -> VariableDeclarationTransformer.transform obj
+  | Expression expression_object ->
+    let open FlowAst.Expression in
+    let (_loc, expr) = expression_object.expression in
+    (
+      match expr with
+      | Binary binary_expression -> BinaryTransformer.transform binary_expression
+      | _ -> Expression Null
+    )
   | _ -> Expression Null
