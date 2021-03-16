@@ -3,13 +3,15 @@ open InfraredUtils
 open Ast
 
 (* @TODO: Once we start working on the checker, this type will become useful.
-   type checking_result =
-   | CheckingSuccess of ...
-   | CheckingFailure of ...
-   | ParsingError of parser_result
+ * @NOTE: I don't think we need to encode type "errors" in the typing routine.
+ * Like a type contradiction isn't something we have a type for in our AST.
 *)
+type typing_result =
+  | TypedProgram of string * program (* file, TypedInfraredProgram *)
+  (* | CheckingFailure of ... *)
+  | ParsingError of parser_result
 
-type parser_result =
+and parser_result =
   | Success of string * program
   | Fail of string * int * string (* file, InfraredParsingError *)
   | Nil of string

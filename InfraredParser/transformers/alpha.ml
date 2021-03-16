@@ -7,11 +7,10 @@ open BinaryTransformer
 exception Illegal_parsing_step of string
 
 let rec transform (prog : program) : program =
-  let env : environment = Hashtbl.create 53 in
   let flow_program = match prog with
     | FlowProgram ((_loc, flow_statements, _comments), _errs) ->
       let statements = infrared_statements_of_flow_statements flow_statements in
-      InfraredProgram (statements, env)
+      InfraredProgram (statements)
     | _ -> raise
              (Illegal_parsing_step
                 "Expected FlowProgram at VariableDeclarationTransformer#transforming")

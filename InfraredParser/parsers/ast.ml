@@ -42,6 +42,9 @@ module rec InfraredAst : sig
     | BinaryOperation of binop * expression * expression
 
   and statement =
+    (* Recall that VariableAssignment don't exist for our AST.
+     * Any VariableAssignments will be considered as new variable
+     * declarations, so we can track any type branches for free. *)
     | VariableDeclaration of identifier * expression (* var x = e *)
     | FunctionDelcaration of identifier * (identifier list) * (statement list) (* name, arguments, body *)
     | If of expression * expression * expression
@@ -63,4 +66,5 @@ type environment = (string, data_type) Hashtbl.t
 type program =
   | FlowProgram of Flow_parser.Loc.t Flow_parser.Ast.program *
                    (Flow_parser.Loc.t * Flow_parser.Parser_common.Error.t) list
-  | InfraredProgram of InfraredAst.statement list * environment
+  | InfraredProgram of InfraredAst.statement list
+  | TypedInfraredProgram of InfraredAst.statement list * environment
