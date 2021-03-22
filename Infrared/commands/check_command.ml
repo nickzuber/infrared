@@ -1,4 +1,5 @@
 open InfraredParser
+open InfraredCompiler
 open InfraredUtils
 open Ast
 
@@ -8,7 +9,6 @@ open Ast
 *)
 type typing_result =
   | TypedProgram of string * program (* file, TypedInfraredProgram *)
-  (* | CheckingFailure of ... *)
   | ParsingError of parser_result
 
 and parser_result =
@@ -50,6 +50,12 @@ let print_result_summary start_time files err_files err_count : unit =
 
 let check_file (file : string) : parser_result =
   let parsing_output = parse_file file in
+  let _typed_program : typing_result = match parsing_output with
+    | Success (file, program) ->
+      let typed_program = Compiler.assign_types ~file ~program in
+      TypedProgram (file, typed_program)
+    | _ -> ParsingError parsing_output
+  in
   (* @TODO: this should eventually return both parsing errors and
    * type checking errors and results. *)
   parsing_output

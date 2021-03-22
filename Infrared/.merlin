@@ -48,6 +48,7 @@ B /Users/nick/.opam/4.08.0/lib/uchar
 B /Users/nick/.opam/4.08.0/lib/variantslib
 B /Users/nick/.opam/4.08.0/lib/wtf8
 B ../_build/default/Infrared/.main.eobjs/byte
+B ../_build/default/InfraredCompiler/.InfraredCompiler.objs/byte
 B ../_build/default/InfraredParser/.InfraredParser.objs/byte
 B ../_build/default/InfraredParser/flow_parser/lib/.Flow_parser.objs/byte
 B ../_build/default/InfraredUtils/.InfraredUtils.objs/byte
@@ -101,6 +102,7 @@ S /Users/nick/.opam/4.08.0/lib/variantslib
 S /Users/nick/.opam/4.08.0/lib/wtf8
 S .
 S commands
+S ../InfraredCompiler
 S ../InfraredParser
 S ../InfraredParser/flow_parser/lib
 S ../InfraredUtils

@@ -2,4 +2,4 @@
 
 (executable
  (name main)
- (libraries core unix InfraredParser InfraredUtils))
+ (libraries core unix InfraredParser InfraredCompiler InfraredUtils))
