@@ -51,7 +51,7 @@ module rec InfraredAst : sig
     | Expression of expression
 end = InfraredAst
 
-type data_type =
+type primative_data_type =
   | Null
   | Undefined
   | String
@@ -60,6 +60,11 @@ type data_type =
   | Object of (string * data_type) list (* PropertyName, Value *)
   | Array of data_type
   | Function of data_type list * data_type (* Arguments, ReturnType *)
+
+and data_type =
+  | Generic of string (* tag *)
+  | Defer of InfraredAst.expression
+  | Primative of primative_data_type
 
 type environment = (string, data_type) Hashtbl.t
 

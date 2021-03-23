@@ -100,6 +100,7 @@ S /Users/nick/.opam/4.08.0/lib/uchar
 S /Users/nick/.opam/4.08.0/lib/variantslib
 S /Users/nick/.opam/4.08.0/lib/wtf8
 S .
+S transformers
 S ../InfraredParser
 S ../InfraredParser/flow_parser/lib
 S ../InfraredUtils

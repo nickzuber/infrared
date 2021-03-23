@@ -48,25 +48,24 @@ let print_result_summary start_time files err_files err_count : unit =
        |> Chalk.red);
   Printf.printf "\n\n"
 
-let check_file (file : string) : parser_result =
+let check_file (file : string) : typing_result =
   let parsing_output = parse_file file in
-  let _typed_program : typing_result = match parsing_output with
+  let typed_program : typing_result = match parsing_output with
     | Success (file, program) ->
       let typed_program = Compiler.assign_types ~file ~program in
       TypedProgram (file, typed_program)
     | _ -> ParsingError parsing_output
   in
-  (* @TODO: this should eventually return both parsing errors and
-   * type checking errors and results. *)
-  parsing_output
+  typed_program
 
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
-  | Success (file, _prog) ->
-    Printf.sprintf "%s %s\n"
+  | Success (file, prog) ->
+    Printf.sprintf "%s %s%s\n"
       (" Pass " |> green |> bold)
       (gray file)
+      (Printer.string_of_program prog)
   | Fail (file, _count, message) ->
     let failure = Printf.sprintf "%s %s\n"
         (" Fail " |> red |> bold)
@@ -78,23 +77,34 @@ let string_of_parser_result (res : parser_result) : string =
       (" Fatal " |> red |> bold)
       (gray file)
 
+let string_of_typing_result (res : typing_result) : string =
+  let open Chalk in
+  match res with
+  | TypedProgram (file, prog) ->
+    Printf.sprintf "%s %s%s\n"
+      (" Pass " |> green |> bold)
+      (gray file)
+      (Printer.string_of_program prog)
+  | ParsingError (parser_result) -> string_of_parser_result parser_result
+
 let check_files (files : string list) : unit =
   let start_time = Unix.gettimeofday () in
   let results = List.map (fun file -> check_file file) files in
-  let result_strings = List.map string_of_parser_result results in
-  (* @TODO: This is printing the parsing results, we'd want to print the
-   * type checking results here isntead eventually. *)
+  let result_strings = List.map string_of_typing_result results in
   let () = List.iter (fun str -> Printf.printf "%s" str) result_strings in
-  (* @TODO: Count up all of the failed parsed files and errors. We'll want to do
-   * the same thing for type checking results too eventually. *)
   let (err_files, err_count) = List.fold_left (fun acc res ->
       match res with
-      | Fail (_file, count, _message) ->
-        let (acc_f, acc_c) = acc in
-        (acc_f + 1, acc_c + count)
-      | Nil _file ->
-        let (acc_f, acc_c) = acc in
-        (acc_f + 1, acc_c)
+      | ParsingError parser_result ->
+        (
+          match parser_result with
+          | Fail (_file, count, _message) ->
+            let (acc_f, acc_c) = acc in
+            (acc_f + 1, acc_c + count)
+          | Nil _file ->
+            let (acc_f, acc_c) = acc in
+            (acc_f + 1, acc_c)
+          | _ -> acc
+        )
       | _ -> acc)
       (0, 0) results
   in

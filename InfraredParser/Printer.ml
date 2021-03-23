@@ -1,4 +1,5 @@
 open Ast
+open InfraredUtils
 module FlowAst = Flow_parser.Ast
 module Loc = Flow_parser.Loc
 module Err = Flow_parser.Parse_error
@@ -9,10 +10,13 @@ let rec string_of_infrared_statement (statement: InfraredAst.statement) : string
   let open InfraredAst in
   match statement with
   | VariableDeclaration (id, value) ->
-    mkstr "%s <- %s"
+    mkstr "%s %s <- %s"
+      (Chalk.yellow "[VariableDeclaration]")
       id
       (string_of_infrared_expression value)
-  | Expression expr -> string_of_infrared_expression expr
+  | Expression expr ->
+    (Chalk.yellow "[Expression] ") ^
+    (string_of_infrared_expression expr)
   | _ -> "#<unhandled_statement>"
 
 and string_of_infrared_expression (expression : InfraredAst.expression) : string =
