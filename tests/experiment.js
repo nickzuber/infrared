@@ -10,6 +10,7 @@ function f (a, b) {
   a + 1;
   var a = 2;
 }
+a + 2;
 
 // var firstName = "Nick";
 // var age = 25;
