@@ -14,6 +14,14 @@ let rec string_of_infrared_statement (statement: InfraredAst.statement) : string
       (Chalk.yellow "[VariableDeclaration]")
       id
       (string_of_infrared_expression value)
+  | FunctionDeclaration (name, params, body) ->
+    let params' = String.concat ", " params in
+    let body' = String.concat "\n\t" (List.map string_of_infrared_statement body) in
+    Printf.sprintf "%s %s (%s) {\n\t%s\n}"
+      (Chalk.yellow "[FunctionDeclaration]")
+      name
+      (params')
+      (body')
   | Expression expr ->
     (Chalk.yellow "[Expression] ") ^
     (string_of_infrared_expression expr)

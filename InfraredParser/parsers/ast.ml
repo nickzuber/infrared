@@ -46,7 +46,7 @@ module rec InfraredAst : sig
      * Any VariableAssignments will be considered as new variable
      * declarations, so we can track any type branches for free. *)
     | VariableDeclaration of identifier * expression (* var x = e *)
-    | FunctionDelcaration of identifier * (identifier list) * (statement list) (* name, arguments, body *)
+    | FunctionDeclaration of identifier * (identifier list) * (statement list) (* name, arguments, body *)
     | If of expression * expression * expression
     | Expression of expression
 end = InfraredAst

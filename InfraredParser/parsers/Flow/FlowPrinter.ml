@@ -478,9 +478,9 @@ and string_of_statment_maybe statement_maybe : string =
   | None -> "∅"
 
 and string_of_catch_clause_maybe handler_maybe : string =
-    match handler_maybe with
-    | Some handler -> string_of_catch_clause handler
-    | None -> "∅"
+  match handler_maybe with
+  | Some handler -> string_of_catch_clause handler
+  | None -> "∅"
 
 and string_of_expression_maybe expression_maybe : string =
   match expression_maybe with
@@ -694,23 +694,23 @@ and string_of_catch_clause handler : string =
 
 and string_of_array elements_or_spread : string =
   let elements_or_spread_as_string = List.map
-  (fun elements_or_spread_maybe ->
-    match elements_or_spread_maybe with
-      | Some elements_or_spread ->
-        string_of_expression_or_spread elements_or_spread
-      | None -> ""
-  )
-  elements_or_spread
+      (fun elements_or_spread_maybe ->
+         match elements_or_spread_maybe with
+         | Some elements_or_spread ->
+           string_of_expression_or_spread elements_or_spread
+         | None -> ""
+      )
+      elements_or_spread
   in
   String.concat ", " elements_or_spread_as_string
 
-  and string_of_class obj : string =
-    let open C in
-    let string_of_expressions = listify string_of_expression in
-      Printf.sprintf "(id: %s) (decorators: %s) (body: %s)"
-        (string_of_identifier_maybe obj.id)
-        (string_of_expressions obj.classDecorators)
-        (string_of_body obj.body)
+and string_of_class obj : string =
+  let open C in
+  let string_of_expressions = listify string_of_expression in
+  Printf.sprintf "(id: %s) (decorators: %s) (body: %s)"
+    (string_of_identifier_maybe obj.id)
+    (string_of_expressions obj.classDecorators)
+    (string_of_body obj.body)
 
 and string_of_template_literal obj : string =
   let open E.TemplateLiteral in
@@ -725,5 +725,5 @@ and string_of_template_element quasi : string =
   let quasi' = strip_location quasi in
   Printf.sprintf "(Element (value: %s) (tail: %s))"
     (Printf.sprintf "(Value (raw: \"%s\") (cooked: \"%s\"))"
-      quasi'.value.raw quasi'.value.cooked)
+       quasi'.value.raw quasi'.value.cooked)
     (string_of_bool quasi'.tail)

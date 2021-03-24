@@ -1,13 +1,13 @@
-open InfraredUtils
-open Ast
-module FlowAst = Flow_parser.Ast
-module Loc = Flow_parser.Loc
+(* open InfraredUtils
+   open Ast
+   module FlowAst = Flow_parser.Ast
+   module Loc = Flow_parser.Loc
 
 
-exception TransformerBinaryError
+   exception TransformerBinaryError
 
-module BinaryTransformer = struct
-  let rec transform (obj : Loc.t FlowAst.Expression.Binary.t) =
+   module BinaryTransformer = struct
+   let rec transform (obj : Loc.t FlowAst.Expression.Binary.t) =
     let open FlowAst.Expression.Binary in
     let left = transform_expression obj.left in
     let right = transform_expression obj.right in
@@ -16,7 +16,7 @@ module BinaryTransformer = struct
       (InfraredAst.BinaryOperation
          (operator, left, right))
 
-  and transform_expression (expression : Loc.t FlowAst.Expression.t) : InfraredAst.expression =
+   and transform_expression (expression : Loc.t FlowAst.Expression.t) : InfraredAst.expression =
     let open FlowAst.Expression in
     let (loc, expr) = expression in
     match expr with
@@ -26,11 +26,11 @@ module BinaryTransformer = struct
       Logger.error "Unhandled expression type" loc;
       (raise TransformerBinaryError)
 
-  and transform_identifier (identifier : Loc.t FlowAst.Identifier.t) : InfraredAst.expression =
+   and transform_identifier (identifier : Loc.t FlowAst.Identifier.t) : InfraredAst.expression =
     let (_, name) = identifier in
     InfraredAst.Variable name
 
-  and transform_assignment_op op =
+   and transform_assignment_op op =
     let open FlowAst.Expression.Binary in
     match op with
     | Equal -> InfraredAst.Compare Equal
@@ -56,7 +56,7 @@ module BinaryTransformer = struct
     | In -> InfraredAst.In
     | Instanceof -> InfraredAst.InstanceOf
 
-  and transform_literal (object_literal : FlowAst.Literal.t) : InfraredAst.expression =
+   and transform_literal (object_literal : FlowAst.Literal.t) : InfraredAst.expression =
     match object_literal.value with
     | Boolean true -> InfraredAst.Boolean true
     | Boolean false -> InfraredAst.Boolean false
@@ -65,4 +65,4 @@ module BinaryTransformer = struct
     | String s -> InfraredAst.String s
     | RegExp regex_object -> InfraredAst.String ("/" ^ regex_object.pattern ^ "/")
 
-end
+   end *)

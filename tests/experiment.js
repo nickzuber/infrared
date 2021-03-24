@@ -4,14 +4,19 @@
 // var x = 2, y = 3;
 // x + 2;
 
-var firstName = "Nick";
-var age = 25;
-firstName - age;
+var a = 1;
+function f (a, b) {
+  var a = 2;
+}
 
-var age = 3;
-age + firstName
-var firstName = "Shiv"
-age + firstName
+// var firstName = "Nick";
+// var age = 25;
+// firstName - age;
+
+// var age = 3;
+// age + firstName
+// var firstName = "Shiv"
+// age + firstName
 
 // age.foo.bar;
 
