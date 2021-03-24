@@ -1,10 +1,9 @@
 open Ast
-open Alpha
 
 exception InfraredParsingError of int * string
 
 let infrared_program_of_flow_program (flow_program: program) : program =
-  let alpha_pass = Transformer.transform flow_program in
+  let alpha_pass = Alpha.Transformer.transform flow_program in
   alpha_pass
 
 let parse_source ~(file : string) ~(source : string) : program =
