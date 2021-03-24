@@ -5,7 +5,9 @@
 // x + 2;
 
 var a = 1;
+var f = 2;
 function f (a, b) {
+  a + 1;
   var a = 2;
 }
 
