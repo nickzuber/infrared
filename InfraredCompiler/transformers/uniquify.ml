@@ -14,9 +14,9 @@ let get_hash tbl key =
   with _ -> Utils.generate_hash ()
 
 let get_hashed_variable id hash =
-  id ^ "_#" ^ hash
+  id ^ "_" ^ hash
 
-let rec uniquify (statement : statement) (env : env_t) : statement =
+let rec uniquify_statement (statement : statement) (env : env_t) : statement =
   match statement with
   | VariableDeclaration (id, expression) ->
     let hash = Utils.generate_hash () in
@@ -33,7 +33,7 @@ let rec uniquify (statement : statement) (env : env_t) : statement =
         get_hashed_variable param hash
       ) params
     in
-    let body' = List.map (fun statement -> uniquify statement env') body in
+    let body' = List.map (fun statement -> uniquify_statement statement env') body in
     FunctionDeclaration (name', params', body')
   | Expression expr ->
     let expression' = uniquify_expression expr env in
@@ -56,6 +56,6 @@ let transform (program : program) : program =
   let env = Hashtbl.create 53 in
   match program with
   | InfraredProgram (statements) ->
-    let statements' = List.map (fun statement -> uniquify statement env) statements in
+    let statements' = List.map (fun statement -> uniquify_statement statement env) statements in
     InfraredProgram statements'
   | _ -> raise (Unexpected_compiler_phase "Expected InfraredProgram")

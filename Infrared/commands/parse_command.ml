@@ -4,7 +4,7 @@ open Ast
 
 type parser_result =
   | Success of string * program
-  | Fail of string * int * string (* file, InfraredParsingError *)
+  | Fail of string * int * string (* file, Infrared_parsing_error *)
   | Nil of string
 
 let parse_file (file : string) : parser_result =
@@ -14,7 +14,7 @@ let parse_file (file : string) : parser_result =
     let prog = Parser.parse_source ~file ~source in
     Success (file, prog)
   with
-  | InfraredParsingError (count, message) ->
+  | Infrared_parsing_error (count, message) ->
     Fail (file, count, message)
   | _ ->
     Nil file

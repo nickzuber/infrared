@@ -41,6 +41,10 @@ and string_of_infrared_expression (expression : InfraredAst.expression) : string
       (string_of_infrared_expression left)
       (string_of_infrared_binop binop)
       (string_of_infrared_expression right)
+  | Assignment (id, expr) ->
+    Printf.sprintf "%s = %s"
+      (id)
+      (string_of_infrared_expression expr)
   | _ -> "#<unhandled_expression>"
 
 and string_of_infrared_binop (binop : InfraredAst.binop) : string =

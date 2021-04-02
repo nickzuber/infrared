@@ -1,7 +1,7 @@
 open Ast
 open FlowError
 
-exception FlowParsingError of int * string
+exception Flow_parsing_error of int * string
 
 (** Does the work of parsing the raw file into components. *)
 let parse_source ~(file : string) ~(source : string) =
@@ -22,7 +22,7 @@ let parse_source ~(file : string) ~(source : string) =
   | Flow_parser.Parse_error.Error errs ->
     let message = FlowError.string_of_errors_in_file file errs in
     let count = List.length errs in
-    raise (FlowParsingError (count, message))
+    raise (Flow_parsing_error (count, message))
 
 (** Actually types the output to be a FlowProgram. *)
 let parse ~(file : string) ~(source : string) =

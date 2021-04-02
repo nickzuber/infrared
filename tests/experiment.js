@@ -6,8 +6,10 @@
 
 var a = 1;
 var f = 2;
+f = "test";
 function f (a, b) {
   a + 1;
+  a = "str";
   var a = 2;
 }
 a + 2;
