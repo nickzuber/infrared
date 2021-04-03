@@ -6,26 +6,30 @@ module Err = Flow_parser.Parse_error
 
 let mkstr = Printf.sprintf
 
+let string_of_type (t : string) : string =
+  Printf.sprintf "[%s] "
+    (Chalk.green t)
+
 let rec string_of_infrared_statement (statement: InfraredAst.statement) : string =
   let open InfraredAst in
   match statement with
   | VariableDeclaration (id, value) ->
     mkstr "%s %s <- %s"
-      (Chalk.yellow "[VariableDeclaration]")
+      (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression value)
   | FunctionDeclaration (name, params, body) ->
     let params' = String.concat ", " params in
     let body' = String.concat "\n\t" (List.map string_of_infrared_statement body) in
     Printf.sprintf "%s %s (%s) {\n\t%s\n}"
-      (Chalk.yellow "[FunctionDeclaration]")
+      (string_of_type "FunctionDeclaration")
       name
       (params')
       (body')
   | Expression expr ->
-    (Chalk.yellow "[Expression] ") ^
+    (string_of_type "Expression") ^
     (string_of_infrared_expression expr)
-  | _ -> "#<unhandled_statement>"
+  | _ -> string_of_type "#<unhandled_statement>"
 
 and string_of_infrared_expression (expression : InfraredAst.expression) : string =
   let open InfraredAst in
@@ -45,7 +49,7 @@ and string_of_infrared_expression (expression : InfraredAst.expression) : string
     Printf.sprintf "%s = %s"
       (id)
       (string_of_infrared_expression expr)
-  | _ -> "#<unhandled_expression>"
+  | _ -> string_of_type "#<unhandled_expression>"
 
 and string_of_infrared_binop (binop : InfraredAst.binop) : string =
   let open InfraredAst in
@@ -89,3 +93,20 @@ let string_of_program (prog: program) : string =
   | FlowProgram (ast, errs) -> FlowPrinter.string_of_ast (ast, errs)
   | InfraredProgram (statements) -> string_of_infrared_ast statements
   | TypedInfraredProgram (statements, _env) -> string_of_infrared_ast statements
+
+let pprint_program_with_title (title : string) (program : program) : program =
+  let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><>" in
+  let length_of_ending_str = String.length ending_str in
+  let length_of_title = String.length title in
+  let final_ending_str =
+    Printf.sprintf "%s ✨"
+      (String.sub ending_str 0
+         (Utils.math_max
+            (length_of_ending_str - length_of_title + 8) 0))
+  in
+  Printf.printf "%s %s %s %s\n\n"
+    (Chalk.cyan "<><>")
+    (Chalk.bold title)
+    (Chalk.cyan final_ending_str)
+    (string_of_program program);
+  program

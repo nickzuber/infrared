@@ -25,3 +25,9 @@ let generate_hash () : string =
   let size = 8 in
   let list_of_chars_as_strings = List.init size (fun _ -> rand_char_as_string ()) in
   String.concat "" list_of_chars_as_strings
+
+let math_min (a : int) (b : int) : int =
+  if a < b then a else b
+
+let math_max (a : int) (b : int) : int =
+  if a < b then b else a

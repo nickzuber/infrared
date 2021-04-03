@@ -46,7 +46,7 @@ let string_of_parser_result (res : parser_result) : string =
     Printf.sprintf "%s %s%s\n"
       (" Pass " |> green |> bold)
       (gray file)
-      (Printer.string_of_program prog)
+      ("\n" ^ Printer.string_of_program prog)
   | Fail (file, _count, message) ->
     let failure = Printf.sprintf "%s %s\n"
         (" Fail " |> red |> bold)

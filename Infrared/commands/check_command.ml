@@ -61,11 +61,10 @@ let check_file (file : string) : typing_result =
 let string_of_parser_result (res : parser_result) : string =
   let open Chalk in
   match res with
-  | Success (file, prog) ->
-    Printf.sprintf "%s %s%s\n"
+  | Success (file, _prog) ->
+    Printf.sprintf "%s %s\n"
       (" Pass " |> green |> bold)
       (gray file)
-      (Printer.string_of_program prog)
   | Fail (file, _count, message) ->
     let failure = Printf.sprintf "%s %s\n"
         (" Fail " |> red |> bold)
@@ -80,11 +79,10 @@ let string_of_parser_result (res : parser_result) : string =
 let string_of_typing_result (res : typing_result) : string =
   let open Chalk in
   match res with
-  | TypedProgram (file, prog) ->
-    Printf.sprintf "%s %s%s\n"
+  | TypedProgram (file, _prog) ->
+    Printf.sprintf "%s %s\n"
       (" Pass " |> green |> bold)
       (gray file)
-      (Printer.string_of_program prog)
   | ParsingError (parser_result) -> string_of_parser_result parser_result
 
 let check_files (files : string list) : unit =
