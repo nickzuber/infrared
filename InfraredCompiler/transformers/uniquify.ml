@@ -38,6 +38,9 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
   | Expression expr ->
     let expression' = uniquify_expression expr env in
     Expression expression'
+  | Return expr ->
+    let expression' = uniquify_expression expr env in
+    Return expression'
   | _ -> statement
 
 and uniquify_expression (expression : expression) (env : env_t) : expression =

@@ -26,6 +26,9 @@ let rec string_of_infrared_statement (statement: InfraredAst.statement) : string
       name
       (params')
       (body')
+  | Return expr ->
+    Printf.sprintf "-> %s"
+      (string_of_infrared_expression expr)
   | Expression expr ->
     (string_of_type "Expression") ^
     (string_of_infrared_expression expr)
@@ -78,9 +81,67 @@ and string_of_infrared_binop (binop : InfraredAst.binop) : string =
       | LessThan -> "<"
     )
 
+let string_of_primative (prim : primative_data_type) : string =
+  match prim with
+  | Null -> "Null"
+  | Undefined -> "Undefined"
+  | String -> "String"
+  | Boolean -> "Boolean"
+  | Number -> "Number"
+  | Object _ -> "Object"
+  | Array _ -> "Array"
+  | Function _ -> "Function"
+
+let string_of_data_type (d_type : data_type) : string =
+  match d_type with
+  | Generic tag -> "'" ^ tag
+  | Defer _expr -> "Defer"
+  | Primative prim -> string_of_primative prim
+
+let pp_string_of_data_type (d_type : data_type) : string =
+  let d_type_str = string_of_data_type d_type in
+  let str = "⊢ " ^ d_type_str in
+  str |> Chalk.white |> Chalk.bold
+
+let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statement) : string =
+  let open TypedInfraredAst in
+  match statement with
+  | VariableDeclaration (id, typed_value) ->
+    let (d_type, value) = typed_value in
+    mkstr "%s %s <- %s %s"
+      (string_of_type "VariableDeclaration")
+      id
+      (string_of_infrared_expression value)
+      (pp_string_of_data_type d_type)
+  | FunctionDeclaration (name, params, body) ->
+    let params' = String.concat ", " params in
+    let body' = String.concat "\n\t" (List.map string_of_typed_infrared_statement body) in
+    Printf.sprintf "%s %s (%s) {\n\t%s\n}"
+      (string_of_type "FunctionDeclaration")
+      name
+      (params')
+      (body')
+  | Return expr ->
+    let (d_type, expr) = expr in
+    Printf.sprintf "%sreturn %s %s"
+      (string_of_type "Return")
+      (string_of_infrared_expression expr)
+      (pp_string_of_data_type d_type)
+  | Expression typed_expr ->
+    let (d_type, expr) = typed_expr in
+    mkstr "%s %s %s"
+      (string_of_type "Expression")
+      (string_of_infrared_expression expr)
+      (pp_string_of_data_type d_type)
+  | _ -> string_of_type "#<unhandled_statement>"
 
 let string_of_infrared_ast (statements : InfraredAst.statement list) : string =
   let statement_strings = List.map string_of_infrared_statement statements in
+  let joined_statement_strings = String.concat "\n" statement_strings in
+  "\n" ^ joined_statement_strings
+
+let string_of_typed_infrared_ast (statements : TypedInfraredAst.statement list) : string =
+  let statement_strings = List.map string_of_typed_infrared_statement statements in
   let joined_statement_strings = String.concat "\n" statement_strings in
   "\n" ^ joined_statement_strings
 
@@ -92,7 +153,7 @@ let string_of_program (prog: program) : string =
   match prog with
   | FlowProgram (ast, errs) -> FlowPrinter.string_of_ast (ast, errs)
   | InfraredProgram (statements) -> string_of_infrared_ast statements
-  | TypedInfraredProgram (statements, _env) -> string_of_infrared_ast statements
+  | TypedInfraredProgram (statements, _env) -> string_of_typed_infrared_ast statements
 
 let pprint_program_with_title (title : string) (program : program) : program =
   let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><>" in

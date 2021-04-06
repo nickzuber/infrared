@@ -11,6 +11,7 @@ function f (a, b) {
   a + 1;
   a = "str";
   var a = 2;
+  return a;
 }
 a + 2;
 

@@ -19,7 +19,7 @@ let assign_types_with_debugging ~(file : string) ~(program : program) =
   program |> Printer.pprint_program_with_title "Initial program"
   |> Remove_assignify.transform |> Printer.pprint_program_with_title "Transform assignments into declarations"
   |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes closures)"
-  |> Typify.transform |> Printer.pprint_program_with_title "Type the program"
+  |> Typify.transform |> Printer.pprint_program_with_title "Assign base types"
 
 let assign_types ~(file : string) ~(program : program) =
   if Settings.debug_mode then
