@@ -22,7 +22,8 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
     let hash = Utils.generate_hash () in
     Hashtbl.replace env id hash;
     let id' = get_hashed_variable id hash in
-    VariableDeclaration (id', expression)
+    let expression' = uniquify_expression expression env in
+    VariableDeclaration (id', expression')
   | FunctionDeclaration (name, params, body) ->
     let hash = Utils.generate_hash () in
     let env' = Hashtbl.copy env in

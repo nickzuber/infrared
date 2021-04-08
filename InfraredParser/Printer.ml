@@ -10,6 +10,9 @@ let string_of_type (t : string) : string =
   Printf.sprintf "[%s] "
     (Chalk.green t)
 
+let get_type tbl key =
+  Hashtbl.find tbl key
+
 let rec string_of_infrared_statement (statement: InfraredAst.statement) : string =
   let open InfraredAst in
   match statement with
@@ -27,7 +30,8 @@ let rec string_of_infrared_statement (statement: InfraredAst.statement) : string
       (params')
       (body')
   | Return expr ->
-    Printf.sprintf "-> %s"
+    Printf.sprintf "%sreturn %s"
+      (string_of_type "Return")
       (string_of_infrared_expression expr)
   | Expression expr ->
     (string_of_type "Expression") ^
@@ -92,18 +96,23 @@ let string_of_primative (prim : primative_data_type) : string =
   | Array _ -> "Array"
   | Function _ -> "Function"
 
-let string_of_data_type (d_type : data_type) : string =
+let rec string_of_data_type (d_type : data_type) : string =
   match d_type with
   | Generic tag -> "'" ^ tag
   | Defer _expr -> "Defer"
   | Primative prim -> string_of_primative prim
+  | Reduction d_types ->
+    let d_types_str = List.map string_of_data_type d_types in
+    let str = String.concat ", " d_types_str in
+    Printf.sprintf "ψ(%s)"
+      str
 
 let pp_string_of_data_type (d_type : data_type) : string =
   let d_type_str = string_of_data_type d_type in
   let str = "⊢ " ^ d_type_str in
   str |> Chalk.white |> Chalk.bold
 
-let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statement) : string =
+let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statement) (env : environment) : string =
   let open TypedInfraredAst in
   match statement with
   | VariableDeclaration (id, typed_value) ->
@@ -114,8 +123,20 @@ let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statemen
       (string_of_infrared_expression value)
       (pp_string_of_data_type d_type)
   | FunctionDeclaration (name, params, body) ->
-    let params' = String.concat ", " params in
-    let body' = String.concat "\n\t" (List.map string_of_typed_infrared_statement body) in
+    let typed_params = List.map (fun param ->
+        let d_type = get_type env param in
+        (d_type, param)
+      ) params
+    in
+    let formatted_typed_params = List.map (fun typed_param ->
+        let (d_type, param) = typed_param in
+        Printf.sprintf "%s %s"
+          param
+          (pp_string_of_data_type d_type)
+      ) typed_params
+    in
+    let params' = String.concat ", " formatted_typed_params in
+    let body' = String.concat "\n\t" (List.map (fun s -> string_of_typed_infrared_statement s env) body) in
     Printf.sprintf "%s %s (%s) {\n\t%s\n}"
       (string_of_type "FunctionDeclaration")
       name
@@ -140,8 +161,8 @@ let string_of_infrared_ast (statements : InfraredAst.statement list) : string =
   let joined_statement_strings = String.concat "\n" statement_strings in
   "\n" ^ joined_statement_strings
 
-let string_of_typed_infrared_ast (statements : TypedInfraredAst.statement list) : string =
-  let statement_strings = List.map string_of_typed_infrared_statement statements in
+let string_of_typed_infrared_ast (statements : TypedInfraredAst.statement list) (env : environment) : string =
+  let statement_strings = List.map (fun s -> string_of_typed_infrared_statement s env) statements in
   let joined_statement_strings = String.concat "\n" statement_strings in
   "\n" ^ joined_statement_strings
 
@@ -153,7 +174,7 @@ let string_of_program (prog: program) : string =
   match prog with
   | FlowProgram (ast, errs) -> FlowPrinter.string_of_ast (ast, errs)
   | InfraredProgram (statements) -> string_of_infrared_ast statements
-  | TypedInfraredProgram (statements, _env) -> string_of_typed_infrared_ast statements
+  | TypedInfraredProgram (statements, env) -> string_of_typed_infrared_ast statements env
 
 let pprint_program_with_title (title : string) (program : program) : program =
   let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><>" in

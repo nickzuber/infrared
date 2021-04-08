@@ -8,6 +8,10 @@ let get_type tbl key =
   try Hashtbl.find tbl key
   with _ -> Primative Undefined
 
+let get_type_of_argument tbl key =
+  try Hashtbl.find tbl key
+  with _ -> Generic key
+
 let rec typify_statement (statement : statement) (env : environment) : TypedInfraredAst.statement =
   match statement with
   | VariableDeclaration (id, expression) ->
@@ -16,6 +20,11 @@ let rec typify_statement (statement : statement) (env : environment) : TypedInfr
     Hashtbl.replace env id d_type;
     VariableDeclaration (id, typed_expression)
   | FunctionDeclaration (name, params, body) ->
+    let _ = List.map (fun id ->
+        let generic = Generic id in
+        Hashtbl.replace env id generic;
+      ) params
+    in
     let typed_body = List.map (fun s -> typify_statement s env) body in
     FunctionDeclaration (name, params, typed_body)
   | Return expr ->
@@ -39,8 +48,8 @@ and type_of_expression (expression : expression) (env : environment) : data_type
   | Variable id -> get_type env id
   | BinaryOperation (_op, left, right) ->
     let d_type_left = type_of_expression left env in
-    let _d_type_right = type_of_expression right env in
-    d_type_left
+    let d_type_right = type_of_expression right env in
+    Reduction [d_type_left; d_type_right]
   | _ -> Generic "todo-expression"
 
 let transform (program : program) : program =

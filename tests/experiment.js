@@ -8,6 +8,7 @@ var a = 1;
 var f = 2;
 f = "test";
 function f (a, b) {
+  var c = a;
   a + 1;
   a = "str";
   var a = 2;

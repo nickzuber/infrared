@@ -64,8 +64,9 @@ type primative_data_type =
 
 and data_type =
   | Generic of string (* tag *)
-  | Defer of InfraredAst.expression
+  | Defer of InfraredAst.identifier (* is this reserved for undefined functions? *)
   | Primative of primative_data_type
+  | Reduction of data_type list
 
 type environment = (string, data_type) Hashtbl.t
 
