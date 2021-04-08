@@ -1,43 +1,7 @@
-// var x;
-// var x = 123;
-// var [x] = 123;
-// var x = 2, y = 3;
-// x + 2;
-
-var a = 1;
-var f = 2;
-f = "test";
-function f (a, b) {
-  var c = a;
-  a + 1;
-  a = "str";
-  var a = 2;
-  return a;
-}
-a + 2;
-
-// var firstName = "Nick";
-// var age = 25;
-// firstName - age;
-
-// var age = 3;
-// age + firstName
-// var firstName = "Shiv"
-// age + firstName
-
-// age.foo.bar;
-
-// function callParent (child) {
-//   const parent = getParent(child);
-//   return child.call(parent);
-// }
-
-// // env :
-// //   x : number
-// //
-// //
-// function f (x) { // x: number -> string
-//   var _ = x - 1; // x : number
-//   x = 'string' // x2 : string
-//   return x; // ret -> typeof x2
-// }
+var bar = "test"
+var o = {
+  baz: "a",
+  foo: 1,
+  bar,
+  [3]: 3
+};

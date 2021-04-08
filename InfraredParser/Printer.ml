@@ -4,8 +4,6 @@ module FlowAst = Flow_parser.Ast
 module Loc = Flow_parser.Loc
 module Err = Flow_parser.Parse_error
 
-let mkstr = Printf.sprintf
-
 let string_of_type (t : string) : string =
   Printf.sprintf "[%s] "
     (Chalk.green t)
@@ -17,7 +15,7 @@ let rec string_of_infrared_statement (statement: InfraredAst.statement) : string
   let open InfraredAst in
   match statement with
   | VariableDeclaration (id, value) ->
-    mkstr "%s %s <- %s"
+    Printf.sprintf "%s %s <- %s"
       (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression value)
@@ -42,7 +40,7 @@ and string_of_infrared_expression (expression : InfraredAst.expression) : string
   let open InfraredAst in
   match expression with
   | Variable id -> id
-  | String s -> s
+  | String s -> "\"" ^ s ^ "\""
   | Number n -> string_of_int n
   | Boolean b -> string_of_bool b
   | Null -> "null"
@@ -56,6 +54,15 @@ and string_of_infrared_expression (expression : InfraredAst.expression) : string
     Printf.sprintf "%s = %s"
       (id)
       (string_of_infrared_expression expr)
+  | Object pairs ->
+    let pairs_strs = List.map (fun pair ->
+        let (key, value) = pair in
+        let value_str = string_of_infrared_expression value in
+        Printf.sprintf "\n\t%s: %s"
+          key value_str
+      ) pairs in
+    let formatted_pairs = String.concat "," pairs_strs in
+    Printf.sprintf "{%s\n}" formatted_pairs
   | _ -> string_of_type "#<unhandled_expression>"
 
 and string_of_infrared_binop (binop : InfraredAst.binop) : string =
@@ -85,18 +92,27 @@ and string_of_infrared_binop (binop : InfraredAst.binop) : string =
       | LessThan -> "<"
     )
 
-let string_of_primative (prim : primative_data_type) : string =
+let rec string_of_primative (prim : primative_data_type) : string =
   match prim with
   | Null -> "Null"
   | Undefined -> "Undefined"
   | String -> "String"
   | Boolean -> "Boolean"
   | Number -> "Number"
-  | Object _ -> "Object"
+  | Object pairs ->
+    let pp_pairs = List.map (fun pair ->
+        let (key, d_type) = pair in
+        Printf.sprintf "\n\t%s: %s"
+          key
+          (string_of_data_type d_type)
+      ) pairs
+    in
+    Printf.sprintf "Object {%s\n}"
+      (String.concat "; " pp_pairs)
   | Array _ -> "Array"
   | Function _ -> "Function"
 
-let rec string_of_data_type (d_type : data_type) : string =
+and string_of_data_type (d_type : data_type) : string =
   match d_type with
   | Generic tag -> "'" ^ tag
   | Defer _expr -> "Defer"
@@ -117,7 +133,7 @@ let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statemen
   match statement with
   | VariableDeclaration (id, typed_value) ->
     let (d_type, value) = typed_value in
-    mkstr "%s %s <- %s %s"
+    Printf.sprintf "%s %s <- %s %s"
       (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression value)
@@ -150,7 +166,7 @@ let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statemen
       (pp_string_of_data_type d_type)
   | Expression typed_expr ->
     let (d_type, expr) = typed_expr in
-    mkstr "%s %s %s"
+    Printf.sprintf "%s %s %s"
       (string_of_type "Expression")
       (string_of_infrared_expression expr)
       (pp_string_of_data_type d_type)
@@ -176,7 +192,7 @@ let string_of_program (prog: program) : string =
   | InfraredProgram (statements) -> string_of_infrared_ast statements
   | TypedInfraredProgram (statements, env) -> string_of_typed_infrared_ast statements env
 
-let pprint_program_with_title (title : string) (program : program) : program =
+let string_of_title (title : string) : string =
   let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><>" in
   let length_of_ending_str = String.length ending_str in
   let length_of_title = String.length title in
@@ -186,9 +202,14 @@ let pprint_program_with_title (title : string) (program : program) : program =
          (Utils.math_max
             (length_of_ending_str - length_of_title + 8) 0))
   in
-  Printf.printf "%s %s %s %s\n\n"
+  Printf.sprintf "%s %s %s"
     (Chalk.cyan "<><>")
     (Chalk.bold title)
     (Chalk.cyan final_ending_str)
+
+let pprint_program_with_title (title : string) (program : program) : program =
+  let title = string_of_title title in
+  Printf.printf "%s %s\n\n"
+    title
     (string_of_program program);
   program

@@ -604,12 +604,21 @@ and string_of_property prop : string =
   let prop = strip_location prop in
   let string_of_key key : string =
     match key with
-    | Literal l -> l
-                   |> strip_location
-                   |> string_of_literal
-    | Identifier id -> string_of_identifier id
-    | PrivateName _ -> (todo "PrivateName")
-    | Computed expr -> string_of_expression expr
+    | Literal l ->
+      let str = l |> strip_location
+                |> string_of_literal
+      in
+      Printf.sprintf "([Literal] %s)"
+        str
+    | Identifier id ->
+      let str = string_of_identifier id in
+      Printf.sprintf "([Identifier] %s)"
+        str
+    | PrivateName _ -> (todo "[PrivateName] PrivateName")
+    | Computed expr ->
+      let str = string_of_expression expr in
+      Printf.sprintf "([Computed] %s)"
+        str
   in
   match prop with
   | Init obj ->

@@ -34,6 +34,7 @@ module rec InfraredAst : sig
     | String of string
     | Number of int
     | Boolean of bool
+    | Object of (identifier * expression) list
     | Null
     | Undefined
     | Access of expression * expression (* e.e *)

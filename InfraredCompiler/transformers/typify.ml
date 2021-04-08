@@ -50,6 +50,13 @@ and type_of_expression (expression : expression) (env : environment) : data_type
     let d_type_left = type_of_expression left env in
     let d_type_right = type_of_expression right env in
     Reduction [d_type_left; d_type_right]
+  | Object pairs ->
+    let typed_pairs = List.map (fun pair ->
+        let (key, value) = pair in
+        let d_type = type_of_expression value env in
+        (key, d_type)
+      ) pairs in
+    Primative (Object typed_pairs)
   | _ -> Generic "todo-expression"
 
 let transform (program : program) : program =

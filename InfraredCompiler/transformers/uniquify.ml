@@ -54,6 +54,14 @@ and uniquify_expression (expression : expression) (env : env_t) : expression =
     let left' = uniquify_expression left env in
     let right' = uniquify_expression right env in
     BinaryOperation (binop, left', right')
+  | Object pairs ->
+    let pairs' = List.map (fun pair ->
+        let (key, value) = pair in
+        let value' = uniquify_expression value env in
+        (key, value')
+      ) pairs
+    in
+    Object pairs'
   | _ -> expression
 
 let transform (program : program) : program =

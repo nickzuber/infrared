@@ -15,7 +15,9 @@ let assign_types_without_debugging ~(file : string) ~(program : program) =
   |> Typify.transform
 
 let assign_types_with_debugging ~(file : string) ~(program : program) =
-  let _ = file in
+  Printf.printf "%s\n%s\n"
+    (Printer.string_of_title "Raw program")
+    (Fs.read_file file);
   program |> Printer.pprint_program_with_title "Initial program"
   |> Remove_assignify.transform |> Printer.pprint_program_with_title "Transform assignments into declarations"
   |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes closures)"
