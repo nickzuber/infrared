@@ -62,11 +62,6 @@ and type_of_expression (expression : expression) (env : environment) : data_type
     Drill (inner_d_type, e2)
   | _ -> Generic "todo-expression"
 
-(* and type_of_property (prop : InfraredAst.property) (env : environment) : data_type =
-   match prop with
-   | PropertyExpression expr -> type_of_expression expr env
-   | PropertyIdentifier expr -> type_of_expression expr env *)
-
 let transform (program : program) : program =
   let env : environment = Hashtbl.create 53 in
   match program with

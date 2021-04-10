@@ -71,8 +71,8 @@ and data_type =
   | Generic of string (* tag *)
   | Defer of InfraredAst.identifier (* is this reserved for undefined functions? *)
   | Primative of primative_data_type
+  | Reduction of data_type list (* operations on expressions *)
   | Drill of data_type * InfraredAst.property
-  | Reduction of data_type list
 
 type environment = (string, data_type) Hashtbl.t
 

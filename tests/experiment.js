@@ -7,5 +7,7 @@ var o = {
 };
 var a = "string".length
 function f(a, b) {
+  a + b + c
+  a.b.c.d
   return a[b]
 }

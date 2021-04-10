@@ -133,7 +133,7 @@ and string_of_data_type (d_type : data_type) : string =
     Printf.sprintf "ψ(%s)"
       str
   | Drill (d_type, prop) ->
-    Printf.sprintf "Drill(%s, %s)"
+    Printf.sprintf "φ(%s, %s)"
       (string_of_data_type d_type)
       (string_of_infrared_property prop)
 
