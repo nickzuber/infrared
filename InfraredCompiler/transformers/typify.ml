@@ -57,7 +57,15 @@ and type_of_expression (expression : expression) (env : environment) : data_type
         (key, d_type)
       ) pairs in
     Primative (Object typed_pairs)
+  | Access (e1, e2) ->
+    let inner_d_type = type_of_expression e1 env in
+    Drill (inner_d_type, e2)
   | _ -> Generic "todo-expression"
+
+(* and type_of_property (prop : InfraredAst.property) (env : environment) : data_type =
+   match prop with
+   | PropertyExpression expr -> type_of_expression expr env
+   | PropertyIdentifier expr -> type_of_expression expr env *)
 
 let transform (program : program) : program =
   let env : environment = Hashtbl.create 53 in

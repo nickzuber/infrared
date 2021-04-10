@@ -5,3 +5,7 @@ var o = {
   bar,
   [3]: 3
 };
+var a = "string".length
+function f(a, b) {
+  return a[b]
+}

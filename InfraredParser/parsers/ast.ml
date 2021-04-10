@@ -29,6 +29,10 @@ module rec InfraredAst : sig
     | GreaterThan
     | LessThan
 
+  and property =
+    | PropertyExpression of expression
+    | PropertyIdentifier of identifier
+
   and expression =
     | Variable of identifier
     | String of string
@@ -37,7 +41,7 @@ module rec InfraredAst : sig
     | Object of (identifier * expression) list
     | Null
     | Undefined
-    | Access of expression * expression (* e.e *)
+    | Access of expression * property (* e.e *)
     | Assignment of identifier * expression (* x = e *)
     | UnaryOperation of unop * expression
     | BinaryOperation of binop * expression * expression
@@ -67,6 +71,7 @@ and data_type =
   | Generic of string (* tag *)
   | Defer of InfraredAst.identifier (* is this reserved for undefined functions? *)
   | Primative of primative_data_type
+  | Drill of data_type * InfraredAst.property
   | Reduction of data_type list
 
 type environment = (string, data_type) Hashtbl.t

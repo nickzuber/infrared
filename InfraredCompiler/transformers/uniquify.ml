@@ -62,7 +62,16 @@ and uniquify_expression (expression : expression) (env : env_t) : expression =
       ) pairs
     in
     Object pairs'
+  | Access (e1, e2) ->
+    let e1' = uniquify_expression e1 env in
+    let e2' = uniquify_property e2 env in
+    Access (e1', e2')
   | _ -> expression
+
+and uniquify_property (prop : property) (env : env_t) : property =
+  match prop with
+  | PropertyExpression expr -> PropertyExpression (uniquify_expression expr env)
+  | PropertyIdentifier id -> PropertyIdentifier id
 
 let transform (program : program) : program =
   let env = Hashtbl.create 53 in

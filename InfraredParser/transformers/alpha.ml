@@ -13,6 +13,8 @@ exception TransformerExpressionError
 let logger_error (message : string) (loc : Loc.t) : unit =
   Logger.error ("[InfraredParser.alpha] " ^ message) loc
 
+let logger_error_no_loc (message : string) : unit =
+  Logger.error_no_loc ("[InfraredParser.alpha] " ^ message)
 
 module rec FunctionDeclarationTransformer : sig
   val transform : Loc.t FlowAst.Function.t -> InfraredAst.statement
@@ -112,8 +114,23 @@ end = struct
     | Object obj -> InfraredAst.Object (transform_object_properties loc obj.properties)
     | Binary binary_expression -> transform_binary binary_expression
     | Assignment obj -> transform_assignment obj
+    | Member obj -> transform_member_expression obj
     | _ ->
       logger_error "Unhandled expression type" loc;
+      (raise TransformerExpressionError)
+
+  and transform_member_expression (obj : Loc.t FlowAst.Expression.Member.t) : InfraredAst.expression =
+    let object_expr = transform_expression obj._object in
+    let property_expr = transform_member_property obj.property in
+    InfraredAst.Access (object_expr, property_expr)
+
+  and transform_member_property (prop : Loc.t FlowAst.Expression.Member.property) : InfraredAst.property =
+    let open FlowAst.Expression.Member in
+    match prop with
+    | PropertyIdentifier id -> PropertyIdentifier (transform_identifier id)
+    | PropertyExpression expr -> PropertyExpression (transform_expression expr)
+    | PropertyPrivateName _name ->
+      logger_error_no_loc "Unhandled SpreadProperty in object";
       (raise TransformerExpressionError)
 
   and transform_object_properties (loc : Loc.t) (properties : Loc.t FlowAst.Expression.Object.property list)
@@ -175,7 +192,7 @@ end = struct
     | Undefined -> "Undefined"
     | Number n -> string_of_int n
     | String s -> s
-    | _ -> "<#UNKNOWN>"
+    | _ -> "<#unknown>"
 
   and transform_assignment (obj : Loc.t FlowAst.Expression.Assignment.t) =
     let open FlowAst.Expression.Assignment in

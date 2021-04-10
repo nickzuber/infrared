@@ -63,7 +63,17 @@ and string_of_infrared_expression (expression : InfraredAst.expression) : string
       ) pairs in
     let formatted_pairs = String.concat "," pairs_strs in
     Printf.sprintf "{%s\n}" formatted_pairs
+  | Access (e1, e2) ->
+    Printf.sprintf "(%s%s)"
+      (string_of_infrared_expression e1)
+      (string_of_infrared_property e2)
   | _ -> string_of_type "#<unhandled_expression>"
+
+and string_of_infrared_property (prop : InfraredAst.property) : string =
+  let open InfraredAst in
+  match prop with
+  | PropertyExpression expr -> "[" ^ (string_of_infrared_expression expr) ^ "]"
+  | PropertyIdentifier id -> "." ^ id
 
 and string_of_infrared_binop (binop : InfraredAst.binop) : string =
   let open InfraredAst in
@@ -122,6 +132,10 @@ and string_of_data_type (d_type : data_type) : string =
     let str = String.concat ", " d_types_str in
     Printf.sprintf "ψ(%s)"
       str
+  | Drill (d_type, prop) ->
+    Printf.sprintf "Drill(%s, %s)"
+      (string_of_data_type d_type)
+      (string_of_infrared_property prop)
 
 let pp_string_of_data_type (d_type : data_type) : string =
   let d_type_str = string_of_data_type d_type in

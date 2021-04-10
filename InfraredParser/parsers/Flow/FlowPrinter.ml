@@ -253,8 +253,8 @@ and string_of_expression expr : string =
       (operator_string)
       (string_of_expression obj.right)
   | Member obj ->
-    Printf.sprintf "(Member %s)"
-      (string_of_member_property obj.property)
+    Printf.sprintf "(MemberExpression %s)"
+      (string_of_member_expression obj)
   | MetaProperty _obj ->
     (* Absolutely no earthly clue what this expression is. *)
     Printf.sprintf "(Skipped `MetaProperty`)"
@@ -455,6 +455,18 @@ and string_of_stringliteral_maybe str_maybe : string =
 and string_of_stringliteral str : string =
   let name = strip_location str in
   name.value
+
+and string_of_member_expression obj : string =
+  let object_string = string_of_member_object obj._object in
+  let property_string = string_of_member_property obj.property in
+  object_string ^ "," ^ property_string
+
+and string_of_member_object obj : string =
+  let open E in
+  let (_loc, expr) = obj in
+  match expr with
+  | Member obj -> string_of_member_expression obj
+  | _ -> string_of_expression obj
 
 and string_of_member_property prop : string =
   let open E.Member in
