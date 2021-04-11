@@ -30,8 +30,15 @@ let rec typify_statement (statement : statement) (env : environment) : TypedInfr
     let d_type = type_of_expression expr env in
     let typed_expression = (d_type, expr) in
     Expression typed_expression
-  | _ -> TypedInfraredAst.Expression
-           (Generic "todo-statement", Undefined)
+  | Block statements ->
+    let statements' = List.map (fun s -> typify_statement s env) statements in
+    Block statements'
+  | If (expr, s1, s2) ->
+    let d_type = type_of_expression expr env in
+    let typed_expression = (d_type, expr) in
+    let s1' = typify_statement s1 env in
+    let s2' = typify_statement s2 env in
+    If (typed_expression, s1', s2')
 
 and type_of_expression (expression : expression) (env : environment) : data_type =
   match expression with
@@ -59,7 +66,7 @@ and type_of_expression (expression : expression) (env : environment) : data_type
     let callee_d_type = type_of_expression callee env in
     let args_d_types = List.map (fun arg -> type_of_expression arg env) args in
     Exec (callee_d_type, args_d_types)
-  | _ -> Generic "todo-expression"
+  | _ -> Generic "typify-todo-expression"
 
 let transform (env : environment) (program : program) : program =
   match program with

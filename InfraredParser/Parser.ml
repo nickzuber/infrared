@@ -4,7 +4,7 @@ open InfraredUtils
 exception Infrared_parsing_error of int * string
 
 let infrared_program_of_flow_program (flow_program: program) : program =
-  let alpha_pass = Alpha.Transformer.transform flow_program in
+  let alpha_pass = Alpha.StatementTransformer.transform flow_program in
   alpha_pass
 
 let flow_program_of_file ~(file : string) ~(source : string) : program =

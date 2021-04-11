@@ -12,8 +12,9 @@ let get_type tbl key =
   try Hashtbl.find tbl key
   with _ -> Generic "unable-to-find-this-type-this-is-a-bug"
 
-let rec string_of_infrared_statement ?depth:(depth=0) (statement: InfraredAst.statement) : string =
+let rec string_of_infrared_statement ?depth:(depth=0) ?tag:(tag="") (statement: InfraredAst.statement) : string =
   let open InfraredAst in
+  let string_of_type (t : string) = string_of_type (tag ^ t) in
   let padding = String.make depth '\t' in
   match statement with
   | VariableDeclaration (id, value) ->
@@ -41,10 +42,24 @@ let rec string_of_infrared_statement ?depth:(depth=0) (statement: InfraredAst.st
       (string_of_type "Return")
       (string_of_infrared_expression ~depth:depth expr)
   | Expression expr ->
-    padding ^
-    (string_of_type "Expression") ^
-    (string_of_infrared_expression ~depth:depth expr)
-  | _ -> string_of_type "#<unhandled_statement>"
+    Printf.sprintf "%s%s%s"
+      padding
+      (string_of_type "Expression")
+      (string_of_infrared_expression ~depth:depth expr)
+  | If (expr, s1, s2) ->
+    Printf.sprintf "%s%sif (%s)\n%s\n%s"
+      padding
+      (string_of_type "IfStatement")
+      (string_of_infrared_expression ~depth:(depth + 1) expr)
+      (string_of_infrared_statement ~depth:(depth + 1) ~tag:("Then") s1)
+      (string_of_infrared_statement ~depth:(depth + 1) ~tag:("Else") s2)
+  | Block statements ->
+    let statement_strs = List.map (string_of_infrared_statement ~depth:(depth + 1)) statements in
+    Printf.sprintf "%s%s{\n%s\n%s}"
+      padding
+      (string_of_type "Block")
+      (String.concat "\n" statement_strs)
+      padding
 
 and string_of_infrared_expression ?depth:(depth=0) (expression : InfraredAst.expression) : string =
   let open InfraredAst in
@@ -178,8 +193,9 @@ let pp_string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
   let str = "⊢ " ^ d_type_str in
   str |> Chalk.white |> Chalk.bold
 
-let rec string_of_typed_infrared_statement ?depth:(depth=0) (statement: TypedInfraredAst.statement) (env : environment) : string =
+let rec string_of_typed_infrared_statement ?depth:(depth=0) ?tag:(tag="") (statement: TypedInfraredAst.statement) (env : environment) : string =
   let open TypedInfraredAst in
+  let string_of_type (t : string) = string_of_type (tag ^ t) in
   let padding = String.make depth '\t' in
   match statement with
   | VariableDeclaration (id, typed_value) ->
@@ -231,7 +247,23 @@ let rec string_of_typed_infrared_statement ?depth:(depth=0) (statement: TypedInf
       (string_of_type "Expression")
       (string_of_infrared_expression ~depth:depth expr)
       (pp_string_of_data_type ~depth:depth d_type)
-  | _ -> string_of_type "#<unhandled_statement>"
+  | If (expr, s1, s2) ->
+    let (d_type, expr) = expr in
+    Printf.sprintf "%s%sif (%s %s)\n%s\n%s"
+      padding
+      (string_of_type "IfStatement")
+      (string_of_infrared_expression ~depth:(depth + 1) expr)
+      (pp_string_of_data_type ~depth:depth d_type)
+      (string_of_typed_infrared_statement ~depth:(depth + 1) ~tag:("Then") s1 env)
+      (string_of_typed_infrared_statement ~depth:(depth + 1) ~tag:("Else") s2 env)
+  | Block statements ->
+    let statement_strs = List.map
+        (fun s -> string_of_typed_infrared_statement ~depth:(depth + 1) s env) statements in
+    Printf.sprintf "%s%s{\n%s\n%s}"
+      padding
+      (string_of_type "Block")
+      (String.concat "\n" statement_strs)
+      padding
 
 let string_of_infrared_ast (statements : InfraredAst.statement list) : string =
   let statement_strings = List.map string_of_infrared_statement statements in

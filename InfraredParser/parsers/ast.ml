@@ -53,9 +53,10 @@ module rec InfraredAst : sig
      * declarations, so we can track any type branches for free. *)
     | VariableDeclaration of identifier * expression (* var x = e *)
     | FunctionDeclaration of identifier * (identifier list) * (statement list) (* name, arguments, body *)
-    | If of expression * expression * expression
+    | If of expression * statement * statement
     | Return of expression
     | Expression of expression
+    | Block of statement list
 end = InfraredAst
 
 type primative_data_type =
@@ -88,9 +89,10 @@ module rec TypedInfraredAst : sig
      * declarations, so we can track any type branches for free. *)
     | VariableDeclaration of InfraredAst.identifier * typed_expression (* var x = e *)
     | FunctionDeclaration of InfraredAst.identifier * (InfraredAst.identifier list) * (statement list) (* name, arguments, body *)
-    | If of typed_expression * typed_expression * typed_expression
+    | If of typed_expression * statement * statement
     | Return of typed_expression
     | Expression of typed_expression
+    | Block of statement list
 end = TypedInfraredAst
 
 type program =

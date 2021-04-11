@@ -28,7 +28,10 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
     let hash = Utils.generate_hash () in
     Hashtbl.replace env name hash;
     let name' = get_hashed_variable name hash in
-    (* Copying the environment for the function body is what lets us remove variable shadowing. *)
+    (* @NOTE: Environment Copying
+     * Copying the environment for the function body is what lets us remove
+     * variable shadowing. This is because we won't overwrite any variables
+     * in the current environment, since this inner closure is contained. *)
     let env' = Hashtbl.copy env in
     let params' = List.map (fun param ->
         let hash = Utils.generate_hash () in
@@ -44,6 +47,16 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
   | Return expr ->
     let expression' = uniquify_expression expr env in
     Return expression'
+  | Block statements ->
+    (* @NOTE: Block Scopes
+     * @SEE: Environment Copying
+     * Technically block scopes are only applied with `let` or `const` variables.
+     * I should eventually come back to clear this up, but for now let's ignore it
+     * and assume all variables are declared this way.
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block#block_scoping_rules_with_var_or_function_declaration_in_non-strict_mode *)
+    let env' = Hashtbl.copy env in
+    let statements' = List.map (fun s -> uniquify_statement s env') statements in
+    Block statements'
   | _ -> statement
 
 and uniquify_expression (expression : expression) (env : env_t) : expression =

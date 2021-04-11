@@ -33,7 +33,7 @@ end = struct
 
   and transform_body_block (block : Loc.t * Loc.t FlowAst.Statement.Block.t) : InfraredAst.statement list =
     let (_, block) = block in
-    List.map Transformer.transform_statement block.body
+    List.map StatementTransformer.transform_statement block.body
 
   and transform_identifier_maybe (identifier_maybe : Loc.t FlowAst.Identifier.t option) : string =
     match identifier_maybe with
@@ -53,6 +53,29 @@ end = struct
     let open FlowAst.Statement.Return in
     let arg = ExpressionTransformer.transform_expression_maybe obj.argument in
     InfraredAst.Return arg
+end
+
+and IfTransformer : sig
+  val transform : Loc.t FlowAst.Statement.If.t -> InfraredAst.statement
+end = struct
+  let transform (obj : Loc.t FlowAst.Statement.If.t) : InfraredAst.statement =
+    let open FlowAst.Statement.If in
+    let test = ExpressionTransformer.transform obj.test in
+    let consequent = StatementTransformer.transform_statement obj.consequent in
+    let alternate = match obj.alternate with
+      | Some statement -> StatementTransformer.transform_statement statement
+      | None -> InfraredAst.Expression (InfraredAst.Undefined)
+    in
+    InfraredAst.If (test, consequent, alternate)
+end
+
+and BlockTransformer : sig
+  val transform : Loc.t FlowAst.Statement.Block.t -> InfraredAst.statement
+end = struct
+  let transform (block : Loc.t FlowAst.Statement.Block.t) : InfraredAst.statement =
+    let open FlowAst.Statement.Block in
+    let statements' = List.map StatementTransformer.transform_statement block.body in
+    InfraredAst.Block statements'
 end
 
 (* @TODO
@@ -86,9 +109,10 @@ end = struct
 end
 
 and ExpressionTransformer : sig
+  val transform : Loc.t FlowAst.Expression.t -> InfraredAst.expression
+  val transform_expression : Loc.t FlowAst.Expression.t -> InfraredAst.expression
   val transform_pattern : Loc.t FlowAst.Pattern.t -> string
   val transform_identifier : Loc.t FlowAst.Identifier.t -> string
-  val transform_expression : Loc.t FlowAst.Expression.t -> InfraredAst.expression
   val transform_expression_maybe : Loc.t FlowAst.Expression.t option -> InfraredAst.expression
   val transform_literal : FlowAst.Literal.t -> InfraredAst.expression
 end = struct
@@ -119,6 +143,9 @@ end = struct
     | _ ->
       logger_error "Unhandled expression type" loc;
       (raise TransformerExpressionError)
+
+  and transform (expression : Loc.t FlowAst.Expression.t) : InfraredAst.expression =
+    transform_expression expression
 
   and transform_call_expression (obj : Loc.t FlowAst.Expression.Call.t) : InfraredAst.expression =
     let arguments = List.map transform_expression_or_spread obj.arguments in
@@ -249,7 +276,7 @@ end = struct
     | Instanceof -> InfraredAst.InstanceOf
 end
 
-and Transformer : sig
+and StatementTransformer : sig
   val transform : program -> program
   val transform_statement : Loc.t FlowAst.Statement.t -> InfraredAst.statement
 end = struct
@@ -283,8 +310,10 @@ end = struct
     | VariableDeclaration obj -> VariableDeclarationTransformer.transform obj
     | FunctionDeclaration fn -> FunctionDeclarationTransformer.transform fn
     | Return obj -> ReturnTransformer.transform obj
+    | If obj -> IfTransformer.transform obj
+    | Block obj -> BlockTransformer.transform obj
     | Expression expression_object ->
       let expression = ExpressionTransformer.transform_expression expression_object.expression in
       InfraredAst.Expression expression
-    | _ -> raise (Unhandled_parsing_step "#<Unhandled FlowStatement>")
+    | _ -> raise (Unhandled_parsing_step "#<unhandled_FlowStatement_to_InfraredStatement_conversion>")
 end
