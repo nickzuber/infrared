@@ -10,29 +10,38 @@ let string_of_type (t : string) : string =
 
 let get_type tbl key =
   try Hashtbl.find tbl key
-  with _ -> Generic "unable-to-find-this-type"
+  with _ -> Generic "unable-to-find-this-type-this-is-a-bug"
 
-let rec string_of_infrared_statement (statement: InfraredAst.statement) : string =
+let rec string_of_infrared_statement ?depth:(depth=0) (statement: InfraredAst.statement) : string =
   let open InfraredAst in
+  let padding = String.make depth '\t' in
   match statement with
   | VariableDeclaration (id, value) ->
-    Printf.sprintf "%s %s <- %s"
+    Printf.sprintf "%s%s %s <- %s"
+      padding
       (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression value)
   | FunctionDeclaration (name, params, body) ->
     let params' = String.concat ", " params in
-    let body' = String.concat "\n\t" (List.map string_of_infrared_statement body) in
-    Printf.sprintf "%s %s (%s) {\n\t%s\n}"
+    let body' = String.concat "\n"
+        (List.map (string_of_infrared_statement ~depth:(depth + 1))
+           body)
+    in
+    Printf.sprintf "%s%s %s (%s) {\n%s\n%s}"
+      padding
       (string_of_type "FunctionDeclaration")
       name
       (params')
       (body')
+      padding
   | Return expr ->
-    Printf.sprintf "%sreturn %s"
+    Printf.sprintf "%s%sreturn %s"
+      padding
       (string_of_type "Return")
       (string_of_infrared_expression expr)
   | Expression expr ->
+    padding ^
     (string_of_type "Expression") ^
     (string_of_infrared_expression expr)
   | _ -> string_of_type "#<unhandled_statement>"
@@ -144,12 +153,14 @@ let pp_string_of_data_type (d_type : data_type) : string =
   let str = "⊢ " ^ d_type_str in
   str |> Chalk.white |> Chalk.bold
 
-let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statement) (env : environment) : string =
+let rec string_of_typed_infrared_statement ?depth:(depth=0) (statement: TypedInfraredAst.statement) (env : environment) : string =
   let open TypedInfraredAst in
+  let padding = String.make depth '\t' in
   match statement with
   | VariableDeclaration (id, typed_value) ->
     let (d_type, value) = typed_value in
-    Printf.sprintf "%s %s <- %s %s"
+    Printf.sprintf "%s%s %s <- %s %s"
+      padding
       (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression value)
@@ -168,21 +179,28 @@ let rec string_of_typed_infrared_statement (statement: TypedInfraredAst.statemen
       ) typed_params
     in
     let params' = String.concat ", " formatted_typed_params in
-    let body' = String.concat "\n\t" (List.map (fun s -> string_of_typed_infrared_statement s env) body) in
-    Printf.sprintf "%s %s (%s) {\n\t%s\n}"
+    let body' = String.concat "\n"
+        (List.map (fun s -> string_of_typed_infrared_statement ~depth:(depth + 1) s env)
+           body)
+    in
+    Printf.sprintf "%s%s %s (%s) {\n%s\n%s}"
+      padding
       (string_of_type "FunctionDeclaration")
       name
       (params')
       (body')
+      padding
   | Return expr ->
     let (d_type, expr) = expr in
-    Printf.sprintf "%sreturn %s %s"
+    Printf.sprintf "%s%sreturn %s %s"
+      padding
       (string_of_type "Return")
       (string_of_infrared_expression expr)
       (pp_string_of_data_type d_type)
   | Expression typed_expr ->
     let (d_type, expr) = typed_expr in
-    Printf.sprintf "%s %s %s"
+    Printf.sprintf "%s%s %s %s"
+      padding
       (string_of_type "Expression")
       (string_of_infrared_expression expr)
       (pp_string_of_data_type d_type)
