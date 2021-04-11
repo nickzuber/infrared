@@ -3,16 +3,19 @@ open InfraredAst
 
 exception Unexpected_compiler_phase of string
 
-let hoist_statement (statement : statement) (env : environment) : statement =
+let rec hoist_statement (statement : statement) (env : environment) : statement =
   match statement with
   | FunctionDeclaration (name, params, body) ->
     let param_d_types = List.map (fun id ->
         let generic = Generic id in
+        (* Assign types to arguments *)
         Hashtbl.replace env id generic;
         generic
       ) params
     in
     let return_d_type = Primative Undefined in
+    (* Assign types to inner body function declarations *)
+    let _ = List.map (fun statement -> hoist_statement statement env) body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in
     Hashtbl.replace env name d_type;
     FunctionDeclaration (name, params, body)
