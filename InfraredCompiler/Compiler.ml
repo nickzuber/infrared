@@ -28,6 +28,7 @@ let assign_types_with_debugging ~(file : string) ~(program : program) =
   |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes shadowing)"
   |> (Hoisify.transform env) |> Printer.pprint_program_with_title "Hoist function declarations within closures"
   |> (Typify.transform env) |> Printer.pprint_program_with_title "Assign base types"
+  |> (Return_typify.transform env) |> Printer.pprint_program_with_title "Assign Functions their return types"
 
 let assign_types ~(file : string) ~(program : program) =
   if Settings.debug_mode then

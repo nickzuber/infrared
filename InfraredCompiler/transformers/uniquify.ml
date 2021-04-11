@@ -7,14 +7,16 @@ exception Unexpected_compiler_phase of string
 type env_t = (identifier, string) Hashtbl.t
 
 (* Return the latest hash for a given variable variable. Since the variables
- * are stored in the hashtable, a failed lookup means we've seen it zero times so
- * we can just generate a new hash. *)
+ * are stored in the hashtable, a failed lookup means this variable was never
+ * declared, so there's a chance its a global. *)
 let get_hash tbl key =
   try Hashtbl.find tbl key
-  with _ -> Utils.generate_hash ()
+  with _ -> ""
 
 let get_hashed_variable id hash =
-  id ^ "_" ^ hash
+  match hash with
+  | "" -> id
+  | _ -> id ^ "_" ^ hash
 
 let rec uniquify_statement (statement : statement) (env : env_t) : statement =
   match statement with
@@ -57,7 +59,11 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
     let env' = Hashtbl.copy env in
     let statements' = List.map (fun s -> uniquify_statement s env') statements in
     Block statements'
-  | _ -> statement
+  | If (expr, s1, s2) ->
+    let expr' = uniquify_expression expr env in
+    let s1' = uniquify_statement s1 env in
+    let s2' = uniquify_statement s2 env in
+    If (expr', s1', s2')
 
 and uniquify_expression (expression : expression) (env : env_t) : expression =
   match expression with

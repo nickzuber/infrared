@@ -183,6 +183,11 @@ and string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
     let str = String.concat ", " d_types_str in
     Printf.sprintf "ψ(%s)"
       str
+  | Union d_types ->
+    let d_types_str = List.map (string_of_data_type ~depth:depth) d_types in
+    let str = String.concat " ∨ " d_types_str in
+    Printf.sprintf "∑(%s)"
+      str
   | Drill (d_type, prop) ->
     Printf.sprintf "φ(%s, %s)"
       (string_of_data_type ~depth:depth d_type)
