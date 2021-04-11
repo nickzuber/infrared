@@ -115,8 +115,22 @@ end = struct
     | Binary binary_expression -> transform_binary binary_expression
     | Assignment obj -> transform_assignment obj
     | Member obj -> transform_member_expression obj
+    | Call obj -> transform_call_expression obj
     | _ ->
       logger_error "Unhandled expression type" loc;
+      (raise TransformerExpressionError)
+
+  and transform_call_expression (obj : Loc.t FlowAst.Expression.Call.t) : InfraredAst.expression =
+    let arguments = List.map transform_expression_or_spread obj.arguments in
+    let callee = transform_expression obj.callee in
+    InfraredAst.Call (callee, arguments)
+
+  and transform_expression_or_spread (expr_or_spread : Loc.t FlowAst.Expression.expression_or_spread) : InfraredAst.expression =
+    let open FlowAst.Expression in
+    match expr_or_spread with
+    | Expression expr -> transform_expression expr
+    | Spread _ ->
+      logger_error_no_loc "Unhandled SpreadExpression";
       (raise TransformerExpressionError)
 
   and transform_member_expression (obj : Loc.t FlowAst.Expression.Member.t) : InfraredAst.expression =

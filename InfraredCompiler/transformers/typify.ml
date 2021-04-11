@@ -55,6 +55,10 @@ and type_of_expression (expression : expression) (env : environment) : data_type
   | Access (e1, e2) ->
     let inner_d_type = type_of_expression e1 env in
     Drill (inner_d_type, e2)
+  | Call (callee, args) ->
+    let callee_d_type = type_of_expression callee env in
+    let args_d_types = List.map (fun arg -> type_of_expression arg env) args in
+    Exec (callee_d_type, args_d_types)
   | _ -> Generic "todo-expression"
 
 let transform (env : environment) (program : program) : program =

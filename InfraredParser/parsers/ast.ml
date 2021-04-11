@@ -41,6 +41,7 @@ module rec InfraredAst : sig
     | Object of (identifier * expression) list
     | Null
     | Undefined
+    | Call of expression * (expression list) (* e(e1, e2) *)
     | Access of expression * property (* e.e *)
     | Assignment of identifier * expression (* x = e *)
     | UnaryOperation of unop * expression
@@ -73,7 +74,7 @@ and data_type =
   | Defer of InfraredAst.identifier (* Do we need this? Might be resolved via Exec *)
   | Reduction of data_type list (* operations on expressions *)
   | Drill of data_type * InfraredAst.property
-  | Exec of InfraredAst.identifier * (InfraredAst.identifier list) (* f(a, b, c) *)
+  | Exec of data_type * (data_type list) (* f(a, b, c) *)
 
 type environment = (string, data_type) Hashtbl.t
 

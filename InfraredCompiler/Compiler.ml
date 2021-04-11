@@ -15,6 +15,8 @@ let assign_types ~(file : string) ~(program : program) =
   |> Uniquify.transform
   |> Hoisify.transform env
   |> Typify.transform env
+(* inner_function_refinement - function args get refined based on use within function *)
+(* global_refinement - global refinement for all vars and usages *)
 
 let assign_types_with_debugging ~(file : string) ~(program : program) =
   let env : environment = Hashtbl.create 53 in

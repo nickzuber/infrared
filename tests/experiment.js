@@ -1,10 +1,14 @@
-baz
-function foo (a, b) {
-  function baz (a, b) {
-    var a = 0;
-    return 2
+const one = 1;
+
+function doNothingInteresting (a, b) {
+  function getNumberOne () {
+    return 1;
   }
-  return 1;
+  // if (Math.random() > 0) {
+  //   return null
+  // }
+  // return getNumberOne();
+  return Math.random()
 }
-foo
-baz
+doNothingInteresting(one, 2);
+baz(one, 2);

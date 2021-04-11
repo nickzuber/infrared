@@ -68,6 +68,10 @@ and uniquify_expression (expression : expression) (env : env_t) : expression =
     let e1' = uniquify_expression e1 env in
     let e2' = uniquify_property e2 env in
     Access (e1', e2')
+  | Call (callee, args) ->
+    let callee' = uniquify_expression callee env in
+    let args' = List.map (fun arg -> uniquify_expression arg env) args in
+    Call (callee', args')
   | _ -> expression
 
 and uniquify_property (prop : property) (env : env_t) : property =
