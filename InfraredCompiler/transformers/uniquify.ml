@@ -26,8 +26,10 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
     VariableDeclaration (id', expression')
   | FunctionDeclaration (name, params, body) ->
     let hash = Utils.generate_hash () in
-    let env' = Hashtbl.copy env in
+    Hashtbl.replace env name hash;
     let name' = get_hashed_variable name hash in
+    (* Copying the environment for the function body is what lets us remove variable shadowing. *)
+    let env' = Hashtbl.copy env in
     let params' = List.map (fun param ->
         let hash = Utils.generate_hash () in
         Hashtbl.replace env' param hash;

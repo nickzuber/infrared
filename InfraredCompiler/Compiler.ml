@@ -7,24 +7,28 @@ let print_program (title : string) (program : program) : unit =
     (("[" ^ title ^ "]") |> Chalk.white |> Chalk.bold)
     (Printer.string_of_program program)
 
-let assign_types_without_debugging ~(file : string) ~(program : program) =
+let assign_types ~(file : string) ~(program : program) =
+  let env : environment = Hashtbl.create 53 in
   let _ = file in
   program
   |> Remove_assignify.transform
   |> Uniquify.transform
-  |> Typify.transform
+  |> Hoisify.transform env
+  |> Typify.transform env
 
 let assign_types_with_debugging ~(file : string) ~(program : program) =
+  let env : environment = Hashtbl.create 53 in
   Printf.printf "%s\n%s\n"
-    (Printer.string_of_title "Raw program")
+    (Printer.string_of_title "Original program")
     (Fs.read_file file);
-  program |> Printer.pprint_program_with_title "Initial program"
+  program |> Printer.pprint_program_with_title "Converted program"
   |> Remove_assignify.transform |> Printer.pprint_program_with_title "Transform assignments into declarations"
-  |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes closures)"
-  |> Typify.transform |> Printer.pprint_program_with_title "Assign base types"
+  |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes shadowing)"
+  |> (Hoisify.transform env) |> Printer.pprint_program_with_title "Hoist function declarations within closures"
+  |> (Typify.transform env) |> Printer.pprint_program_with_title "Assign base types"
 
 let assign_types ~(file : string) ~(program : program) =
   if Settings.debug_mode then
     assign_types_with_debugging ~file ~program
   else
-    assign_types_without_debugging ~file ~program
+    assign_types ~file ~program

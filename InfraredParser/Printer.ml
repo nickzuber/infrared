@@ -9,7 +9,8 @@ let string_of_type (t : string) : string =
     (Chalk.green t)
 
 let get_type tbl key =
-  Hashtbl.find tbl key
+  try Hashtbl.find tbl key
+  with _ -> Generic "unable-to-find-this-type"
 
 let rec string_of_infrared_statement (statement: InfraredAst.statement) : string =
   let open InfraredAst in
@@ -126,6 +127,7 @@ and string_of_data_type (d_type : data_type) : string =
   match d_type with
   | Generic tag -> "'" ^ tag
   | Defer _expr -> "Defer"
+  | Exec _ -> "Exec"
   | Primative prim -> string_of_primative prim
   | Reduction d_types ->
     let d_types_str = List.map string_of_data_type d_types in

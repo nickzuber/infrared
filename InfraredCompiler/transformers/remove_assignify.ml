@@ -1,4 +1,3 @@
-(* open InfraredUtils *)
 open InfraredParser.Ast
 open InfraredAst
 

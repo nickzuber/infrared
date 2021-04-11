@@ -20,11 +20,6 @@ let rec typify_statement (statement : statement) (env : environment) : TypedInfr
     Hashtbl.replace env id d_type;
     VariableDeclaration (id, typed_expression)
   | FunctionDeclaration (name, params, body) ->
-    let _ = List.map (fun id ->
-        let generic = Generic id in
-        Hashtbl.replace env id generic;
-      ) params
-    in
     let typed_body = List.map (fun s -> typify_statement s env) body in
     FunctionDeclaration (name, params, typed_body)
   | Return expr ->
@@ -62,8 +57,7 @@ and type_of_expression (expression : expression) (env : environment) : data_type
     Drill (inner_d_type, e2)
   | _ -> Generic "todo-expression"
 
-let transform (program : program) : program =
-  let env : environment = Hashtbl.create 53 in
+let transform (env : environment) (program : program) : program =
   match program with
   | InfraredProgram (statements) ->
     let statements' = List.map (fun statement -> typify_statement statement env) statements in

@@ -68,11 +68,12 @@ type primative_data_type =
   | Function of data_type list * data_type (* Arguments, ReturnType *)
 
 and data_type =
-  | Generic of string (* tag *)
-  | Defer of InfraredAst.identifier (* is this reserved for undefined functions? *)
   | Primative of primative_data_type
+  | Generic of string (* tag *)
+  | Defer of InfraredAst.identifier (* Do we need this? Might be resolved via Exec *)
   | Reduction of data_type list (* operations on expressions *)
   | Drill of data_type * InfraredAst.property
+  | Exec of InfraredAst.identifier * (InfraredAst.identifier list) (* f(a, b, c) *)
 
 type environment = (string, data_type) Hashtbl.t
 
