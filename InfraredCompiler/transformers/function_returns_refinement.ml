@@ -59,6 +59,9 @@ and get_return_type_of_function (statements : statement list) : data_type =
 let transform  (env : environment) (program : program) : program =
   match program with
   | TypedInfraredProgram (statements, _env) ->
-    let statements' = List.map (fun statement -> function_returns_refine_statement statement env) statements in
+    let statements' = List.map
+        (fun statement -> function_returns_refine_statement statement env)
+        statements
+    in
     TypedInfraredProgram (statements', env)
   | _ -> raise (Unexpected_compiler_phase "Expected TypedInfraredProgram")

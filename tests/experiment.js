@@ -12,8 +12,13 @@
 // doNothingInteresting(one, 2);
 // baz(one, 2);
 
-function foo () {
-  return 1;
+const a = 123;
+function a () {
+  const test = "Test"
+  return b();
 }
-var f = foo
-foo()
+
+function b () {
+  const test = "Test"
+  return a();
+}

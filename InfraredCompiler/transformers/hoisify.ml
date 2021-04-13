@@ -13,7 +13,7 @@ let rec hoist_statement (statement : statement) (env : environment) : statement 
         generic
       ) params
     in
-    let return_d_type = Primative Undefined in
+    let return_d_type = Generic "unknown_yet" in
     (* Assign types to inner body function declarations *)
     let _ = List.map (fun statement -> hoist_statement statement env) body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in

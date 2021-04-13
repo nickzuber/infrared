@@ -291,7 +291,7 @@ let string_of_program (prog: program) : string =
   | TypedInfraredProgram (statements, env) -> string_of_typed_infrared_ast statements env
 
 let string_of_title (title : string) : string =
-  let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><>" in
+  let ending_str = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>" in
   let length_of_ending_str = String.length ending_str in
   let length_of_title = String.length title in
   let final_ending_str =

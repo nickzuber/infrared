@@ -15,6 +15,8 @@ let assign_types ~(file : string) ~(program : program) =
   |> Uniquify.transform
   |> Hoisify.transform env
   |> Typify.transform env
+  |> Function_returns_refinement.transform env
+  |> Realign_typed_expressions.transform env
 (* inner_function_refinement - function args get refined based on use within function *)
 (* global_refinement - global refinement for all vars and usages *)
 
@@ -29,6 +31,7 @@ let assign_types_with_debugging ~(file : string) ~(program : program) =
   |> (Hoisify.transform env) |> Printer.pprint_program_with_title "Hoist function declarations within closures"
   |> (Typify.transform env) |> Printer.pprint_program_with_title "Assign base types"
   |> (Function_returns_refinement.transform env) |> Printer.pprint_program_with_title "Assign Functions their return types"
+  |> (Realign_typed_expressions.transform env) |> Printer.pprint_program_with_title "Re-align typed expressions"
 
 let assign_types ~(file : string) ~(program : program) =
   if Settings.debug_mode then
