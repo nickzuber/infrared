@@ -77,6 +77,7 @@ and data_type =
   | Exec of data_type * (data_type list) (* f(a, b, c) *)
   | Reduction of data_type list (* operations on expressions *)
   | Union of data_type list
+  | Unknown
 
 type environment = (string, data_type) Hashtbl.t
 

@@ -41,7 +41,8 @@ let rec function_returns_refine_statement (statement : statement) (env : environ
     let return_d_type = get_return_type_of_function body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in
     Hashtbl.replace env name d_type;
-    FunctionDeclaration (name, params, body)
+    let body' = List.map (fun s -> function_returns_refine_statement s env) body in
+    FunctionDeclaration (name, params, body')
   | _ -> statement
 
 and get_return_type_of_function (statements : statement list) : data_type =

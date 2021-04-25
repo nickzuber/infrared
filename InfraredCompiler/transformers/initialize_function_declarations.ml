@@ -3,7 +3,7 @@ open InfraredAst
 
 exception Unexpected_compiler_phase of string
 
-let rec hoist_statement (statement : statement) (env : environment) : statement =
+let rec init_func_statement (statement : statement) (env : environment) : statement =
   match statement with
   | FunctionDeclaration (name, params, body) ->
     let param_d_types = List.map (fun id ->
@@ -13,9 +13,9 @@ let rec hoist_statement (statement : statement) (env : environment) : statement 
         generic
       ) params
     in
-    let return_d_type = Generic "unknown_yet" in
+    let return_d_type = Unknown in
     (* Assign types to inner body function declarations *)
-    let _ = List.map (fun statement -> hoist_statement statement env) body in
+    let _ = List.map (fun statement -> init_func_statement statement env) body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in
     Hashtbl.replace env name d_type;
     FunctionDeclaration (name, params, body)
@@ -29,6 +29,6 @@ let rec hoist_statement (statement : statement) (env : environment) : statement 
 let transform  (env : environment) (program : program) : program =
   match program with
   | InfraredProgram (statements) ->
-    let statements' = List.map (fun statement -> hoist_statement statement env) statements in
+    let statements' = List.map (fun statement -> init_func_statement statement env) statements in
     InfraredProgram statements'
   | _ -> raise (Unexpected_compiler_phase "Expected InfraredProgram")

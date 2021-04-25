@@ -12,13 +12,13 @@
 // doNothingInteresting(one, 2);
 // baz(one, 2);
 
-const a = 123;
-function a () {
-  const test = "Test"
-  return b();
-}
+const foo = add1(5);
 
-function b () {
-  const test = "Test"
-  return a();
+function add1 (n) {
+  const five = 5;
+
+  function inner () { return null; }
+
+  return n + five;
 }
+function inner () { return null; }

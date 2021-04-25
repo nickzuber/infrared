@@ -13,7 +13,7 @@ let assign_types ~(file : string) ~(program : program) =
   program
   |> Remove_assignify.transform
   |> Uniquify.transform
-  |> Hoisify.transform env
+  |> Initialize_function_declarations.transform env
   |> Typify.transform env
   |> Function_returns_refinement.transform env
   |> Realign_typed_expressions.transform env
@@ -28,7 +28,7 @@ let assign_types_with_debugging ~(file : string) ~(program : program) =
   program |> Printer.pprint_program_with_title "Converted program"
   |> Remove_assignify.transform |> Printer.pprint_program_with_title "Transform assignments into declarations"
   |> Uniquify.transform |> Printer.pprint_program_with_title "Uniqufy variable names (removes shadowing)"
-  |> (Hoisify.transform env) |> Printer.pprint_program_with_title "Hoist function declarations within closures"
+  |> (Initialize_function_declarations.transform env) |> Printer.pprint_program_with_title "Initialize function declarations within closures"
   |> (Typify.transform env) |> Printer.pprint_program_with_title "Assign base types"
   |> (Function_returns_refinement.transform env) |> Printer.pprint_program_with_title "Assign Functions their return types"
   |> (Realign_typed_expressions.transform env) |> Printer.pprint_program_with_title "Re-align typed expressions"

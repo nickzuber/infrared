@@ -192,6 +192,7 @@ and string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
     Printf.sprintf "φ(%s, %s)"
       (string_of_data_type ~depth:depth d_type)
       (string_of_infrared_property prop)
+  | Unknown -> Chalk.red "Unknown"
 
 let pp_string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
   let d_type_str = string_of_data_type ~depth:depth d_type in

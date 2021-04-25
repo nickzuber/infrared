@@ -18,14 +18,13 @@ let get_hashed_variable id hash =
   | "" -> id
   | _ -> id ^ "_" ^ hash
 
-let rec uniquify_statement (statement : statement) (env : env_t) : statement =
+let rec uniquify_statements (statements : statement list) (env : env_t) : statement list =
+  let statements' = List.map (fun s -> uniquify_function_declaration_statement s env) statements in
+  let statements'' = List.map (fun s -> uniquify_all_other_statement s env) statements' in
+  statements''
+
+and uniquify_function_declaration_statement (statement : statement) (env : env_t) : statement =
   match statement with
-  | VariableDeclaration (id, expression) ->
-    let hash = Utils.generate_hash () in
-    Hashtbl.replace env id hash;
-    let id' = get_hashed_variable id hash in
-    let expression' = uniquify_expression expression env in
-    VariableDeclaration (id', expression')
   | FunctionDeclaration (name, params, body) ->
     let hash = Utils.generate_hash () in
     Hashtbl.replace env name hash;
@@ -41,8 +40,18 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
         get_hashed_variable param hash
       ) params
     in
-    let body' = List.map (fun statement -> uniquify_statement statement env') body in
+    let body' = uniquify_statements body env' in
     FunctionDeclaration (name', params', body')
+  | _ -> statement
+
+and uniquify_all_other_statement (statement : statement) (env : env_t) : statement =
+  match statement with
+  | VariableDeclaration (id, expression) ->
+    let hash = Utils.generate_hash () in
+    Hashtbl.replace env id hash;
+    let id' = get_hashed_variable id hash in
+    let expression' = uniquify_expression expression env in
+    VariableDeclaration (id', expression')
   | Expression expr ->
     let expression' = uniquify_expression expr env in
     Expression expression'
@@ -57,13 +66,15 @@ let rec uniquify_statement (statement : statement) (env : env_t) : statement =
      * and assume all variables are declared this way.
      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block#block_scoping_rules_with_var_or_function_declaration_in_non-strict_mode *)
     let env' = Hashtbl.copy env in
-    let statements' = List.map (fun s -> uniquify_statement s env') statements in
+    let statements' = uniquify_statements statements env' in
     Block statements'
   | If (expr, s1, s2) ->
     let expr' = uniquify_expression expr env in
-    let s1' = uniquify_statement s1 env in
-    let s2' = uniquify_statement s2 env in
+    let s1' = uniquify_all_other_statement s1 env in
+    let s2' = uniquify_all_other_statement s2 env in
     If (expr', s1', s2')
+  | FunctionDeclaration (name, args, body) ->
+    FunctionDeclaration (name, args, body)
 
 and uniquify_expression (expression : expression) (env : env_t) : expression =
   match expression with
@@ -102,6 +113,6 @@ let transform (program : program) : program =
   let env = Hashtbl.create 53 in
   match program with
   | InfraredProgram (statements) ->
-    let statements' = List.map (fun statement -> uniquify_statement statement env) statements in
+    let statements' = uniquify_statements statements env in
     InfraredProgram statements'
   | _ -> raise (Unexpected_compiler_phase "Expected InfraredProgram")
