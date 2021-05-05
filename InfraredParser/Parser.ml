@@ -14,7 +14,7 @@ let flow_program_of_file ~(file : string) ~(source : string) : program =
 let parse_source ~(file : string) ~(source : string) : program =
   try
     let flow_program = flow_program_of_file ~file ~source in
-    let _ = if Settings.debug_mode then
+    let _ = if !Settings.debug_mode then
         begin
           (* This just prints the parsed FlowAST for reference while developing *)
           let _ = Printer.pprint_program_with_title "Flow Ast" flow_program in
