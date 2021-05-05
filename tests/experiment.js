@@ -21,4 +21,7 @@ function add1 (n) {
 
   return n + five;
 }
+
+foo + 1
+
 function inner () { return null; }

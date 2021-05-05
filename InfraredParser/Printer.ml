@@ -174,22 +174,22 @@ and string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
   | Exec (callee_d_type, args_d_types) ->
     let pp_args_d_types = List.map (string_of_data_type ~depth:depth) args_d_types in
     let pp_args_d_types_str = String.concat ", " pp_args_d_types in
-    Printf.sprintf "λ(%s, (%s))"
+    Printf.sprintf "Call(%s, (%s))"
       (string_of_data_type ~depth:depth callee_d_type)
       (pp_args_d_types_str)
   | Primative prim -> string_of_primative ~depth:depth prim
   | Reduction d_types ->
     let d_types_str = List.map (string_of_data_type ~depth:depth) d_types in
     let str = String.concat ", " d_types_str in
-    Printf.sprintf "ψ(%s)"
+    Printf.sprintf "Reduce(%s)"
       str
   | Union d_types ->
     let d_types_str = List.map (string_of_data_type ~depth:depth) d_types in
     let str = String.concat " ∨ " d_types_str in
-    Printf.sprintf "∑(%s)"
+    Printf.sprintf "Union(%s)"
       str
   | Drill (d_type, prop) ->
-    Printf.sprintf "φ(%s, %s)"
+    Printf.sprintf "Access(%s, %s)"
       (string_of_data_type ~depth:depth d_type)
       (string_of_infrared_property prop)
   | Unknown -> Chalk.red "Unknown"
