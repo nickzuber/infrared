@@ -1,7 +1,9 @@
-module rec InfraredAst : sig
-  type identifier = string
+module Loc = Flow_parser.Loc
 
-  type unop =
+module rec InfraredAst : sig
+  type identifier' = string
+
+  and unop =
     | Negate
     | Not
 
@@ -33,7 +35,7 @@ module rec InfraredAst : sig
     | PropertyExpression of expression
     | PropertyIdentifier of identifier
 
-  and expression =
+  and expression' =
     | Variable of identifier
     | String of string
     | Number of int
@@ -47,7 +49,7 @@ module rec InfraredAst : sig
     | UnaryOperation of unop * expression
     | BinaryOperation of binop * expression * expression
 
-  and statement =
+  and statement' =
     (* Recall that VariableAssignment don't exist for our AST.
      * Any VariableAssignments will be considered as new variable
      * declarations, so we can track any type branches for free. *)
@@ -57,6 +59,10 @@ module rec InfraredAst : sig
     | Return of expression
     | Expression of expression
     | Block of statement list
+
+  and expression = Loc.t * expression'
+  and statement = Loc.t * statement'
+  and identifier = Loc.t * identifier'
 end = InfraredAst
 
 type primative_data_type =
@@ -85,7 +91,7 @@ type environment = (string, data_type) Hashtbl.t
 module rec TypedInfraredAst : sig
   type typed_expression = data_type * InfraredAst.expression
 
-  and statement =
+  and statement' =
     (* Recall that VariableAssignment don't exist for our AST.
      * Any VariableAssignments will be considered as new variable
      * declarations, so we can track any type branches for free. *)
@@ -95,6 +101,8 @@ module rec TypedInfraredAst : sig
     | Return of typed_expression
     | Expression of typed_expression
     | Block of statement list
+
+  and statement = Loc.t * statement'
 end = TypedInfraredAst
 
 type program =

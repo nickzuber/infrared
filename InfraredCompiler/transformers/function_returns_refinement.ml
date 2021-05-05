@@ -9,10 +9,11 @@ let get_type tbl key =
   with _ -> Generic "unable-to-find-this-type-this-is-a-bug"
 
 let rec flatten_statement (statement : statement) : statement list =
+  let (loc, statement) = statement in
   match statement with
   | Block statements -> flatten_statements statements
   | If (_, s1, s2) -> List.append (flatten_statement s1) (flatten_statement s2)
-  | _ -> [statement]
+  | _ -> [(loc, statement)]
 
 and flatten_statements (statements : statement list) : statement list =
   let flat_statements = List.map flatten_statement statements in
@@ -21,6 +22,7 @@ and flatten_statements (statements : statement list) : statement list =
 let get_all_return_d_types (statements : statement list) : data_type list =
   let statements' = flatten_statements statements in
   List.filter_map (fun statement ->
+      let (_, statement) = statement in
       match statement with
       | Return (d_type, _) -> Some d_type
       | _ -> None
@@ -34,16 +36,17 @@ let get_param_d_types (d_type : data_type) : data_type list =
       (Unexpected_function_data_type "A function was found with a non-function data type")
 
 let rec function_returns_refine_statement (statement : statement) (env : environment) : statement =
+  let (loc, statement) = statement in
   match statement with
-  | FunctionDeclaration (name, params, body) ->
+  | FunctionDeclaration ((name_loc, name), params, body) ->
     let prev_d_type = get_type env name in
     let param_d_types = get_param_d_types prev_d_type in
     let return_d_type = get_return_type_of_function body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in
     Hashtbl.replace env name d_type;
     let body' = List.map (fun s -> function_returns_refine_statement s env) body in
-    FunctionDeclaration (name, params, body')
-  | _ -> statement
+    (loc, FunctionDeclaration ((name_loc, name), params, body'))
+  | _ -> (loc, statement)
 
 and get_return_type_of_function (statements : statement list) : data_type =
   let return_statement_d_types = get_all_return_d_types statements in
