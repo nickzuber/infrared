@@ -108,8 +108,8 @@ let check_files (files : string list) : unit =
   in
   print_result_summary start_time files err_files err_count
 
-let type_check args : unit =
-  print_endline "";
+let type_check ?flags:(flags=[]) args : unit =
+  print_endline ("FLAGS" ^ (String.concat ", " flags));
   match args with
   | [] -> ()
   | arg :: [] ->
@@ -132,13 +132,16 @@ let spec = Command.create
     ~name:"check"
     ~aliases:["ch"]
     ~doc:"Type check the given JavaScript files"
-    ~flags:[]
+    ~flags:[
+      (Flag.create ~name:"--show-types-in-console" ~doc:"Shows types in console");
+      (Flag.create ~name:"--debug" ~doc:"Show debug information, like AST transforms")
+    ]
 
 let exec = type_check
 
 type t =
   { spec: Command.t
-  ; exec: string list -> unit
+  ; exec: ?flags:string list -> string list -> unit
   }
 
 let command : t =

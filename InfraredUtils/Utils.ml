@@ -31,3 +31,6 @@ let math_min (a : int) (b : int) : int =
 
 let math_max (a : int) (b : int) : int =
   if a < b then b else a
+
+let parse_args_for_flags (args : string list) : (string list * string list) =
+  List.partition (fun arg -> (String.sub arg 0 2) <> "--") args

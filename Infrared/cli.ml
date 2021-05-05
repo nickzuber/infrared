@@ -1,3 +1,5 @@
+open InfraredUtils
+
 type valid_command =
   | Help of Help_command.t
   | Version of Version_command.t
@@ -33,6 +35,13 @@ let doc_of_valid_command vc : string =
   | Version v -> v.spec.doc
   | Check c -> c.spec.doc
   | Parse p -> p.spec.doc
+
+let flags_of_valid_command vc : Flag.t list =
+  match vc with
+  | Help h -> h.spec.flags
+  | Version v -> v.spec.flags
+  | Check c -> c.spec.flags
+  | Parse p -> p.spec.flags
 
 let name_of_valid_command vc : string =
   match vc with
@@ -78,39 +87,34 @@ end = struct
       let command = any_command_of_string cmd in
       match command with
       | Valid vcmd -> begin
+          let (args, flags) = Utils.parse_args_for_flags args in
           match vcmd with
-          | Check c -> c.exec args
+          | Check c -> c.exec ~flags:flags args
           | Parse p -> p.exec args
           | Version v -> Printf.printf "v%s\n\n" (v.exec ())
           | Help h ->
-            let name_and_docs : (string * string) list =
+            let name_and_docs : (string * string * Flag.t list) list =
               List.fold_left
                 (fun tuples command ->
                    ( name_of_valid_command command
                    , doc_of_valid_command command
+                   , flags_of_valid_command command
                    ) :: tuples)
                 []
                 commands
             in
-            let aliases_and_docs : (string * string) list =
+            let alias_and_docs : (string * string) list =
               List.fold_left
                 (fun tuples command ->
                    let command_name = name_of_valid_command command in
                    let aliases = aliases_of_valid_command command in
-                   let aliases_and_docs = List.fold_left
-                       (fun tuples' alias ->
-                          ( alias
-                          , "Alias for " ^ command_name
-                          ) :: tuples')
-                       []
-                       aliases
-                   in
-                   aliases_and_docs @ tuples)
+                   let alias_strs = String.concat ", " aliases in
+                   let alias_and_docs = (alias_strs, "Alias for " ^ command_name) in
+                   [alias_and_docs] @ tuples)
                 []
                 commands
             in
-            let all_tuples = name_and_docs @ aliases_and_docs in
-            Printf.printf "%s\n" (h.exec all_tuples)
+            Printf.printf "%s\n" (h.exec name_and_docs alias_and_docs)
         end
       | Invalid name ->
         report_command_error
