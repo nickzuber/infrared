@@ -45,7 +45,7 @@ let rec realign_typed_statement (statement : statement) (env : environment) : Ty
     (loc, If (typed_expression, s1', s2'))
 
 and type_of_expression (expression : InfraredAst.expression) (env : environment) : data_type =
-  let (loc, expression) = expression in
+  let (_, expression) = expression in
   match expression with
   | String _ -> Primative String
   | Number _ -> Primative Number
