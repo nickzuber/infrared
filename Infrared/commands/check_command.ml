@@ -135,7 +135,7 @@ let spec = Command.create
     ~aliases:["ch"]
     ~doc:"Type check the given JavaScript files"
     ~flags:[
-      (Flag.create ~name:"--show-types-in-console" ~doc:"Shows types in console");
+      (Flag.create ~name:"--show-types-in-console" ~doc:"Show types in console");
       (Flag.create ~name:"--debug" ~doc:"Show debug information, like AST transforms")
     ]
 
