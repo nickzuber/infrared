@@ -1,3 +1,8 @@
+type loc = {
+  line: int;
+  col: int;
+}
+
 module rec InfraredAst : sig
   type identifier = string
 
@@ -33,7 +38,7 @@ module rec InfraredAst : sig
     | PropertyExpression of expression
     | PropertyIdentifier of identifier
 
-  and expression =
+  and expression' =
     | Variable of identifier
     | String of string
     | Number of int
@@ -47,7 +52,7 @@ module rec InfraredAst : sig
     | UnaryOperation of unop * expression
     | BinaryOperation of binop * expression * expression
 
-  and statement =
+  and statement' =
     (* Recall that VariableAssignment don't exist for our AST.
      * Any VariableAssignments will be considered as new variable
      * declarations, so we can track any type branches for free. *)
@@ -57,6 +62,9 @@ module rec InfraredAst : sig
     | Return of expression
     | Expression of expression
     | Block of statement list
+
+  and expression = loc * expression'
+  and statement = loc * statement'
 end = InfraredAst
 
 type primative_data_type =
