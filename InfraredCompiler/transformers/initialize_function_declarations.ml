@@ -4,9 +4,10 @@ open InfraredAst
 exception Unexpected_compiler_phase of string
 
 let rec init_func_statement (statement : statement) (env : environment) : statement =
+  let (loc, statement) = statement in
   match statement with
-  | FunctionDeclaration (name, params, body) ->
-    let param_d_types = List.map (fun id ->
+  | FunctionDeclaration ((name_loc, name), params, body) ->
+    let param_d_types = List.map (fun (_, id) ->
         let generic = Generic id in
         (* Assign types to arguments *)
         Hashtbl.replace env id generic;
@@ -18,8 +19,8 @@ let rec init_func_statement (statement : statement) (env : environment) : statem
     let _ = List.map (fun statement -> init_func_statement statement env) body in
     let d_type = Primative (Function (param_d_types, return_d_type)) in
     Hashtbl.replace env name d_type;
-    FunctionDeclaration (name, params, body)
-  | _ -> statement
+    (loc, FunctionDeclaration ((name_loc, name), params, body))
+  | _ -> (loc, statement)
 
 (* The environment is just mutated here and it doesn't actually conver this into a
  * typed program. This is important because this phase happens before we begin to
