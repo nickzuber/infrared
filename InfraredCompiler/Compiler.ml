@@ -34,7 +34,7 @@ let assign_types_with_debugging ~(file : string) ~(program : program) =
   |> (Realign_typed_expressions.transform env) |> Printer.pprint_program_with_title "Re-align typed expressions"
 
 let assign_types ~(file : string) ~(program : program) =
-  if Settings.debug_mode then
+  if !Settings.debug_mode then
     assign_types_with_debugging ~file ~program
   else
     assign_types ~file ~program

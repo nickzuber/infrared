@@ -109,7 +109,9 @@ let check_files (files : string list) : unit =
   print_result_summary start_time files err_files err_count
 
 let type_check ?flags:(flags=[]) args : unit =
-  print_endline ("FLAGS" ^ (String.concat ", " flags));
+  print_endline "";
+  if Utils.is_debug_mode flags then
+    Settings.debug_mode := true;
   match args with
   | [] -> ()
   | arg :: [] ->
