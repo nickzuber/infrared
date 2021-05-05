@@ -207,6 +207,7 @@ let rec string_of_typed_infrared_statement ?depth:(depth=0) ?tag:(tag="") (state
   let open TypedInfraredAst in
   let string_of_type (t : string) = string_of_type (tag ^ t) in
   let padding = String.make depth '\t' in
+  let (_, statement) = statement in
   match statement with
   | VariableDeclaration ((_, id), typed_value) ->
     let (d_type, value) = typed_value in

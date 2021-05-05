@@ -91,7 +91,7 @@ type environment = (string, data_type) Hashtbl.t
 module rec TypedInfraredAst : sig
   type typed_expression = data_type * InfraredAst.expression
 
-  and statement =
+  and statement' =
     (* Recall that VariableAssignment don't exist for our AST.
      * Any VariableAssignments will be considered as new variable
      * declarations, so we can track any type branches for free. *)
@@ -101,6 +101,8 @@ module rec TypedInfraredAst : sig
     | Return of typed_expression
     | Expression of typed_expression
     | Block of statement list
+
+  and statement = Loc.t * statement'
 end = TypedInfraredAst
 
 type program =
