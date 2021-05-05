@@ -41,7 +41,7 @@ end = struct
     | None -> "(anonymous)"
 
   and transform_params (params : Loc.t FlowAst.Function.Params.t) : InfraredAst.identifier list =
-    let (_, obj) = params in
+    let (loc, obj) = params in
     (* @TODO skipping rest elements for now. *)
     List.map ExpressionTransformer.transform_pattern obj.params
 end

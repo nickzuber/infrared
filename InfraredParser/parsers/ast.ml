@@ -1,7 +1,4 @@
-type loc = {
-  line: int;
-  col: int;
-}
+module Loc = Flow_parser.Loc
 
 module rec InfraredAst : sig
   type identifier = string
@@ -63,8 +60,8 @@ module rec InfraredAst : sig
     | Expression of expression
     | Block of statement list
 
-  and expression = loc * expression'
-  and statement = loc * statement'
+  and expression = Loc.t * expression'
+  and statement = Loc.t * statement'
 end = InfraredAst
 
 type primative_data_type =
