@@ -16,15 +16,17 @@ let rec string_of_infrared_statement ?depth:(depth=0) ?tag:(tag="") (statement: 
   let open InfraredAst in
   let string_of_type (t : string) = string_of_type (tag ^ t) in
   let padding = String.make depth '\t' in
+  let (_, statement) = statement in
   match statement with
-  | VariableDeclaration (id, value) ->
+  | VariableDeclaration ((_, id), value) ->
     Printf.sprintf "%s%s %s <- %s"
       padding
       (string_of_type "VariableDeclaration")
       id
       (string_of_infrared_expression ~depth:depth value)
-  | FunctionDeclaration (name, params, body) ->
-    let params' = String.concat ", " params in
+  | FunctionDeclaration ((_, name), params, body) ->
+    let params_no_loc = List.map (fun (_, p) -> p) params in
+    let params' = String.concat ", " params_no_loc in
     let body' = String.concat "\n"
         (List.map (string_of_infrared_statement ~depth:(depth + 1))
            body)
@@ -64,8 +66,9 @@ let rec string_of_infrared_statement ?depth:(depth=0) ?tag:(tag="") (statement: 
 and string_of_infrared_expression ?depth:(depth=0) (expression : InfraredAst.expression) : string =
   let open InfraredAst in
   let padding = String.make depth '\t' in
+  let (_, expression) = expression in
   match expression with
-  | Variable id -> id
+  | Variable (_, id) -> id
   | String s -> "\"" ^ s ^ "\""
   | Number n -> string_of_int n
   | Boolean b -> string_of_bool b
@@ -76,19 +79,20 @@ and string_of_infrared_expression ?depth:(depth=0) (expression : InfraredAst.exp
       (string_of_infrared_expression ~depth:depth left)
       (string_of_infrared_binop binop)
       (string_of_infrared_expression ~depth:depth right)
-  | Assignment (id, expr) ->
+  | Assignment ((_, id), expr) ->
     Printf.sprintf "%s = %s"
       (id)
       (string_of_infrared_expression ~depth:depth expr)
   | Object pairs ->
     let pairs_strs = List.map (fun pair ->
-        let (key, value) = pair in
+        let ((_, key), value) = pair in
         let value_str = string_of_infrared_expression ~depth:(depth + 1) value in
         Printf.sprintf "\n\t%s%s: %s"
           padding
           key
           value_str
-      ) pairs in
+      ) pairs
+    in
     let formatted_pairs = String.concat "," pairs_strs in
     Printf.sprintf "{%s\n%s}"
       formatted_pairs
@@ -109,7 +113,7 @@ and string_of_infrared_property (prop : InfraredAst.property) : string =
   let open InfraredAst in
   match prop with
   | PropertyExpression expr -> "[" ^ (string_of_infrared_expression expr) ^ "]"
-  | PropertyIdentifier id -> "." ^ id
+  | PropertyIdentifier (_, id) -> "." ^ id
 
 and string_of_infrared_binop (binop : InfraredAst.binop) : string =
   let open InfraredAst in
@@ -204,7 +208,7 @@ let rec string_of_typed_infrared_statement ?depth:(depth=0) ?tag:(tag="") (state
   let string_of_type (t : string) = string_of_type (tag ^ t) in
   let padding = String.make depth '\t' in
   match statement with
-  | VariableDeclaration (id, typed_value) ->
+  | VariableDeclaration ((_, id), typed_value) ->
     let (d_type, value) = typed_value in
     Printf.sprintf "%s%s %s <- %s %s"
       padding
@@ -212,8 +216,8 @@ let rec string_of_typed_infrared_statement ?depth:(depth=0) ?tag:(tag="") (state
       id
       (string_of_infrared_expression ~depth:depth value)
       (pp_string_of_data_type ~depth:depth d_type)
-  | FunctionDeclaration (name, params, body) ->
-    let typed_params = List.map (fun param ->
+  | FunctionDeclaration ((_, name), params, body) ->
+    let typed_params = List.map (fun (_, param) ->
         let d_type = get_type env param in
         (d_type, param)
       ) params

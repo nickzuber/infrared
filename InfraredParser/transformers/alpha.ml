@@ -17,9 +17,9 @@ let logger_error_no_loc (message : string) : unit =
   Logger.error_no_loc ("[InfraredParser.alpha] " ^ message)
 
 module rec FunctionDeclarationTransformer : sig
-  val transform : Loc.t FlowAst.Function.t -> InfraredAst.statement
+  val transform : Loc.t FlowAst.Function.t -> InfraredAst.statement'
 end = struct
-  let rec transform (fn : Loc.t FlowAst.Function.t) : InfraredAst.statement =
+  let rec transform (fn : Loc.t FlowAst.Function.t) : InfraredAst.statement' =
     let open FlowAst.Function in
     let name = transform_identifier_maybe fn.id in
     let params = transform_params fn.params in
@@ -28,51 +28,55 @@ end = struct
 
   and transform_body (body : Loc.t FlowAst.Function.body) : InfraredAst.statement list =
     match body with
-    | BodyExpression expression -> [InfraredAst.Expression (ExpressionTransformer.transform_expression expression)]
+    | BodyExpression expression ->
+      let (loc, _) = expression in
+      let expr = InfraredAst.Expression (ExpressionTransformer.transform_expression expression) in
+      [(loc, expr)]
     | BodyBlock block -> transform_body_block block
 
   and transform_body_block (block : Loc.t * Loc.t FlowAst.Statement.Block.t) : InfraredAst.statement list =
     let (_, block) = block in
     List.map StatementTransformer.transform_statement block.body
 
-  and transform_identifier_maybe (identifier_maybe : Loc.t FlowAst.Identifier.t option) : string =
+  and transform_identifier_maybe (identifier_maybe : Loc.t FlowAst.Identifier.t option) : InfraredAst.identifier =
     match identifier_maybe with
     | Some id -> ExpressionTransformer.transform_identifier id
-    | None -> "(anonymous)"
+    | None -> (Loc.none, "(anonymous)")
 
   and transform_params (params : Loc.t FlowAst.Function.Params.t) : InfraredAst.identifier list =
-    let (loc, obj) = params in
+    (* Ignore this location since we have the individual param locations *)
+    let (_, obj) = params in
     (* @TODO skipping rest elements for now. *)
     List.map ExpressionTransformer.transform_pattern obj.params
 end
 
 and ReturnTransformer : sig
-  val transform : Loc.t FlowAst.Statement.Return.t -> InfraredAst.statement
+  val transform : Loc.t FlowAst.Statement.Return.t -> InfraredAst.statement'
 end = struct
-  let transform (obj : Loc.t FlowAst.Statement.Return.t) : InfraredAst.statement =
+  let transform (obj : Loc.t FlowAst.Statement.Return.t) : InfraredAst.statement' =
     let open FlowAst.Statement.Return in
     let arg = ExpressionTransformer.transform_expression_maybe obj.argument in
     InfraredAst.Return arg
 end
 
 and IfTransformer : sig
-  val transform : Loc.t FlowAst.Statement.If.t -> InfraredAst.statement
+  val transform : Loc.t FlowAst.Statement.If.t -> InfraredAst.statement'
 end = struct
-  let transform (obj : Loc.t FlowAst.Statement.If.t) : InfraredAst.statement =
+  let transform (obj : Loc.t FlowAst.Statement.If.t) : InfraredAst.statement' =
     let open FlowAst.Statement.If in
     let test = ExpressionTransformer.transform obj.test in
     let consequent = StatementTransformer.transform_statement obj.consequent in
     let alternate = match obj.alternate with
       | Some statement -> StatementTransformer.transform_statement statement
-      | None -> InfraredAst.Expression (InfraredAst.Undefined)
+      | None -> (Loc.none, InfraredAst.Expression ((Loc.none, InfraredAst.Undefined)))
     in
     InfraredAst.If (test, consequent, alternate)
 end
 
 and BlockTransformer : sig
-  val transform : Loc.t FlowAst.Statement.Block.t -> InfraredAst.statement
+  val transform : Loc.t FlowAst.Statement.Block.t -> InfraredAst.statement'
 end = struct
-  let transform (block : Loc.t FlowAst.Statement.Block.t) : InfraredAst.statement =
+  let transform (block : Loc.t FlowAst.Statement.Block.t) : InfraredAst.statement' =
     let open FlowAst.Statement.Block in
     let statements' = List.map StatementTransformer.transform_statement block.body in
     InfraredAst.Block statements'
@@ -85,38 +89,29 @@ end
  * ```
  * We'll only process `x` *)
 and VariableDeclarationTransformer : sig
-  val transform : Loc.t FlowAst.Statement.VariableDeclaration.t -> InfraredAst.statement
+  val transform : Loc.t FlowAst.Statement.VariableDeclaration.t -> InfraredAst.statement'
 end = struct
-  let rec transform (obj : Loc.t FlowAst.Statement.VariableDeclaration.t) =
+  let transform (obj : Loc.t FlowAst.Statement.VariableDeclaration.t) : InfraredAst.statement' =
     let open FlowAst.Statement.VariableDeclaration in
     let declarations = obj.declarations in
     let declaration = List.hd declarations in
     let (loc, declaration') = declaration in
     if List.length declarations > 1 then
       Logger.warn "Skipping additional declarators" loc;
-    let identifier = string_of_pattern declaration'.id in
+    let identifier = ExpressionTransformer.transform_pattern declaration'.id in
     let value = ExpressionTransformer.transform_expression_maybe declaration'.init in
     InfraredAst.VariableDeclaration (identifier, value)
-
-  and string_of_pattern (id : Loc.t FlowAst.Pattern.t) : string =
-    let open FlowAst.Pattern in
-    let (loc, pattern) = id in
-    match pattern with
-    | Identifier id -> ExpressionTransformer.transform_identifier id.name
-    | _ ->
-      Logger.warn "Unhandled variable declaration identifier type" loc;
-      "#<unhandled_identifer_type>"
 end
 
 and ExpressionTransformer : sig
   val transform : Loc.t FlowAst.Expression.t -> InfraredAst.expression
   val transform_expression : Loc.t FlowAst.Expression.t -> InfraredAst.expression
-  val transform_pattern : Loc.t FlowAst.Pattern.t -> string
-  val transform_identifier : Loc.t FlowAst.Identifier.t -> string
+  val transform_pattern : Loc.t FlowAst.Pattern.t -> InfraredAst.identifier
+  val transform_identifier : Loc.t FlowAst.Identifier.t -> InfraredAst.identifier
   val transform_expression_maybe : Loc.t FlowAst.Expression.t option -> InfraredAst.expression
-  val transform_literal : FlowAst.Literal.t -> InfraredAst.expression
+  val transform_literal : FlowAst.Literal.t -> InfraredAst.expression'
 end = struct
-  let rec transform_pattern (pattern : Loc.t FlowAst.Pattern.t) : string =
+  let rec transform_pattern (pattern : Loc.t FlowAst.Pattern.t) : InfraredAst.identifier =
     let open FlowAst.Pattern in
     let (loc, pattern') = pattern in
     match pattern' with
@@ -125,21 +120,35 @@ end = struct
       logger_error "Unhandled pattern type in function parameters" loc;
       (raise TransformerExpressionError)
 
-  and transform_identifier (identifier : Loc.t FlowAst.Identifier.t) : string =
-    let (_, name) = identifier in
-    name
+  and transform_identifier (identifier : Loc.t FlowAst.Identifier.t) : InfraredAst.identifier =
+    let (loc, name) = identifier in
+    (loc, name)
 
   and transform_expression (expression : Loc.t FlowAst.Expression.t) : InfraredAst.expression =
     let open FlowAst.Expression in
     let (loc, expr) = expression in
     match expr with
-    | Literal object_literal -> transform_literal object_literal
-    | Identifier id -> InfraredAst.Variable (transform_identifier id)
-    | Object obj -> InfraredAst.Object (transform_object_properties loc obj.properties)
-    | Binary binary_expression -> transform_binary binary_expression
-    | Assignment obj -> transform_assignment obj
-    | Member obj -> transform_member_expression obj
-    | Call obj -> transform_call_expression obj
+    | Literal object_literal ->
+      let lit = transform_literal object_literal in
+      (loc, lit)
+    | Identifier id ->
+      let expr' = InfraredAst.Variable (transform_identifier id) in
+      (loc, expr')
+    | Object obj ->
+      let obj' = InfraredAst.Object (transform_object_properties loc obj.properties) in
+      (loc, obj')
+    | Binary binary_expression ->
+      let expr = transform_binary binary_expression in
+      (loc, expr)
+    | Assignment obj ->
+      let expr = transform_assignment obj in
+      (loc, expr)
+    | Member obj ->
+      let expr = transform_member_expression obj in
+      (loc, expr)
+    | Call obj ->
+      let expr = transform_call_expression obj in
+      (loc, expr)
     | _ ->
       logger_error "Unhandled expression type" loc;
       (raise TransformerExpressionError)
@@ -147,7 +156,7 @@ end = struct
   and transform (expression : Loc.t FlowAst.Expression.t) : InfraredAst.expression =
     transform_expression expression
 
-  and transform_call_expression (obj : Loc.t FlowAst.Expression.Call.t) : InfraredAst.expression =
+  and transform_call_expression (obj : Loc.t FlowAst.Expression.Call.t) : InfraredAst.expression' =
     let arguments = List.map transform_expression_or_spread obj.arguments in
     let callee = transform_expression obj.callee in
     InfraredAst.Call (callee, arguments)
@@ -160,7 +169,7 @@ end = struct
       logger_error_no_loc "Unhandled SpreadExpression";
       (raise TransformerExpressionError)
 
-  and transform_member_expression (obj : Loc.t FlowAst.Expression.Member.t) : InfraredAst.expression =
+  and transform_member_expression (obj : Loc.t FlowAst.Expression.Member.t) : InfraredAst.expression' =
     let object_expr = transform_expression obj._object in
     let property_expr = transform_member_property obj.property in
     InfraredAst.Access (object_expr, property_expr)
@@ -191,12 +200,14 @@ end = struct
     let transform_key key : InfraredAst.identifier =
       match key with
       | Literal lit ->
-        let (_, lit) = lit in
+        let (loc, lit) = lit in
         let lit_expr = transform_literal lit in
-        Printf.sprintf "%s"
-          (string_of_infrared_literal lit_expr)
+        let str = Printf.sprintf "%s"
+            (string_of_infrared_literal lit_expr)
+        in
+        (loc, str)
       | Identifier id -> transform_identifier id
-      | Computed _expr -> "<#computed_value>"
+      | Computed (loc, _) -> (loc, "<#computed_value>")
       | PrivateName _ ->
         logger_error "Unhandled PrivateName in object property" loc;
         (raise TransformerExpressionError)
@@ -213,9 +224,9 @@ end = struct
   and transform_expression_maybe (expression_maybe : Loc.t FlowAst.Expression.t option) : InfraredAst.expression =
     match expression_maybe with
     | Some expr -> transform_expression expr
-    | None -> Undefined
+    | None -> (Loc.none, Undefined)
 
-  and transform_literal (object_literal : FlowAst.Literal.t) : InfraredAst.expression =
+  and transform_literal (object_literal : FlowAst.Literal.t) : InfraredAst.expression' =
     match object_literal.value with
     | Boolean true -> InfraredAst.Boolean true
     | Boolean false -> InfraredAst.Boolean false
@@ -305,15 +316,25 @@ end = struct
   and infrared_statement_of_flow_statement (flow_statement : Loc.t FlowAst.Statement.t)
     : InfraredAst.statement =
     let open FlowAst.Statement in
-    let (_loc, statement) = flow_statement in
+    let (loc, statement) = flow_statement in
     match statement with
-    | VariableDeclaration obj -> VariableDeclarationTransformer.transform obj
-    | FunctionDeclaration fn -> FunctionDeclarationTransformer.transform fn
-    | Return obj -> ReturnTransformer.transform obj
-    | If obj -> IfTransformer.transform obj
-    | Block obj -> BlockTransformer.transform obj
+    | VariableDeclaration obj ->
+      let statement = VariableDeclarationTransformer.transform obj in
+      (loc, statement)
+    | FunctionDeclaration fn ->
+      let statement = FunctionDeclarationTransformer.transform fn in
+      (loc, statement)
+    | Return obj ->
+      let statement = ReturnTransformer.transform obj in
+      (loc, statement)
+    | If obj ->
+      let statement = IfTransformer.transform obj in
+      (loc, statement)
+    | Block obj ->
+      let statement = BlockTransformer.transform obj in
+      (loc, statement)
     | Expression expression_object ->
       let expression = ExpressionTransformer.transform_expression expression_object.expression in
-      InfraredAst.Expression expression
+      (loc, InfraredAst.Expression expression)
     | _ -> raise (Unhandled_parsing_step "#<unhandled_FlowStatement_to_InfraredStatement_conversion>")
 end

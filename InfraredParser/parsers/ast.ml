@@ -1,9 +1,9 @@
 module Loc = Flow_parser.Loc
 
 module rec InfraredAst : sig
-  type identifier = string
+  type identifier' = string
 
-  type unop =
+  and unop =
     | Negate
     | Not
 
@@ -62,6 +62,7 @@ module rec InfraredAst : sig
 
   and expression = Loc.t * expression'
   and statement = Loc.t * statement'
+  and identifier = Loc.t * identifier'
 end = InfraredAst
 
 type primative_data_type =
