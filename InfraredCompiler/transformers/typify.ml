@@ -48,7 +48,7 @@ and type_of_expression (expression : expression) (env : environment) : data_type
   | Boolean _ -> Primative Boolean
   | Null -> Primative Null
   | Undefined -> Primative Undefined
-  | Variable id -> get_type env id
+  | Variable (_, id) -> get_type env id
   | BinaryOperation (_op, left, right) ->
     let d_type_left = type_of_expression left env in
     let d_type_right = type_of_expression right env in
