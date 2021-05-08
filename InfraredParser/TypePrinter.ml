@@ -13,7 +13,22 @@ let get_type_data tbl key : type_data option =
   try Some (Hashtbl.find tbl key)
   with _ -> None
 
-let rec walk_statement (statement : TypedInfraredAst.statement) (env : environment) (type_map : type_mapping) : unit =
+let rec walk_expression (expression : TypedInfraredAst.typed_expression) (env : environment) (type_map : type_mapping) : unit =
+  let open InfraredAst in
+  let open Flow_parser.Loc in
+  let (expression_type, (expression_loc, expression)) = expression in
+  match expression with
+  | Variable (id_loc, id) ->
+    let line_number = id_loc.start.line in
+    let d_type = get_type env id in
+    Hashtbl.replace type_map line_number (id_loc, d_type);
+    ()
+  | BinaryOperation _ ->
+    let line_number = expression_loc.start.line in
+    Hashtbl.replace type_map line_number (expression_loc, expression_type);
+  | _ -> ()
+
+and walk_statement (statement : TypedInfraredAst.statement) (env : environment) (type_map : type_mapping) : unit =
   let open TypedInfraredAst in
   let open Flow_parser.Loc in
   let (statement_loc, statement) = statement in
@@ -31,11 +46,11 @@ let rec walk_statement (statement : TypedInfraredAst.statement) (env : environme
   | If (_expr, s1, s2) ->
     walk_statement s1 env type_map;
     walk_statement s2 env type_map
+  | Expression expr -> walk_expression expr env type_map
   | Return (d_type, _expr) ->
     let line_number = statement_loc.start.line in
     Hashtbl.replace type_map line_number (statement_loc, d_type);
   | Block body -> List.iter (fun statement -> walk_statement statement env type_map) body
-  | _ -> ()
 
 module TypePrinter = struct
   let split = Str.split (Str.regexp "\n")
@@ -78,16 +93,14 @@ module TypePrinter = struct
           | Some (loc, d_type) ->
             let open Flow_parser.Loc in
             let underline_spacing = String.make (loc.start.column + 1) ' ' in
-            let underline =
-              (create_string "▀" (loc._end.column - loc.start.column)) ^
-              "▏"
+            let underline = create_string "▔" (loc._end.column - loc.start.column)
             in
             Printf.sprintf "\n%s%s%s%s %s"
               (pad line_number)
               (pad_of_number line_number)
               underline_spacing
-              (underline |> Chalk.white |> Chalk.bold)
-              ((Printer.string_of_data_type d_type) |> Chalk.white |> Chalk.bold)
+              (underline |> Chalk.green |> Chalk.bold)
+              ((Printer.string_of_data_type d_type) |> Chalk.green |> Chalk.bold)
           | None -> ""
         in
         Printf.sprintf "%s%s%s%s%s"

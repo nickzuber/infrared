@@ -1,7 +1,12 @@
 const age = 25;
-const foo = add1(5);
+const foo = addFive(6);
 
-function add1 (n) {
+function addFive (n) {
+  const five = 5;
+  return n + five;
+}
+
+function doStuff (n) {
   const five = 5;
 
   function inner () {
@@ -9,14 +14,15 @@ function add1 (n) {
   }
 
   if (n > 10) {
-    const _ = undefined;
+    const ignore = undefined;
     return null;
   }
 
   return n + five;
 }
 
-foo + 1
+age + 1
+age
 
 function inner () {
   return null;
