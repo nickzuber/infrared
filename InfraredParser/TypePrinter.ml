@@ -78,7 +78,10 @@ module TypePrinter = struct
           | Some (loc, d_type) ->
             let open Flow_parser.Loc in
             let underline_spacing = String.make (loc.start.column + 1) ' ' in
-            let underline = create_string "┇" (loc._end.column - loc.start.column) in
+            let underline =
+              (create_string "▀" (loc._end.column - loc.start.column)) ^
+              "▏"
+            in
             Printf.sprintf "\n%s%s%s%s %s"
               (pad line_number)
               (pad_of_number line_number)
