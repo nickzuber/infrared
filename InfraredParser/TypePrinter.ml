@@ -13,12 +13,42 @@ let get_type_data tbl key : type_data option =
   try Some (Hashtbl.find tbl key)
   with _ -> None
 
+let rec walk_statement (statement : TypedInfraredAst.statement) (env : environment) (type_map : type_mapping) : unit =
+  let open TypedInfraredAst in
+  let open Flow_parser.Loc in
+  let (statement_loc, statement) = statement in
+  match statement with
+  | VariableDeclaration ((id_loc, id), _) ->
+    let line_number = id_loc.start.line in
+    let d_type = get_type env id in
+    Hashtbl.replace type_map line_number (id_loc, d_type);
+    ()
+  | FunctionDeclaration ((name_loc, name), _args, body) ->
+    let line_number = name_loc.start.line in
+    let d_type = get_type env name in
+    Hashtbl.replace type_map line_number (name_loc, d_type);
+    List.iter (fun statement -> walk_statement statement env type_map) body
+  | If (_expr, s1, s2) ->
+    walk_statement s1 env type_map;
+    walk_statement s2 env type_map
+  | Return (d_type, _expr) ->
+    let line_number = statement_loc.start.line in
+    Hashtbl.replace type_map line_number (statement_loc, d_type);
+  | Block body -> List.iter (fun statement -> walk_statement statement env type_map) body
+  | _ -> ()
+
 module TypePrinter = struct
   let split = Str.split (Str.regexp "\n")
 
   let pad (n : int) = match n with
     | _ when n < 10 -> "  "
     | _ when n < 100 -> " "
+    | _ -> ""
+
+  let pad_of_number (n : int) = match n with
+    | _ when n < 10 -> "  "
+    | _ when n < 100 -> "   "
+    | _ when n < 1000 -> "    "
     | _ -> ""
 
   let create_string (char : string) (length : int) : string =
@@ -30,18 +60,7 @@ module TypePrinter = struct
     let type_map : type_mapping = Hashtbl.create 53 in
     let _ = match program with
       | TypedInfraredProgram (statements, env) ->
-        let open TypedInfraredAst in
-        List.iter (fun statement ->
-            let (_, statement) = statement in
-            match statement with
-            | VariableDeclaration ((id_loc, id), _) ->
-              let open Flow_parser.Loc in
-              let line_number = id_loc.start.line in
-              let d_type = get_type env id in
-              Hashtbl.replace type_map line_number (id_loc, d_type);
-              ()
-            | _ -> ()
-          ) statements
+        List.iter (fun statement -> walk_statement statement env type_map) statements
       | _ -> ()
     in
     type_map
@@ -59,12 +78,13 @@ module TypePrinter = struct
           | Some (loc, d_type) ->
             let open Flow_parser.Loc in
             let underline_spacing = String.make (loc.start.column + 1) ' ' in
-            let underline = create_string "^" (loc._end.column - loc.start.column) in
-            Printf.sprintf "\n%s%s  %s %s"
+            let underline = create_string "╵" (loc._end.column - loc.start.column) in
+            Printf.sprintf "\n%s%s%s%s %s"
               (pad line_number)
+              (pad_of_number line_number)
               underline_spacing
-              (underline |> Chalk.cyan |> Chalk.bold)
-              ((Printer.string_of_data_type d_type) |> Chalk.cyan |> Chalk.bold)
+              (underline |> Chalk.white |> Chalk.bold)
+              ((Printer.string_of_data_type d_type) |> Chalk.white |> Chalk.bold)
           | None -> ""
         in
         Printf.sprintf "%s%s%s%s%s"
