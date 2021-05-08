@@ -100,7 +100,7 @@ module TypePrinter = struct
               (pad_of_number line_number)
               underline_spacing
               (underline |> Chalk.green |> Chalk.bold)
-              ((Printer.string_of_data_type d_type) |> Chalk.green |> Chalk.bold)
+              ((Printer.string_of_data_type d_type ~depth:2) |> Chalk.green |> Chalk.bold)
           | None -> ""
         in
         Printf.sprintf "%s%s%s%s%s"

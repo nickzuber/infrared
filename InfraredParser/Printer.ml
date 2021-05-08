@@ -178,7 +178,7 @@ and string_of_data_type ?depth:(depth=0) (d_type : data_type) : string =
   | Exec (callee_d_type, args_d_types) ->
     let pp_args_d_types = List.map (string_of_data_type ~depth:depth) args_d_types in
     let pp_args_d_types_str = String.concat ", " pp_args_d_types in
-    Printf.sprintf "Call(%s, (%s))"
+    Printf.sprintf "App(%s, (%s))"
       (string_of_data_type ~depth:depth callee_d_type)
       (pp_args_d_types_str)
   | Primative prim -> string_of_primative ~depth:depth prim
