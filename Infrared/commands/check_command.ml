@@ -110,8 +110,10 @@ let check_files (files : string list) : unit =
 
 let type_check ?flags:(flags=[]) args : unit =
   print_endline "";
-  if Utils.is_debug_mode flags then
+  if Utils.is_flag_set "debug" flags then
     Settings.debug_mode := true;
+  if Utils.is_flag_set "show-types-in-console" flags then
+    Settings.show_types_in_console := true;
   match args with
   | [] -> ()
   | arg :: [] ->

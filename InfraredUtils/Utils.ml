@@ -35,5 +35,5 @@ let math_max (a : int) (b : int) : int =
 let parse_args_for_flags (args : string list) : (string list * string list) =
   List.partition (fun arg -> (String.sub arg 0 2) <> "--") args
 
-let is_debug_mode (flags : string list) : bool =
-  List.exists (fun flag -> flag = "--debug") flags
+let is_flag_set (target : string) (flags : string list) : bool =
+  List.exists (fun flag -> flag = ("--" ^ target)) flags
