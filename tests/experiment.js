@@ -1,3 +1,4 @@
+const age = 25;
 const foo = add1(5);
 
 function add1 (n) {
