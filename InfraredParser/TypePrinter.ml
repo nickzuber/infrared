@@ -75,8 +75,7 @@ module TypePrinter = struct
           type_line
       ) lines
     in
-    Printf.printf "%s\n%s\n%s\n%s\n\n"
-      (padding ^ (Chalk.bold file_underline))
+    Printf.printf "%s\n%s\n%s\n\n"
       (padding ^ (Chalk.bold file))
       (padding ^ (Chalk.bold file_underline))
       (String.concat "\n" line_strs)
